@@ -13,12 +13,7 @@ export const App = () => {
   return (
     <>
       <div style={{ textAlign: 'center' }}>
-        <h1>Welcome to sin-nihongo!</h1>
-        <img
-          width="450"
-          src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-          alt="Nx - Smart, Extensible Build Framework"
-        />
+        <h1>新日本語の世界へようこそ！</h1>
       </div>
       <div>{m.message}</div>
     </>

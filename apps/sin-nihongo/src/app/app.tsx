@@ -1,5 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { withTheme } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
 import { Message } from '@sin-nihongo/api-interfaces';
+
+const MenuTitleTypography = styled(Typography)`
+  flex-grow: 1;
+`;
+
+const MenuIconButton = withTheme(styled(IconButton)`
+  margin-right: ${(props) => props.theme.spacing(2)};
+`);
+
+const HeaderDiv = withTheme(styled.div`
+  ${(props) => ({ ...props.theme.mixins.toolbar })};
+`);
 
 export const App = () => {
   const [m, setMessage] = useState<Message>({ message: '' });
@@ -11,12 +32,26 @@ export const App = () => {
   }, []);
 
   return (
-    <>
-      <div style={{ textAlign: 'center' }}>
-        <h1>新日本語の世界へようこそ！</h1>
-      </div>
-      <div>{m.message}</div>
-    </>
+    <Box display="flex">
+      <CssBaseline />
+      <AppBar position="fixed">
+        <Toolbar>
+          <MenuIconButton color="inherit" aria-label="open drawer" edge="start">
+            <MenuIcon />
+          </MenuIconButton>
+          <MenuTitleTypography variant="h6">新日本語</MenuTitleTypography>
+        </Toolbar>
+      </AppBar>
+      <main>
+        <HeaderDiv />
+        <Typography variant="h2" gutterBottom>
+          新日本語の世界へようこそ！
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          {m.message}
+        </Typography>
+      </main>
+    </Box>
   );
 };
 

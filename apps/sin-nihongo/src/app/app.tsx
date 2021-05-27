@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -50,9 +51,9 @@ export const App = () => {
       <BrowserRouter>
         <StyledAppBar position="fixed">
           <Toolbar>
-            <MenuTitleTypography variant="h6" noWrap>
+            <Button size="large" color="inherit" component={Link} to="/">
               新日本語
-            </MenuTitleTypography>
+            </Button>
           </Toolbar>
         </StyledAppBar>
         <StyledDrawer variant="permanent">

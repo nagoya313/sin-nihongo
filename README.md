@@ -15,13 +15,13 @@ yarn nx run-many --target=serve --projects=nx-fullstack,api --parallel=true
 フロントだけ上げたい場合は
 
 ```
-yarn start
+yarn nx serve
 ```
 
 バックエンドだけ上げたい場合は
 
 ```
-yarn start api
+yarn nx serve api
 ```
 
 で上がります。

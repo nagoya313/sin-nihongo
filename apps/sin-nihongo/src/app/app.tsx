@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
@@ -65,8 +65,10 @@ export const App = () => {
         </StyledDrawer>
         <ContentMain>
           <HeaderDiv />
-          <Route exact path="/" component={Home} />
-          <Route component={NotFound} />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route component={NotFound} />
+          </Switch>
         </ContentMain>
       </BrowserRouter>
     </Box>

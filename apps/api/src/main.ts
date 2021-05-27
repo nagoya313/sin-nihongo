@@ -1,19 +1,18 @@
 import * as express from 'express';
 import * as path from 'path';
-import { Message } from '@sin-nihongo/api-interfaces';
+import { initRoutingController } from './config/routing_controller';
 
-const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
+export const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
 
 const app = express();
 app.use(express.static(CLIENT_BUILD_PATH));
 
-const greeting: Message = { message: 'Welcome to api!' };
+initRoutingController(app);
 
-app.get('/api', (req, res) => {
-  res.send(greeting);
-});
-
-app.get('*', (request, response) => {
+// routing-controllerはマッチしたものを全部呼ぶので'*'だと二重レスポンスになるので
+// /api/v1/から始まるものは除去することを明示する
+// が、いづれなんとかしたい
+app.get(/^(?!\/api\/v1\/).*$/, (request, response) => {
   response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
 });
 

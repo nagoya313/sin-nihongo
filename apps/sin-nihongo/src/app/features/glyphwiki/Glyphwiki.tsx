@@ -6,6 +6,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
+import { GLYPHWIKI_QUERY_PARAMS_MATCHER } from '@sin-nihongo/api-interfaces';
 import { NewTabLink } from '../../components/NewTabLink';
 import { SearchForm } from '../../components/SearchForm';
 import { GlyphwikiData } from './GlyphwikiData';
@@ -16,8 +17,7 @@ const CardAvatar = styled(Avatar)`
 
 export const Glyphwiki = () => {
   const [searchWord, setSearchWord] = useState('');
-  const checkedSearchWord = searchWord.length === 1 ? `u${searchWord.charCodeAt(0).toString(16)}` : searchWord;
-  const validation = (word: string) => word.match(/^([\da-z-]+|.)$/) !== null || word === '';
+  const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';
 
   return (
     <React.Fragment>
@@ -44,7 +44,7 @@ export const Glyphwiki = () => {
               errorMessage="検索項目が不正です"
             />
           </GridListTile>
-          {checkedSearchWord && <GlyphwikiData searchWord={checkedSearchWord} />}
+          {searchWord !== '' && <GlyphwikiData searchWord={searchWord} />}
         </GridList>
       </div>
     </React.Fragment>

@@ -14,8 +14,8 @@ interface Props {
 
 export const GlyphwikiData: React.FC<Props> = ({ searchWord }) => {
   const [{ data, loading, error }] = useAxios<GlyphwikiData>({
-    baseURL: 'https://glyphwiki.org/api/glyph',
-    params: { name: searchWord },
+    baseURL: 'api/v1/glyphwiki',
+    params: { q: searchWord },
   });
 
   return <React.Fragment></React.Fragment>;

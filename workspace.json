@@ -37,10 +37,7 @@
             "main": "apps/sin-nihongo/src/main.tsx",
             "polyfills": "apps/sin-nihongo/src/polyfills.ts",
             "tsConfig": "apps/sin-nihongo/tsconfig.app.json",
-            "assets": [
-              "apps/sin-nihongo/src/favicon.ico",
-              "apps/sin-nihongo/src/assets"
-            ],
+            "assets": ["apps/sin-nihongo/src/favicon.ico", "apps/sin-nihongo/src/assets"],
             "styles": [],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"

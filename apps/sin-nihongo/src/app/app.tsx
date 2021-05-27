@@ -59,11 +59,7 @@ export const App = () => {
           <HeaderDiv />
           <MenuDiv>
             <List>
-              <ListItemRouteLink
-                icon={<SearchIcon />}
-                primary="グリフウィキ検索"
-                to="glyphwiki"
-              />
+              <ListItemRouteLink icon={<SearchIcon />} primary="グリフウィキ検索" to="glyphwiki" />
             </List>
           </MenuDiv>
         </StyledDrawer>

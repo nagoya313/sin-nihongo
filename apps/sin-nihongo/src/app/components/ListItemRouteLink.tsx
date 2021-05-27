@@ -11,13 +11,9 @@ interface Props {
 }
 
 export const ListItemRouteLink: React.FC<Props> = ({ icon, primary, to }) => {
-  const CustomLink = useMemo(
-    () =>
-      forwardRef((linkProps, ref: any) => (
-        <Link ref={ref} to={to} {...linkProps} />
-      )),
-    [to]
-  );
+  const CustomLink = useMemo(() => forwardRef((linkProps, ref: any) => <Link ref={ref} to={to} {...linkProps} />), [
+    to,
+  ]);
 
   return (
     <li>

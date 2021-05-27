@@ -1,5 +1,3 @@
-
-
 # 新日本語
 
 このプロジェクトは[Nx](https://nx.dev)を使つてゐます。
@@ -28,7 +26,7 @@ yarn nx serve api
 
 ## ローカルアクセス
 
-http://localhost:4200 でフロントエンド、http://localhost:3333/api/v1/ でAPIにアクセスできます。
+http://localhost:4200 でフロントエンド、http://localhost:3333/api/v1/ で API にアクセスできます。
 
 ## テスト
 
@@ -38,7 +36,7 @@ http://localhost:4200 でフロントエンド、http://localhost:3333/api/v1/ �
 yarn test
 ```
 
-e2eテストは
+e2e テストは
 
 ```
 yarn e2e sin-nihongo-e2e

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Message } from '@sin-nihongo/api-interfaces';
+import { Home } from './features/home/Home';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
@@ -23,14 +23,6 @@ const HeaderDiv = withTheme(styled.div`
 `);
 
 export const App = () => {
-  const [m, setMessage] = useState<Message>({ message: '' });
-
-  useEffect(() => {
-    fetch('/api')
-      .then((r) => r.json())
-      .then(setMessage);
-  }, []);
-
   return (
     <Box display="flex">
       <CssBaseline />
@@ -44,12 +36,7 @@ export const App = () => {
       </AppBar>
       <main>
         <HeaderDiv />
-        <Typography variant="h2" gutterBottom>
-          新日本語の世界へようこそ！
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          {m.message}
-        </Typography>
+        <Home />
       </main>
     </Box>
   );

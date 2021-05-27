@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
@@ -26,18 +27,24 @@ export const App = () => {
   return (
     <Box display="flex">
       <CssBaseline />
-      <AppBar position="fixed">
-        <Toolbar>
-          <MenuIconButton color="inherit" aria-label="open drawer" edge="start">
-            <MenuIcon />
-          </MenuIconButton>
-          <MenuTitleTypography variant="h6">新日本語</MenuTitleTypography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        <HeaderDiv />
-        <Home />
-      </main>
+      <BrowserRouter>
+        <AppBar position="fixed">
+          <Toolbar>
+            <MenuIconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+            >
+              <MenuIcon />
+            </MenuIconButton>
+            <MenuTitleTypography variant="h6">新日本語</MenuTitleTypography>
+          </Toolbar>
+        </AppBar>
+        <main>
+          <HeaderDiv />
+          <Route exact path="/" component={Home} />
+        </main>
+      </BrowserRouter>
     </Box>
   );
 };

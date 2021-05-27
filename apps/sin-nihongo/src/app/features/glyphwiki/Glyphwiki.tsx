@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
@@ -6,13 +6,17 @@ import CardHeader from '@material-ui/core/CardHeader';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import { withTheme } from '@material-ui/core/styles';
+import { Buhin } from '@kurgm/kage-engine';
 import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/api-interfaces';
 import { NewTabLink } from '../../components/NewTabLink';
 import { SearchForm } from '../../components/SearchForm';
+import { drawGlyph } from '../../utils/canvas';
 import { GlyphwikiData } from './GlyphwikiData';
+import { GlyphCanvas } from '../../components/GlyphCanvas';
 
 const CardAvatar = styled(Avatar)`
   background-color: ${red[500]};
@@ -44,8 +48,17 @@ const splitData = (data: string | undefined) => {
 export const Glyphwiki = () => {
   const [searchWord, setSearchWord] = useState('');
   const [kageData, setKageData] = useState<KageRecursionData>();
+  const [buhin, setBuhin] = useState(new Buhin());
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';
+
+  useEffect(() => {
+    const b = new Buhin();
+    kageData?.needGlyphs?.forEach((glyph) => {
+      b.push(glyph.name, glyph.data);
+    });
+    setBuhin(b);
+  }, [kageData]);
 
   return (
     <React.Fragment>
@@ -73,18 +86,21 @@ export const Glyphwiki = () => {
             />
           </GridListTile>
           <GridListTile style={{ height: 'auto' }}>
-            <CanvasBox>
-              <Canvas ref={canvasRef} width="200px" height="200px" />
-            </CanvasBox>
+            <GlyphCanvas buhin={buhin} name={kageData?.name} />
             <GridListTileBar
               title={kageData?.name}
               subtitle={splitData(kageData?.needGlyphs[0]?.data)}
+              style={{ height: 'auto' }}
             ></GridListTileBar>
           </GridListTile>
           {searchWord !== '' && <GlyphwikiData searchWord={searchWord} onLoad={setKageData} />}
+          <GridListTile cols={2} style={{ height: 'auto' }}>
+            <ListSubheader component="div">参照グリフ</ListSubheader>
+          </GridListTile>
           {kageData?.needGlyphs.slice(1).map((glyph) => {
             return (
-              <GridListTile key={glyph.name}>
+              <GridListTile key={glyph.name} style={{ height: 'auto' }}>
+                <GlyphCanvas buhin={buhin} name={glyph.name} />
                 <GridListTileBar
                   title={glyph.name}
                   subtitle={splitData(glyph.data)}

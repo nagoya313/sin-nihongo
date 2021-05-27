@@ -1440,6 +1440,11 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@kurgm/kage-engine@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@kurgm/kage-engine/-/kage-engine-0.3.1.tgz#99647c2ef2a9ffcd461f5595a273bd84157a476b"
+  integrity sha512-UCWnVMe8ce07yPHbSlRFNN2CQA9Hl+tECYrZARfLpARA1dmMnMjFFlyRHMNXtWH+yWnvQBj9gw6bbcJHxr5tFQ==
+
 "@material-ui/core@^4.11.4":
   version "4.11.4"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.4.tgz#4fb9fe5dec5dcf780b687e3a40cff78b2b9640a4"

@@ -7,7 +7,7 @@
 以下コマンドでフロントとバックエンドが兩方上がります。
 
 ```
-yarn nx run-many --target=serve --projects=nx-fullstack,api --parallel=true
+yarn nx run-many --target=serve --projects=sin-nihongo,api --parallel=true
 ```
 
 フロントだけ上げたい場合は

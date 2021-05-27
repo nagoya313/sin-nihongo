@@ -4,24 +4,43 @@ import styled from 'styled-components';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import IconButton from '@material-ui/core/IconButton';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
 import { Home } from './features/home/Home';
 import { NotFound } from './features/error/404';
+import { ListItemRouteLink } from './components/ListItemRouteLink';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
 `;
 
-const MenuIconButton = withTheme(styled(IconButton)`
-  margin-right: ${(props) => props.theme.spacing(2)};
-`);
+const MenuDiv = styled.div`
+  overflow: 'auto';
+`;
 
 const HeaderDiv = withTheme(styled.div`
   ${(props) => ({ ...props.theme.mixins.toolbar })};
+`);
+
+const StyledAppBar = withTheme(styled(AppBar)`
+  z-index: ${(props) => props.theme.zIndex.drawer + 1};
+`);
+
+const StyledDrawer = styled(Drawer)`
+  width: 240px;
+  flex-shrink: 0;
+  .MuiDrawer-paper {
+    width: 240px;
+  }
+`;
+
+const ContentMain = withTheme(styled.main`
+  flex-grow: 1;
+  padding: ${(props) => props.theme.spacing(3)}px;
 `);
 
 export const App = () => {
@@ -29,23 +48,30 @@ export const App = () => {
     <Box display="flex">
       <CssBaseline />
       <BrowserRouter>
-        <AppBar position="fixed">
+        <StyledAppBar position="fixed">
           <Toolbar>
-            <MenuIconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-            >
-              <MenuIcon />
-            </MenuIconButton>
-            <MenuTitleTypography variant="h6">新日本語</MenuTitleTypography>
+            <MenuTitleTypography variant="h6" noWrap>
+              新日本語
+            </MenuTitleTypography>
           </Toolbar>
-        </AppBar>
-        <main>
+        </StyledAppBar>
+        <StyledDrawer variant="permanent">
+          <HeaderDiv />
+          <MenuDiv>
+            <List>
+              <ListItemRouteLink
+                icon={<SearchIcon />}
+                primary="グリフウィキ検索"
+                to="glyphwiki"
+              />
+            </List>
+          </MenuDiv>
+        </StyledDrawer>
+        <ContentMain>
           <HeaderDiv />
           <Route exact path="/" component={Home} />
           <Route component={NotFound} />
-        </main>
+        </ContentMain>
       </BrowserRouter>
     </Box>
   );

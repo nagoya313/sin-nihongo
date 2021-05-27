@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Home } from './features/home/Home';
+import { NotFound } from './features/error/404';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
@@ -43,6 +44,7 @@ export const App = () => {
         <main>
           <HeaderDiv />
           <Route exact path="/" component={Home} />
+          <Route component={NotFound} />
         </main>
       </BrowserRouter>
     </Box>

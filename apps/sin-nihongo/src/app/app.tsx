@@ -14,6 +14,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { Home } from './features/home/Home';
 import { NotFound } from './features/error/404';
 import { ListItemRouteLink } from './components/ListItemRouteLink';
+import { Glyphwiki } from './features/glyphwiki/Glyphwiki';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
@@ -68,6 +69,7 @@ export const App = () => {
           <HeaderDiv />
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route exact path="/glyphwiki" component={Glyphwiki} />
             <Route component={NotFound} />
           </Switch>
         </ContentMain>

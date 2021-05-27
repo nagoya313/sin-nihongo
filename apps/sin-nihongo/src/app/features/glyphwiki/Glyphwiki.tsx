@@ -4,9 +4,10 @@ import Avatar from '@material-ui/core/Avatar';
 import CardHeader from '@material-ui/core/CardHeader';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import { GLYPHWIKI_QUERY_PARAMS_MATCHER } from '@sin-nihongo/api-interfaces';
+import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/api-interfaces';
 import { NewTabLink } from '../../components/NewTabLink';
 import { SearchForm } from '../../components/SearchForm';
 import { GlyphwikiData } from './GlyphwikiData';
@@ -15,8 +16,20 @@ const CardAvatar = styled(Avatar)`
   background-color: ${red[500]};
 `;
 
+const splitData = (data: string | undefined) => {
+  return data?.split('$')?.map((t, i) => {
+    return (
+      <span key={i}>
+        {t}
+        <br />
+      </span>
+    );
+  });
+};
+
 export const Glyphwiki = () => {
   const [searchWord, setSearchWord] = useState('');
+  const [kageData, setKageData] = useState<KageRecursionData>();
   const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';
 
   return (
@@ -33,8 +46,8 @@ export const Glyphwiki = () => {
       </Typography>
       <div>
         <GridList cellHeight={180}>
-          <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-            <CardHeader avatar={<CardAvatar>字</CardAvatar>} title="グリフウィキのグリフ" subheader="" />
+          <GridListTile key="Subheader" style={{ height: 'auto' }}>
+            <CardHeader avatar={<CardAvatar>字</CardAvatar>} title="グリフウィキのグリフ" subheader={kageData?.name} />
             <SearchForm
               title="グリフウィキから検索"
               label="漢字・USC"
@@ -44,7 +57,24 @@ export const Glyphwiki = () => {
               errorMessage="検索項目が不正です"
             />
           </GridListTile>
-          {searchWord !== '' && <GlyphwikiData searchWord={searchWord} />}
+          <GridListTile>
+            <GridListTileBar
+              title={kageData?.name}
+              subtitle={splitData(kageData?.needGlyphs[0]?.data)}
+            ></GridListTileBar>
+          </GridListTile>
+          {searchWord !== '' && <GlyphwikiData searchWord={searchWord} onLoad={setKageData} />}
+          {kageData?.needGlyphs.slice(1).map((glyph) => {
+            return (
+              <GridListTile key={glyph.name}>
+                <GridListTileBar
+                  title={glyph.name}
+                  subtitle={splitData(glyph.data)}
+                  style={{ height: 'auto' }}
+                ></GridListTileBar>
+              </GridListTile>
+            );
+          })}
         </GridList>
       </div>
     </React.Fragment>

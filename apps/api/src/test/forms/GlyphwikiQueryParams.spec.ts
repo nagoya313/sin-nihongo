@@ -66,7 +66,6 @@ describe('GlyphwikiQueryParams', () => {
       params.q = '一';
       expect(params.glyphwikiApiRequestParam).toBe('u4e00');
       params.q = '𠀋';
-      console.log(params.q.length);
       expect(params.glyphwikiApiRequestParam).toBe('u2000b');
     });
 

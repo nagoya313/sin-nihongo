@@ -3,19 +3,8 @@ import React from 'react';
 import App from './app';
 
 describe('App', () => {
-  afterEach(() => {
-    delete global['fetch'];
-    cleanup();
-  });
-
-  it('should render successfully', async () => {
-    global['fetch'] = jest.fn().mockResolvedValueOnce({
-      json: () => ({
-        message: 'my message',
-      }),
-    });
-
+  it('レンダリングに成功すること', async () => {
     const { baseElement } = render(<App />);
-    await waitFor(() => getByText(baseElement, 'my message'));
+    await waitFor(() => getByText(baseElement, '新日本語'));
   });
 });

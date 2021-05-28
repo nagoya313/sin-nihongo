@@ -12,8 +12,9 @@ const dbProductionConfig: PostgresConnectionOptions = {
   cli: {
     migrationsDir: 'db/migrations',
   },
+  ssl: true,
   extra: {
-    ssl: true,
+    ssl: { rejectUnauthorized: false },
   },
   namingStrategy: new TypeOrmNamingStrategy(),
 };

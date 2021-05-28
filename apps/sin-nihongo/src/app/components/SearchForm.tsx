@@ -14,7 +14,7 @@ interface Props {
 }
 
 const SerchFormTypography = styled(Typography)`
-  font-size: 14;
+  font-size: 14px;
 `;
 
 export const SearchForm: React.FC<Props> = ({ title, label, onSearchWordChange, validation, hint, errorMessage }) => {

@@ -35,7 +35,14 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data, buhin }) => {
       <GlyphCanvas buhin={buhin} name={name} />
       <Box flexGrow={1}>
         <List>
-          <ListItem alignItems="flex-start" button>
+          <ListItem
+            alignItems="flex-start"
+            button
+            component="a"
+            href={`https://glyphwiki.org/wiki/${name}`}
+            target="_blank"
+            rel="noopener"
+          >
             <ListItemText>{name}</ListItemText>
             <ListItemSecondaryAction>
               <ListItemIcon>

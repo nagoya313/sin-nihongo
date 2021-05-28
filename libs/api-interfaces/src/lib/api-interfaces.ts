@@ -14,4 +14,4 @@ export interface KageRecursionData {
   readonly needGlyphs: KageData[];
 }
 
-export const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-]+|.)$/;
+export const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;

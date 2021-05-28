@@ -1,6 +1,6 @@
 import * as express from 'express';
 import * as path from 'path';
-import { initRoutingController } from './config/routing_controller';
+import { initRoutingController } from './app/config/routing_controller';
 
 export const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
 

@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  heroku: circleci/heroku@1.2.6
+
 jobs:
   build:
     working_directory: ~/mern-starter
@@ -26,3 +29,15 @@ jobs:
           path: test-results.xml
       - store_test_results:
           path: test-results.xml
+
+workflows:
+  deploy:
+    jobs:
+      - build
+      - heroku/deploy-via-git:
+          force: true
+          requires:
+            - build
+          filters:
+            branches:
+              only: main

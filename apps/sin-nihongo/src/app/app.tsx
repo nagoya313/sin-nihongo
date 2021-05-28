@@ -15,7 +15,6 @@ import { Home } from './features/home/Home';
 import { NotFound } from './features/error/404';
 import { ListItemRouteLink } from './components/ListItemRouteLink';
 import { Glyphwiki } from './features/glyphwiki/Glyphwiki';
-import { Footer } from './components/Footer';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
@@ -74,7 +73,6 @@ export const App = () => {
             <Route component={NotFound} />
           </Switch>
         </ContentMain>
-        <Footer />
       </BrowserRouter>
     </Box>
   );

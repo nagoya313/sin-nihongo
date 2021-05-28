@@ -8,6 +8,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
+import { withTheme } from '@material-ui/core/styles';
 import { Buhin } from '@kurgm/kage-engine';
 import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/api-interfaces';
 import { NewTabLink } from '../../components/NewTabLink';
@@ -18,6 +19,14 @@ import { GlyphCanvas } from '../../components/GlyphCanvas';
 const CardAvatar = styled(Avatar)`
   background-color: ${red[500]};
 `;
+
+const GlidListDiv = withTheme(styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.palette.background.paper};
+`);
 
 const splitData = (data: string | undefined) => {
   return data?.split('$')?.map((t, i) => {
@@ -56,8 +65,8 @@ export const Glyphwiki = () => {
         />
         からグリフお検索します。漢字一文字或いわグリフウィキのグリフ名から検索できます。
       </Typography>
-      <div>
-        <GridList cellHeight={180}>
+      <GlidListDiv>
+        <GridList>
           <GridListTile key="Subheader" style={{ height: 'auto' }}>
             <CardHeader avatar={<CardAvatar>字</CardAvatar>} title="グリフウィキのグリフ" subheader={kageData?.name} />
             <SearchForm
@@ -94,7 +103,7 @@ export const Glyphwiki = () => {
             );
           })}
         </GridList>
-      </div>
+      </GlidListDiv>
     </React.Fragment>
   );
 };

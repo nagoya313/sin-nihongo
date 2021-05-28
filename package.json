@@ -23,7 +23,11 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "typeorm": "ts-node --transpile-only -r tsconfig-paths/register -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm/cli.js",
+    "db:migrate:make": "yarn typeorm migration:generate -n Initialize",
+    "db:migrate:run": "yarn typeorm migration:run",
+    "db:drop": "yarn typeorm schema:drop"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +42,8 @@
     "document-register-element": "1.13.1",
     "ecstatic": "^4.1.3",
     "express": "4.17.1",
+    "pg": "^8.6.0",
+    "pluralize": "^8.0.0",
     "postcss": "^8.2.10",
     "react": "17.0.2",
     "react-copy-to-clipboard": "^5.0.3",
@@ -49,6 +55,7 @@
     "routing-controllers": "^0.9.0",
     "styled-components": "5.2.1",
     "tslib": "^2.0.0",
+    "typeorm": "^0.2.32",
     "underscore": "^1.13.1",
     "use-debounce": "^6.0.1"
   },

@@ -24,7 +24,7 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "typeorm": "ts-node --transpile-only -r tsconfig-paths/register -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm/cli.js",
+    "typeorm": "yarn ts-node --transpile-only -r tsconfig-paths/register -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm/cli.js",
     "db:migrate:make": "yarn typeorm migration:generate -n Initialize",
     "db:migrate:run": "yarn typeorm migration:run",
     "db:drop": "yarn typeorm schema:drop"

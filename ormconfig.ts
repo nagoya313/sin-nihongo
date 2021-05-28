@@ -1,6 +1,23 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import TypeOrmNamingStrategy from './apps/api/src/app/libs/TypeOrmNamingStrategy';
 
+const dbProductionConfig: PostgresConnectionOptions = {
+  type: 'postgres',
+  url: process.env.DATABASE_URL,
+  synchronize: false,
+  logging: false,
+  migrationsRun: true,
+  entities: ['apps/api/src/app/entities/*.ts'],
+  migrations: ['db/migrations/*.ts'],
+  cli: {
+    migrationsDir: 'db/migrations',
+  },
+  extra: {
+    ssl: true,
+  },
+  namingStrategy: new TypeOrmNamingStrategy(),
+};
+
 const dbLocalConfig: PostgresConnectionOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
@@ -19,4 +36,4 @@ const dbLocalConfig: PostgresConnectionOptions = {
   namingStrategy: new TypeOrmNamingStrategy(),
 };
 
-module.exports = dbLocalConfig;
+module.exports = process.env.NODE_ENV === 'production' ? dbProductionConfig : dbLocalConfig;

@@ -1,3 +1,9 @@
+export interface Error {
+  name: string;
+  stack: string;
+  message: string;
+}
+
 export interface KageData {
   readonly name: string;
   readonly data: string;

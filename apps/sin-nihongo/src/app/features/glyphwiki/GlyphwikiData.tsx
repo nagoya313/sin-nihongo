@@ -22,6 +22,7 @@ export const GlyphwikiData: React.FC<Props> = ({ searchWord, onLoad }) => {
   const [{ data, loading, error }] = useAxios<KageRecursionData, Error>(
     {
       baseURL: 'api/v1/glyphwiki',
+      method: 'GET', // prodでビルドするとこゝを明示的に指定しないとtoUpperCase undefinedエラーになる
       params: { q: searchWord },
     },
     { useCache: false }

@@ -7,6 +7,5 @@ export const dbConfig = () => {
   const options: PostgresConnectionOptions = require('../../../../../ormconfig');
   return Object.assign(options, {
     entities: [Radical],
-    migrations: [],
   });
 };

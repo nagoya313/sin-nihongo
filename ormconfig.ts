@@ -7,11 +7,7 @@ const dbProductionConfig: PostgresConnectionOptions = {
   synchronize: false,
   logging: false,
   migrationsRun: true,
-  entities: ['apps/api/src/app/entities/*.ts'],
-  migrations: ['db/migrations/*.ts'],
-  cli: {
-    migrationsDir: 'db/migrations',
-  },
+  migrations: ['db/migrations/*.js'],
   ssl: true,
   extra: {
     ssl: { rejectUnauthorized: false },
@@ -30,7 +26,7 @@ const dbLocalConfig: PostgresConnectionOptions = {
   dropSchema: process.env.NODE_ENV === 'test',
   logging: process.env.NODE_ENV === 'development',
   entities: ['apps/api/src/app/entities/*.ts'],
-  migrations: ['db/migrations/*.ts'],
+  migrations: ['db/migrations/*.js'],
   cli: {
     migrationsDir: 'db/migrations',
   },

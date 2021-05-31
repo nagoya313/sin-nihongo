@@ -23,6 +23,12 @@ export default class CreateRaicals implements Seeder {
     const pipeline = util.promisify(stream.pipeline);
 
     await pipeline(rs, parser);
-    await connection.createQueryBuilder().insert().into(Radical).values(radicals).execute();
+    await connection
+      .createQueryBuilder()
+      .insert()
+      .into(Radical)
+      .values(radicals)
+      .onConflict(`("id") DO NOTHING`)
+      .execute();
   }
 }

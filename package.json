@@ -29,7 +29,7 @@
     "db:migrate:run": "yarn typeorm migration:run",
     "db:drop": "yarn typeorm schema:drop",
     "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
-    "seed:run": "ts-node --transpile-only -r tsconfig-paths/register -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm-seeding/dist/cli.js seed"
+    "seed:run": "ts-node --transpile-only -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "private": true,
   "dependencies": {
@@ -61,7 +61,6 @@
     "tslib": "^2.0.0",
     "typeorm": "^0.2.32",
     "typeorm-seeding": "^1.6.1",
-    "typescript": "^4.3.2",
     "underscore": "^1.13.1",
     "use-debounce": "^6.0.1"
   },
@@ -107,7 +106,8 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "jest": "26.2.2",
     "prettier": "2.2.1",
-    "ts-jest": "26.5.5"
+    "ts-jest": "26.5.5",
+    "typescript": "^4.3.2"
   },
   "resolutions": {
     "postcss": "^8.2.10"

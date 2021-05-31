@@ -29,6 +29,6 @@ export const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
     });
     server.on('error', console.error);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 })();

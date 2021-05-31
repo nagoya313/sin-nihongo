@@ -11,10 +11,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import CategorIcon from '@material-ui/icons/Category';
 import { Home } from './features/home/Home';
 import { NotFound } from './features/error/404';
 import { ListItemRouteLink } from './components/ListItemRouteLink';
 import { Glyphwiki } from './features/glyphwiki/Glyphwiki';
+import { Radicals } from './features/radicals/Radicals';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
@@ -62,6 +64,7 @@ export const App = () => {
           <MenuDiv>
             <List>
               <ListItemRouteLink icon={<SearchIcon />} primary="グリフウィキ検索" to="glyphwiki" />
+              <ListItemRouteLink icon={<CategorIcon />} primary="部首索引" to="radicals" />
             </List>
           </MenuDiv>
         </StyledDrawer>
@@ -70,6 +73,7 @@ export const App = () => {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/glyphwiki" component={Glyphwiki} />
+            <Route exact path="/radicals" component={Radicals} />
             <Route component={NotFound} />
           </Switch>
         </ContentMain>

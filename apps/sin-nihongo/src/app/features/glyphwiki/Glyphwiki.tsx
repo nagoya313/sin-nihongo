@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import useAxios from 'axios-hooks';
 import styled from 'styled-components';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -11,18 +12,30 @@ import { Buhin } from '@kurgm/kage-engine';
 import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/api-interfaces';
 import { NewTabLink } from '../../components/NewTabLink';
 import { SearchForm } from '../../components/SearchForm';
-import { GlyphwikiData } from './GlyphwikiData';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
 const CardAvatar = styled(Avatar)`
   background-color: ${red[500]};
 `;
 
+const ErrorTypography = styled(Typography)`
+  color: red;
+`;
+
+const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';
+
 export const Glyphwiki = () => {
   const [searchWord, setSearchWord] = useState('');
+  const [{ data, loading, error }, refetch] = useAxios<KageRecursionData, Error>(
+    {
+      baseURL: 'api/v1/glyphwiki',
+      method: 'GET', // prodでビルドするとこゝを明示的に指定しないとtoUpperCase undefinedエラーになる
+      params: { q: searchWord },
+    },
+    { useCache: false, manual: true }
+  );
   const [kageData, setKageData] = useState<KageRecursionData>();
   const [buhin, setBuhin] = useState(new Buhin());
-  const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';
 
   useEffect(() => {
     const b = new Buhin();
@@ -31,6 +44,23 @@ export const Glyphwiki = () => {
     });
     setBuhin(b);
   }, [kageData]);
+
+  useEffect(() => {
+    if (searchWord) {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      refetch({ params: { q: searchWord } }).catch(() => {});
+    }
+  }, [refetch, searchWord]);
+
+  useEffect(() => {
+    if (!loading) {
+      if (error) {
+        setKageData(undefined);
+      } else if (typeof data !== 'undefined') {
+        setKageData(data);
+      }
+    }
+  }, [data, loading, error]);
 
   return (
     <Card>
@@ -55,7 +85,8 @@ export const Glyphwiki = () => {
           errorMessage="検索ワードが不正です"
         />
         <Divider />
-        {searchWord !== '' && <GlyphwikiData searchWord={searchWord} onLoad={setKageData} />}
+        {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
+        {loading && <Typography>検索中...</Typography>}
         {kageData?.name && (
           <React.Fragment>
             <GlyphwikiContent name={kageData?.name} data={kageData?.needGlyphs[0]?.data} buhin={buhin} />

@@ -3,7 +3,7 @@ import { GlyphwikiQueryParams } from '../../app/forms/GlyphwikiForm';
 
 describe('GlyphwikiQueryParams', () => {
   describe('validation', () => {
-    it('qとして一文字は受け付けること', async (done) => {
+    it('qとして一文字は受附けること', async (done) => {
       const accepts = ['a', '一', 'あ', 'Ａ'];
 
       await Promise.all(
@@ -18,7 +18,7 @@ describe('GlyphwikiQueryParams', () => {
       done();
     });
 
-    it('qとして半角英数字と_-@以外を含む二文字以上は受け付けないこと', async (done) => {
+    it('qとして半角英数字と_-@以外を含む二文字以上は受附けないこと', async (done) => {
       const accepts = ['aＡ', '一二', 'あa', '*1', '一2三'];
 
       await Promise.all(
@@ -33,7 +33,7 @@ describe('GlyphwikiQueryParams', () => {
       done();
     });
 
-    it('qとして半角英数字と-@のみを含む二文字以上は受け付けること', async (done) => {
+    it('qとして半角英数字と-@のみを含む二文字以上は受附けること', async (done) => {
       const accepts = [
         'u4e00',
         'bsp_a0001',

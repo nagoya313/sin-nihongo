@@ -122,19 +122,8 @@ const setRead = async (kanjis: Map<string, Kanji>) => {
   await finished(rs);
 };
 
-/*
-radicalId: number;
-  numberOfStrokesInRadical: number;
-  numberOfStrokes: number;
-  onyomi: string[];
-  kunyomi: string[];
-  jisLevel: number;
-  regular: boolean;
-  forName: boolean;
-*/
-
 export const makeKanjiCsvFromUnihan = async () => {
-  // downloadUnihanZip();
+  downloadUnihanZip();
 
   const kanjis = new Map<string, Kanji>();
 

@@ -185,6 +185,56 @@
           }
         }
       }
+    },
+    "initial-data": {
+      "root": "apps/initial-data",
+      "sourceRoot": "apps/initial-data/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/initial-data",
+            "main": "apps/initial-data/src/main.ts",
+            "tsConfig": "apps/initial-data/tsconfig.app.json",
+            "assets": ["apps/initial-data/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/initial-data/src/environments/environment.ts",
+                  "with": "apps/initial-data/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "initial-data:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/initial-data/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/initial-data"],
+          "options": {
+            "jestConfig": "apps/initial-data/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

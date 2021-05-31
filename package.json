@@ -61,6 +61,7 @@
     "tslib": "^2.0.0",
     "typeorm": "^0.2.32",
     "typeorm-seeding": "^1.6.1",
+    "typescript": "^4.3.2",
     "underscore": "^1.13.1",
     "use-debounce": "^6.0.1"
   },
@@ -106,8 +107,7 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "jest": "26.2.2",
     "prettier": "2.2.1",
-    "ts-jest": "26.5.5",
-    "typescript": "~4.2.4"
+    "ts-jest": "26.5.5"
   },
   "resolutions": {
     "postcss": "^8.2.10"

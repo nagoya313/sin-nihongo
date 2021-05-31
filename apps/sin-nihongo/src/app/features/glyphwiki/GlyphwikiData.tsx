@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { AxiosError } from 'axios';
 import useAxios from 'axios-hooks';
 import Typography from '@material-ui/core/Typography';
 import { Error, KageRecursionData } from '@sin-nihongo/api-interfaces';
@@ -9,10 +8,6 @@ interface Props {
   readonly searchWord: string;
   readonly onLoad: (data: KageRecursionData | undefined) => void;
 }
-
-const errorMessage = (error: AxiosError<Error> | undefined) => {
-  return error?.response?.data?.message;
-};
 
 const ErrorTypography = styled(Typography)`
   color: red;
@@ -36,6 +31,7 @@ export const GlyphwikiData: React.FC<Props> = ({ searchWord, onLoad }) => {
         onLoad(data);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, loading, error]);
 
   if (error) {

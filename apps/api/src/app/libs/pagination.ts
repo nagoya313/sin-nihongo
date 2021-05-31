@@ -9,7 +9,7 @@ export class PaginationQueryParams {
 
 export const addPageData = <T>(data: T[], count: number, query: PaginationQueryParams): Pagination<T> => {
   return {
-    data: data,
+    items: data,
     meta: {
       totalItems: count,
       itemsPerPage: 20,

@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';

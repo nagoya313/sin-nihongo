@@ -1,7 +1,12 @@
+export interface ValidationError {
+  readonly property: string;
+  readonly value: string;
+  readonly constraints: { [key: string]: string };
+}
+
 export interface Error {
-  name: string;
-  stack: string;
-  message: string;
+  readonly name: string;
+  readonly message: string | ValidationError;
 }
 
 interface PaginationMetaData {

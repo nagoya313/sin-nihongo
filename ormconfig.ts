@@ -33,4 +33,6 @@ const dbLocalConfig: PostgresConnectionOptions = {
   namingStrategy: new TypeOrmNamingStrategy(),
 };
 
-module.exports = process.env.NODE_ENV === 'production' ? dbProductionConfig : dbLocalConfig;
+module.exports = Object.assign(process.env.NODE_ENV === 'production' ? dbProductionConfig : dbLocalConfig, {
+  seeds: ['apps/api/src/app/seeds/*.ts'],
+});

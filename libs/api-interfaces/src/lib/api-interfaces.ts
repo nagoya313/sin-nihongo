@@ -13,7 +13,7 @@ interface PaginationMetaData {
 }
 
 export interface Pagination<T> {
-  readonly data: T[];
+  readonly items: T[];
   readonly meta: PaginationMetaData;
 }
 

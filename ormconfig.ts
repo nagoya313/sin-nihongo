@@ -7,7 +7,7 @@ const dbProductionConfig: PostgresConnectionOptions = {
   synchronize: false,
   logging: false,
   migrationsRun: true,
-  entities: ['apps/api/src/app/entities/*.ts'],
+  entities: ['apps/api/src/app/entities/*.ts'], // seedsの時に必須
   migrations: ['db/migrations/*.js'],
   ssl: true,
   extra: {

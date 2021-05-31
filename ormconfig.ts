@@ -7,6 +7,7 @@ const dbProductionConfig: PostgresConnectionOptions = {
   synchronize: false,
   logging: false,
   migrationsRun: true,
+  entities: ['apps/api/src/app/entities/*.ts'],
   migrations: ['db/migrations/*.js'],
   ssl: true,
   extra: {

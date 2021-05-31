@@ -1,10 +1,11 @@
-import { Min, IsOptional } from 'class-validator';
+import { IsInt, Min, IsOptional } from 'class-validator';
 import { Pagination } from '@sin-nihongo/api-interfaces';
 
 export class PaginationQueryParams {
   @Min(1)
+  @IsInt({ message: 'ページ番号わ整数で入力してください。' })
   @IsOptional()
-  readonly page: number;
+  page: number;
 }
 
 export const addPageData = <T>(data: T[], count: number, query: PaginationQueryParams): Pagination<T> => {

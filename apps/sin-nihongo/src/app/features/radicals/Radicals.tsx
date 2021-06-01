@@ -54,7 +54,7 @@ const columns: { field: Fields; headerName: string }[] = [
 
 export const Radicals = () => {
   const [searchName, setSearchName] = useState('');
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
   const [radicals, setRadicals] = useState<Radical[]>();
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Radical>>('api/v1/radicals');
@@ -63,16 +63,18 @@ export const Radicals = () => {
   };
 
   useEffect(() => {
+    setPageNumber(1);
+  }, [searchName, searchNumberOfStrokes]);
+
+  useEffect(() => {
     if (searchName || searchNumberOfStrokes || pageNumber) {
-      let params = { page: pageNumber };
-      if (searchName) {
-        params = Object.assign(params, { nameLike: searchName });
-      }
-      if (searchNumberOfStrokes) {
-        params = Object.assign(params, { numberOfStrokes: searchNumberOfStrokes });
-      }
+      // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
       refetch({
-        params: params,
+        params: {
+          page: pageNumber,
+          nameLike: searchName || undefined,
+          numberOfStrokes: searchNumberOfStrokes || undefined,
+        },
         // eslint-disable-next-line @typescript-eslint/no-empty-function
       }).catch(() => {});
     }

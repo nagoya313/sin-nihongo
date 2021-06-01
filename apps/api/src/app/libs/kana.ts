@@ -1,5 +1,8 @@
 import * as MojiJS from 'mojijs';
-const mojiJS = MojiJS['default'];
+// seedから呼ぶ時
+const mojiJS = MojiJS;
+// 鯖から呼ぶ時
+//const mojiJS = MojiJS['default'];
 
 const replaceMojiTable = {
   ぢ: 'じ',

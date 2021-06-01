@@ -75,7 +75,6 @@ export const Kanjis = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis');
   const [kanjis, setKanjis] = useState<Kanji[]>();
-  console.log(location.search.substr(1));
 
   const onPageChange = (page: number) => {
     setPageNumber(page);
@@ -188,71 +187,31 @@ export const Kanjis = () => {
           />
           <FormControl component="fieldset">
             <FormLabel component="legend">JIS水準</FormLabel>
-            <RadioGroup row aria-label="position" name="position" defaultValue={searchJisLevel}>
-              <FormControlLabel
-                value="1"
-                control={<Radio color="primary" onChange={onJisLevelChange} />}
-                label="1"
-                labelPlacement="top"
-              />
-              <FormControlLabel
-                value="2"
-                control={<Radio color="primary" onChange={onJisLevelChange} />}
-                label="2"
-                labelPlacement="top"
-              />
-              <FormControlLabel
-                value=""
-                control={<Radio color="primary" onChange={onJisLevelChange} />}
-                label="指定なし"
-                labelPlacement="top"
-              />
+            <RadioGroup row value={searchJisLevel} onChange={onJisLevelChange}>
+              <FormControlLabel value="1" control={<Radio color="primary" />} label="1" labelPlacement="top" />
+              <FormControlLabel value="2" control={<Radio color="primary" />} label="2" labelPlacement="top" />
+              <FormControlLabel value="" control={<Radio color="primary" />} label="指定なし" labelPlacement="top" />
             </RadioGroup>
           </FormControl>
           <FormControl component="fieldset">
             <FormLabel component="legend">常用漢字</FormLabel>
-            <RadioGroup row aria-label="position" name="position" defaultValue={searchRegular}>
-              <FormControlLabel
-                value="true"
-                control={<Radio color="primary" onChange={onRegularChange} />}
-                label="常用"
-                labelPlacement="top"
-              />
-              <FormControlLabel
-                value="false"
-                control={<Radio color="primary" onChange={onRegularChange} />}
-                label="非常用"
-                labelPlacement="top"
-              />
-              <FormControlLabel
-                value=""
-                control={<Radio color="primary" onChange={onRegularChange} />}
-                label="指定なし"
-                labelPlacement="top"
-              />
+            <RadioGroup row value={searchRegular} onChange={onRegularChange}>
+              <FormControlLabel value="true" control={<Radio color="primary" />} label="常用" labelPlacement="top" />
+              <FormControlLabel value="false" control={<Radio color="primary" />} label="非常用" labelPlacement="top" />
+              <FormControlLabel value="" control={<Radio color="primary" />} label="指定なし" labelPlacement="top" />
             </RadioGroup>
           </FormControl>
           <FormControl component="fieldset">
             <FormLabel component="legend">人名用漢字</FormLabel>
-            <RadioGroup row aria-label="position" name="position" defaultValue={searchForName}>
-              <FormControlLabel
-                value="true"
-                control={<Radio color="primary" onChange={onForNameChange} />}
-                label="人名用"
-                labelPlacement="top"
-              />
+            <RadioGroup row value={searchForName} onChange={onForNameChange}>
+              <FormControlLabel value="true" control={<Radio color="primary" />} label="人名用" labelPlacement="top" />
               <FormControlLabel
                 value="false"
-                control={<Radio color="primary" onChange={onForNameChange} />}
+                control={<Radio color="primary" />}
                 label="非人名用"
                 labelPlacement="top"
               />
-              <FormControlLabel
-                value=""
-                control={<Radio color="primary" onChange={onForNameChange} />}
-                label="指定なし"
-                labelPlacement="top"
-              />
+              <FormControlLabel value="" control={<Radio color="primary" />} label="指定なし" labelPlacement="top" />
             </RadioGroup>
           </FormControl>
         </StyledForm>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
 import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -13,13 +12,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
-import { SearchForm } from '../../components/SearchForm';
+import { SearchNumberField } from '../../components/SearchNumberField';
+import { SearchTextField } from '../../components/SearchTextField';
 import { useAxiosGet } from '../../libs/axios';
 import { Pagination as ApiPagination, Radical } from '@sin-nihongo/api-interfaces';
 import { Pagination } from '../../components/Pagination';
@@ -57,9 +56,6 @@ export const Radicals = () => {
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
   const [radicals, setRadicals] = useState<Radical[]>();
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Radical>>('api/v1/radicals');
-  const debounced = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchNumberOfStrokes(event.target.value);
-  }, 1000);
   const onPageChange = (page: number) => {
     setPageNumber(page);
   };
@@ -111,23 +107,19 @@ export const Radicals = () => {
           部首名（表音式の前方一致）か画数で検索できます。
         </Typography>
         <StyledForm noValidate autoComplete="off">
-          <SearchForm
+          <SearchTextField
             label="なまえ"
             onSearchWordChange={setSearchName}
             validation={validation}
             hint="例：いち、しょー、つずみ"
             errorMessage="検索ワードが不正です"
           />
-          <TextField
+          <SearchNumberField
             label="画数"
-            type="number"
-            InputProps={{
+            inputProps={{
               inputProps: { min: 1 },
             }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={debounced}
+            onSearchNumberChange={setSearchNumberOfStrokes}
           />
         </StyledForm>
         <Divider />

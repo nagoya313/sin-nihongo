@@ -9,7 +9,7 @@ import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { NewTabLink } from '../../components/NewTabLink';
-import { SearchForm } from '../../components/SearchForm';
+import { SearchTextField } from '../../components/SearchTextField';
 import { useLazyAxiosGet } from '../../libs/axios';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
@@ -61,7 +61,7 @@ export const Glyphwiki = () => {
           />
           からグリフお検索します。漢字一文字或いわグリフウィキのグリフ名から検索できます。
         </Typography>
-        <SearchForm
+        <SearchTextField
           label="漢字・USC・グリフ名"
           onSearchWordChange={setSearchWord}
           validation={validation}

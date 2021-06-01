@@ -10,7 +10,7 @@ interface Props {
   readonly errorMessage?: string;
 }
 
-export const SearchForm: React.FC<Props> = ({ label, onSearchWordChange, validation, hint, errorMessage }) => {
+export const SearchTextField: React.FC<Props> = ({ label, onSearchWordChange, validation, hint, errorMessage }) => {
   const [inputError, setInputError] = useState(false);
   const debounced = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (typeof validation === 'undefined' || validation(event.target.value)) {

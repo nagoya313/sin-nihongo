@@ -75,14 +75,15 @@ export const Kanjis = () => {
       // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
       refetch({
         params: {
-          readLike: searchRead,
-          page: pageNumber,
+          readLike: searchRead || undefined,
+          numberOfStrokes: searchNumberOfStrokes || undefined,
           radicalId: qs.parse(location.search.substr(1))['radical_id'],
+          page: pageNumber,
         },
         // eslint-disable-next-line @typescript-eslint/no-empty-function
       }).catch(() => {});
     }
-  }, [refetch, searchRead, pageNumber, location.search]);
+  }, [refetch, searchRead, searchNumberOfStrokes, pageNumber, location.search]);
 
   useEffect(() => {
     if (!loading) {
@@ -120,7 +121,7 @@ export const Kanjis = () => {
       <CardContent>
         <Typography variant="body1" gutterBottom>
           JIS第一、第二水準の漢字を検索できます。それ以外の漢字は新日本語ではサポートしません。
-          音読み、訓読みの検索は表音式ではない漢字の読み方のひらがな前方一致です（表音式に対応中）。
+          音読み、訓読みの検索は表音式ひらがなの前方一致です。
         </Typography>
         <StyledForm noValidate autoComplete="off">
           <SearchTextField

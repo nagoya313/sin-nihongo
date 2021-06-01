@@ -7,7 +7,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Check from '@material-ui/icons/Check';
 import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import Link from '@material-ui/core/Link';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import {
@@ -46,7 +51,7 @@ type Fields =
 const columns: { field: Fields; headerName: string }[] = [
   { field: 'ucs', headerName: 'ID' },
   { field: 'character', headerName: '漢字' },
-  { field: 'kage', headerName: '実装' },
+  { field: 'kage', headerName: '新日本語字形' },
   { field: 'radical', headerName: '部首' },
   { field: 'numberOfStrokes', headerName: '画数' },
   { field: 'regular', headerName: '常用漢字' },
@@ -61,6 +66,9 @@ export const Kanjis = () => {
   const location = useLocation();
   const [searchRead, setSearchRead] = useState('');
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
+  const [searchJisLevel, setSearchJisLevel] = useState('');
+  const [searchRegular, setSearchRegular] = useState('');
+  const [searchForName, setSearchForName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis');
   const [kanjis, setKanjis] = useState<Kanji[]>();
@@ -70,6 +78,22 @@ export const Kanjis = () => {
     setPageNumber(page);
   };
 
+  const onJisLevelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchJisLevel(event.target.value);
+  };
+
+  const onRegularChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchRegular(event.target.value);
+  };
+
+  const onForNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchForName(event.target.value);
+  };
+
+  useEffect(() => {
+    setPageNumber(1);
+  }, [searchRead, searchNumberOfStrokes, searchJisLevel, pageNumber, searchRegular, searchForName]);
+
   useEffect(() => {
     if (pageNumber) {
       // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
@@ -77,13 +101,25 @@ export const Kanjis = () => {
         params: {
           readLike: searchRead || undefined,
           numberOfStrokes: searchNumberOfStrokes || undefined,
+          jisLevel: searchJisLevel || undefined,
+          regular: searchRegular || undefined,
+          forName: searchForName || undefined,
           radicalId: qs.parse(location.search.substr(1))['radical_id'],
           page: pageNumber,
         },
         // eslint-disable-next-line @typescript-eslint/no-empty-function
       }).catch(() => {});
     }
-  }, [refetch, searchRead, searchNumberOfStrokes, pageNumber, location.search]);
+  }, [
+    refetch,
+    searchRead,
+    searchNumberOfStrokes,
+    searchJisLevel,
+    pageNumber,
+    searchRegular,
+    searchForName,
+    location.search,
+  ]);
 
   useEffect(() => {
     if (!loading) {
@@ -138,6 +174,75 @@ export const Kanjis = () => {
             }}
             onSearchNumberChange={setSearchNumberOfStrokes}
           />
+          <FormControl component="fieldset">
+            <FormLabel component="legend">JIS水準</FormLabel>
+            <RadioGroup row aria-label="position" name="position" defaultValue={searchJisLevel}>
+              <FormControlLabel
+                value="1"
+                control={<Radio color="primary" onChange={onJisLevelChange} />}
+                label="1"
+                labelPlacement="top"
+              />
+              <FormControlLabel
+                value="2"
+                control={<Radio color="primary" onChange={onJisLevelChange} />}
+                label="2"
+                labelPlacement="top"
+              />
+              <FormControlLabel
+                value=""
+                control={<Radio color="primary" onChange={onJisLevelChange} />}
+                label="指定なし"
+                labelPlacement="top"
+              />
+            </RadioGroup>
+          </FormControl>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">常用漢字</FormLabel>
+            <RadioGroup row aria-label="position" name="position" defaultValue={searchJisLevel}>
+              <FormControlLabel
+                value="true"
+                control={<Radio color="primary" onChange={onRegularChange} />}
+                label="常用"
+                labelPlacement="top"
+              />
+              <FormControlLabel
+                value="false"
+                control={<Radio color="primary" onChange={onRegularChange} />}
+                label="非常用"
+                labelPlacement="top"
+              />
+              <FormControlLabel
+                value=""
+                control={<Radio color="primary" onChange={onRegularChange} />}
+                label="指定なし"
+                labelPlacement="top"
+              />
+            </RadioGroup>
+          </FormControl>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">人名用漢字</FormLabel>
+            <RadioGroup row aria-label="position" name="position" defaultValue={searchJisLevel}>
+              <FormControlLabel
+                value="true"
+                control={<Radio color="primary" onChange={onForNameChange} />}
+                label="人名用"
+                labelPlacement="top"
+              />
+              <FormControlLabel
+                value="false"
+                control={<Radio color="primary" onChange={onForNameChange} />}
+                label="非人名用"
+                labelPlacement="top"
+              />
+              <FormControlLabel
+                value=""
+                control={<Radio color="primary" onChange={onForNameChange} />}
+                label="指定なし"
+                labelPlacement="top"
+              />
+            </RadioGroup>
+          </FormControl>
         </StyledForm>
         <Divider />
         {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}

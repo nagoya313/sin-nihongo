@@ -29,7 +29,7 @@ export class KanjiRepository {
     }
 
     if (params.jisLevel) {
-      base = base.andWhere('jisLevel = :q4', { q4: params.jisLevel });
+      base = base.andWhere('jis_level = :q4', { q4: params.jisLevel });
     }
 
     if (typeof params.regular !== 'undefined') {

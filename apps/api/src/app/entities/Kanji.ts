@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { IsInt, Min } from 'class-validator';
-import { JisLevel } from './JisLevel';
 import { Radical } from './Radical';
 import { TimeStampEntity } from './TimeStampEntity';
 
@@ -43,11 +42,7 @@ export class Kanji extends TimeStampEntity {
   radical: Radical;
 
   @Column({ nullable: true })
-  jisLevelId?: number | null;
-
-  @ManyToOne(() => JisLevel, (jisLevel) => jisLevel.kanjis)
-  @JoinColumn()
-  jisLevel: JisLevel;
+  jisLevel?: number | null;
 
   @Column('varchar', { array: true, default: {} })
   onyomis: string[];

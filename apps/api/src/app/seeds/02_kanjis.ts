@@ -30,7 +30,7 @@ export default class CreateKanjis implements Seeder {
       kanji.numberOfStrokes = row.numberOfStrokes;
       kanji.onyomis = row.onyomi.split(',');
       kanji.kunyomis = row.kunyomi.split(',');
-      kanji.jisLevelId = row.jisLevel;
+      kanji.jisLevel = row.jisLevel;
       kanji.regular = row.regular == 'true';
       kanji.forName = row.forName == 'true';
       console.log(kanji);
@@ -39,6 +39,7 @@ export default class CreateKanjis implements Seeder {
     const pipeline = util.promisify(stream.pipeline);
 
     await pipeline(rs, parser);
+
     await connection.createQueryBuilder().insert().into(Kanji).values(kanjis).onConflict(`("id") DO NOTHING`).execute();
   }
 }

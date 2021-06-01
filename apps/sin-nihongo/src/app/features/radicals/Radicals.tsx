@@ -5,7 +5,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import FindInPage from '@material-ui/icons/FindInPage';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import {
@@ -15,6 +14,7 @@ import {
 } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
+import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
@@ -84,9 +84,9 @@ export const Radicals = () => {
     read: radical.names.join('、'),
     numberOfStrokes: radical.numberOfStrokes,
     show: (
-      <IconButton>
+      <IconButtonRouteLink to={`kanjis?radical_id=${radical.id}`}>
         <FindInPage />
-      </IconButton>
+      </IconButtonRouteLink>
     ),
   }));
 

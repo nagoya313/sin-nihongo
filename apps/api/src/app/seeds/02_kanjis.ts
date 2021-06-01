@@ -5,6 +5,7 @@ import * as util from 'util';
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import { Kanji } from '../entities/Kanji';
+import { toHiraganaFromRomaji, toKatakanaFromRomaji } from '../libs/kana';
 
 interface CsvKanji {
   readonly ucs: number;
@@ -28,8 +29,8 @@ export default class CreateKanjis implements Seeder {
       kanji.radicalId = row.radicalId;
       kanji.numberOfStrokesInRadical = row.numberOfStrokesInRadical;
       kanji.numberOfStrokes = row.numberOfStrokes;
-      kanji.onyomis = row.onyomi.split(',');
-      kanji.kunyomis = row.kunyomi.split(',');
+      kanji.onyomi = row.onyomi.split(',').map((read) => toKatakanaFromRomaji(read));
+      kanji.kunyomi = row.kunyomi.split(',').map((read) => toHiraganaFromRomaji(read));
       kanji.jisLevel = row.jisLevel;
       kanji.regular = row.regular == 'true';
       kanji.forName = row.forName == 'true';

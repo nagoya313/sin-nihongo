@@ -1,6 +1,5 @@
 import { Kanji as ApiKanji } from '@sin-nihongo/api-interfaces';
 import { Kanji as EntityKanji } from '../entities/Kanji';
-import { toHiraganaFromRomaji, toKatakanaFromRomaji } from '../libs/kana';
 import { EntityResponse } from './EntityResponse';
 
 export class KanjiResponse extends EntityResponse<EntityKanji, ApiKanji> {
@@ -17,8 +16,8 @@ export class KanjiResponse extends EntityResponse<EntityKanji, ApiKanji> {
         id: kanji.radicalId,
         character: String.fromCodePoint(kanji.radicalId + 0x2eff),
       },
-      kunyomis: kanji.kunyomis.map((read) => toHiraganaFromRomaji(read)),
-      onyomis: kanji.onyomis.map((read) => toKatakanaFromRomaji(read)),
+      kunyomis: kanji.kunyomi,
+      onyomis: kanji.onyomi,
       character: String.fromCodePoint(kanji.id),
     };
   }

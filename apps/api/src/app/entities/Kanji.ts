@@ -10,8 +10,8 @@ export class Kanji extends TimeStampEntity {
     this.id = id;
     this.regular = false;
     this.forName = false;
-    this.kunyomis = [];
-    this.onyomis = [];
+    this.kunyomi = [];
+    this.onyomi = [];
   }
 
   @PrimaryColumn()
@@ -45,10 +45,10 @@ export class Kanji extends TimeStampEntity {
   jisLevel?: number | null;
 
   @Column('varchar', { array: true, default: {} })
-  onyomis: string[];
+  onyomi: string[];
 
   @Column('varchar', { array: true, default: {} })
-  kunyomis: string[];
+  kunyomi: string[];
 
   @Column({ nullable: true })
   glyphId: string;

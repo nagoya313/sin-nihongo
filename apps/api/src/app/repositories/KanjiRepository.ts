@@ -31,7 +31,7 @@ export class KanjiRepository {
     }
 
     if (params.radicalId) {
-      base = base.andWhere('radicalId = :q6', { q4: params.radicalId });
+      base = base.andWhere('radical_id = :q6', { q6: params.radicalId });
     }
 
     return base.orderBy('kanjis.id');

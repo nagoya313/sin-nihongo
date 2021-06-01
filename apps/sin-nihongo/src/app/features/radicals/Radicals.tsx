@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, forwardRef } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -15,6 +16,7 @@ import {
 } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
+import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
@@ -84,9 +86,9 @@ export const Radicals = () => {
     read: radical.names.join('、'),
     numberOfStrokes: radical.numberOfStrokes,
     show: (
-      <IconButton>
+      <IconButtonRouteLink to={`kanjis?radical_id=${radical.id}`}>
         <FindInPage />
-      </IconButton>
+      </IconButtonRouteLink>
     ),
   }));
 

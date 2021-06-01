@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import * as qs from 'qs';
+import { useLocation } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -44,9 +46,11 @@ const columns: { field: Fields; headerName: string }[] = [
 ];
 
 export const Kanjis = () => {
+  const location = useLocation();
   const [pageNumber, setPageNumber] = useState(1);
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis');
   const [kanjis, setKanjis] = useState<Kanji[]>();
+  console.log(location.search.substr(1));
 
   const onPageChange = (page: number) => {
     setPageNumber(page);
@@ -58,6 +62,7 @@ export const Kanjis = () => {
       refetch({
         params: {
           page: pageNumber,
+          radicalId: qs.parse(location.search.substr(1))['radical_id'],
         },
         // eslint-disable-next-line @typescript-eslint/no-empty-function
       }).catch(() => {});

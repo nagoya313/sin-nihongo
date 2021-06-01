@@ -29,5 +29,5 @@ export class KanjisQueryParams extends PaginationQueryParams {
   @IsOptional()
   @IsInt({ message: '部首番号わ整数で入力してください。' })
   @Min(1, { message: '部首番号わ$constraint1以上で入力してください。' })
-  radicalId: boolean;
+  radicalId: number;
 }

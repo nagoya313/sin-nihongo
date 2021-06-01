@@ -10,14 +10,16 @@ import List from '@material-ui/core/List';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { createMuiTheme, withTheme, ThemeProvider } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
 import CategorIcon from '@material-ui/icons/Category';
+import SearchIcon from '@material-ui/icons/Search';
+import TranslateIcon from '@material-ui/icons/Translate';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import green from '@material-ui/core/colors/green';
 import { Home } from './features/home/Home';
 import { NotFound } from './features/error/404';
 import { ListItemRouteLink } from './components/ListItemRouteLink';
 import { Glyphwiki } from './features/glyphwiki/Glyphwiki';
+import { Kanjis } from './features/kanjis/Kanjis';
 import { Radicals } from './features/radicals/Radicals';
 
 const MenuTitleTypography = styled(Typography)`
@@ -80,6 +82,7 @@ export const App = () => {
               <List>
                 <ListItemRouteLink icon={<SearchIcon />} primary="グリフウィキ検索" to="glyphwiki" />
                 <ListItemRouteLink icon={<CategorIcon />} primary="部首索引" to="radicals" />
+                <ListItemRouteLink icon={<TranslateIcon />} primary="新日本語漢字" to="kanjis" />
               </List>
             </MenuDiv>
           </StyledDrawer>
@@ -89,6 +92,7 @@ export const App = () => {
               <Route exact path="/" component={Home} />
               <Route exact path="/glyphwiki" component={Glyphwiki} />
               <Route exact path="/radicals" component={Radicals} />
+              <Route exact path="/kanjis" component={Kanjis} />
               <Route component={NotFound} />
             </Switch>
           </ContentMain>

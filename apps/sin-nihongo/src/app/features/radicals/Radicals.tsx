@@ -6,39 +6,25 @@ import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import FindInPage from '@material-ui/icons/FindInPage';
 import IconButton from '@material-ui/core/IconButton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
-import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
+import {
+  RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
+  Pagination as ApiPagination,
+  Radical,
+} from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
+import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
-import { Pagination as ApiPagination, Radical } from '@sin-nihongo/api-interfaces';
-import { Pagination } from '../../components/Pagination';
 
 const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
 
 const StyledForm = withTheme(styled.form`
   & > * {
     margin: ${(props) => props.theme.spacing(1)}px;
-  }
-`);
-
-const HeaderTableCell = withTheme(styled(TableCell)`
-  background-color: ${(props) => props.theme.palette.common.black};
-  color: ${(props) => props.theme.palette.common.white};
-`);
-
-const BodyTableRow = withTheme(styled(TableRow)`
-  &:nth-of-type(odd) {
-    background-color: ${(props) => props.theme.palette.action.hover};
   }
 `);
 
@@ -109,7 +95,7 @@ export const Radicals = () => {
       <CardHeader avatar={<CardAvatar>部</CardAvatar>} title="部首索引" titleTypographyProps={{ variant: 'h4' }} />
       <CardContent>
         <Typography variant="body1" gutterBottom>
-          部首名（表音式の前方一致）か画数で検索できます。
+          部首名（表音式ひらがなの前方一致）か画数で検索できます。
         </Typography>
         <StyledForm noValidate autoComplete="off">
           <SearchTextField
@@ -130,30 +116,13 @@ export const Radicals = () => {
         <Divider />
         {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
         {loading && <Typography>検索中...</Typography>}
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <HeaderTableCell key={column.field}>{column.headerName}</HeaderTableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows?.map((row) => (
-                <BodyTableRow key={`${row.key}`}>
-                  {columns.map((column) => (
-                    <TableCell key={`${column.field}_${row.key}`}>{row[column.field]}</TableCell>
-                  ))}
-                </BodyTableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {radicals && (
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            <Pagination page={pageNumber} totalPages={data!.meta.totalPages} onPageChange={onPageChange} />
-          )}
-        </TableContainer>
+        <Table<Fields>
+          columns={columns}
+          rows={rows}
+          pageNumber={pageNumber}
+          totalPages={data?.meta?.totalPages}
+          onPageChange={onPageChange}
+        />
       </CardContent>
     </Card>
   );

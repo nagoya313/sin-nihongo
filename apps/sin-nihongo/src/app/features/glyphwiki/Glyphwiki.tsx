@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import useAxios from 'axios-hooks';
 import styled from 'styled-components';
-import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import { Buhin } from '@kurgm/kage-engine';
 import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/api-interfaces';
+import { CardAvatar } from '../../components/CardAvatar';
 import { NewTabLink } from '../../components/NewTabLink';
 import { SearchForm } from '../../components/SearchForm';
+import { useLazyAxiosGet } from '../../libs/axios';
 import { GlyphwikiContent } from './GlyphwikiContent';
-
-const CardAvatar = styled(Avatar)`
-  background-color: ${red[500]};
-`;
 
 const ErrorTypography = styled(Typography)`
   color: red;
@@ -26,14 +21,7 @@ const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) 
 
 export const Glyphwiki = () => {
   const [searchWord, setSearchWord] = useState('');
-  const [{ data, loading, error }, refetch] = useAxios<KageRecursionData, Error>(
-    {
-      baseURL: 'api/v1/glyphwiki',
-      method: 'GET', // prodでビルドするとこゝを明示的に指定しないとtoUpperCase undefinedエラーになる
-      params: { q: searchWord },
-    },
-    { useCache: false, manual: true }
-  );
+  const [{ data, loading, error }, refetch] = useLazyAxiosGet<KageRecursionData>('api/v1/glyphwiki');
   const [kageData, setKageData] = useState<KageRecursionData>();
   const [buhin, setBuhin] = useState(new Buhin());
 
@@ -81,7 +69,7 @@ export const Glyphwiki = () => {
           label="漢字・USC・グリフ名"
           onSearchWordChange={setSearchWord}
           validation={validation}
-          hint="例：一、u4e00、aj1-10186'"
+          hint="例：一、u4e00、aj1-10186"
           errorMessage="検索ワードが不正です"
         />
         <Divider />

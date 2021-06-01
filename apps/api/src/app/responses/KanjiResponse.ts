@@ -17,8 +17,8 @@ export class KanjiResponse extends EntityResponse<EntityKanji, ApiKanji> {
         id: kanji.radicalId,
         character: String.fromCodePoint(kanji.radicalId + 0x2eff),
       },
-      kunyomis: kanji.kunyomis.map((read) => toHiraganaFromRomaji(read)),
-      onyomis: kanji.onyomis.map((read) => toKatakanaFromRomaji(read)),
+      kunyomis: kanji.kunyomi.map((read) => toHiraganaFromRomaji(read)),
+      onyomis: kanji.onyomi.map((read) => toKatakanaFromRomaji(read)),
       character: String.fromCodePoint(kanji.id),
     };
   }

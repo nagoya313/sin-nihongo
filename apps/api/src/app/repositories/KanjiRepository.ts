@@ -1,7 +1,10 @@
+import * as MojiJS from 'mojijs';
 import { createQueryBuilder } from 'typeorm';
 import { Kanji } from '../entities/Kanji';
 import { KanjisQueryParams } from '../forms/KanjiForm';
 import { genericFindAndCount } from '../libs/queryBuilder';
+
+const mojiJS = MojiJS['default'];
 
 export class KanjiRepository {
   static findAndCount(params: KanjisQueryParams) {
@@ -12,8 +15,8 @@ export class KanjiRepository {
     let base = createQueryBuilder(Kanji, 'kanjis');
 
     if (params.readLike) {
-      base = base.andWhere('EXISTS(SELECT FROM unnest(onyomis) name WHERE name LIKE :q1)', {
-        q1: `${params.readLike}%`,
+      base = base.andWhere('EXISTS(SELECT FROM unnest(onyomi) yomi WHERE yomi LIKE :q1)', {
+        q1: `${mojiJS.toRomajiFromHiragana(params.readLike).toUpperCase()}%`,
       });
     }
 

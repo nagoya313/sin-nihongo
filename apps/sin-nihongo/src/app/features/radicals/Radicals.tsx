@@ -52,15 +52,19 @@ const columns = [
 
 export const Radicals = () => {
   const [searchName, setSearchName] = useState('');
+  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
   const [radicals, setRadicals] = useState<Radical[]>();
   const [{ data, loading, error }, refetch] = useLazyAxiosGet<Pagination<Radical>>('api/v1/radicals');
+  const debounced = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchNumberOfStrokes(event.target.value);
+  }, 1000);
 
   useEffect(() => {
-    if (searchName) {
+    if (searchName || searchNumberOfStrokes) {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      refetch({ params: { nameLike: searchName } }).catch(() => {});
+      refetch({ params: { nameLike: searchName, numberOfStrokes: searchNumberOfStrokes } }).catch(() => {});
     }
-  }, [refetch, searchName]);
+  }, [refetch, searchName, searchNumberOfStrokes]);
 
   useEffect(() => {
     if (!loading) {
@@ -109,6 +113,7 @@ export const Radicals = () => {
             InputLabelProps={{
               shrink: true,
             }}
+            onChange={debounced}
           />
         </StyledForm>
         <Divider />

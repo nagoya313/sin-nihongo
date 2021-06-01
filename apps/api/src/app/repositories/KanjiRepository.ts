@@ -44,6 +44,14 @@ export class KanjiRepository {
       base = base.andWhere('radical_id = :q7', { q7: params.radicalId });
     }
 
+    if (params.ucs) {
+      if (params.ucsQuery) {
+        base = base.andWhere('id = :q8', { q8: params.ucsQuery });
+      } else if (params.kanjiQuery) {
+        base = base.andWhere('id = :q8', { q8: params.kanjiQuery });
+      }
+    }
+
     return base.orderBy('kanjis.id');
   }
 }

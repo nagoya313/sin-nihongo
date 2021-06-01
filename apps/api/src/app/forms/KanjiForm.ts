@@ -1,8 +1,15 @@
 import { IsInt, Min, Max, IsBoolean, IsOptional, Matches } from 'class-validator';
-import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
+import * as MojiJS from 'mojijs';
+import { KANJI_USC_QUERY_PARAMS_MATCHER, RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
 import { PaginationQueryParams } from '../libs/pagination';
 
+const mojiJS = MojiJS['default'];
+
 export class KanjisQueryParams extends PaginationQueryParams {
+  @IsOptional()
+  @Matches(KANJI_USC_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能なよみがなです。` })
+  ucs: string;
+
   @IsOptional()
   @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです。` })
   readLike: string;
@@ -30,4 +37,16 @@ export class KanjisQueryParams extends PaginationQueryParams {
   @IsInt({ message: '部首番号わ整数で入力してください。' })
   @Min(1, { message: '部首番号わ$constraint1以上で入力してください。' })
   radicalId: number;
+
+  get ucsQuery() {
+    return this.ucs.match(/^u[\da-f]{4,5}$/) ? parseInt(this.ucs.replace('u', ''), 16) : undefined;
+  }
+
+  get kanjiQuery() {
+    return this.mojiData.type.is_kanji ? this.ucs.charCodeAt(0) : undefined;
+  }
+
+  private get mojiData() {
+    return mojiJS.getMojiData(mojiJS.codePointAt(this.ucs[0]));
+  }
 }

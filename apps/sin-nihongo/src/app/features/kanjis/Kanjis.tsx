@@ -16,6 +16,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import {
+  KANJI_USC_QUERY_PARAMS_MATCHER,
   RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
   Pagination as ApiPagination,
   Kanji,
@@ -27,7 +28,8 @@ import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
 
-const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
+const ucsValidation = (word: string) => word.match(KANJI_USC_QUERY_PARAMS_MATCHER) !== null || word === '';
+const readValidation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
 
 const StyledForm = withTheme(styled.form`
   & > * {
@@ -64,6 +66,7 @@ const columns: { field: Fields; headerName: string }[] = [
 
 export const Kanjis = () => {
   const location = useLocation();
+  const [searchUcs, setSearchUcs] = useState('');
   const [searchRead, setSearchRead] = useState('');
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
   const [searchJisLevel, setSearchJisLevel] = useState('');
@@ -92,13 +95,14 @@ export const Kanjis = () => {
 
   useEffect(() => {
     setPageNumber(1);
-  }, [searchRead, searchNumberOfStrokes, searchJisLevel, pageNumber, searchRegular, searchForName]);
+  }, [searchUcs, searchRead, searchNumberOfStrokes, searchJisLevel, pageNumber, searchRegular, searchForName]);
 
   useEffect(() => {
     if (pageNumber) {
       // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
       refetch({
         params: {
+          ucs: searchUcs || undefined,
           readLike: searchRead || undefined,
           numberOfStrokes: searchNumberOfStrokes || undefined,
           jisLevel: searchJisLevel || undefined,
@@ -112,6 +116,7 @@ export const Kanjis = () => {
     }
   }, [
     refetch,
+    searchUcs,
     searchRead,
     searchNumberOfStrokes,
     searchJisLevel,
@@ -161,9 +166,16 @@ export const Kanjis = () => {
         </Typography>
         <StyledForm noValidate autoComplete="off">
           <SearchTextField
+            label="漢字、UCS"
+            onSearchWordChange={setSearchUcs}
+            validation={ucsValidation}
+            hint="例：一、u4e00"
+            errorMessage="検索ワードが不正です"
+          />
+          <SearchTextField
             label="音読み・訓読み"
             onSearchWordChange={setSearchRead}
-            validation={validation}
+            validation={readValidation}
             hint="例：いち、さん、じょー"
             errorMessage="検索ワードが不正です"
           />

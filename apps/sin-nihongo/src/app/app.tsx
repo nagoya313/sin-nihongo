@@ -9,9 +9,11 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { withTheme } from '@material-ui/core/styles';
+import { createMuiTheme, withTheme, ThemeProvider } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import CategorIcon from '@material-ui/icons/Category';
+import deepPurple from '@material-ui/core/colors/deepPurple';
+import green from '@material-ui/core/colors/green';
 import { Home } from './features/home/Home';
 import { NotFound } from './features/error/404';
 import { ListItemRouteLink } from './components/ListItemRouteLink';
@@ -47,38 +49,52 @@ const ContentMain = withTheme(styled.main`
   padding: ${(props) => props.theme.spacing(3)}px;
 `);
 
+const theme = createMuiTheme({
+  palette: {
+    primary: deepPurple,
+    secondary: green,
+  },
+  props: {
+    MuiTextField: {
+      variant: 'filled',
+    },
+  },
+});
+
 export const App = () => {
   return (
-    <Box display="flex">
-      <CssBaseline />
-      <BrowserRouter>
-        <StyledAppBar position="fixed">
-          <Toolbar>
-            <Button size="large" color="inherit" component={Link} to="/">
-              新日本語
-            </Button>
-          </Toolbar>
-        </StyledAppBar>
-        <StyledDrawer variant="permanent">
-          <HeaderDiv />
-          <MenuDiv>
-            <List>
-              <ListItemRouteLink icon={<SearchIcon />} primary="グリフウィキ検索" to="glyphwiki" />
-              <ListItemRouteLink icon={<CategorIcon />} primary="部首索引" to="radicals" />
-            </List>
-          </MenuDiv>
-        </StyledDrawer>
-        <ContentMain>
-          <HeaderDiv />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/glyphwiki" component={Glyphwiki} />
-            <Route exact path="/radicals" component={Radicals} />
-            <Route component={NotFound} />
-          </Switch>
-        </ContentMain>
-      </BrowserRouter>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box display="flex">
+        <CssBaseline />
+        <BrowserRouter>
+          <StyledAppBar position="fixed">
+            <Toolbar>
+              <Button size="large" color="inherit" component={Link} to="/">
+                新日本語
+              </Button>
+            </Toolbar>
+          </StyledAppBar>
+          <StyledDrawer variant="permanent">
+            <HeaderDiv />
+            <MenuDiv>
+              <List>
+                <ListItemRouteLink icon={<SearchIcon />} primary="グリフウィキ検索" to="glyphwiki" />
+                <ListItemRouteLink icon={<CategorIcon />} primary="部首索引" to="radicals" />
+              </List>
+            </MenuDiv>
+          </StyledDrawer>
+          <ContentMain>
+            <HeaderDiv />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/glyphwiki" component={Glyphwiki} />
+              <Route exact path="/radicals" component={Radicals} />
+              <Route component={NotFound} />
+            </Switch>
+          </ContentMain>
+        </BrowserRouter>
+      </Box>
+    </ThemeProvider>
   );
 };
 

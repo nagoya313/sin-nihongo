@@ -25,7 +25,6 @@ export const SearchForm: React.FC<Props> = ({ label, onSearchWordChange, validat
     <TextField
       label={label}
       type="search"
-      variant="outlined"
       onChange={debounced}
       error={inputError}
       helperText={inputError ? errorMessage : hint}

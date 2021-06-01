@@ -211,7 +211,7 @@ export const Kanjis = () => {
           </FormControl>
           <FormControl component="fieldset">
             <FormLabel component="legend">常用漢字</FormLabel>
-            <RadioGroup row aria-label="position" name="position" defaultValue={searchJisLevel}>
+            <RadioGroup row aria-label="position" name="position" defaultValue={searchRegular}>
               <FormControlLabel
                 value="true"
                 control={<Radio color="primary" onChange={onRegularChange} />}
@@ -234,7 +234,7 @@ export const Kanjis = () => {
           </FormControl>
           <FormControl component="fieldset">
             <FormLabel component="legend">人名用漢字</FormLabel>
-            <RadioGroup row aria-label="position" name="position" defaultValue={searchJisLevel}>
+            <RadioGroup row aria-label="position" name="position" defaultValue={searchForName}>
               <FormControlLabel
                 value="true"
                 control={<Radio color="primary" onChange={onForNameChange} />}

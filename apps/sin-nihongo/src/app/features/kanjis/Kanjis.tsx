@@ -97,22 +97,20 @@ export const Kanjis = () => {
   }, [searchUcs, searchRead, searchNumberOfStrokes, searchJisLevel, pageNumber, searchRegular, searchForName]);
 
   useEffect(() => {
-    if (pageNumber) {
-      // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
-      refetch({
-        params: {
-          ucs: searchUcs || undefined,
-          readLike: searchRead || undefined,
-          numberOfStrokes: searchNumberOfStrokes || undefined,
-          jisLevel: searchJisLevel || undefined,
-          regular: searchRegular || undefined,
-          forName: searchForName || undefined,
-          radicalId: qs.parse(location.search.substr(1))['radical_id'],
-          page: pageNumber,
-        },
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-      }).catch(() => {});
-    }
+    // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
+    refetch({
+      params: {
+        ucs: searchUcs || undefined,
+        readLike: searchRead || undefined,
+        numberOfStrokes: searchNumberOfStrokes || undefined,
+        jisLevel: searchJisLevel || undefined,
+        regular: searchRegular || undefined,
+        forName: searchForName || undefined,
+        radicalId: qs.parse(location.search.substr(1))['radical_id'],
+        page: pageNumber,
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+    }).catch(() => {});
   }, [
     refetch,
     searchUcs,

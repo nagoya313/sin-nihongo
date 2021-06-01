@@ -4,8 +4,6 @@ import { Kanji } from '../entities/Kanji';
 import { KanjisQueryParams } from '../forms/KanjiForm';
 import { genericFindAndCount } from '../libs/queryBuilder';
 
-const mojiJS = MojiJS['default'];
-
 export class KanjiRepository {
   static findAndCount(params: KanjisQueryParams) {
     return genericFindAndCount(this.query(params), params.page);
@@ -19,7 +17,7 @@ export class KanjiRepository {
         '(EXISTS(SELECT FROM unnest(kunyomi) yomi WHERE yomi LIKE :q1) OR EXISTS(SELECT FROM unnest(onyomi) yomi WHERE yomi LIKE :q2))',
         {
           q1: `${params.readLike}%`,
-          q2: `${mojiJS.toKatakana(params.readLike)}%`,
+          q2: `${MojiJS.toKatakana(params.readLike)}%`,
         }
       );
     }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Check from '@material-ui/icons/Check';
 import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
@@ -11,7 +12,6 @@ import {
   Kanji,
 } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
-import { CheckIcon } from '../../components/CheckIcon';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
@@ -86,8 +86,8 @@ export const Kanjis = () => {
     kage: null,
     radical: kanji.radical.character,
     numberOfStrokes: kanji.numberOfStrokes,
-    regular: <CheckIcon val={kanji.regular} />,
-    forName: <CheckIcon val={kanji.forName} />,
+    regular: kanji.regular && <Check />,
+    forName: kanji.forName && <Check />,
     kunyomi: kanji.kunyomis.join('、'),
     onyomi: kanji.onyomis.join('、'),
     jisLevel: kanji.jisLevel,

@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useMemo, forwardRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import FindInPage from '@material-ui/icons/FindInPage';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as qs from 'qs';
+import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,6 +9,7 @@ import Check from '@material-ui/icons/Check';
 import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import { withTheme } from '@material-ui/core/styles';
 import {
   RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
   Pagination as ApiPagination,
@@ -15,8 +17,18 @@ import {
 } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
+import { SearchNumberField } from '../../components/SearchNumberField';
+import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
+
+const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
+
+const StyledForm = withTheme(styled.form`
+  & > * {
+    margin: ${(props) => props.theme.spacing(1)}px;
+  }
+`);
 
 type Fields =
   | 'ucs'
@@ -47,6 +59,8 @@ const columns: { field: Fields; headerName: string }[] = [
 
 export const Kanjis = () => {
   const location = useLocation();
+  const [searchRead, setSearchRead] = useState('');
+  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis');
   const [kanjis, setKanjis] = useState<Kanji[]>();
@@ -61,13 +75,14 @@ export const Kanjis = () => {
       // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
       refetch({
         params: {
+          readLike: searchRead,
           page: pageNumber,
           radicalId: qs.parse(location.search.substr(1))['radical_id'],
         },
         // eslint-disable-next-line @typescript-eslint/no-empty-function
       }).catch(() => {});
     }
-  }, [refetch, pageNumber]);
+  }, [refetch, searchRead, pageNumber, location.search]);
 
   useEffect(() => {
     if (!loading) {
@@ -106,6 +121,22 @@ export const Kanjis = () => {
         <Typography variant="body1" gutterBottom>
           JIS第一、第二水準の漢字を検索できます。それ以外の漢字は新日本語ではサポートしません。音読み、訓読みの検索は表音式ひらがなの前方一致です。
         </Typography>
+        <StyledForm noValidate autoComplete="off">
+          <SearchTextField
+            label="音読み・訓読み"
+            onSearchWordChange={setSearchRead}
+            validation={validation}
+            hint="例：いち、さん、じょー"
+            errorMessage="検索ワードが不正です"
+          />
+          <SearchNumberField
+            label="画数"
+            inputProps={{
+              inputProps: { min: 1 },
+            }}
+            onSearchNumberChange={setSearchNumberOfStrokes}
+          />
+        </StyledForm>
         <Divider />
         {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
         {loading && <Typography>検索中...</Typography>}

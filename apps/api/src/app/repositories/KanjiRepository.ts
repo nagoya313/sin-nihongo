@@ -11,9 +11,12 @@ export class KanjiRepository {
   private static query(params: KanjisQueryParams) {
     let base = createQueryBuilder(Kanji, 'kanjis');
 
-    if (params.nameLike) {
-      base = base.andWhere('EXISTS(SELECT FROM unnest(names) name WHERE name LIKE :q1)', { q1: `${params.nameLike}%` });
+    if (params.readLike) {
+      base = base.andWhere('EXISTS(SELECT FROM unnest(onyomis) name WHERE name LIKE :q1)', {
+        q1: `${params.readLike}%`,
+      });
     }
+
     if (params.numberOfStrokes) {
       base = base.andWhere('number_of_strokes = :q2', { q2: params.numberOfStrokes });
     }

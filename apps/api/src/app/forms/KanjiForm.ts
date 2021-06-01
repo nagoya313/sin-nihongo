@@ -5,7 +5,7 @@ import { PaginationQueryParams } from '../libs/pagination';
 export class KanjisQueryParams extends PaginationQueryParams {
   @IsOptional()
   @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです。` })
-  nameLike: string;
+  readLike: string;
 
   @IsOptional()
   @IsInt({ message: '画数わ整数で入力してください。' })

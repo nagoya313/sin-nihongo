@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { withTheme } from '@material-ui/core/styles';
 import {
   RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
   Pagination as ApiPagination,
@@ -21,7 +13,7 @@ import {
 import { CardAvatar } from '../../components/CardAvatar';
 import { CheckIcon } from '../../components/CheckIcon';
 import { ErrorTypography } from '../../components/ErrorTypography';
-import { Pagination } from '../../components/Pagination';
+import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
 
 type Fields =
@@ -50,17 +42,6 @@ const columns: { field: Fields; headerName: string }[] = [
   { field: 'jisLevel', headerName: 'JIS水準' },
   { field: 'action', headerName: '' },
 ];
-
-const HeaderTableCell = withTheme(styled(TableCell)`
-  background-color: ${(props) => props.theme.palette.common.black};
-  color: ${(props) => props.theme.palette.common.white};
-`);
-
-const BodyTableRow = withTheme(styled(TableRow)`
-  &:nth-of-type(odd) {
-    background-color: ${(props) => props.theme.palette.action.hover};
-  }
-`);
 
 export const Kanjis = () => {
   const [pageNumber, setPageNumber] = useState(1);
@@ -123,30 +104,13 @@ export const Kanjis = () => {
         <Divider />
         {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
         {loading && <Typography>検索中...</Typography>}
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <HeaderTableCell key={column.field}>{column.headerName}</HeaderTableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows?.map((row) => (
-                <BodyTableRow key={`${row.key}`}>
-                  {columns.map((column) => (
-                    <TableCell key={`${column.field}_${row.key}`}>{row[column.field]}</TableCell>
-                  ))}
-                </BodyTableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {kanjis && (
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            <Pagination page={pageNumber} totalPages={data!.meta.totalPages} onPageChange={onPageChange} />
-          )}
-        </TableContainer>
+        <Table<Fields>
+          columns={columns}
+          rows={rows}
+          pageNumber={pageNumber}
+          totalPages={data?.meta?.totalPages}
+          onPageChange={onPageChange}
+        />
       </CardContent>
     </Card>
   );

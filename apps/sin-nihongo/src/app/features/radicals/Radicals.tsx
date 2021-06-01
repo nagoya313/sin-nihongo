@@ -53,17 +53,15 @@ export const Radicals = () => {
   }, [searchName, searchNumberOfStrokes]);
 
   useEffect(() => {
-    if (searchName || searchNumberOfStrokes || pageNumber) {
-      // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
-      refetch({
-        params: {
-          page: pageNumber,
-          nameLike: searchName || undefined,
-          numberOfStrokes: searchNumberOfStrokes || undefined,
-        },
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-      }).catch(() => {});
-    }
+    // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
+    refetch({
+      params: {
+        page: pageNumber,
+        nameLike: searchName || undefined,
+        numberOfStrokes: searchNumberOfStrokes || undefined,
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+    }).catch(() => {});
   }, [refetch, searchName, searchNumberOfStrokes, pageNumber]);
 
   useEffect(() => {

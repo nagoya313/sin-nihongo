@@ -1,8 +1,8 @@
 import { JsonController, Get } from 'routing-controllers';
 import { ValidateQueryParams } from '../libs/decorators';
 import { RadicalsQueryParams } from '../forms/RadicalForm';
-import { RadicalResponse } from '../responses/RadicalResponse';
 import { RadicalRepository } from '../repositories/RadicalRepository';
+import { RadicalResponse } from '../responses/RadicalResponse';
 
 @JsonController()
 export class RadicalsController {

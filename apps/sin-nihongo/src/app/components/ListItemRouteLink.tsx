@@ -1,4 +1,5 @@
 import React, { useMemo, forwardRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Location, LocationDescriptor } from 'history';
 import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export const ListItemRouteLink: React.FC<Props> = ({ icon, primary, to }) => {
+  const location = useLocation();
+
   const CustomLink = useMemo(
     () => forwardRef((linkProps, ref: React.Ref<HTMLAnchorElement>) => <Link ref={ref} to={to} {...linkProps} />),
     [to]
@@ -19,7 +22,7 @@ export const ListItemRouteLink: React.FC<Props> = ({ icon, primary, to }) => {
 
   return (
     <li>
-      <ListItem button component={CustomLink}>
+      <ListItem button component={CustomLink} selected={location.pathname === `/${to}`}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={primary} />
       </ListItem>

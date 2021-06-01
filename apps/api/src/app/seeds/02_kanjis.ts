@@ -28,8 +28,8 @@ export default class CreateKanjis implements Seeder {
       kanji.radicalId = row.radicalId;
       kanji.numberOfStrokesInRadical = row.numberOfStrokesInRadical;
       kanji.numberOfStrokes = row.numberOfStrokes;
-      kanji.onyomis = row.onyomi.split(',');
-      kanji.kunyomis = row.kunyomi.split(',');
+      kanji.onyomi = row.onyomi.split(',');
+      kanji.kunyomi = row.kunyomi.split(',');
       kanji.jisLevel = row.jisLevel;
       kanji.regular = row.regular == 'true';
       kanji.forName = row.forName == 'true';

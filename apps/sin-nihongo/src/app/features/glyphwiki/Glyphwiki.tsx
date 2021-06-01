@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -8,14 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import { Buhin } from '@kurgm/kage-engine';
 import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
+import { ErrorTypography } from '../../components/ErrorTypography';
 import { NewTabLink } from '../../components/NewTabLink';
 import { SearchForm } from '../../components/SearchForm';
 import { useLazyAxiosGet } from '../../libs/axios';
 import { GlyphwikiContent } from './GlyphwikiContent';
-
-const ErrorTypography = styled(Typography)`
-  color: red;
-`;
 
 const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';
 

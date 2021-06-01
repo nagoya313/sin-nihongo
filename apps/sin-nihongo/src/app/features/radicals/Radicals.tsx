@@ -20,8 +20,9 @@ import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interf
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { SearchForm } from '../../components/SearchForm';
-import { useLazyAxiosGet } from '../../libs/axios';
-import { Pagination, Radical } from '@sin-nihongo/api-interfaces';
+import { useAxiosGet } from '../../libs/axios';
+import { Pagination as ApiPagination, Radical } from '@sin-nihongo/api-interfaces';
+import { Pagination } from '../../components/Pagination';
 
 const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
 
@@ -36,7 +37,7 @@ const HeaderTableCell = withTheme(styled(TableCell)`
   color: ${(props) => props.theme.palette.common.white};
 `);
 
-const RowTableCell = withTheme(styled(TableCell)`
+const BodyTableRow = withTheme(styled(TableRow)`
   &:nth-of-type(odd) {
     background-color: ${(props) => props.theme.palette.action.hover};
   }
@@ -52,19 +53,32 @@ const columns = [
 
 export const Radicals = () => {
   const [searchName, setSearchName] = useState('');
+  const [pageNumber, setPageNumber] = useState(0);
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
   const [radicals, setRadicals] = useState<Radical[]>();
-  const [{ data, loading, error }, refetch] = useLazyAxiosGet<Pagination<Radical>>('api/v1/radicals');
+  const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Radical>>('api/v1/radicals');
   const debounced = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchNumberOfStrokes(event.target.value);
   }, 1000);
+  const onPageChange = (page: number) => {
+    setPageNumber(page);
+  };
 
   useEffect(() => {
-    if (searchName || searchNumberOfStrokes) {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      refetch({ params: { nameLike: searchName, numberOfStrokes: searchNumberOfStrokes } }).catch(() => {});
+    if (searchName || searchNumberOfStrokes || pageNumber) {
+      let params = { page: pageNumber };
+      if (searchName) {
+        params = Object.assign(params, { nameLike: searchName });
+      }
+      if (searchNumberOfStrokes) {
+        params = Object.assign(params, { numberOfStrokes: searchNumberOfStrokes });
+      }
+      refetch({
+        params: params,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+      }).catch(() => {});
     }
-  }, [refetch, searchName, searchNumberOfStrokes]);
+  }, [refetch, searchName, searchNumberOfStrokes, pageNumber]);
 
   useEffect(() => {
     if (!loading) {
@@ -130,14 +144,15 @@ export const Radicals = () => {
             </TableHead>
             <TableBody>
               {rows?.map((row) => (
-                <TableRow key={`${row.key}`}>
+                <BodyTableRow key={`${row.key}`}>
                   {columns.map((column) => (
-                    <RowTableCell key={`${column.field}_${row.key}`}>{row[column.field]}</RowTableCell>
+                    <TableCell key={`${column.field}_${row.key}`}>{row[column.field]}</TableCell>
                   ))}
-                </TableRow>
+                </BodyTableRow>
               ))}
             </TableBody>
           </Table>
+          {radicals && <Pagination page={pageNumber} totalPages={data!.meta.totalPages} onPageChange={onPageChange} />}
         </TableContainer>
       </CardContent>
     </Card>

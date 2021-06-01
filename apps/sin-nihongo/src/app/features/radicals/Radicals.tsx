@@ -42,7 +42,9 @@ const BodyTableRow = withTheme(styled(TableRow)`
   }
 `);
 
-const columns = [
+type Fields = 'id' | 'radical' | 'read' | 'numberOfStrokes' | 'show';
+
+const columns: { field: Fields; headerName: string }[] = [
   { field: 'id', headerName: 'ID' },
   { field: 'radical', headerName: '部首' },
   { field: 'read', headerName: 'よみ' },
@@ -86,7 +88,8 @@ export const Radicals = () => {
     }
   }, [data, loading, error]);
 
-  const rows = radicals?.map((radical) => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rows = radicals?.map((radical): { [key in Fields | 'key']: any } => ({
     key: `radical_${radical.id}`,
     id: radical.id,
     radical: radical.character,
@@ -144,7 +147,10 @@ export const Radicals = () => {
               ))}
             </TableBody>
           </Table>
-          {radicals && <Pagination page={pageNumber} totalPages={data!.meta.totalPages} onPageChange={onPageChange} />}
+          {radicals && (
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            <Pagination page={pageNumber} totalPages={data!.meta.totalPages} onPageChange={onPageChange} />
+          )}
         </TableContainer>
       </CardContent>
     </Card>

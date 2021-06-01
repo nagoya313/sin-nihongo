@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { IsInt, Min } from 'class-validator';
+import { Kanji } from './Kanji';
 import { TimeStampEntity } from './TimeStampEntity';
 
 @Entity()
@@ -23,4 +24,7 @@ export class Radical extends TimeStampEntity {
 
   @Column('varchar', { array: true })
   names: string[];
+
+  @OneToMany(() => Kanji, (kanji) => kanji.radical)
+  kanjis: Kanji[];
 }

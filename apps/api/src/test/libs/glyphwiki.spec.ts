@@ -2,6 +2,7 @@ jest.mock('axios');
 import axios from 'axios';
 import { glyphwikiData } from '../../app/libs/glyphwiki';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (axios.get as any).mockImplementation(async (url, { params }) => {
   switch (params.name) {
     case 'u4e00': {

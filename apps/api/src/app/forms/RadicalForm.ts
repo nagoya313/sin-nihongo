@@ -1,9 +1,10 @@
 import { IsInt, Min, IsOptional, Matches } from 'class-validator';
+import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
 import { PaginationQueryParams } from '../libs/pagination';
 
 export class RadicalsQueryParams extends PaginationQueryParams {
   @IsOptional()
-  @Matches(/^(?!.*[ぢづゐゑを])[\u3040-\u3093ー]*$/, { message: `"$value"わ検索不可能なよみがなです。` })
+  @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです。` })
   nameLike: string;
 
   @IsOptional()

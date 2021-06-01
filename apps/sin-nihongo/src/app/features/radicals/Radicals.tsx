@@ -14,13 +14,16 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
-import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
+import {
+  RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
+  Pagination as ApiPagination,
+  Radical,
+} from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { useAxiosGet } from '../../libs/axios';
-import { Pagination as ApiPagination, Radical } from '@sin-nihongo/api-interfaces';
 import { Pagination } from '../../components/Pagination';
 
 const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
@@ -109,7 +112,7 @@ export const Radicals = () => {
       <CardHeader avatar={<CardAvatar>部</CardAvatar>} title="部首索引" titleTypographyProps={{ variant: 'h4' }} />
       <CardContent>
         <Typography variant="body1" gutterBottom>
-          部首名（表音式の前方一致）か画数で検索できます。
+          部首名（表音式ひらがなの前方一致）か画数で検索できます。
         </Typography>
         <StyledForm noValidate autoComplete="off">
           <SearchTextField

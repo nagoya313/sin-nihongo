@@ -32,14 +32,5 @@ describe('RadicalsQueryParams', () => {
       ]);
       done();
     });
-
-    it('numberOfStrokes', async (done) => {
-      await Promise.all([
-        expect(subject).isOptionalProperty('numberOfStrokes'),
-        expect(subject).isIntProperty('numberOfStrokes'),
-        expect(subject).minProperty('numberOfStrokes', 1),
-      ]);
-      done();
-    });
   });
 });

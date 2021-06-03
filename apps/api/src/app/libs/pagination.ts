@@ -2,9 +2,9 @@ import { IsInt, Min, IsOptional } from 'class-validator';
 import { Pagination } from '@sin-nihongo/api-interfaces';
 
 export class PaginationQueryParams {
+  @IsOptional()
   @Min(1)
   @IsInt({ message: 'ページ番号わ整数で入力してください。' })
-  @IsOptional()
   page: number;
 }
 

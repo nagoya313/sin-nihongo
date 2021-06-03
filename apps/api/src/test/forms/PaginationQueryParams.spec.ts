@@ -1,16 +1,11 @@
 import { validate } from 'class-validator';
 import { PaginationQueryParams } from '../../app/libs/pagination';
+import { itBehavesLike } from '../shared_examples/index';
 
 describe('PaginationQueryParams', () => {
   describe('validation', () => {
     describe('page', () => {
-      it('pageとして値なしを受附けること', async (done) => {
-        const params = new PaginationQueryParams();
-        const errors = await validate(params);
-        expect(errors.length).toBe(0);
-
-        done();
-      });
+      itBehavesLike('isOptionalParams', { target: new PaginationQueryParams(), param: 'page' });
 
       it('pageとして1以上の数字は受附けること', async (done) => {
         const accepts = [1, 5, 11];

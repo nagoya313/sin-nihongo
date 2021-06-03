@@ -1,16 +1,11 @@
 import { validate } from 'class-validator';
 import { RadicalsQueryParams } from '../../app/forms/RadicalForm';
+import { itBehavesLike } from '../shared_examples/index';
 
 describe('RadicalsQueryParams', () => {
   describe('validation', () => {
     describe('nameLike', () => {
-      it('nameLikeとして値なしを受附けること', async (done) => {
-        const params = new RadicalsQueryParams();
-        const errors = await validate(params);
-        expect(errors.length).toBe(0);
-
-        done();
-      });
+      itBehavesLike('isOptionalParams', { target: new RadicalsQueryParams(), param: 'nameLike' });
 
       it('nameLikeとして表音的なひらがなのみの時は受附けること', async (done) => {
         const accepts = ['あ', 'あい', 'あー', 'あじの'];
@@ -59,13 +54,7 @@ describe('RadicalsQueryParams', () => {
     });
 
     describe('numberOfStrokes', () => {
-      it('numberOfStrokesとして値なしを受附けること', async (done) => {
-        const params = new RadicalsQueryParams();
-        const errors = await validate(params);
-        expect(errors.length).toBe(0);
-
-        done();
-      });
+      itBehavesLike('isOptionalParams', { target: new RadicalsQueryParams(), param: 'numberOfStrokes' });
 
       it('numberOfStrokesとして1以上の数字は受附けること', async (done) => {
         const accepts = [1, 5, 11];

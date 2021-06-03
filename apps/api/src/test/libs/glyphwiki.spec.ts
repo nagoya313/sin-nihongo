@@ -100,32 +100,49 @@ describe('glyphwikiData', () => {
   it('参照なしの字を正しく取得できること', async (done) => {
     const response = await glyphwikiData('u4e00-j');
     expect(response.name).toBe('u4e00-j');
-    expect(response.needGlyphs).toStrictEqual([{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }]);
+    expect(response.needGlyphs).toBeArrayOfSize(1);
+    expect(response.needGlyphs).toIncludeAllMembers([{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }]);
     done();
   });
 
   it('参照ありの字を正しく取得できること', async (done) => {
     const response = await glyphwikiData('u4e00');
     expect(response.name).toBe('u4e00');
+    expect(response.needGlyphs).toBeArrayOfSize(2);
     // needGlyphsの最初の要素は検索した文字の情報が入ることを保証する仕様のため
-    expect(response.needGlyphs).toStrictEqual([
-      { name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' },
-      { name: 'u4e00-j', data: '1:0:0:14:101:186:101' },
-    ]);
+    expect(response.needGlyphs[0]).toStrictEqual({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' });
+    expect(response.needGlyphs).toIncludeAllMembers([{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }]);
     done();
   });
 
   it('参照のネストがある字を正しく取得できること', async (done) => {
     const response = await glyphwikiData('u7777');
     expect(response.name).toBe('u7777');
-    expect(response.needGlyphs.length).toBe(6);
+    expect(response.needGlyphs).toBeArrayOfSize(6);
     // needGlyphsの最初の要素は検索した文字の情報が入ることを保証する仕様のため
     expect(response.needGlyphs[0]).toStrictEqual({
       name: 'u7777',
       data: '99:0:0:0:0:165:200:u76ee-01$99:0:0:5:0:200:200:u5efa-02',
     });
-    // ほかは非同期のため順番が未保証
-    // 面倒なのでテストはあとで
+    expect(response.needGlyphs).toIncludeAllMembers([
+      { name: 'u76ee-01', data: '99:0:0:7:11:85:174:u76ee-j' },
+      {
+        name: 'u76ee-j',
+        data:
+          '1:12:13:46:30:46:168$1:2:2:46:30:154:30$1:22:23:154:30:154:168$1:2:2:46:75:154:75$1:2:2:46:120:154:120$1:2:2:46:168:154:168',
+      },
+      { name: 'u5efa-02', data: '99:0:0:0:0:200:200:u5ef4-02:0:0:0$99:0:0:69:-10:217:191:u807f-06:0:0:0' },
+      {
+        name: 'u5ef4-02',
+        data:
+          '1:0:2:63:30:92:30$1:22:13:92:30:75:85$1:2:2:75:85:100:85$2:22:7:100:85:89:161:50:186$2:7:0:69:103:84:183:177:176',
+      },
+      {
+        name: 'u807f-06',
+        data:
+          '1:0:0:97:25:97:173$1:0:2:59:45:133:45$1:22:23:133:45:133:95$1:0:2:59:95:133:95$1:0:0:39:70:161:70$1:0:0:51:123:150:123$1:0:0:44:148:158:148',
+      },
+    ]);
     done();
   });
 
@@ -134,11 +151,11 @@ describe('glyphwikiData', () => {
     expect(response.name).toBe('u3402-j');
     expect(response.needGlyphs.length).toBe(2);
     // needGlyphsの最初の要素は検索した文字の情報が入ることを保証する仕様のため
-    expect(response.needGlyphs).toStrictEqual([
-      {
-        name: 'u3402-j',
-        data: '99:0:0:10:5:190:105:u4e03-j$99:0:0:5:92:113:192:u4e03-j$99:0:0:75:92:195:192:u4e03-j',
-      },
+    expect(response.needGlyphs[0]).toStrictEqual({
+      name: 'u3402-j',
+      data: '99:0:0:10:5:190:105:u4e03-j$99:0:0:5:92:113:192:u4e03-j$99:0:0:75:92:195:192:u4e03-j',
+    });
+    expect(response.needGlyphs).toIncludeAllMembers([
       {
         name: 'u4e03-j',
         data: '1:0:0:14:103:186:69$3:0:5:80:19:80:171:168:171',

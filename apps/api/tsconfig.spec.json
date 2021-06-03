@@ -3,7 +3,11 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": ["jest", "node"]
+    "types": ["jest", "node", "jest-extended"],
+    "paths": {
+      "apps/api/src/test/jest-matchers/properties": ["apps/api/src/test/jest-matchers/properties.d.ts"],
+      "@sin-nihongo/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+    }
   },
   "include": ["**/*.spec.ts", "**/*.d.ts"]
 }

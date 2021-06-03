@@ -43,10 +43,10 @@ export class KanjiRepository {
     }
 
     if (params.ucs) {
-      if (params.ucsQuery) {
-        base = base.andWhere('id = :q8', { q8: params.ucsQuery });
-      } else if (params.kanjiQuery) {
-        base = base.andWhere('id = :q8', { q8: params.kanjiQuery });
+      if (params.ucsParam) {
+        base = base.andWhere('id = :q8', { q8: params.ucsParam });
+      } else if (params.kanjiParam) {
+        base = base.andWhere('id = :q8', { q8: params.kanjiParam });
       }
     }
 

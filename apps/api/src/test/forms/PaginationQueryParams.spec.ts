@@ -1,55 +1,16 @@
-import { validate } from 'class-validator';
 import { PaginationQueryParams } from '../../app/libs/pagination';
 
 describe('PaginationQueryParams', () => {
   describe('validation', () => {
-    describe('page', () => {
-      it('pageとして値なしを受附けること', async (done) => {
-        const params = new PaginationQueryParams();
-        const errors = await validate(params);
-        expect(errors.length).toBe(0);
+    const subject = PaginationQueryParams;
 
-        done();
-      });
-
-      it('pageとして1以上の数字は受附けること', async (done) => {
-        const accepts = [1, 5, 11];
-
-        await Promise.all(
-          accepts.map(async (q) => {
-            const params = new PaginationQueryParams();
-            params.page = q;
-            const errors = await validate(params);
-            expect(errors.length).toBe(0);
-          })
-        );
-
-        done();
-      });
-
-      it('pageとして0は受附けないこと', async (done) => {
-        const params = new PaginationQueryParams();
-        params.page = 0;
-        const errors = await validate(params);
-        expect(errors.length).not.toBe(0);
-
-        done();
-      });
-
-      it('pageとして整数以外は受附けないこと', async (done) => {
-        const accepts = [1.2, 2.7];
-
-        await Promise.all(
-          accepts.map(async (q) => {
-            const params = new PaginationQueryParams();
-            params.page = q;
-            const errors = await validate(params);
-            expect(errors.length).not.toBe(0);
-          })
-        );
-
-        done();
-      });
+    it('page', async (done) => {
+      await Promise.all([
+        expect(subject).isOptionalProperty('page'),
+        expect(subject).isIntProperty('page'),
+        expect(subject).minProperty('page', 1),
+      ]);
+      done();
     });
   });
 });

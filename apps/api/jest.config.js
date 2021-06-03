@@ -11,4 +11,5 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
+  setupFilesAfterEnv: ['jest-extended', '<rootDir>/src/test/jest-matchers/properties.ts'],
 };

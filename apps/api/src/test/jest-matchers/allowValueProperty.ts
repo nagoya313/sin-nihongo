@@ -1,5 +1,4 @@
 import { validate } from 'class-validator';
-import { NotImplementedError } from './NotImplementedError';
 
 interface Target {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

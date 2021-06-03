@@ -94,7 +94,7 @@ export const Kanjis = () => {
 
   useEffect(() => {
     setPageNumber(1);
-  }, [searchUcs, searchRead, searchNumberOfStrokes, searchJisLevel, pageNumber, searchRegular, searchForName]);
+  }, [searchUcs, searchRead, searchNumberOfStrokes, searchJisLevel, searchRegular, searchForName]);
 
   useEffect(() => {
     // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる

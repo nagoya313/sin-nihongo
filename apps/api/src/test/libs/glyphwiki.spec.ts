@@ -1,5 +1,4 @@
 jest.mock('axios');
-import 'jest-extended';
 import axios from 'axios';
 import { glyphwikiData } from '../../app/libs/glyphwiki';
 

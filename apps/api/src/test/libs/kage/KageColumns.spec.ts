@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { KageColumns } from '../../../app/libs/kage';
 
 describe('KageColumns', () => {

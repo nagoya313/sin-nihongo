@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { KageStrokes } from '../../../app/libs/kage';
 
 describe('KageStrokes', () => {

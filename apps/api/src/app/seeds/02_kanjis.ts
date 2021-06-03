@@ -41,6 +41,6 @@ export default class CreateKanjis implements Seeder {
 
     await pipeline(rs, parser);
 
-    await connection.createQueryBuilder().insert().into(Kanji).values(kanjis).onConflict(`("id") DO NOTHING`).execute();
+    await connection.createQueryBuilder().insert().into(Kanji).values(kanjis).orIgnore().execute();
   }
 }

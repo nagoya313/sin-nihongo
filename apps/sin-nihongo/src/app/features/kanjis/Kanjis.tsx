@@ -158,8 +158,8 @@ export const Kanjis = () => {
       <CardHeader avatar={<CardAvatar>漢</CardAvatar>} title="新日本語漢字" titleTypographyProps={{ variant: 'h4' }} />
       <CardContent>
         <Typography variant="body1" gutterBottom>
-          JIS第一、第二水準の漢字を検索できます。それ以外の漢字は新日本語ではサポートしません。
-          音読み、訓読みの検索は表音式ひらがなの前方一致です。
+          JIS第一、第二水準の漢字お検索できます。それ以外の漢字わ新日本語でわサポートしません。
+          音読み・訓読みの検索わ表音式ひらがなの前方一致です。
         </Typography>
         <StyledForm noValidate autoComplete="off">
           <SearchTextField

@@ -28,7 +28,8 @@ export default class CreateRaicals implements Seeder {
       .insert()
       .into(Radical)
       .values(radicals)
-      .orUpdate({ conflict_target: ['id'], overwrite: ['names'] })
+      //.orUpdate({ conflict_target: ['id'], overwrite: ['names'] })
+      .orIgnore()
       .execute();
   }
 }

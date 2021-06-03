@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { KageStrokes } from '../../../app/libs/kage';
 
 describe('KageStrokes', () => {
@@ -24,9 +25,8 @@ describe('KageStrokes', () => {
     const strokes = new KageStrokes('99:0:0:0:0:165:200:u76ee-01$99:0:0:5:0:200:200:u5efa-02');
     expect(strokes.data).toBe('99:0:0:0:0:165:200:u76ee-01$99:0:0:5:0:200:200:u5efa-02');
     expect(strokes.numberOfStrokes).toBe(2);
-    expect(strokes.linkIds.length).toBe(2);
-    expect(strokes.linkIds).toContain('u76ee-01');
-    expect(strokes.linkIds).toContain('u5efa-02');
+    expect(strokes.linkIds).toBeArrayOfSize(2);
+    expect(strokes.linkIds).toIncludeAllMembers(['u76ee-01', 'u5efa-02']);
     expect(strokes.strokeOf(0).data).toBe('99:0:0:0:0:165:200:u76ee-01');
   });
 
@@ -34,8 +34,8 @@ describe('KageStrokes', () => {
     const strokes = new KageStrokes('99:0:0:1:2:166:200:u4ebb-01$0:0:0:0$1:0:0:75:58:173:58$1:0:0:62:165:185:165');
     expect(strokes.data).toBe('99:0:0:1:2:166:200:u4ebb-01$0:0:0:0$1:0:0:75:58:173:58$1:0:0:62:165:185:165');
     expect(strokes.numberOfStrokes).toBe(4);
-    expect(strokes.linkIds.length).toBe(1);
-    expect(strokes.linkIds).toContain('u4ebb-01');
+    expect(strokes.linkIds).toBeArrayOfSize(1);
+    expect(strokes.linkIds).toIncludeAllMembers(['u4ebb-01']);
     expect(strokes.strokeOf(0).data).toBe('99:0:0:1:2:166:200:u4ebb-01');
   });
 
@@ -46,7 +46,7 @@ describe('KageStrokes', () => {
     expect(strokes.data).toBe('99:0:0:10:5:190:105:u4e03-j$99:0:0:5:92:113:192:u4e03-j$99:0:0:75:92:195:192:u4e03-j');
     expect(strokes.linkIds).toContain('u4e03-j');
     expect(strokes.numberOfStrokes).toBe(3);
-    expect(strokes.linkIds.length).toBe(1);
+    expect(strokes.linkIds).toBeArrayOfSize(1);
     expect(strokes.strokeOf(0).data).toBe('99:0:0:10:5:190:105:u4e03-j');
   });
 });

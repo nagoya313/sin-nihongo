@@ -2,7 +2,7 @@ import { GlyphwikiQueryParams } from '../../app/forms/GlyphwikiForm';
 
 describe('GlyphwikiQueryParams', () => {
   describe('validation', () => {
-    const subject = new GlyphwikiQueryParams();
+    const subject = GlyphwikiQueryParams;
     it('q', async (done) => {
       await Promise.all(
         // 一文字は許可

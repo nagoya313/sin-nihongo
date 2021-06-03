@@ -2,15 +2,15 @@ import { validate } from 'class-validator';
 import { NotImplementedError } from './NotImplementedError';
 
 interface Target {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: number;
 }
 
-export const isIntProperty = async (subject: Target, property: string) => {
-  subject[property] = 1.1;
-  const notIntCheck = await validate(subject);
-  subject[property] = 1;
-  const intCheck = await validate(subject);
+export const isIntProperty = async (subject: { new (): Target }, property: string) => {
+  const model = new subject();
+  model[property] = 1.1;
+  const notIntCheck = await validate(model);
+  model[property] = 1;
+  const intCheck = await validate(model);
 
   const pass =
     notIntCheck.some((error) => error.property === property && error.constraints?.isInt) &&

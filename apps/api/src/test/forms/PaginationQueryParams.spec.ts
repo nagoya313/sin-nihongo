@@ -2,7 +2,7 @@ import { PaginationQueryParams } from '../../app/libs/pagination';
 
 describe('PaginationQueryParams', () => {
   describe('validation', () => {
-    const subject = new PaginationQueryParams();
+    const subject = PaginationQueryParams;
 
     it('page', async (done) => {
       await Promise.all([

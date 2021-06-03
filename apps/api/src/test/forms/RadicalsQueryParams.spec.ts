@@ -2,7 +2,7 @@ import { RadicalsQueryParams } from '../../app/forms/RadicalForm';
 
 describe('RadicalsQueryParams', () => {
   describe('validation', () => {
-    const subject = new RadicalsQueryParams();
+    const subject = RadicalsQueryParams;
     it('nameLike', async (done) => {
       await Promise.all(
         [expect(subject).isOptionalProperty('nameLike')]

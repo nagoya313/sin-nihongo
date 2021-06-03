@@ -7,9 +7,10 @@ interface Target {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const allowValueProperty = async (subject: Target, property: string, value: any) => {
-  subject[property] = value;
-  const matchCheck = await validate(subject);
+export const allowValueProperty = async (subject: { new (): Target }, property: string, value: any) => {
+  const model = new subject();
+  model[property] = value;
+  const matchCheck = await validate(model);
 
   const pass = !matchCheck.some((error) => error.property === property && error.constraints?.matches);
 

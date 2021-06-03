@@ -2,15 +2,15 @@ import { validate } from 'class-validator';
 import { NotImplementedError } from './NotImplementedError';
 
 interface Target {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: number;
 }
 
-export const minProperty = async (subject: Target, property: string, min: number) => {
-  subject[property] = min - 0.1;
-  const notMinCheck = await validate(subject);
-  subject[property] = min;
-  const minCheck = await validate(subject);
+export const minProperty = async (subject: { new (): Target }, property: string, min: number) => {
+  const model = new subject();
+  model[property] = min - 0.1;
+  const notMinCheck = await validate(model);
+  model[property] = min;
+  const minCheck = await validate(model);
 
   const pass =
     notMinCheck.some((error) => error.property === property && error.constraints?.min) &&

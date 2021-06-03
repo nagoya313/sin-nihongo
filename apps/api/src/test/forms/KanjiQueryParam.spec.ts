@@ -2,7 +2,7 @@ import { KanjisQueryParams } from '../../app/forms/KanjiForm';
 
 describe('KanjisQueryParams', () => {
   describe('validation', () => {
-    const subject = new KanjisQueryParams();
+    const subject = KanjisQueryParams;
 
     it('ucs', async (done) => {
       await Promise.all([expect(subject).allowValueProperty('ucs', '一')]);

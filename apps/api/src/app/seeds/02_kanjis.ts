@@ -34,7 +34,6 @@ export default class CreateKanjis implements Seeder {
       kanji.jisLevel = row.jisLevel;
       kanji.regular = row.regular == 'true';
       kanji.forName = row.forName == 'true';
-      console.log(kanji);
       kanjis.push(kanji);
     });
     const pipeline = util.promisify(stream.pipeline);

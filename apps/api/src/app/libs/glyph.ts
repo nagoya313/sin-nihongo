@@ -6,18 +6,15 @@ type Getter = (key: string) => Promise<Glyph>;
 
 export const glyphData = async (key: string, getter: Getter, firstGetter = getter): Promise<Glyph | undefined> => {
   const base = await firstGetter(key);
-  if (typeof base.name !== 'undefined' && base.data != null) {
-    const glyphs = await firstRecursionData(base, getter);
-    return {
-      name: base.name,
-      data: base.data,
-      includeGlyphs: uniq(
-        glyphs.map((glyph) => ({ name: glyph.name, data: glyph.data })),
-        'name'
-      ),
-    };
-  }
-  return undefined;
+  const glyphs = await firstRecursionData(base, getter);
+  return {
+    name: base.name,
+    data: base.data,
+    includeGlyphs: uniq(
+      glyphs.map((glyph) => ({ name: glyph.name, data: glyph.data })),
+      'name'
+    ),
+  };
 };
 
 const scanRecursion = async (data: Glyph, getter: Getter) => {

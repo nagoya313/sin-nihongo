@@ -27,12 +27,12 @@ export class Kanji extends TimeStampEntity {
   @Column()
   forName: boolean;
 
-  @Column({ nullable: true })
+  @Column()
   @IsInt()
   @Min(1)
   numberOfStrokes: number;
 
-  @Column({ nullable: true })
+  @Column()
   @IsInt()
   numberOfStrokesInRadical: number;
 

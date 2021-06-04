@@ -9,14 +9,9 @@ import { GlyphRepository } from '../repositories/GlyphRepository';
 @JsonController()
 export class GlyphsController {
   @Get('/glyphs')
-  async index(@ValidateQueryParams query: GlyphsQueryParams) {
-    const glyphs = await GlyphModel.paginate({
-      query: query.name && { name: { $regex: query.name, $options: 'i' } },
-      sort: { name: 'asc' },
-      limit: 20,
-      page: query.page,
-    });
-    return this.responser.toIndexResponse(glyphs);
+  async index(@ValidateQueryParams params: GlyphsQueryParams) {
+    const [glyphs, includeGlyphs] = await GlyphRepository.findAndCount(params);
+    return this.responser.toIndexResponse(glyphs, includeGlyphs);
   }
 
   @Get('/glyphs/:id')

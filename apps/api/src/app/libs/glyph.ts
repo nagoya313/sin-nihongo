@@ -4,17 +4,21 @@ import { KageStrokes } from './kage/KageStrokes';
 
 type Getter = (key: string) => Promise<Glyph>;
 
-export const glyphData = async (key: string, getter: Getter, firstGetter = getter): Promise<Glyph | undefined> => {
+export const glyphData = async (key: string, getter: Getter, firstGetter = getter): Promise<Glyph> => {
   const base = await firstGetter(key);
-  const glyphs = await firstRecursionData(base, getter);
   return {
     name: base.name,
     data: base.data,
-    includeGlyphs: uniq(
-      glyphs.map((glyph) => ({ name: glyph.name, data: glyph.data })),
-      'name'
-    ),
+    includeGlyphs: await includesGlyphData(base, getter),
   };
+};
+
+export const includesGlyphData = async (data: Glyph, getter: Getter): Promise<Glyph[]> => {
+  const glyphs = await firstRecursionData(data, getter);
+  return uniq(
+    glyphs.map((glyph) => ({ name: glyph.name, data: glyph.data })),
+    'name'
+  );
 };
 
 const scanRecursion = async (data: Glyph, getter: Getter) => {

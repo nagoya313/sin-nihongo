@@ -46,6 +46,12 @@ export interface Kanji {
   readonly character: string;
 }
 
+export interface Glyph {
+  readonly id: string;
+  readonly name: string;
+  readonly data: string;
+}
+
 export interface KageData {
   readonly name: string;
   readonly data: string;

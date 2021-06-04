@@ -1,16 +1,26 @@
-import { Document } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
-import { Pagination } from '@sin-nihongo/api-interfaces';
+import { Glyph as ApiGlyph, Pagination } from '@sin-nihongo/api-interfaces';
+import { Glyph } from '../models/glyph';
 
-export const glyphsResponse = <T extends Document>(data: PaginationModel<T>): Pagination<T> => {
-  return {
-    items: data.docs,
-    meta: {
-      totalItems: data.totalDocs,
-      itemsPerPage: 20,
-      itemCount: data.docs.length,
-      totalPages: data.totalPages,
-      currentPage: data.page || 1,
-    },
-  };
-};
+export class GlyphResponse {
+  toResponse(glyph: Glyph): ApiGlyph {
+    return {
+      id: glyph._id.toString(),
+      name: glyph.name,
+      data: glyph.data,
+    };
+  }
+
+  toIndexResponse(data: PaginationModel<Glyph>): Pagination<ApiGlyph> {
+    return {
+      items: data.docs.map((doc) => this.toResponse(doc)),
+      meta: {
+        totalItems: data.totalDocs,
+        itemsPerPage: 20,
+        itemCount: data.docs.length,
+        totalPages: data.totalPages,
+        currentPage: data.page || 1,
+      },
+    };
+  }
+}

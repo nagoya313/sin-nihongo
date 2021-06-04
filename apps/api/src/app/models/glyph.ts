@@ -1,7 +1,7 @@
 import { model, Document, Schema } from 'mongoose';
 import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 
-interface Glyph extends Document {
+export interface Glyph extends Document {
   name: string;
   data: string;
 }
@@ -13,12 +13,6 @@ const schema = new Schema<Glyph>(
   },
   {
     timestamps: true,
-    toObject: {
-      versionKey: false,
-      transform: (doc, ret) => {
-        return { id: ret._id.toString(), name: ret.name, data: ret.data };
-      },
-    },
   }
 );
 

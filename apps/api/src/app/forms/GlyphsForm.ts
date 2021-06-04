@@ -1,5 +1,9 @@
-import { IsNotEmpty } from 'class-validator';
-export class GlyphsQueryParams {}
+import { IsNotEmpty, IsOptional } from 'class-validator';
+
+export class GlyphsQueryParams {
+  @IsOptional()
+  name: string;
+}
 
 export class GlyphsParams {
   @IsNotEmpty()

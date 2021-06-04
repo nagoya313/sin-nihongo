@@ -8,7 +8,7 @@ import { GlyphModel } from '../models/glyph';
 export class GlyphsController {
   @Get('/glyphs')
   async index(@ValidateQueryParams query: GlyphsQueryParams) {
-    const glyphs = await GlyphModel.find().exec();
+    const glyphs = await GlyphModel.find({ name: query.name }).exec();
     return glyphs.map((glyph) => glyph.toObject());
   }
 

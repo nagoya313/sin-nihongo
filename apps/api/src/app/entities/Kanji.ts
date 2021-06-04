@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { IsInt, Min } from 'class-validator';
 import { Radical } from './Radical';
 import { TimeStampEntity } from './TimeStampEntity';
@@ -18,6 +18,7 @@ export class Kanji extends TimeStampEntity {
   @Min(1)
   readonly id: number;
 
+  @Index({ unique: true })
   @Column()
   ucs: number;
 

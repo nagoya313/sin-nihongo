@@ -175,3 +175,6 @@ export const toHiraganaFromRomaji = (text: string) => {
 };
 
 export const toKanjiYomigana = (text: string) => mojiJS.toHalfWidthKana(mojiJS.toKatakana(toHiraganaFromRomaji(text)));
+export const toQueryYomigana = (text: string) => mojiJS.toHalfWidthKana(mojiJS.toKatakana(text));
+export const toKunyomi = (text: string) => mojiJS.toHiragana(mojiJS.toFullWidthKana(text));
+export const toOnyomi = (text: string) => mojiJS.toFullWidthKana(text);

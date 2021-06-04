@@ -1,6 +1,7 @@
 import { Kanji as ApiKanji } from '@sin-nihongo/api-interfaces';
 import { Kanji as EntityKanji } from '../entities/Kanji';
 import { EntityResponse } from './EntityResponse';
+import { toKunyomi, toOnyomi } from '../libs/kana';
 
 export class KanjiResponse extends EntityResponse<EntityKanji, ApiKanji> {
   toResponse(kanji: EntityKanji): ApiKanji {
@@ -16,8 +17,8 @@ export class KanjiResponse extends EntityResponse<EntityKanji, ApiKanji> {
         id: kanji.radicalId,
         character: String.fromCodePoint(kanji.radicalId + 0x2eff),
       },
-      kunyomis: kanji.kunyomi,
-      onyomis: kanji.onyomi,
+      kunyomis: kanji.kunyomi.map((yomi) => toKunyomi(yomi)),
+      onyomis: kanji.onyomi.map((yomi) => toOnyomi(yomi)),
       character: String.fromCodePoint(kanji.id),
     };
   }

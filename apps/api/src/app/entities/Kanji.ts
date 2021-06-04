@@ -1,23 +1,25 @@
-import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { IsInt, Min } from 'class-validator';
 import { Radical } from './Radical';
 import { TimeStampEntity } from './TimeStampEntity';
 
 @Entity()
 export class Kanji extends TimeStampEntity {
-  constructor(id: number) {
+  constructor() {
     super();
-    this.id = id;
     this.regular = false;
     this.forName = false;
     this.kunyomi = [];
     this.onyomi = [];
   }
 
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   @IsInt()
   @Min(1)
   readonly id: number;
+
+  @Column()
+  ucs: number;
 
   @Column()
   regular: boolean;

@@ -25,7 +25,8 @@ export default class CreateKanjis implements Seeder {
     const kanjis: Kanji[] = [];
     const rs = fs.createReadStream('db/seeds/kanjis.csv', { encoding: 'utf8' });
     const parser = parse({ columns: true }).on('data', (row: CsvKanji) => {
-      const kanji = new Kanji(row.ucs);
+      const kanji = new Kanji();
+      kanji.ucs = row.ucs;
       kanji.radicalId = row.radicalId;
       kanji.numberOfStrokesInRadical = row.numberOfStrokesInRadical;
       kanji.numberOfStrokes = row.numberOfStrokes;

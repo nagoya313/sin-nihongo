@@ -9,9 +9,9 @@ export class KanjiRepository {
 
     if (params.ucs) {
       if (params.ucsParam) {
-        whereConditions.id = params.ucsParam;
+        whereConditions.ucs = params.ucsParam;
       } else if (params.kanjiParam) {
-        whereConditions.id = params.kanjiParam;
+        whereConditions.ucs = params.kanjiParam;
       }
     }
 

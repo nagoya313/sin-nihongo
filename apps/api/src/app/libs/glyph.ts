@@ -4,8 +4,8 @@ import { KageStrokes } from './kage/KageStrokes';
 
 type Getter = (key: string) => Promise<Glyph>;
 
-export const glyphData = async (key: string, getter: Getter): Promise<Glyph | undefined> => {
-  const base = await getter(key);
+export const glyphData = async (key: string, getter: Getter, firstGetter = getter): Promise<Glyph | undefined> => {
+  const base = await firstGetter(key);
   if (typeof base.name !== 'undefined' && base.data != null) {
     const glyphs = await firstRecursionData(base, getter);
     return {
@@ -25,7 +25,6 @@ const scanRecursion = async (data: Glyph, getter: Getter) => {
   const strokes: (Glyph | Glyph[])[] = await Promise.all(
     linkStrokes.map(async (stroke) => {
       const base = await getter(stroke.linkStrokeId);
-      console.log(base);
       return recursionData(base, getter);
     })
   );

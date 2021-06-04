@@ -4,6 +4,7 @@ import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
 import { GlyphsParams, GlyphsQueryParams } from '../forms/GlyphsForm';
 import { GlyphModel } from '../models/glyph';
 import { GlyphResponse } from '../responses/GlyphResponse';
+import { GlyphRepository } from '../repositories/GlyphRepository';
 
 @JsonController()
 export class GlyphsController {
@@ -20,8 +21,7 @@ export class GlyphsController {
 
   @Get('/glyphs/:id')
   async show(@Param('id') id: string) {
-    const glyph = await GlyphModel.findById(Types.ObjectId(id)).exec();
-    return this.responser.toResponse(glyph);
+    return await GlyphRepository.findOne(id);
   }
 
   @Post('/glyphs')

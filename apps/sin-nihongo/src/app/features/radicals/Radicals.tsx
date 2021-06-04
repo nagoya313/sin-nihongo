@@ -35,7 +35,7 @@ const columns: { field: Fields; headerName: string }[] = [
   { field: 'radical', headerName: '部首' },
   { field: 'read', headerName: 'よみ' },
   { field: 'numberOfStrokes', headerName: '画数' },
-  { field: 'show', headerName: '' },
+  { field: 'show', headerName: '部首で漢字絞り込み' },
 ];
 
 export const Radicals = () => {
@@ -82,7 +82,7 @@ export const Radicals = () => {
     read: radical.names.join('、'),
     numberOfStrokes: radical.numberOfStrokes,
     show: (
-      <IconButtonRouteLink to={`kanjis?radical_id=${radical.id}`}>
+      <IconButtonRouteLink to={`radicals/${radical.id}/kanjis`}>
         <FindInPage />
       </IconButtonRouteLink>
     ),

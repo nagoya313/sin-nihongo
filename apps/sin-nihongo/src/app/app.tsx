@@ -21,6 +21,7 @@ import { ListItemRouteLink } from './components/ListItemRouteLink';
 import { Glyphwiki } from './features/glyphwiki/Glyphwiki';
 import { Kanjis } from './features/kanjis/Kanjis';
 import { Radicals } from './features/radicals/Radicals';
+import { RadicalKanjis } from './features/radicals/RadicalKanjis';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
@@ -63,7 +64,7 @@ const theme = createMuiTheme({
   },
 });
 
-export const App = () => {
+export const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box display="flex">
@@ -80,9 +81,9 @@ export const App = () => {
             <HeaderDiv />
             <MenuDiv>
               <List>
-                <ListItemRouteLink icon={<SearchIcon />} primary="グリフウィキ検索" to="glyphwiki" />
-                <ListItemRouteLink icon={<CategorIcon />} primary="部首索引" to="radicals" />
-                <ListItemRouteLink icon={<TranslateIcon />} primary="新日本語漢字" to="kanjis" />
+                <ListItemRouteLink icon={<SearchIcon />} primary="グリフウィキ検索" to="/glyphwiki" />
+                <ListItemRouteLink icon={<CategorIcon />} primary="部首索引" to="/radicals" />
+                <ListItemRouteLink icon={<TranslateIcon />} primary="新日本語漢字" to="/kanjis" />
               </List>
             </MenuDiv>
           </StyledDrawer>
@@ -93,6 +94,7 @@ export const App = () => {
               <Route exact path="/glyphwiki" component={Glyphwiki} />
               <Route exact path="/radicals" component={Radicals} />
               <Route exact path="/kanjis" component={Kanjis} />
+              <Route exact path="/radicals/:id/kanjis" component={RadicalKanjis} />
               <Route component={NotFound} />
             </Switch>
           </ContentMain>

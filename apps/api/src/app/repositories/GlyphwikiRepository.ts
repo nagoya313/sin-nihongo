@@ -13,7 +13,7 @@ interface GlyphwikiData {
   readonly related: string;
 }
 
-export const glyphwikiDataGet = async (code: string): Promise<Glyph> => {
+const glyphwikiDataGet = async (code: string): Promise<Glyph> => {
   const response = await axios.get<GlyphwikiData>(GLYPHWIKI_API_ENDPOINT, {
     params: { name: code },
   });

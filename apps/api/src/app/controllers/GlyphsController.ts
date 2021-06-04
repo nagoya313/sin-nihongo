@@ -4,24 +4,19 @@ import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
 import { GlyphsParams, GlyphsQueryParams } from '../forms/GlyphsForm';
 import { GlyphModel } from '../models/glyph';
 import { GlyphResponse } from '../responses/GlyphResponse';
+import { GlyphRepository } from '../repositories/GlyphRepository';
 
 @JsonController()
 export class GlyphsController {
   @Get('/glyphs')
-  async index(@ValidateQueryParams query: GlyphsQueryParams) {
-    const glyphs = await GlyphModel.paginate({
-      query: query.name && { name: { $regex: query.name, $options: 'i' } },
-      sort: { name: 'asc' },
-      limit: 20,
-      page: query.page,
-    });
-    return this.responser.toIndexResponse(glyphs);
+  async index(@ValidateQueryParams params: GlyphsQueryParams) {
+    const [glyphs, includeGlyphs] = await GlyphRepository.findAndCount(params);
+    return this.responser.toIndexResponse(glyphs, includeGlyphs);
   }
 
   @Get('/glyphs/:id')
   async show(@Param('id') id: string) {
-    const glyph = await GlyphModel.findById(Types.ObjectId(id)).exec();
-    return this.responser.toResponse(glyph);
+    return await GlyphRepository.findOne(id);
   }
 
   @Post('/glyphs')

@@ -5,7 +5,7 @@ export class PaginationQueryParams {
   @IsOptional()
   @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください。' })
   @IsInt({ message: 'ページ番号わ整数で入力してください。' })
-  page: number;
+  page?: number;
 }
 
 export const addPageData = <T>(data: T[], count: number, query: PaginationQueryParams): Pagination<T> => {

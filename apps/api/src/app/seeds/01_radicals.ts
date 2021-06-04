@@ -14,7 +14,7 @@ interface CsvRadical {
 
 export default class CreateRaicals implements Seeder {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async run(factory: Factory, connection: Connection): Promise<any> {
+  public async run(_factory: Factory, connection: Connection): Promise<any> {
     const radicals: Radical[] = [];
     const rs = fs.createReadStream('db/seeds/radicals.csv', { encoding: 'utf8' });
     const parser = parse({ columns: true }).on('data', (row: CsvRadical) => {

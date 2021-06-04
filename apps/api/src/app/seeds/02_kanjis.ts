@@ -5,7 +5,7 @@ import * as util from 'util';
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import { Kanji } from '../entities/Kanji';
-import { toHiraganaFromRomaji, toKatakanaFromRomaji } from '../libs/kana';
+import { toKanjiYomigana } from '../libs/kana';
 
 interface CsvKanji {
   readonly ucs: number;
@@ -21,16 +21,17 @@ interface CsvKanji {
 
 export default class CreateKanjis implements Seeder {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async run(factory: Factory, connection: Connection): Promise<any> {
+  public async run(_factory: Factory, connection: Connection): Promise<any> {
     const kanjis: Kanji[] = [];
     const rs = fs.createReadStream('db/seeds/kanjis.csv', { encoding: 'utf8' });
     const parser = parse({ columns: true }).on('data', (row: CsvKanji) => {
-      const kanji = new Kanji(row.ucs);
+      const kanji = new Kanji();
+      kanji.ucs = row.ucs;
       kanji.radicalId = row.radicalId;
       kanji.numberOfStrokesInRadical = row.numberOfStrokesInRadical;
       kanji.numberOfStrokes = row.numberOfStrokes;
-      kanji.onyomi = row.onyomi.split(',').map((read) => toKatakanaFromRomaji(read));
-      kanji.kunyomi = row.kunyomi.split(',').map((read) => toHiraganaFromRomaji(read));
+      kanji.onyomi = row.onyomi.split(',').map((read) => toKanjiYomigana(read));
+      kanji.kunyomi = row.kunyomi.split(',').map((read) => toKanjiYomigana(read));
       kanji.jisLevel = row.jisLevel;
       kanji.regular = row.regular == 'true';
       kanji.forName = row.forName == 'true';
@@ -40,6 +41,13 @@ export default class CreateKanjis implements Seeder {
 
     await pipeline(rs, parser);
 
-    await connection.createQueryBuilder().insert().into(Kanji).values(kanjis).orIgnore().execute();
+    await connection
+      .createQueryBuilder()
+      .insert()
+      .into(Kanji)
+      .values(kanjis)
+      //.orUpdate({ conflict_target: ['ucs'], overwrite: ['onyomi', 'kunyomi'] })
+      .orIgnore()
+      .execute();
   }
 }

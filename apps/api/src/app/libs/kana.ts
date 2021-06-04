@@ -1,8 +1,4 @@
-import * as MojiJS from 'mojijs';
-// seedから呼ぶ時
-const mojiJS = MojiJS;
-// 鯖から呼ぶ時
-//const mojiJS = MojiJS['default'];
+import * as mojiJS from 'mojijs';
 
 const replaceMojiTable = {
   ぢ: 'じ',
@@ -14,6 +10,7 @@ const replaceMojiTable = {
 
 const bobikiTable = {
   ああ: 'あー',
+  あう: 'おー',
   いい: 'いー',
   うう: 'うー',
   えい: 'えー',
@@ -21,6 +18,7 @@ const bobikiTable = {
   おう: 'おー',
   おお: 'おー',
   かあ: 'かー',
+  かう: 'かー',
   きい: 'きー',
   くう: 'くー',
   けい: 'けー',
@@ -28,6 +26,7 @@ const bobikiTable = {
   こう: 'こー',
   こお: 'こー',
   さあ: 'さー',
+  さう: 'そー',
   しい: 'しー',
   すう: 'すー',
   せい: 'せー',
@@ -35,6 +34,7 @@ const bobikiTable = {
   そう: 'そー',
   そお: 'そー',
   たあ: 'たー',
+  たう: 'とー',
   ちい: 'ちー',
   つう: 'つー',
   てい: 'てー',
@@ -42,6 +42,7 @@ const bobikiTable = {
   とう: 'とー',
   とお: 'とー',
   なあ: 'なー',
+  なう: 'のー',
   にい: 'にー',
   ぬう: 'ぬー',
   ねい: 'ねー',
@@ -49,6 +50,7 @@ const bobikiTable = {
   のう: 'のー',
   のお: 'のー',
   はあ: 'はー',
+  はう: 'ほー',
   ひい: 'ひー',
   ふう: 'ふー',
   へい: 'へー',
@@ -57,6 +59,7 @@ const bobikiTable = {
   ほお: 'ほー',
   ほほ: 'ほー',
   まあ: 'まー',
+  まう: 'もー',
   みい: 'みー',
   むう: 'むー',
   めい: 'めー',
@@ -64,10 +67,12 @@ const bobikiTable = {
   もう: 'もー',
   もお: 'もー',
   やあ: 'やー',
+  やう: 'よー',
   ゆう: 'ゆー',
   よう: 'よー',
   よお: 'よー',
   らあ: 'らー',
+  らう: 'ろー',
   りい: 'りー',
   るう: 'るー',
   れい: 'れー',
@@ -75,7 +80,9 @@ const bobikiTable = {
   ろう: 'ろー',
   ろお: 'ろー',
   わあ: 'わー',
+  わう: 'おー',
   があ: 'がー',
+  がう: 'ごー',
   ぎい: 'ぎー',
   ぐう: 'ぐー',
   げい: 'げー',
@@ -83,6 +90,7 @@ const bobikiTable = {
   ごう: 'ごー',
   ごお: 'ごー',
   ざあ: 'ざー',
+  ざう: 'ぞー',
   じい: 'じー',
   ずう: 'ずー',
   ぜい: 'ぜー',
@@ -90,11 +98,13 @@ const bobikiTable = {
   ぞう: 'ぞー',
   ぞお: 'ぞー',
   だあ: 'だー',
+  だう: 'どー',
   でい: 'でー',
   でえ: 'でー',
   どう: 'どー',
   どお: 'どー',
   ばあ: 'ばー',
+  ばう: 'ぼー',
   びい: 'びー',
   ぶう: 'ぶー',
   べい: 'べー',
@@ -102,6 +112,7 @@ const bobikiTable = {
   ぼう: 'ぼー',
   ぼお: 'ぼー',
   ぱあ: 'ぱー',
+  ぱう: 'ぽー',
   ぴい: 'ぴー',
   ぷう: 'ぷー',
   ぺい: 'ぺー',
@@ -151,6 +162,10 @@ const bobikiTable = {
   ぴゅう: 'ぴゅー',
   ぴょう: 'ぴょー',
   ぴょお: 'ぴょー',
+  ふぁあ: 'ふぁー',
+  ふぃい: 'ふぃー',
+  ふぇえ: 'ふぇー',
+  ふぉお: 'ふぉー',
 };
 
 export const toHiraganaFromRomaji = (text: string) => {
@@ -159,4 +174,7 @@ export const toHiraganaFromRomaji = (text: string) => {
   return notUseKanaRemoved.replace(new RegExp(Object.keys(bobikiTable).join('|'), 'g'), (str) => bobikiTable[str]);
 };
 
-export const toKatakanaFromRomaji = (text: string) => mojiJS.toKatakana(toHiraganaFromRomaji(text));
+export const toKanjiYomigana = (text: string) => mojiJS.toHalfWidthKana(mojiJS.toKatakana(toHiraganaFromRomaji(text)));
+export const toQueryYomigana = (text: string) => mojiJS.toHalfWidthKana(mojiJS.toKatakana(text));
+export const toKunyomi = (text: string) => mojiJS.toHiragana(mojiJS.toFullWidthKana(text));
+export const toOnyomi = (text: string) => mojiJS.toFullWidthKana(text);

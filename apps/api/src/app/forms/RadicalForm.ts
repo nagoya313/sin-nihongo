@@ -5,10 +5,10 @@ import { PaginationQueryParams } from '../libs/pagination';
 export class RadicalsQueryParams extends PaginationQueryParams {
   @IsOptional()
   @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです。` })
-  nameLike: string;
+  readonly nameLike?: string;
 
   @IsOptional()
   @IsInt({ message: '画数わ整数で入力してください。' })
   @Min(1, { message: '画数わ$constraint1以上で入力してください。' })
-  numberOfStrokes: number;
+  readonly numberOfStrokes?: number;
 }

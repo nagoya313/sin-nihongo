@@ -47,19 +47,10 @@ export interface Kanji {
 }
 
 export interface Glyph {
-  readonly id: string;
+  readonly id?: string;
   readonly name: string;
   readonly data: string;
-}
-
-export interface KageData {
-  readonly name: string;
-  readonly data: string;
-}
-
-export interface KageRecursionData {
-  readonly name: string;
-  readonly needGlyphs: KageData[];
+  readonly includeGlyphs?: Glyph[];
 }
 
 export const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;

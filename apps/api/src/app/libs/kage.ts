@@ -1,6 +1,6 @@
 import { KageColumns } from './kage/KageColumns';
 import { KageStrokes } from './kage/KageStrokes';
-import { GlyphwikiData } from './glyphwiki';
+import { GlyphRecursionData } from './glyph';
 
 export { KageColumns, KageStrokes };
-export const glyphwikiDataToKageStrokes = (data: GlyphwikiData) => new KageStrokes(data.data);
+export const glyphRecursionDataToKageStrokes = (data: GlyphRecursionData) => new KageStrokes(data.data);

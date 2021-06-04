@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as _ from 'underscore';
+import { uniq } from 'underscore';
 import { KageRecursionData } from '@sin-nihongo/api-interfaces';
 import { glyphwikiDataToKageStrokes } from './kage';
 
@@ -18,7 +18,7 @@ export const glyphwikiData = async (code: string): Promise<KageRecursionData | u
     const glyphs = await recursionData(base);
     return {
       name: code,
-      needGlyphs: _.uniq(
+      needGlyphs: uniq(
         glyphs.map((glyph) => ({ name: glyph.name, data: glyph.data })),
         'name'
       ),

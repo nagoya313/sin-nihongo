@@ -1,6 +1,22 @@
-import { createQueryBuilder, BaseEntity, EntityTarget, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import {
+  createQueryBuilder,
+  BaseEntity,
+  EntityTarget,
+  ObjectLiteral,
+  SelectQueryBuilder,
+  FindConditions,
+  FindManyOptions,
+} from 'typeorm';
 import { snakeCase } from 'typeorm/util/StringUtils';
 import * as pluralize from 'pluralize';
+
+export const makeWhereConditions = <Entity>(): FindConditions<Entity> => ({});
+
+export const commonFindManyOption = (page: number): FindManyOptions => ({
+  order: { id: 'ASC' },
+  take: 20,
+  skip: 20 * ((page || 1) - 1),
+});
 
 interface WhereExpression {
   readonly where: string;

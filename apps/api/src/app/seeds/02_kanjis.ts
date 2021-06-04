@@ -21,7 +21,7 @@ interface CsvKanji {
 
 export default class CreateKanjis implements Seeder {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async run(factory: Factory, connection: Connection): Promise<any> {
+  public async run(_factory: Factory, connection: Connection): Promise<any> {
     const kanjis: Kanji[] = [];
     const rs = fs.createReadStream('db/seeds/kanjis.csv', { encoding: 'utf8' });
     const parser = parse({ columns: true }).on('data', (row: CsvKanji) => {

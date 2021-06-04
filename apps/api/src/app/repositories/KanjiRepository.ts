@@ -1,11 +1,24 @@
 import * as MojiJS from 'mojijs';
 import { Kanji } from '../entities/Kanji';
 import { KanjisQueryParams } from '../forms/KanjiForm';
-import { queryBuilder, genericFindAndCount } from '../libs/queryBuilder';
+import { queryBuilder, commonFindManyOption, makeWhereConditions } from '../libs/queryBuilder';
 
 export class KanjiRepository {
   static findAndCount(params: KanjisQueryParams) {
-    return genericFindAndCount(this.query(params), params.page);
+    const whereConditions = makeWhereConditions<Kanji>();
+
+    if (params.ucs) {
+      if (params.ucsParam) {
+        whereConditions.id = params.ucsParam;
+      } else if (params.kanjiParam) {
+        whereConditions.id = params.kanjiParam;
+      }
+    }
+
+    return Kanji.findAndCount({
+      where: whereConditions,
+      ...commonFindManyOption(params.page),
+    });
   }
 
   private static query(params: KanjisQueryParams) {

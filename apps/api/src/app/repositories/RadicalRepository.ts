@@ -1,22 +1,26 @@
+import { Raw } from 'typeorm';
 import { Radical } from '../entities/Radical';
 import { RadicalsQueryParams } from '../forms/RadicalForm';
-import { queryBuilder, genericFindAndCount } from '../libs/queryBuilder';
+import { commonFindManyOption, makeWhereConditions } from '../libs/queryBuilder';
 
 export class RadicalRepository {
   static findAndCount(params: RadicalsQueryParams) {
-    return genericFindAndCount(this.query(params), params.page);
-  }
+    const whereConditions = makeWhereConditions<Radical>();
+    if (params.numberOfStrokes) {
+      whereConditions.numberOfStrokes = params.numberOfStrokes;
+    }
+    if (params.nameLike) {
+      whereConditions.names = Raw(
+        (alias) => {
+          return `EXISTS(SELECT FROM unnest(${alias}) name WHERE name LIKE :name)`;
+        },
+        { name: `${params.nameLike}%` }
+      );
+    }
 
-  private static query(params: RadicalsQueryParams) {
-    return queryBuilder(Radical, [
-      {
-        where: 'EXISTS(SELECT FROM unnest(names) name WHERE name LIKE :q1)',
-        parameters: { q1: params.nameLike && `${params.nameLike}%` },
-      },
-      {
-        where: 'number_of_strokes = :q2',
-        parameters: { q2: params.numberOfStrokes },
-      },
-    ]);
+    return Radical.findAndCount({
+      where: whereConditions,
+      ...commonFindManyOption(params.page),
+    });
   }
 }

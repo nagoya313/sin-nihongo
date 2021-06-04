@@ -48,6 +48,7 @@
     "express": "4.17.1",
     "mojijs": "^3.1.0",
     "mongoose": "^5.12.12",
+    "mongoose-paginate-ts": "^1.2.0",
     "pg": "^8.6.0",
     "pluralize": "^8.0.0",
     "postcss": "^8.2.10",

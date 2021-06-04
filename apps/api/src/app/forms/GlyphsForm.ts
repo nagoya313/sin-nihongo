@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { PaginationQueryParams } from '../libs/pagination';
 
-export class GlyphsQueryParams {
+export class GlyphsQueryParams extends PaginationQueryParams {
   @IsOptional()
   name: string;
 }

@@ -3,17 +3,25 @@ import { Types } from 'mongoose';
 import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
 import { GlyphsParams, GlyphsQueryParams } from '../forms/GlyphsForm';
 import { GlyphModel } from '../models/glyph';
+import { glyphsResponse } from '../responses/GlyphResponse';
 
 @JsonController()
 export class GlyphsController {
   @Get('/glyphs')
   async index(@ValidateQueryParams query: GlyphsQueryParams) {
-    const glyphs = await GlyphModel.find({ name: { $regex: query.name, $options: 'i' } })
-      .sort({ name: 1 })
-      .limit(2)
-      .skip(0)
-      .exec();
-    return glyphs.map((glyph) => glyph.toObject());
+    const glyphs = await GlyphModel.paginate({
+      query: query.name && { name: { $regex: query.name, $options: 'i' } },
+      sort: { name: 'asc' },
+      limit: 20,
+      page: query.page,
+    });
+    return glyphsResponse(glyphs);
+  }
+
+  @Get('/glyphs/:id')
+  async show(@Param('id') id: string) {
+    const glyph = await GlyphModel.findById(Types.ObjectId(id)).exec();
+    return glyph.toObject();
   }
 
   @Post('/glyphs')

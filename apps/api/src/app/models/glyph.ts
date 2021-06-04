@@ -1,6 +1,7 @@
-import { model, Schema } from 'mongoose';
+import { model, Document, Schema } from 'mongoose';
+import { mongoosePagination, Pagination } from 'mongoose-paginate-ts';
 
-interface Glyph {
+interface Glyph extends Document {
   name: string;
   data: string;
 }
@@ -21,4 +22,6 @@ const schema = new Schema<Glyph>(
   }
 );
 
-export const GlyphModel = model<Glyph>('Glyph', schema);
+schema.plugin(mongoosePagination);
+
+export const GlyphModel: Pagination<Glyph> = model<Glyph, Pagination<Glyph>>('Glyph', schema);

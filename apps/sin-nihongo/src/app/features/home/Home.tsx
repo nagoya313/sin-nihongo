@@ -29,20 +29,24 @@ export const Home = () => {
         部首情報
       </Typography>
       <Typography variant="body1" gutterBottom>
-        文字情報基盤のSPARQL Endpoint（https://mojikiban.ipa.go.jp/1bf7a30fda/sparqlsearch）。
-        文字情報基盤の成果物が一般社団法人文字情報技術促進協議会に移管された際に同等機能のエンドポイントわ廃止されたよーなので現在は取得不可。
+        文字情報基盤のSPARQL Endpoint（https://mojikiban.ipa.go.jp/1bf7a30fda/sparqlsearch）から取得。
+        文字情報基盤の成果物が一般社団法人文字情報技術促進協議会に移管された際に同等機能のエンドポイントわ廃止されたよーなので現在わ取得不可。
       </Typography>
       <Typography variant="h6" gutterBottom>
         漢字情報
       </Typography>
       <Typography variant="body1" gutterBottom>
         <NewTabLink url="https://unicode.org/charts/unihan.html" text="Unihan Database" />
+        のunihan.zipから取得。
       </Typography>
       <Typography variant="h6" gutterBottom>
         漢字グリフ生成
       </Typography>
       <Typography variant="body1" gutterBottom>
         <NewTabLink url="http://kamichi.jp/kage.html" text="KAGE（影）システム" />
+        お採用。 KAGEデータからグリフ画像ファイルお生成するエンジンにわ
+        <NewTabLink url="https://www.npmjs.com/package/@kurgm/kage-engine" text="@kurgm/kage-engine" />
+        お使っているので、グリフウィキとわ表示されるグリフに差異が生じる場合があります。
       </Typography>
       <Typography variant="body2" align="right">
         2681 新日本語漢字形制定委員会

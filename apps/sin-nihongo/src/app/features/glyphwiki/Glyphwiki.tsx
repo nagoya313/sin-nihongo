@@ -5,7 +5,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { Buhin } from '@kurgm/kage-engine';
-import { GLYPHWIKI_QUERY_PARAMS_MATCHER, KageRecursionData } from '@sin-nihongo/api-interfaces';
+import { GLYPHWIKI_QUERY_PARAMS_MATCHER, Glyph } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { NewTabLink } from '../../components/NewTabLink';
@@ -17,15 +17,19 @@ const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) 
 
 export const Glyphwiki = () => {
   const [searchWord, setSearchWord] = useState('');
-  const [{ data, loading, error }, refetch] = useLazyAxiosGet<KageRecursionData>('api/v1/glyphwiki');
-  const [kageData, setKageData] = useState<KageRecursionData>();
+  const [{ data, loading, error }, refetch] = useLazyAxiosGet<Glyph>('api/v1/glyphwiki');
+  const [kageData, setKageData] = useState<Glyph>();
   const [buhin, setBuhin] = useState(new Buhin());
 
   useEffect(() => {
     const b = new Buhin();
-    kageData?.needGlyphs?.forEach((glyph) => {
-      b.push(glyph.name, glyph.data);
-    });
+    if (kageData) {
+      b.push(kageData.name, kageData.data);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      kageData.includeGlyphs!.forEach((glyph) => {
+        b.push(glyph.name, glyph.data);
+      });
+    }
     setBuhin(b);
   }, [kageData]);
 
@@ -73,11 +77,11 @@ export const Glyphwiki = () => {
         {loading && <Typography>検索中...</Typography>}
         {kageData?.name && (
           <React.Fragment>
-            <GlyphwikiContent name={kageData?.name} data={kageData?.needGlyphs[0]?.data} buhin={buhin} />
+            <GlyphwikiContent name={kageData?.name} data={kageData?.data} buhin={buhin} />
             <Typography variant="body2" gutterBottom>
               参照グリフ
             </Typography>
-            {kageData?.needGlyphs.slice(1).map((glyph) => {
+            {kageData?.includeGlyphs.map((glyph) => {
               return <GlyphwikiContent key={glyph.name} name={glyph.name} data={glyph.data} buhin={buhin} />;
             })}
           </React.Fragment>

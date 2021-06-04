@@ -11,5 +11,6 @@ export const initRoutingController = (app: Express) => {
     routePrefix: '/api/v1',
     defaultErrorHandler: true,
     controllers: [GlyphsController, GlyphwikiController, KanjisController, RadicalsController],
+    authorizationChecker: async () => false,
   });
 };

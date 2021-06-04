@@ -1,4 +1,4 @@
-import { JsonController, Delete, Get, Param, Patch, Post } from 'routing-controllers';
+import { Authorized, JsonController, Delete, Get, Param, Patch, Post } from 'routing-controllers';
 import { Types } from 'mongoose';
 import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
 import { GlyphsParams, GlyphsQueryParams } from '../forms/GlyphsForm';
@@ -25,18 +25,21 @@ export class GlyphsController {
   }
 
   @Post('/glyphs')
+  @Authorized()
   async create(@ValidateBody params: GlyphsParams) {
     await GlyphModel.create(params);
     return { message: 'グリフデータを作成しました。' };
   }
 
   @Patch('/glyphs/:id')
+  @Authorized()
   async update(@Param('id') id: string, @ValidateBody params: GlyphsParams) {
     await GlyphModel.findByIdAndUpdate(Types.ObjectId(id), params, { new: true }).exec();
     return { message: 'グリフデータを更新しました。' };
   }
 
   @Delete('/glyphs/:id')
+  @Authorized()
   async destroy(@Param('id') id: string) {
     await GlyphModel.findByIdAndDelete(Types.ObjectId(id)).exec();
     return { message: 'グリフデータを削除しました。' };

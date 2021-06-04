@@ -25,8 +25,7 @@ export const Glyphwiki = () => {
     const b = new Buhin();
     if (kageData) {
       b.push(kageData.name, kageData.data);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      kageData.includeGlyphs!.forEach((glyph) => {
+      kageData.includeGlyphs?.forEach((glyph) => {
         b.push(glyph.name, glyph.data);
       });
     }
@@ -81,7 +80,7 @@ export const Glyphwiki = () => {
             <Typography variant="body2" gutterBottom>
               参照グリフ
             </Typography>
-            {kageData?.includeGlyphs.map((glyph) => {
+            {kageData?.includeGlyphs?.map((glyph) => {
               return <GlyphwikiContent key={glyph.name} name={glyph.name} data={glyph.data} buhin={buhin} />;
             })}
           </React.Fragment>

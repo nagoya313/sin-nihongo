@@ -19,7 +19,7 @@ export class KanjiResponse extends EntityResponse<EntityKanji, ApiKanji> {
       },
       kunyomis: kanji.kunyomi.map((yomi) => toKunyomi(yomi)),
       onyomis: kanji.onyomi.map((yomi) => toOnyomi(yomi)),
-      character: String.fromCodePoint(kanji.id),
+      character: String.fromCodePoint(kanji.ucs),
     };
   }
 }

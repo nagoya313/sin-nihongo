@@ -1,12 +1,14 @@
 import { Raw } from 'typeorm';
 import { Kanji } from '../entities/Kanji';
 import { KanjisQueryParams } from '../forms/KanjiForm';
-import { commonFindManyOption, makeWhereConditions } from '../libs/queryBuilder';
+import { findAndCount, makeWhereConditions, permit } from '../libs/queryBuilder';
 import { toQueryYomigana } from '../libs/kana';
 
 export class KanjiRepository {
   static findAndCount(params: KanjisQueryParams) {
-    const whereConditions = makeWhereConditions<Kanji>();
+    const whereConditions = makeWhereConditions<Kanji>(
+      permit(params, ['regular', 'forName', 'numberOfStrokes', 'radicalId', 'jisLevel'])
+    );
 
     if (params.ucs) {
       if (params.ucsParam) {
@@ -14,21 +16,6 @@ export class KanjiRepository {
       } else if (params.kanjiParam) {
         whereConditions.ucs = params.kanjiParam;
       }
-    }
-    if (typeof params.regular !== 'undefined') {
-      whereConditions.regular = params.regular;
-    }
-    if (typeof params.forName !== 'undefined') {
-      whereConditions.forName = params.forName;
-    }
-    if (params.numberOfStrokes) {
-      whereConditions.numberOfStrokes = params.numberOfStrokes;
-    }
-    if (params.radicalId) {
-      whereConditions.radicalId = params.radicalId;
-    }
-    if (params.jisLevel) {
-      whereConditions.jisLevel = params.jisLevel;
     }
     if (params.readLike) {
       whereConditions.kunyomi = Raw(
@@ -39,9 +26,6 @@ export class KanjiRepository {
       );
     }
 
-    return Kanji.findAndCount({
-      where: whereConditions,
-      ...commonFindManyOption(params.page),
-    });
+    return findAndCount(Kanji, whereConditions, params.page);
   }
 }

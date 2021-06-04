@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import * as qs from 'qs';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -64,8 +62,11 @@ const columns: { field: Fields; headerName: string }[] = [
   { field: 'action', headerName: '' },
 ];
 
-export const Kanjis = () => {
-  const location = useLocation();
+interface Props {
+  readonly radicalId?: string;
+}
+
+export const Kanjis: React.FC<Props> = ({ radicalId }) => {
   const [searchUcs, setSearchUcs] = useState('');
   const [searchRead, setSearchRead] = useState('');
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
@@ -106,7 +107,7 @@ export const Kanjis = () => {
         jisLevel: searchJisLevel || undefined,
         regular: searchRegular || undefined,
         forName: searchForName || undefined,
-        radicalId: qs.parse(location.search.substr(1))['radical_id'],
+        radicalId: radicalId,
         page: pageNumber,
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -120,7 +121,7 @@ export const Kanjis = () => {
     pageNumber,
     searchRegular,
     searchForName,
-    location.search,
+    radicalId,
   ]);
 
   useEffect(() => {

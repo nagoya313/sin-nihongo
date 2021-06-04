@@ -1,7 +1,7 @@
-import * as MojiJS from 'mojijs';
+import * as mojiJs from 'mojijs';
 import { Kanji } from '../entities/Kanji';
 import { KanjisQueryParams } from '../forms/KanjiForm';
-import { queryBuilder, commonFindManyOption, makeWhereConditions } from '../libs/queryBuilder';
+import { queryBuilder, commonFindManyOption, makeWhereConditions, unnestLike } from '../libs/queryBuilder';
 
 export class KanjiRepository {
   static findAndCount(params: KanjisQueryParams) {
@@ -13,6 +13,31 @@ export class KanjiRepository {
       } else if (params.kanjiParam) {
         whereConditions.ucs = params.kanjiParam;
       }
+    }
+    if (typeof params.regular !== 'undefined') {
+      whereConditions.regular = params.regular;
+    }
+    if (typeof params.forName !== 'undefined') {
+      whereConditions.forName = params.forName;
+    }
+    if (params.numberOfStrokes) {
+      whereConditions.numberOfStrokes = params.numberOfStrokes;
+    }
+    if (params.radicalId) {
+      whereConditions.radicalId = params.radicalId;
+    }
+    if (params.jisLevel) {
+      whereConditions.jisLevel = params.jisLevel;
+    }
+    if (params.readLike) {
+      whereConditions.kunyomi = [
+        {
+          kunyomi: unnestLike(params.readLike),
+        },
+        {
+          onyomi: unnestLike(mojiJs.toKatakana(params.readLike)),
+        },
+      ];
     }
 
     return Kanji.findAndCount({
@@ -28,7 +53,7 @@ export class KanjiRepository {
           '(EXISTS(SELECT FROM unnest(kunyomi) yomi WHERE yomi LIKE :q1) OR EXISTS(SELECT FROM unnest(onyomi) yomi WHERE yomi LIKE :q2))',
         parameters: params.readLike && {
           q1: `${params.readLike}%`,
-          q2: `${MojiJS.toKatakana(params.readLike)}%`,
+          q2: `${mojiJs.toKatakana(params.readLike)}%`,
         },
       },
       {

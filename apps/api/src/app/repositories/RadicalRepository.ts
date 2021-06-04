@@ -1,7 +1,6 @@
-import { Raw } from 'typeorm';
 import { Radical } from '../entities/Radical';
 import { RadicalsQueryParams } from '../forms/RadicalForm';
-import { commonFindManyOption, makeWhereConditions } from '../libs/queryBuilder';
+import { commonFindManyOption, makeWhereConditions, unnestLike } from '../libs/queryBuilder';
 
 export class RadicalRepository {
   static findAndCount(params: RadicalsQueryParams) {
@@ -10,12 +9,7 @@ export class RadicalRepository {
       whereConditions.numberOfStrokes = params.numberOfStrokes;
     }
     if (params.nameLike) {
-      whereConditions.names = Raw(
-        (alias) => {
-          return `EXISTS(SELECT FROM unnest(${alias}) name WHERE name LIKE :name)`;
-        },
-        { name: `${params.nameLike}%` }
-      );
+      whereConditions.names = unnestLike(params.nameLike);
     }
 
     return Radical.findAndCount({

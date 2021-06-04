@@ -5,8 +5,8 @@ import { EntityResponse } from './EntityResponse';
 export class KanjiResponse extends EntityResponse<EntityKanji, ApiKanji> {
   toResponse(kanji: EntityKanji): ApiKanji {
     return {
-      id: kanji.id,
-      ucs: `u${kanji.id.toString(16)}`,
+      id: kanji.ucs,
+      ucs: `u${kanji.ucs.toString(16)}`,
       regular: kanji.regular,
       forName: kanji.forName,
       jisLevel: kanji.jisLevel,

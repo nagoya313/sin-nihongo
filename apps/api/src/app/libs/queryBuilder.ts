@@ -6,6 +6,7 @@ import {
   SelectQueryBuilder,
   FindConditions,
   FindManyOptions,
+  Raw,
 } from 'typeorm';
 import { snakeCase } from 'typeorm/util/StringUtils';
 import * as pluralize from 'pluralize';
@@ -17,6 +18,14 @@ export const commonFindManyOption = (page: number): FindManyOptions => ({
   take: 20,
   skip: 20 * ((page || 1) - 1),
 });
+
+export const unnestLike = (like: string) =>
+  Raw(
+    (alias) => {
+      return `EXISTS(SELECT FROM unnest(${alias}) name WHERE name LIKE :name)`;
+    },
+    { name: `${like}%` }
+  );
 
 interface WhereExpression {
   readonly where: string;

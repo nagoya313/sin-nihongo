@@ -9,7 +9,9 @@ export class GlyphsController {
   @Get('/glyphs')
   async index(@ValidateQueryParams query: GlyphsQueryParams) {
     const glyphs = await GlyphModel.find({ name: { $regex: query.name, $options: 'i' } })
-      .limit(20)
+      .sort({ name: 1 })
+      .limit(2)
+      .skip(0)
       .exec();
     return glyphs.map((glyph) => glyph.toObject());
   }

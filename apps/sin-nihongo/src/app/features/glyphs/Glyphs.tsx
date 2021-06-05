@@ -12,7 +12,7 @@ import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
 import { splitData } from '../../utils/kageData';
 
-type Fields = 'id' | 'glyph' | 'name' | 'data' | 'show';
+type Fields = 'glyph' | 'name' | 'data' | 'show';
 
 const columns: { field: Fields; headerName: string }[] = [
   { field: 'name', headerName: '名前' },

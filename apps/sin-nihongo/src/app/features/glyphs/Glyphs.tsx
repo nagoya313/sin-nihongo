@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DescriptionIcon from '@material-ui/icons/Description';
 import { Buhin } from '@kurgm/kage-engine';
 import { Glyphs as ApiGlyphs, Glyph } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
+import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
 import { splitData } from '../../utils/kageData';
 
-type Fields = 'glyph' | 'name' | 'data' | 'show';
+type Fields = 'glyph' | 'name' | 'data' | 'show' | 'delete';
 
 const columns: { field: Fields; headerName: string }[] = [
   { field: 'name', headerName: '名前' },
   { field: 'glyph', headerName: '生成グリフ' },
   { field: 'data', headerName: 'KAGEデータ' },
   { field: 'show', headerName: '' },
+  { field: 'delete', headerName: '' },
 ];
 
 export const Glyphs = () => {
+  const { isAuthenticated } = useAuth0();
   const [searchName, setSearchName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [glyphs, setGlyphs] = useState<Glyph[]>();
@@ -76,7 +82,16 @@ export const Glyphs = () => {
     name: glyph.name,
     glyph: <GlyphCanvas buhin={buhin} name={glyph.name} />,
     data: splitData(glyph.data),
-    show: '',
+    show: (
+      <IconButtonRouteLink to="/">
+        <DescriptionIcon />
+      </IconButtonRouteLink>
+    ),
+    delete: isAuthenticated ? (
+      <IconButtonRouteLink to="/">
+        <DeleteIcon />
+      </IconButtonRouteLink>
+    ) : null,
   }));
 
   return (

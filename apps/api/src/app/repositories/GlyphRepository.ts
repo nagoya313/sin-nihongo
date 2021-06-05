@@ -10,7 +10,7 @@ import { GlyphsQueryParams } from '../forms/GlyphsForm';
 export class GlyphRepository {
   static async findAndCount(params: GlyphsQueryParams): Promise<[PaginationModel<Glyph>, ApiGlyph[]]> {
     const glyphs = await GlyphModel.paginate({
-      query: params.name && { name: { $regex: params.name, $options: 'i' } },
+      query: params.nameLike && { name: { $regex: params.nameLike, $options: 'i' } },
       sort: { name: 'asc' },
       limit: 20,
       page: params.page,

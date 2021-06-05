@@ -3,7 +3,7 @@ import { PaginationQueryParams } from '../libs/pagination';
 
 export class GlyphsQueryParams extends PaginationQueryParams {
   @IsOptional()
-  name: string;
+  nameLike: string;
 }
 
 export class GlyphsParams {

@@ -44,6 +44,7 @@ export const Radicals = () => {
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
   const [radicals, setRadicals] = useState<Radical[]>();
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Radical>>('api/v1/radicals');
+
   const onPageChange = (page: number) => {
     setPageNumber(page);
   };

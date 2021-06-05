@@ -13,7 +13,8 @@ export const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
 (async () => {
   try {
     await createConnection(dbConfig());
-    await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true });
 
     initPaspport();
 

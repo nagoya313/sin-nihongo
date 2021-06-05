@@ -2,8 +2,8 @@ import { CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
 
 export class TimeStampEntity extends BaseEntity {
   @CreateDateColumn()
-  readonly createdAt: Date;
+  readonly createdAt?: Date;
 
   @UpdateDateColumn()
-  readonly updatedAt: Date;
+  readonly updatedAt?: Date;
 }

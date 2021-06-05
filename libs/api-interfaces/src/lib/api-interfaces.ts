@@ -1,3 +1,5 @@
+import { IsNotEmpty, Length } from 'class-validator';
+
 export interface Message {
   readonly message: string;
 }
@@ -59,6 +61,14 @@ export interface Glyph {
 
 export interface Glyphs extends Pagination<Glyph> {
   readonly includeGlyphs: Glyph[];
+}
+
+export class CreateGlyph {
+  @Length(1, 20)
+  readonly name: string;
+
+  @IsNotEmpty()
+  readonly data: string;
 }
 
 export const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;

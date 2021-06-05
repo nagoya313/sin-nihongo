@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';

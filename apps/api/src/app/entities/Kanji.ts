@@ -16,7 +16,7 @@ export class Kanji extends TimeStampEntity {
   @PrimaryGeneratedColumn()
   @IsInt()
   @Min(1)
-  readonly id: number;
+  readonly id?: number;
 
   @Index({ unique: true })
   @Column()

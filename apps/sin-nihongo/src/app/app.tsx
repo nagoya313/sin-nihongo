@@ -67,7 +67,6 @@ const theme = createMuiTheme({
 
 export const App: React.FC = () => {
   const { isAuthenticated } = useAuth0();
-  console.log(isAuthenticated);
 
   return (
     <ThemeProvider theme={theme}>

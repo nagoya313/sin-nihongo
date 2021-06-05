@@ -99,7 +99,8 @@ export const Glyphs = () => {
       <CardHeader avatar={<CardAvatar>グ</CardAvatar>} title="グリフ一覧" titleTypographyProps={{ variant: 'h4' }} />
       <CardContent>
         <Typography variant="body1" gutterBottom>
-          新日本語で採用された字形およびその部品のKAGEデータとその生成グリフお閲覧できます。グリフ名で検索もできます（グリフ名わグリフウィキとおーむね一致です）。
+          新日本語で採用された字形およびその部品のKAGEデータとその生成グリフお閲覧できます。
+          グリフ名で検索もできます（グリフ名わグリフウィキとおーむね一致です）。
         </Typography>
         <SearchTextField label="グリフ名" onSearchWordChange={setSearchName} hint="例：u4e00" />
         <Divider />

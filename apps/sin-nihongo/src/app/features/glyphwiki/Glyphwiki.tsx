@@ -22,17 +22,6 @@ export const Glyphwiki = () => {
   const [buhin, setBuhin] = useState(new Buhin());
 
   useEffect(() => {
-    const b = new Buhin();
-    if (kageData) {
-      b.push(kageData.name, kageData.data);
-      kageData.includeGlyphs?.forEach((glyph) => {
-        b.push(glyph.name, glyph.data);
-      });
-    }
-    setBuhin(b);
-  }, [kageData]);
-
-  useEffect(() => {
     if (searchWord) {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       refetch({ params: { q: searchWord } }).catch(() => {});
@@ -45,6 +34,14 @@ export const Glyphwiki = () => {
         setKageData(undefined);
       } else if (typeof data !== 'undefined') {
         setKageData(data);
+        const b = new Buhin();
+        if (data) {
+          b.push(data.name, data.data);
+          data.includeGlyphs?.forEach((glyph) => {
+            b.push(glyph.name, glyph.data);
+          });
+        }
+        setBuhin(b);
       }
     }
   }, [data, loading, error]);

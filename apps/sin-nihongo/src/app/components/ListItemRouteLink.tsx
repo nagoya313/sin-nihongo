@@ -21,7 +21,7 @@ export const ListItemRouteLink: React.FC<Props> = ({ icon, primary, to }) => {
 
   return (
     <li>
-      <ListItem button component={CustomLink} selected={location.pathname === `/${to}`}>
+      <ListItem button component={CustomLink} selected={location.pathname === `${to}`}>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={primary} />
       </ListItem>

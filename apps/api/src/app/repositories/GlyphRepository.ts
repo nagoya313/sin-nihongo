@@ -23,6 +23,13 @@ export class GlyphRepository {
     return glyphData(id, this.findOneOrFail, this.findByIdOrFail);
   }
 
+  static async deleteOne(id: string) {
+    const glyph = await GlyphModel.findByIdAndDelete(Types.ObjectId(id)).exec();
+    if (!glyph) {
+      throw new NotFoundError(`"${id}"のグリフわ見つかりませんでした。`);
+    }
+  }
+
   private static async findOneOrFail(name) {
     const glyph: Glyph | null = await GlyphModel.findOne({ name: name }).exec();
     if (!glyph) {

@@ -19,3 +19,13 @@ export const useLazyAxiosGet = <T>(url: string) => {
     { useCache: false, manual: true }
   );
 };
+
+export const useLazyAxiosDelete = <T>(url: string) => {
+  return useAxios<T, Error>(
+    {
+      baseURL: url,
+      method: 'DELETE',
+    },
+    { useCache: false, manual: true }
+  );
+};

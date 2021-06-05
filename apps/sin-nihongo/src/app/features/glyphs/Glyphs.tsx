@@ -10,11 +10,11 @@ import { ErrorTypography } from '../../components/ErrorTypography';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
 import { useAxiosGet } from '../../libs/axios';
+import { splitData } from '../../utils/kageData';
 
 type Fields = 'id' | 'glyph' | 'name' | 'data' | 'show';
 
 const columns: { field: Fields; headerName: string }[] = [
-  { field: 'id', headerName: 'ID' },
   { field: 'name', headerName: '名前' },
   { field: 'glyph', headerName: '生成グリフ' },
   { field: 'data', headerName: 'KAGEデータ' },
@@ -59,10 +59,9 @@ export const Glyphs = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rows = glyphs?.map((glyph): { [key in Fields | 'key']: any } => ({
     key: `glyph_${glyph.id}`,
-    id: glyph.id,
     name: glyph.name,
     glyph: '',
-    data: glyph.data,
+    data: splitData(glyph.data),
     show: '',
   }));
 

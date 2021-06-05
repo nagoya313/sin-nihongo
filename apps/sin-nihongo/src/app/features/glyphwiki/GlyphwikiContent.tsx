@@ -9,17 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { Buhin } from '@kurgm/kage-engine';
 import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
-
-const splitData = (data: string | undefined) => {
-  return data?.split('$')?.map((t, i) => {
-    return (
-      <span key={i}>
-        {t}
-        <br />
-      </span>
-    );
-  });
-};
+import { splitData } from '../../utils/kageData';
 
 interface Props {
   readonly name?: string;

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import styled from 'styled-components';
-import Alert from '@material-ui/lab/Alert';
+import Alert, { Color } from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { withTheme } from '@material-ui/core/styles';
 
@@ -13,11 +13,13 @@ const StyledDiv = withTheme(styled.div`
 
 interface StateType {
   open: boolean;
-  message: string;
+  severity?: Color;
+  message?: string;
 }
 
 type ActionType = {
   type: 'open' | 'close';
+  severity?: Color;
   message?: string;
 };
 
@@ -27,13 +29,13 @@ const NoticeStateContext = createContext({} as StateType);
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const NoticeDispatchContext = createContext<React.Dispatch<ActionType>>(() => {});
 
-const reducer = (_state: StateType, action: ActionType): StateType => {
+const reducer = (state: StateType, action: ActionType): StateType => {
   switch (action.type) {
     case 'open':
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return { open: true, message: action.message! };
+      return { open: true, message: action.message, severity: action.severity };
     case 'close':
-      return { open: false, message: '' };
+      return { ...state, open: false };
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -56,7 +58,7 @@ export const Notice: React.FC = () => {
   return (
     <StyledDiv>
       <Snackbar open={state.open} autoHideDuration={3000} onClose={() => dispatch({ type: 'close' })}>
-        <Alert variant="filled" severity="error" onClose={() => dispatch({ type: 'close' })}>
+        <Alert variant="filled" severity={state.severity} onClose={() => dispatch({ type: 'close' })}>
           {state.message}
         </Alert>
       </Snackbar>

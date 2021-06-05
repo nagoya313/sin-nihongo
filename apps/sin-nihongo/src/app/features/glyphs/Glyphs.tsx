@@ -1,24 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Buhin } from '@kurgm/kage-engine';
-import { Glyphs as ApiGlyphs, Glyph } from '@sin-nihongo/api-interfaces';
+import { Glyphs as ApiGlyphs, Glyph, Message } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
-import { useAxiosGet } from '../../utils/axios';
+import { NoticeDispatchContext } from '../notice/Notice';
+import { useAxiosGet, useLazyAxiosDelete, accessTokenHeader } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
-import { DeleteDialog } from './DeleteDialog';
 
 type Fields = 'glyph' | 'name' | 'data' | 'show' | 'delete';
 
@@ -32,30 +38,50 @@ const columns: { field: Fields; headerName: string }[] = [
 
 export const Glyphs = () => {
   const [open, setOpen] = React.useState(false);
+  const noticeDispatch = useContext(NoticeDispatchContext);
   const [deleteID, setDeleteId] = React.useState('');
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [searchName, setSearchName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [glyphs, setGlyphs] = useState<Glyph[]>();
   const [buhin, setBuhin] = useState(new Buhin());
-  const [{ data, loading, error }, refetch] = useAxiosGet<ApiGlyphs>('api/v1/glyphs');
+  const [getResponse, getRefetch] = useAxiosGet<ApiGlyphs>('api/v1/glyphs');
+  const [deleteResponse, deleteRefetch] = useLazyAxiosDelete<Message>('');
 
-  useEffect(() => {
-    setPageNumber(1);
-  }, [searchName]);
-
-  useEffect(() => {
+  const refetchGetRequest = () => {
     // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
-    refetch({
-      params: {
-        page: pageNumber,
-        nameLike: searchName || undefined,
-      },
+    getRefetch({
+      params: { page: pageNumber, nameLike: searchName || undefined },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
     }).catch(() => {});
-  }, [refetch, searchName, pageNumber]);
+  };
+
+  const notDeleteClose = () => {
+    setDeleteId('');
+    setOpen(false);
+  };
+
+  const onDeleteClose = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const token = await getAccessTokenSilently({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      audience: process.env.NX_API_IDENTIFIER!,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    await deleteRefetch({ url: `api/v1/glyphs/${deleteID}`, headers: accessTokenHeader(token) }).catch(() => {});
+    setDeleteId('');
+    refetchGetRequest();
+  };
+
+  useEffect(() => setPageNumber(1), [searchName]);
 
   useEffect(() => {
+    refetchGetRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchName, pageNumber]);
+
+  useEffect(() => {
+    const { data, loading, error } = getResponse;
     if (!loading) {
       if (error) {
         setGlyphs(undefined);
@@ -73,7 +99,20 @@ export const Glyphs = () => {
         setBuhin(b);
       }
     }
-  }, [data, loading, error]);
+  }, [getResponse]);
+
+  useEffect(() => {
+    const { data, loading, error } = deleteResponse;
+    if (!loading) {
+      if (error) {
+        noticeDispatch({ type: 'open', message: error.message, severity: 'error' });
+        setOpen(false);
+      } else if (data) {
+        noticeDispatch({ type: 'open', message: data.message, severity: 'success' });
+        setOpen(false);
+      }
+    }
+  }, [deleteResponse, noticeDispatch]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rows = glyphs?.map((glyph): { [key in Fields | 'key']: any } => ({
@@ -109,24 +148,31 @@ export const Glyphs = () => {
         </Typography>
         <SearchTextField label="グリフ名" onSearchWordChange={setSearchName} hint="例：u4e00" />
         <Divider />
-        {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
-        {loading && <Typography>検索中...</Typography>}
+        {getResponse.error && <ErrorTypography>{getResponse.error.response?.data?.message}</ErrorTypography>}
+        {getResponse.loading && <Typography>検索中...</Typography>}
         <Table<Fields>
           columns={columns}
           rows={rows}
           pageNumber={pageNumber}
-          totalPages={data?.meta?.totalPages}
+          totalPages={getResponse.data?.meta?.totalPages}
           onPageChange={(page: number) => setPageNumber(page)}
         />
       </CardContent>
-      <DeleteDialog
-        id={deleteID}
-        open={open}
-        onClose={() => {
-          setDeleteId('');
-          setOpen(false);
-        }}
-      />
+      <Dialog open={open} onClose={notDeleteClose}>
+        <DialogTitle>グリフお本当に削除しますか？</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <DialogActions>
+              <Button onClick={notDeleteClose} color="primary">
+                いーえ
+              </Button>
+              <Button onClick={onDeleteClose} color="primary" autoFocus>
+                はい
+              </Button>
+            </DialogActions>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

@@ -1,5 +1,7 @@
 import useAxios from 'axios-hooks';
 
+export const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
+
 export const useAxiosGet = <T>(url: string) => {
   return useAxios<T, Error>(
     {

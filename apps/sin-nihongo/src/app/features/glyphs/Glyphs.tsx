@@ -16,7 +16,7 @@ import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
-import { useAxiosGet } from '../../libs/axios';
+import { useAxiosGet } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 import { DeleteDialog } from './DeleteDialog';
 
@@ -39,10 +39,6 @@ export const Glyphs = () => {
   const [glyphs, setGlyphs] = useState<Glyph[]>();
   const [buhin, setBuhin] = useState(new Buhin());
   const [{ data, loading, error }, refetch] = useAxiosGet<ApiGlyphs>('api/v1/glyphs');
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   useEffect(() => {
     setPageNumber(1);

@@ -10,7 +10,7 @@ import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { NewTabLink } from '../../components/NewTabLink';
 import { SearchTextField } from '../../components/SearchTextField';
-import { useLazyAxiosGet } from '../../libs/axios';
+import { useLazyAxiosGet } from '../../utils/axios';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
 const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';

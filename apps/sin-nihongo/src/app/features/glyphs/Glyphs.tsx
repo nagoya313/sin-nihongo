@@ -12,6 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Buhin } from '@kurgm/kage-engine';
@@ -140,7 +141,18 @@ export const Glyphs = () => {
 
   return (
     <Card>
-      <CardHeader avatar={<CardAvatar>グ</CardAvatar>} title="グリフ一覧" titleTypographyProps={{ variant: 'h4' }} />
+      <CardHeader
+        avatar={<CardAvatar>グ</CardAvatar>}
+        title="グリフ一覧"
+        titleTypographyProps={{ variant: 'h4' }}
+        action={
+          isAuthenticated ? (
+            <IconButtonRouteLink to="/glyphs/new">
+              <BuildIcon />
+            </IconButtonRouteLink>
+          ) : null
+        }
+      />
       <CardContent>
         <Typography variant="body1" gutterBottom>
           新日本語で採用された字形およびその部品のKAGEデータとその生成グリフお閲覧できます。
@@ -158,21 +170,23 @@ export const Glyphs = () => {
           onPageChange={(page: number) => setPageNumber(page)}
         />
       </CardContent>
-      <Dialog open={open} onClose={notDeleteClose}>
-        <DialogTitle>グリフお本当に削除しますか？</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <DialogActions>
-              <Button onClick={notDeleteClose} color="primary">
-                いーえ
-              </Button>
-              <Button onClick={onDeleteClose} color="primary" autoFocus>
-                はい
-              </Button>
-            </DialogActions>
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
+      {isAuthenticated ? (
+        <Dialog open={open} onClose={notDeleteClose}>
+          <DialogTitle>グリフお本当に削除しますか？</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <DialogActions>
+                <Button onClick={notDeleteClose} color="primary">
+                  いーえ
+                </Button>
+                <Button onClick={onDeleteClose} color="primary" autoFocus>
+                  はい
+                </Button>
+              </DialogActions>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+      ) : null}
     </Card>
   );
 };

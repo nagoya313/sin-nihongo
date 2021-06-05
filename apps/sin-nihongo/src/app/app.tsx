@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuth0 } from '@auth0/auth0-react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -8,7 +9,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { createMuiTheme, withTheme, ThemeProvider } from '@material-ui/core/styles';
 import CategorIcon from '@material-ui/icons/Category';
 import FormatSizeIcon from '@material-ui/icons/FormatSize';
@@ -26,10 +26,7 @@ import { Notice, NoticeProvider } from './features/notice/Notice';
 import { Radicals } from './features/radicals/Radicals';
 import { RadicalKanjis } from './features/radicals/RadicalKanjis';
 import { Login } from './features/login/Login';
-
-const MenuTitleTypography = styled(Typography)`
-  flex-grow: 1;
-`;
+import { GlyphCreate } from './features/glyphs/GlyphCreate';
 
 const MenuDiv = styled.div`
   overflow: auto;
@@ -69,6 +66,9 @@ const theme = createMuiTheme({
 });
 
 export const App: React.FC = () => {
+  const { isAuthenticated } = useAuth0();
+  console.log(isAuthenticated);
+
   return (
     <ThemeProvider theme={theme}>
       <NoticeProvider>
@@ -104,6 +104,7 @@ export const App: React.FC = () => {
                 <Route exact path="/kanjis" component={Kanjis} />
                 <Route exact path="/glyphs" component={Glyphs} />
                 <Route exact path="/radicals/:id/kanjis" component={RadicalKanjis} />
+                {isAuthenticated ? <Route exact path="/glyphs/new" component={GlyphCreate} /> : null}
                 <Route component={NotFound} />
               </Switch>
             </ContentMain>

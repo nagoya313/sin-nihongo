@@ -1,3 +1,7 @@
+export interface Message {
+  readonly message: string;
+}
+
 export interface ValidationError {
   readonly property: string;
   readonly value: string;

@@ -24,7 +24,7 @@ import { ErrorTypography } from '../../components/ErrorTypography';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
-import { useAxiosGet } from '../../libs/axios';
+import { useAxiosGet } from '../../utils/axios';
 
 const ucsValidation = (word: string) => word.match(KANJI_USC_QUERY_PARAMS_MATCHER) !== null || word === '';
 const readValidation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';

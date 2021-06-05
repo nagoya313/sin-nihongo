@@ -36,7 +36,7 @@ export class GlyphsController {
   @Delete('/glyphs/:id')
   @Authorized()
   async destroy(@Param('id') id: string) {
-    await GlyphModel.findByIdAndDelete(Types.ObjectId(id)).exec();
+    await GlyphRepository.deleteOne(id);
     return { message: 'グリフデータを削除しました。' };
   }
 

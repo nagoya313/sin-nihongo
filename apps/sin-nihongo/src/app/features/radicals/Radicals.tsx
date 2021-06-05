@@ -18,7 +18,7 @@ import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
-import { useAxiosGet } from '../../libs/axios';
+import { useAxiosGet } from '../../utils/axios';
 
 const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
 

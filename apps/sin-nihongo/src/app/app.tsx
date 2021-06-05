@@ -24,6 +24,7 @@ import { Glyphwiki } from './features/glyphwiki/Glyphwiki';
 import { Kanjis } from './features/kanjis/Kanjis';
 import { Radicals } from './features/radicals/Radicals';
 import { RadicalKanjis } from './features/radicals/RadicalKanjis';
+import { Login } from './features/login/Login';
 
 const MenuTitleTypography = styled(Typography)`
   flex-grow: 1;
@@ -77,6 +78,8 @@ export const App: React.FC = () => {
               <Button size="large" color="inherit" component={Link} to="/">
                 新日本語
               </Button>
+              <div style={{ flexGrow: 1 }}></div>
+              <Login />
             </Toolbar>
           </StyledAppBar>
           <StyledDrawer variant="permanent">

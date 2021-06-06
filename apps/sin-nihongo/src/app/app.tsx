@@ -98,7 +98,7 @@ export const App: React.FC = () => {
               <HeaderDiv />
               <Switch>
                 <Route exact path="/" component={Home} />
-                <Route exact path="/glyphwiki" component={Glyphwiki} />
+                <Route exact path="/glyphwiki" render={() => <Glyphwiki isAdmin={false} />} />
                 <Route exact path="/radicals" component={Radicals} />
                 <Route exact path="/kanjis" component={Kanjis} />
                 <Route exact path="/glyphs" component={Glyphs} />

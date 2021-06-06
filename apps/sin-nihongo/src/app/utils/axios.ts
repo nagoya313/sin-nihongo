@@ -19,6 +19,7 @@ export const errorMessage = (error: AxiosError<ApiError>) => {
 
 type Execute<Response> = (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<Response>;
 
+export const fetch = <Response>(execute: Execute<Response>) => execute().catch(errorHandler);
 export const fetchWithToken = <Response>(execute: Execute<Response>, token: string) =>
   execute({ headers: accessTokenHeader(token) }).catch(errorHandler);
 export const fetchWithTokenAndData = <Params, Response>(execute: Execute<Response>, token: string, data: Params) =>
@@ -33,7 +34,8 @@ export const useAxiosGet = <Response>(url: string, config?: AxiosRequestConfig) 
 const useLazyAxiosBase = <Response>(url: string, method: Method, config?: AxiosRequestConfig, options?: Options) =>
   useAxiosBase<Response>(url, method, config, { ...options, manual: true });
 
-export const useLazyAxiosGet = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'GET');
+export const useLazyAxiosGet = <Response>(url: string, config?: AxiosRequestConfig) =>
+  useLazyAxiosBase<Response>(url, 'GET', config);
 export const useLazyAxiosPost = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'POST');
 export const useLazyAxiosPatch = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'PATCH');
 export const useLazyAxiosDelete = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'DELETE');

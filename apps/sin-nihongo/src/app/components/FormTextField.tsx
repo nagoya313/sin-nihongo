@@ -12,11 +12,13 @@ type Props = {
   name: string;
 } & TextFieldProps;
 
-export const FormTextField: React.FC<Props> = ({ label, name }) => {
+export const FormTextField: React.FC<Props> = ({ label, name, helperText }) => {
   const {
     control,
     formState: { errors },
   } = useFormContext();
+  const isError = errors[name] != null;
+
   return (
     <Controller
       name={name}
@@ -25,8 +27,8 @@ export const FormTextField: React.FC<Props> = ({ label, name }) => {
         <StyledTextField
           label={label}
           {...field}
-          error={errors[name] != null}
-          helperText={<ErrorMessage errors={errors} name={name} />}
+          error={isError}
+          helperText={isError ? <ErrorMessage errors={errors} name={name} /> : helperText}
         />
       )}
     />

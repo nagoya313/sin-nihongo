@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { FormProvider, useForm, Controller } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import { ErrorMessage } from '@hookform/error-message';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -18,18 +17,13 @@ import { Form } from '../../components/Form';
 const resolver = classValidatorResolver(CreateGlyph);
 
 export const GlyphCreate: React.FC = () => {
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm<CreateGlyph>({ mode: 'onBlur', resolver });
+  const methods = useForm({ resolver, defaultValues: { name: '', data: '' } });
   const [buhin, setBuhin] = useState(new Buhin());
 
-  const onSubmit = (data) => alert(JSON.stringify(data));
+  const onSubmit = (data: CreateGlyph) => alert(JSON.stringify(data));
 
   const onDraw = () => {
-    const data = getValues('data');
+    const data = methods.getValues('data');
     const b = new Buhin();
     b.push('preview', data);
     setBuhin(b);
@@ -43,39 +37,15 @@ export const GlyphCreate: React.FC = () => {
           <GlyphCanvas buhin={buhin} name="preview" />
           <IconButton onClick={onDraw} icon={<BrushIcon />} />
         </Box>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <Box display="flex" flexDirection="column">
-            <Controller
-              name="name"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <FormTextField
-                  label="グリフ名"
-                  {...field}
-                  error={errors.name != null}
-                  helperText={<ErrorMessage errors={errors} name="name" />}
-                />
-              )}
-            />
-            <ErrorMessage errors={errors} name="name" />
-            <Controller
-              name="data"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <FormTextField
-                  label="KAGEデータ"
-                  multiline
-                  {...field}
-                  error={errors.data != null}
-                  helperText={<ErrorMessage errors={errors} name="data" />}
-                />
-              )}
-            />
-            <SubmitButton text="登録する" />
-          </Box>
-        </Form>
+        <FormProvider {...methods}>
+          <Form onSubmit={methods.handleSubmit(onSubmit)}>
+            <Box display="flex" flexDirection="column">
+              <FormTextField name="name" label="グリフ名" />
+              <FormTextField name="data" label="KAGEデータ" multiline />
+              <SubmitButton text="登録する" />
+            </Box>
+          </Form>
+        </FormProvider>
       </CardContent>
     </Card>
   );

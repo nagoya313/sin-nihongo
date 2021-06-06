@@ -12,7 +12,8 @@ export interface ValidationError {
 
 export interface Error {
   readonly name: string;
-  readonly message: string | ValidationError;
+  readonly message: string;
+  readonly errors?: ValidationError;
 }
 
 interface PaginationMetaData {
@@ -63,12 +64,21 @@ export interface Glyphs extends Pagination<Glyph> {
   readonly includeGlyphs: Glyph[];
 }
 
-export class CreateGlyph {
+export class GlyphForm {
   @Length(1, 20)
   readonly name: string;
 
   @IsNotEmpty()
   readonly data: string;
+}
+
+export class GlyphParams {
+  constructor(glyph: GlyphForm) {
+    this.glyph = glyph;
+  }
+
+  @IsNotEmpty()
+  readonly glyph: GlyphForm;
 }
 
 export const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;

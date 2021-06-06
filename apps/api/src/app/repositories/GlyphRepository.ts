@@ -28,7 +28,7 @@ export class GlyphRepository {
     } catch (error) {
       throw new BadRequestError(`未実装のグリフお含んでいます。${error.message}`);
     }
-    GlyphModel.create(params.glyph);
+    return GlyphModel.create(params.glyph);
   }
 
   static async deleteOne(id: string) {

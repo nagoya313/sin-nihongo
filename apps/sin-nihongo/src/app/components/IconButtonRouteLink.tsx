@@ -1,4 +1,4 @@
-import React, { useMemo, forwardRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Location, LocationDescriptor } from 'history';
 import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
@@ -9,10 +9,9 @@ type Props = {
 } & IconButtonProps;
 
 export const IconButtonRouteLink: React.FC<Props> = ({ to, icon }) => {
-  const CustomLink = useMemo(
-    () => forwardRef((linkProps, ref: React.Ref<HTMLAnchorElement>) => <Link ref={ref} to={to} {...linkProps} />),
-    [to]
+  return (
+    <IconButton component={Link} to={to}>
+      {icon}
+    </IconButton>
   );
-
-  return <IconButton component={CustomLink}>{icon}</IconButton>;
 };

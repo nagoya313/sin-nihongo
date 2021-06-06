@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+          key: v1-dependency-cache-{{ checksum "yarn.lock" }}
       - run:
           name: fetch dependencies
           command: yarn install --no-progress --non-interactive --silent --pure-lockfile

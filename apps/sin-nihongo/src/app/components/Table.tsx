@@ -20,14 +20,14 @@ const BodyTableRow = withTheme(styled(TableRow)`
   }
 `);
 
-interface Props<Fields extends string> {
-  readonly columns: { field: Fields; headerName: string }[];
+type Props<Fields extends string> = {
+  columns: { field: Fields; headerName: string }[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly rows?: { [key in Fields | 'key']: any }[];
-  readonly pageNumber: number;
-  readonly totalPages?: number;
-  readonly onPageChange: (_: number) => void;
-}
+  rows?: { [key in Fields | 'key']: any }[];
+  pageNumber: number;
+  totalPages?: number;
+  onPageChange: (_: number) => void;
+};
 
 export function Table<Fields extends string>(props: Props<Fields>) {
   const { columns, rows, pageNumber, totalPages, onPageChange } = props;

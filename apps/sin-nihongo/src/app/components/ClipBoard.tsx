@@ -4,10 +4,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-interface Props {
-  readonly data?: string;
-  readonly title: string;
-}
+type Props = {
+  data?: string;
+  title: string;
+};
 
 export const ClipBoard: React.FC<Props> = ({ data, title }) => {
   const [openTip, setOpenTip] = useState(false);

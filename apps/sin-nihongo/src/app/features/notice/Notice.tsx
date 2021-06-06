@@ -11,11 +11,11 @@ const StyledDiv = withTheme(styled.div`
   }
 `);
 
-interface StateType {
+type StateType = {
   open: boolean;
   severity?: Color;
   message?: string;
-}
+};
 
 type ActionType = {
   type: 'open' | 'close';

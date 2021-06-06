@@ -7,7 +7,7 @@ type Props = {
 
 export const TextButton: React.FC<Props> = ({ text, ...others }) => {
   return (
-    <Button {...others} color="primary">
+    <Button color="primary" {...others}>
       {text}
     </Button>
   );

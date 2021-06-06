@@ -25,10 +25,10 @@ const Canvas = styled.canvas`
   background-color: white;
 `;
 
-interface Props {
-  readonly buhin: Buhin;
-  readonly name?: string;
-}
+type Props = {
+  buhin: Buhin;
+  name?: string;
+};
 
 export const GlyphCanvas: React.FC<Props> = ({ buhin, name }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

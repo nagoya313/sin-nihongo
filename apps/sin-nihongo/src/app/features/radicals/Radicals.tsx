@@ -2,22 +2,21 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import FindInPage from '@material-ui/icons/FindInPage';
-import Typography from '@material-ui/core/Typography';
 import { withTheme } from '@material-ui/core/styles';
 import {
   RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
   Pagination as ApiPagination,
   Radical,
 } from '@sin-nihongo/api-interfaces';
-import { CardAvatar } from '../../components/CardAvatar';
-import { ErrorTypography } from '../../components/ErrorTypography';
+import { CardHeader } from '../../components/CardHeader';
 import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
+import { ResponseNotice } from '../../components/ResponseNotice';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
+import { Text } from '../../components/Text';
 import { useAxiosGet } from '../../utils/axios';
 
 const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
@@ -87,11 +86,9 @@ export const Radicals: React.FC = () => {
 
   return (
     <Card>
-      <CardHeader avatar={<CardAvatar>部</CardAvatar>} title="部首索引" titleTypographyProps={{ variant: 'h4' }} />
+      <CardHeader avatarText="部" title="部首索引" />
       <CardContent>
-        <Typography variant="body1" gutterBottom>
-          部首名（表音式ひらがなの前方一致）か画数で検索できます。
-        </Typography>
+        <Text>部首名（表音式ひらがなの前方一致）か画数で検索できます。</Text>
         <StyledForm noValidate autoComplete="off">
           <SearchTextField
             label="なまえ"
@@ -109,8 +106,7 @@ export const Radicals: React.FC = () => {
           />
         </StyledForm>
         <Divider />
-        {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
-        {loading && <Typography>検索中...</Typography>}
+        <ResponseNotice loading={loading} error={error} />
         <Table<Fields>
           columns={columns}
           rows={rows}

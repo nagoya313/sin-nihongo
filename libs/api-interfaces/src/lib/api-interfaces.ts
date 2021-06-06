@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import { IsNotEmpty, Length } from 'class-validator';
+
 export interface Message {
   readonly message: string;
 }
@@ -8,9 +11,10 @@ export interface ValidationError {
   readonly constraints: { [key: string]: string };
 }
 
-export interface Error {
+export interface ApiError {
   readonly name: string;
-  readonly message: string | ValidationError;
+  readonly message: string;
+  readonly errors?: ValidationError;
 }
 
 interface PaginationMetaData {
@@ -59,6 +63,23 @@ export interface Glyph {
 
 export interface Glyphs extends Pagination<Glyph> {
   readonly includeGlyphs: Glyph[];
+}
+
+export class GlyphForm {
+  @Length(1, 20)
+  readonly name: string;
+
+  @IsNotEmpty()
+  readonly data: string;
+}
+
+export class GlyphParams {
+  constructor(glyph: GlyphForm) {
+    this.glyph = glyph;
+  }
+
+  @IsNotEmpty()
+  readonly glyph: GlyphForm;
 }
 
 export const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;

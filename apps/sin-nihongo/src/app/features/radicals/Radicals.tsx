@@ -38,7 +38,7 @@ const columns: { field: Fields; headerName: string }[] = [
   { field: 'show', headerName: '部首で漢字絞り込み' },
 ];
 
-export const Radicals = () => {
+export const Radicals: React.FC = () => {
   const [searchName, setSearchName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
@@ -82,11 +82,7 @@ export const Radicals = () => {
     radical: radical.character,
     read: radical.names.join('、'),
     numberOfStrokes: radical.numberOfStrokes,
-    show: (
-      <IconButtonRouteLink to={`radicals/${radical.id}/kanjis`}>
-        <FindInPage />
-      </IconButtonRouteLink>
-    ),
+    show: <IconButtonRouteLink to={`radicals/${radical.id}/kanjis`} icon={<FindInPage />} />,
   }));
 
   return (

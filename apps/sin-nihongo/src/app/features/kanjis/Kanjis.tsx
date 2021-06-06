@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -12,7 +11,6 @@ import Link from '@material-ui/core/Link';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
-import { withTheme } from '@material-ui/core/styles';
 import {
   KANJI_USC_QUERY_PARAMS_MATCHER,
   RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
@@ -21,6 +19,7 @@ import {
 } from '@sin-nihongo/api-interfaces';
 import { CardAvatar } from '../../components/CardAvatar';
 import { ErrorTypography } from '../../components/ErrorTypography';
+import { Form } from '../../components/Form';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
@@ -28,12 +27,6 @@ import { useAxiosGet } from '../../utils/axios';
 
 const ucsValidation = (word: string) => word.match(KANJI_USC_QUERY_PARAMS_MATCHER) !== null || word === '';
 const readValidation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
-
-const StyledForm = withTheme(styled.form`
-  & > * {
-    margin: ${(props) => props.theme.spacing(1)}px;
-  }
-`);
 
 type Fields =
   | 'ucs'
@@ -162,7 +155,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
           JIS第一、第二水準の漢字お検索できます。それ以外の漢字わ新日本語でわサポートしません。
           音読み・訓読みの検索わ表音式ひらがなの前方一致です。
         </Typography>
-        <StyledForm noValidate autoComplete="off">
+        <Form noValidate autoComplete="off">
           <SearchTextField
             label="漢字、UCS"
             onSearchWordChange={setSearchUcs}
@@ -213,7 +206,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
               <FormControlLabel value="" control={<Radio color="primary" />} label="指定なし" labelPlacement="top" />
             </RadioGroup>
           </FormControl>
-        </StyledForm>
+        </Form>
         <Divider />
         {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
         {loading && <Typography>検索中...</Typography>}

@@ -1,7 +1,8 @@
 import { Authorized, JsonController, Delete, Get, Param, Patch, Post } from 'routing-controllers';
 import { Types } from 'mongoose';
+import { GlyphParams } from '@sin-nihongo/api-interfaces';
 import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
-import { GlyphsParams, GlyphsQueryParams } from '../forms/GlyphsForm';
+import { GlyphsQueryParams } from '../forms/GlyphsForm';
 import { GlyphModel } from '../models/glyph';
 import { GlyphResponse } from '../responses/GlyphResponse';
 import { GlyphRepository } from '../repositories/GlyphRepository';
@@ -21,14 +22,14 @@ export class GlyphsController {
 
   @Post('/glyphs')
   @Authorized()
-  async create(@ValidateBody params: GlyphsParams) {
-    await GlyphModel.create(params);
+  async create(@ValidateBody params: GlyphParams) {
+    await GlyphModel.create(params.glyph);
     return { message: 'グリフデータを作成しました。' };
   }
 
   @Patch('/glyphs/:id')
   @Authorized()
-  async update(@Param('id') id: string, @ValidateBody params: GlyphsParams) {
+  async update(@Param('id') id: string, @ValidateBody params: GlyphParams) {
     await GlyphModel.findByIdAndUpdate(Types.ObjectId(id), params, { new: true }).exec();
     return { message: 'グリフデータを更新しました。' };
   }

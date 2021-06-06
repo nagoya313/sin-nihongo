@@ -8,8 +8,8 @@ export interface Glyph extends Document {
 
 const schema = new Schema<Glyph>(
   {
-    name: { type: String, require: true, unique: true },
-    data: { type: String, require: true },
+    name: { type: String, required: true, unique: true },
+    data: { type: String, required: true },
   },
   {
     timestamps: true,

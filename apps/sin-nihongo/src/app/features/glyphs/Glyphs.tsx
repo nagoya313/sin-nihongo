@@ -3,7 +3,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -17,14 +16,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { Buhin } from '@kurgm/kage-engine';
 import { Glyphs as ApiGlyphs, Glyph, Message } from '@sin-nihongo/api-interfaces';
-import { CardAvatar } from '../../components/CardAvatar';
+import { CardHeader } from '../../components/CardHeader';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
+import { Text } from '../../components/Text';
 import { NoticeDispatchContext } from '../notice/Notice';
-import { useAxiosGet, useLazyAxiosDelete, accessTokenHeader } from '../../utils/axios';
+import { useAxiosGet, useLazyAxiosDelete } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 
 type Fields = 'glyph' | 'name' | 'data' | 'show' | 'delete';
@@ -121,11 +121,7 @@ export const Glyphs = () => {
     name: glyph.name,
     glyph: <GlyphCanvas buhin={buhin} name={glyph.name} />,
     data: splitData(glyph.data),
-    show: (
-      <IconButtonRouteLink to="/">
-        <DescriptionIcon />
-      </IconButtonRouteLink>
-    ),
+    show: <IconButtonRouteLink to="/" icon={<DescriptionIcon />} />,
     delete: isAuthenticated ? (
       <IconButton
         onClick={() => {
@@ -142,22 +138,15 @@ export const Glyphs = () => {
   return (
     <Card>
       <CardHeader
-        avatar={<CardAvatar>グ</CardAvatar>}
+        avatarText="グ"
         title="グリフ一覧"
-        titleTypographyProps={{ variant: 'h4' }}
-        action={
-          isAuthenticated ? (
-            <IconButtonRouteLink to="/glyphs/new">
-              <BuildIcon />
-            </IconButtonRouteLink>
-          ) : null
-        }
+        action={isAuthenticated ? <IconButtonRouteLink to="/glyphs/new" icon={<BuildIcon />} /> : undefined}
       />
       <CardContent>
-        <Typography variant="body1" gutterBottom>
+        <Text>
           新日本語で採用された字形およびその部品のKAGEデータとその生成グリフお閲覧できます。
           グリフ名で検索もできます（グリフ名わグリフウィキとおーむね一致です）。
-        </Typography>
+        </Text>
         <SearchTextField label="グリフ名" onSearchWordChange={setSearchName} hint="例：u4e00" />
         <Divider />
         {getResponse.error && <ErrorTypography>{getResponse.error.response?.data?.message}</ErrorTypography>}

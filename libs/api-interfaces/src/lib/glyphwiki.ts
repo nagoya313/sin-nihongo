@@ -3,7 +3,7 @@ import { Matches } from 'class-validator';
 const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;
 
 export class GlyphwikiQueryParams {
-  @Matches(GLYPHWIKI_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能なクエリです。` })
+  @Matches(GLYPHWIKI_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能なクエリです` })
   q: string;
 
   get glyphwikiApiRequestParam() {

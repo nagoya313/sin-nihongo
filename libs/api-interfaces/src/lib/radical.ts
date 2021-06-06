@@ -6,11 +6,11 @@ export const RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER = /^(?!.*[ぢづゐゑを])
 
 export class RadicalsQueryParams extends PaginationQueryParams {
   @IsOptional()
-  @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです。` })
+  @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです` })
   nameLike?: string;
 
   @IsOptional()
-  @IsInt({ message: '画数わ整数で入力してください。' })
-  @Min(1, { message: '画数わ$constraint1以上で入力してください。' })
+  @IsInt({ message: '画数わ整数で入力してください' })
+  @Min(1, { message: '画数わ$constraint1以上で入力してください' })
   numberOfStrokes?: number;
 }

@@ -35,14 +35,14 @@ export const Radicals: React.FC = () => {
   });
   const [searchName, setSearchName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
-  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState(0);
+  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState(NaN);
   const [{ data, loading, error }] = useAxiosGet<ApiPagination<Radical>>('api/v1/radicals', {
     params: { page: pageNumber, nameLike: searchName, numberOfStrokes: searchNumberOfStrokes },
   });
 
   const onSubmit = (data: RadicalsQueryParams) => {
-    setSearchName(data.nameLike ?? '');
-    setSearchNumberOfStrokes(data.numberOfStrokes ?? NaN);
+    setSearchName(data.nameLike || '');
+    setSearchNumberOfStrokes(data.numberOfStrokes || NaN);
   };
 
   const onPageChange = (page: number) => setPageNumber(page);

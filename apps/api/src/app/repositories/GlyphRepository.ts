@@ -1,8 +1,8 @@
 import { Types } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import { flatten, uniq } from 'underscore';
-import { NotFoundError } from 'routing-controllers';
-import { Glyph as ApiGlyph, GlyphsQueryParams } from '@sin-nihongo/api-interfaces';
+import { NotFoundError, BadRequestError } from 'routing-controllers';
+import { Glyph as ApiGlyph, GlyphsQueryParams, GlyphParams } from '@sin-nihongo/api-interfaces';
 import { glyphData, includesGlyphData } from '../libs/glyph';
 import { Glyph, GlyphModel } from '../models/glyph';
 
@@ -20,6 +20,15 @@ export class GlyphRepository {
 
   static async findOne(id: string) {
     return glyphData(id, this.findOneOrFail, this.findByIdOrFail);
+  }
+
+  static async create(params: GlyphParams) {
+    try {
+      await includesGlyphData(params.glyph, this.findOneOrFail);
+    } catch (error) {
+      throw new BadRequestError(`未実装のグリフお含んでいます。${error.message}`);
+    }
+    return GlyphModel.create(params.glyph);
   }
 
   static async deleteOne(id: string) {

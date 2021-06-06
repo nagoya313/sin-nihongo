@@ -22,7 +22,7 @@ export class GlyphsController {
   @Post('/glyphs')
   @Authorized()
   async create(@ValidateBody params: GlyphParams) {
-    await GlyphModel.create(params.glyph);
+    await GlyphRepository.create(params);
     return { message: 'グリフデータを作成しました。' };
   }
 

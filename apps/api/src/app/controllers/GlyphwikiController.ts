@@ -1,5 +1,5 @@
 import { JsonController, Get } from 'routing-controllers';
-import { GlyphwikiQueryParams } from '../forms/GlyphwikiForm';
+import { GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
 import { ValidateQueryParams } from '../libs/decorators';
 import { GlyphwikiRepository } from '../repositories/GlyphwikiRepository';
 

@@ -1,5 +1,6 @@
 import { Matches } from 'class-validator';
-import { GLYPHWIKI_QUERY_PARAMS_MATCHER } from '@sin-nihongo/api-interfaces';
+
+const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;
 
 export class GlyphwikiQueryParams {
   @Matches(GLYPHWIKI_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能なクエリです。` })

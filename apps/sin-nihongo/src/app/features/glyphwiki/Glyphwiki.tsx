@@ -1,50 +1,42 @@
 import React, { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import { Buhin } from '@kurgm/kage-engine';
-import { GLYPHWIKI_QUERY_PARAMS_MATCHER, Glyph } from '@sin-nihongo/api-interfaces';
+import { Glyph, GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
 import { CardHeader } from '../../components/CardHeader';
+import { Form } from '../../components/Form';
+import { FormTextField } from '../../components/FormTextField';
 import { NewTabLink } from '../../components/NewTabLink';
 import { ResponseNotice } from '../../components/ResponseNotice';
-import { SearchTextField } from '../../components/SearchTextField';
 import { SubText } from '../../components/SubText';
 import { Text } from '../../components/Text';
-import { useLazyAxiosGet } from '../../utils/axios';
+import { useAxiosGet } from '../../utils/axios';
+import { glyphToBuhin } from '../../utils/kageData';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
-const validation = (word: string) => word.match(GLYPHWIKI_QUERY_PARAMS_MATCHER) !== null || word === '';
+const resolver = classValidatorResolver(GlyphwikiQueryParams);
+const initialWord = '一';
 
-export const Glyphwiki = () => {
-  const [searchWord, setSearchWord] = useState('');
-  const [{ data, loading, error }, refetch] = useLazyAxiosGet<Glyph>('api/v1/glyphwiki');
-  const [kageData, setKageData] = useState<Glyph>();
+type Props = {
+  isAdmin: boolean;
+};
+
+export const Glyphwiki: React.FC<Props> = ({ isAdmin }) => {
+  const methods = useForm<GlyphwikiQueryParams>({ resolver, defaultValues: { q: initialWord } });
+  const [searchWord, setSearchWord] = useState(initialWord);
+  const [{ data, loading, error }] = useAxiosGet<Glyph>('api/v1/glyphwiki', {
+    params: { q: searchWord },
+  });
   const [buhin, setBuhin] = useState(new Buhin());
 
-  useEffect(() => {
-    if (searchWord) {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      refetch({ params: { q: searchWord } }).catch(() => {});
-    }
-  }, [refetch, searchWord]);
+  const onSubmit = (data: GlyphwikiQueryParams) => setSearchWord(data.q);
 
   useEffect(() => {
-    if (!loading) {
-      if (error) {
-        setKageData(undefined);
-      } else if (typeof data !== 'undefined') {
-        setKageData(data);
-        const b = new Buhin();
-        if (data) {
-          b.push(data.name, data.data);
-          data.includeGlyphs?.forEach((glyph) => {
-            b.push(glyph.name, glyph.data);
-          });
-        }
-        setBuhin(b);
-      }
-    }
-  }, [data, loading, error]);
+    data && setBuhin(glyphToBuhin(data));
+  }, [data]);
 
   return (
     <Card>
@@ -57,22 +49,20 @@ export const Glyphwiki = () => {
           />
           からグリフお検索します。漢字一文字或いわグリフウィキのグリフ名から検索できます。
         </Text>
-        <SearchTextField
-          label="漢字・USC・グリフ名"
-          onSearchWordChange={setSearchWord}
-          validation={validation}
-          hint="例：一、u4e00、aj1-10186"
-          errorMessage="検索ワードが不正です"
-        />
+        <FormProvider {...methods}>
+          <Form onSubmit={methods.handleSubmit(onSubmit)}>
+            <FormTextField name="q" label="漢字・USC・グリフ名" helperText="例：一、u4e00、aj1-10186" />
+          </Form>
+        </FormProvider>
         <Divider />
         <ResponseNotice loading={loading} error={error} />
-        {kageData?.name && (
+        {data && (
           <React.Fragment>
-            <GlyphwikiContent name={kageData?.name} data={kageData?.data} buhin={buhin} />
+            <GlyphwikiContent isAdmin={isAdmin} name={data.name} data={data.data} buhin={buhin} />
             <SubText>参照グリフ</SubText>
-            {kageData?.includeGlyphs?.map((glyph) => {
-              return <GlyphwikiContent key={glyph.name} name={glyph.name} data={glyph.data} buhin={buhin} />;
-            })}
+            {data.includeGlyphs?.map((glyph) => (
+              <GlyphwikiContent key={glyph.name} isAdmin={isAdmin} name={glyph.name} data={glyph.data} buhin={buhin} />
+            ))}
           </React.Fragment>
         )}
       </CardContent>

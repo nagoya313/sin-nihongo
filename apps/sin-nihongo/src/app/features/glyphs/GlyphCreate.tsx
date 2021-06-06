@@ -17,7 +17,7 @@ import { GlyphCreateForm } from './GlyphCreateForm';
 const resolver = classValidatorResolver(GlyphForm);
 
 export const GlyphCreate: React.FC = () => {
-  const methods = useForm({ resolver, defaultValues: { name: '', data: '' } });
+  const methods = useForm<GlyphForm>({ resolver, defaultValues: { name: '', data: '' } });
   const [buhin, setBuhin] = useState(new Buhin());
 
   const onDraw = () => {

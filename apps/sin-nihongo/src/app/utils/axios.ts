@@ -1,7 +1,6 @@
 import { AxiosError, AxiosPromise, AxiosRequestConfig, Method } from 'axios';
 import useAxios, { Options, RefetchOptions } from 'axios-hooks';
 import { ApiError } from '@sin-nihongo/api-interfaces';
-import { Length } from 'class-validator';
 
 export const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

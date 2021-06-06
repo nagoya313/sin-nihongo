@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { classValidatorResolver } from '@hookform/resolvers/class-validator';
+import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Check from '@material-ui/icons/Check';
@@ -6,26 +9,19 @@ import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-import Link from '@material-ui/core/Link';
 import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import {
-  KANJI_USC_QUERY_PARAMS_MATCHER,
-  RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
-  Pagination as ApiPagination,
-  Kanji,
-} from '@sin-nihongo/api-interfaces';
+import { Pagination as ApiPagination, Kanji, KanjisQueryParams } from '@sin-nihongo/api-interfaces';
 import { CardHeader } from '../../components/CardHeader';
 import { Form } from '../../components/Form';
+import { FormTextField } from '../../components/FormTextField';
+import { NewTabLink } from '../../components/NewTabLink';
+import { RadioGroup } from '../../components/RadioGroup';
 import { ResponseNotice } from '../../components/ResponseNotice';
-import { SearchNumberField } from '../../components/SearchNumberField';
-import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
 import { useAxiosGet } from '../../utils/axios';
 
-const ucsValidation = (word: string) => word.match(KANJI_USC_QUERY_PARAMS_MATCHER) !== null || word === '';
-const readValidation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
+const resolver = classValidatorResolver(KanjisQueryParams);
 
 type Fields =
   | 'ucs'
@@ -59,18 +55,37 @@ type Props = {
 };
 
 export const Kanjis: React.FC<Props> = ({ radicalId }) => {
+  const methods = useForm<KanjisQueryParams>({
+    resolver,
+    defaultValues: { ucs: '', readLike: '', numberOfStrokes: NaN },
+  });
   const [searchUcs, setSearchUcs] = useState('');
   const [searchRead, setSearchRead] = useState('');
-  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
+  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState(NaN);
   const [searchJisLevel, setSearchJisLevel] = useState('');
   const [searchRegular, setSearchRegular] = useState('');
   const [searchForName, setSearchForName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
-  const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis');
+  const [{ data, loading, error }] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis', {
+    params: {
+      ucs: searchUcs,
+      readLike: searchRead,
+      numberOfStrokes: searchNumberOfStrokes,
+      jisLevel: searchJisLevel,
+      regular: searchRegular,
+      forName: searchForName,
+      radicalId: radicalId,
+      page: pageNumber,
+    },
+  });
   const [kanjis, setKanjis] = useState<Kanji[]>();
 
-  const onPageChange = (page: number) => {
-    setPageNumber(page);
+  const onPageChange = (page: number) => setPageNumber(page);
+
+  const onSubmit = (data: KanjisQueryParams) => {
+    setSearchUcs(data.ucs || '');
+    setSearchRead(data.readLike || '');
+    setSearchNumberOfStrokes(data.numberOfStrokes || NaN);
   };
 
   const onJisLevelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,33 +105,6 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
   }, [searchUcs, searchRead, searchNumberOfStrokes, searchJisLevel, searchRegular, searchForName]);
 
   useEffect(() => {
-    // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
-    refetch({
-      params: {
-        ucs: searchUcs || undefined,
-        readLike: searchRead || undefined,
-        numberOfStrokes: searchNumberOfStrokes || undefined,
-        jisLevel: searchJisLevel || undefined,
-        regular: searchRegular || undefined,
-        forName: searchForName || undefined,
-        radicalId: radicalId,
-        page: pageNumber,
-      },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-    }).catch(() => {});
-  }, [
-    refetch,
-    searchUcs,
-    searchRead,
-    searchNumberOfStrokes,
-    searchJisLevel,
-    pageNumber,
-    searchRegular,
-    searchForName,
-    radicalId,
-  ]);
-
-  useEffect(() => {
     if (!loading) {
       if (error) {
         setKanjis(undefined);
@@ -130,11 +118,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
   const rows = kanjis?.map((kanji): { [key in Fields | 'key']: any } => ({
     key: `kanji_${kanji.ucs}`,
     ucs: kanji.ucs,
-    character: (
-      <Link href={`https://glyphwiki.org/wiki/${kanji.ucs}`} target="_blank" rel="noopener">
-        {kanji.character}
-      </Link>
-    ),
+    character: <NewTabLink url={`https://glyphwiki.org/wiki/${kanji.ucs}`} text={kanji.character} />,
     kage: null,
     radical: kanji.radical.character,
     numberOfStrokes: kanji.numberOfStrokes,
@@ -154,58 +138,56 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
           JIS第一、第二水準の漢字お検索できます。それ以外の漢字わ新日本語でわサポートしません。
           音読み・訓読みの検索わ表音式ひらがなの前方一致です。
         </Text>
-        <Form noValidate autoComplete="off">
-          <SearchTextField
-            label="漢字、UCS"
-            onSearchWordChange={setSearchUcs}
-            validation={ucsValidation}
-            hint="例：一、u4e00"
-            errorMessage="検索ワードが不正です"
-          />
-          <SearchTextField
-            label="音読み・訓読み"
-            onSearchWordChange={setSearchRead}
-            validation={readValidation}
-            hint="例：いち、さん、じょー"
-            errorMessage="検索ワードが不正です"
-          />
-          <SearchNumberField
-            label="画数"
-            inputProps={{
-              inputProps: { min: 1 },
-            }}
-            onSearchNumberChange={setSearchNumberOfStrokes}
-          />
-          <FormControl component="fieldset">
-            <FormLabel component="legend">JIS水準</FormLabel>
-            <RadioGroup row value={searchJisLevel} onChange={onJisLevelChange}>
-              <FormControlLabel value="1" control={<Radio color="primary" />} label="1" labelPlacement="top" />
-              <FormControlLabel value="2" control={<Radio color="primary" />} label="2" labelPlacement="top" />
-              <FormControlLabel value="" control={<Radio color="primary" />} label="指定なし" labelPlacement="top" />
-            </RadioGroup>
-          </FormControl>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">常用漢字</FormLabel>
-            <RadioGroup row value={searchRegular} onChange={onRegularChange}>
-              <FormControlLabel value="true" control={<Radio color="primary" />} label="常用" labelPlacement="top" />
-              <FormControlLabel value="false" control={<Radio color="primary" />} label="非常用" labelPlacement="top" />
-              <FormControlLabel value="" control={<Radio color="primary" />} label="指定なし" labelPlacement="top" />
-            </RadioGroup>
-          </FormControl>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">人名用漢字</FormLabel>
-            <RadioGroup row value={searchForName} onChange={onForNameChange}>
-              <FormControlLabel value="true" control={<Radio color="primary" />} label="人名用" labelPlacement="top" />
-              <FormControlLabel
-                value="false"
-                control={<Radio color="primary" />}
-                label="非人名用"
-                labelPlacement="top"
+        <FormProvider {...methods}>
+          <Box display="flex">
+            <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+              <FormTextField name="ucs" label="漢字、UCS" type="search" helperText="例：一、u4e00" />
+            </Form>
+            <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+              <FormTextField
+                name="readLike"
+                label="音読み・訓読み"
+                type="search"
+                helperText="例：例：いち、さん、じょー"
               />
-              <FormControlLabel value="" control={<Radio color="primary" />} label="指定なし" labelPlacement="top" />
-            </RadioGroup>
-          </FormControl>
-        </Form>
+            </Form>
+            <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+              <FormTextField name="numberOfStrokes" label="画数" type="number" />
+            </Form>
+          </Box>
+          <Form onSubmit={methods.handleSubmit(onSubmit)}>
+            <RadioGroup
+              value={searchJisLevel}
+              onChange={onJisLevelChange}
+              title="JIS水準"
+              labels={[
+                { label: '1', value: '1' },
+                { label: '2', value: '2' },
+                { label: '指定なし', value: '' },
+              ]}
+            />
+            <RadioGroup
+              value={searchRegular}
+              onChange={onRegularChange}
+              title="常用漢字"
+              labels={[
+                { label: '常用', value: 'true' },
+                { label: '非常用', value: 'false' },
+                { label: '指定なし', value: '' },
+              ]}
+            />
+            <RadioGroup
+              value={searchForName}
+              onChange={onForNameChange}
+              title="人名用漢字"
+              labels={[
+                { label: '人名用', value: 'true' },
+                { label: '非人名用', value: 'false' },
+                { label: '指定なし', value: '' },
+              ]}
+            />
+          </Form>
+        </FormProvider>
         <Divider />
         <ResponseNotice loading={loading} error={error} />
         <Table<Fields>

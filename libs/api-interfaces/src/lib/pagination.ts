@@ -16,7 +16,7 @@ export interface Pagination<T> {
 
 export class PaginationQueryParams {
   @IsOptional()
-  @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください。' })
-  @IsInt({ message: 'ページ番号わ整数で入力してください。' })
+  @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください' })
+  @IsInt({ message: 'ページ番号わ整数で入力してください' })
   page?: number;
 }

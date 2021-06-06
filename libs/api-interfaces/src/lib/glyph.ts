@@ -8,10 +8,10 @@ export class GlyphsQueryParams extends PaginationQueryParams {
 }
 
 export class GlyphForm {
-  @Length(1, 20)
+  @Length(1, 20, { message: 'グリフ名わ$constraint1文字以上$constraint2文字以内で入力してください' })
   name: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'KAGEデータお入力してください' })
   data: string;
 }
 

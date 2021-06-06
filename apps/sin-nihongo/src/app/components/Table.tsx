@@ -44,7 +44,7 @@ export function Table<Fields extends string>(props: Props<Fields>) {
         </TableHead>
         <TableBody>
           {rows?.map((row) => (
-            <BodyTableRow key={`${row.key}`}>
+            <BodyTableRow key={`table_row_${row.key}`}>
               {columns.map((column) => (
                 <TableCell key={`${column.field}_${row.key}`}>{row[column.field]}</TableCell>
               ))}

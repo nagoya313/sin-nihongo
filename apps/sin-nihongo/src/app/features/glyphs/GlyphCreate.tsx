@@ -2,36 +2,23 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import { ErrorMessage } from '@hookform/error-message';
-import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
 import BrushIcon from '@material-ui/icons/Brush';
 import { Buhin } from '@kurgm/kage-engine';
 import { CreateGlyph } from '@sin-nihongo/api-interfaces';
-import { CardAvatar } from '../../components/CardAvatar';
+import { CardHeader } from '../../components/CardHeader';
+import { FormTextField } from '../../components/FormTextField';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
+import { IconButton } from '../../components/IconButton';
+import { SubmitButton } from '../../components/SubmitButton';
 import { Form } from '../../components/Form';
-
-const FormTextField = styled(TextField)`
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
-
-const FormButton = styled(Button)`
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
 
 const resolver = classValidatorResolver(CreateGlyph);
 
 export const GlyphCreate: React.FC = () => {
   const {
-    register,
     control,
     handleSubmit,
     getValues,
@@ -50,17 +37,11 @@ export const GlyphCreate: React.FC = () => {
 
   return (
     <Card>
-      <CardHeader
-        avatar={<CardAvatar>グ</CardAvatar>}
-        title="グリフ新規作成"
-        titleTypographyProps={{ variant: 'h4' }}
-      />
+      <CardHeader avatarText="グ" title="グリフ新規作成" />
       <CardContent>
         <Box display="flex" alignItems="flex-end">
           <GlyphCanvas buhin={buhin} name="preview" />
-          <IconButton onClick={onDraw}>
-            <BrushIcon />
-          </IconButton>
+          <IconButton onClick={onDraw} icon={<BrushIcon />} />
         </Box>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <div style={{ width: 400, display: 'flex', flexDirection: 'column' }}>
@@ -92,9 +73,7 @@ export const GlyphCreate: React.FC = () => {
                 />
               )}
             />
-            <FormButton variant="contained" color="secondary" type="submit">
-              登録する
-            </FormButton>
+            <SubmitButton text="登録する" />
           </div>
         </Form>
       </CardContent>

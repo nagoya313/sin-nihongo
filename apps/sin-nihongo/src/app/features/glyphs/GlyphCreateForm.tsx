@@ -4,7 +4,8 @@ import { useFormContext } from 'react-hook-form';
 import { useAuth0 } from '@auth0/auth0-react';
 import { GlyphForm, GlyphParams, Message } from '@sin-nihongo/api-interfaces';
 import { Form } from '../../components/Form';
-import { errorMessage, getAccessTokenOptions, useLazyAxiosPost, fetch } from '../../utils/axios';
+import { getAccessTokenOptions } from '../../utils/auth0';
+import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../utils/axios';
 import { NoticeDispatchContext } from '../notice/Notice';
 
 export const GlyphCreateForm: React.FC = ({ children }) => {
@@ -16,13 +17,11 @@ export const GlyphCreateForm: React.FC = ({ children }) => {
 
   const onSubmit = async (data: GlyphForm) => {
     const token = await getAccessTokenSilently(getAccessTokenOptions);
-    fetch(execute, GlyphParams, data, token);
+    fetchWithTokenAndData(execute, token, new GlyphParams(data));
   };
 
   useEffect(() => {
-    if (error) {
-      noticeDispatch({ type: 'open', message: errorMessage(error), severity: 'error' });
-    }
+    error && noticeDispatch({ type: 'open', message: errorMessage(error), severity: 'error' });
   }, [error, noticeDispatch]);
 
   useEffect(() => {

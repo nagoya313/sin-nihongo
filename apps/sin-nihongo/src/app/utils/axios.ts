@@ -2,17 +2,12 @@ import { AxiosError, AxiosPromise, AxiosRequestConfig, Method } from 'axios';
 import useAxios, { Options, RefetchOptions } from 'axios-hooks';
 import { ApiError } from '@sin-nihongo/api-interfaces';
 
-const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
+export const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const errorHandler = (error: any) => {
   if (process.env.NODE_ENV !== 'production') {
-    console.error(error.response);
+    console.error(error);
   }
-};
-
-export const getAccessTokenOptions = {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  audience: process.env.NX_API_IDENTIFIER!,
 };
 
 export const errorMessage = (error: AxiosError<ApiError>) => {
@@ -24,20 +19,19 @@ export const errorMessage = (error: AxiosError<ApiError>) => {
 
 type Execute<Response> = (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<Response>;
 
-export const fetch = <Params, Form, Response>(
-  execute: Execute<Response>,
-  wrapper: { new (params: Form): Params },
-  data: Form,
-  token: string
-) => execute({ data: new wrapper(data), headers: accessTokenHeader(token) }).catch(errorHandler);
+export const fetchWithToken = <Response>(execute: Execute<Response>, token: string) =>
+  execute({ headers: accessTokenHeader(token) }).catch(errorHandler);
+export const fetchWithTokenAndData = <Params, Response>(execute: Execute<Response>, token: string, data: Params) =>
+  execute({ headers: accessTokenHeader(token), data: data }).catch(errorHandler);
 
-const useAxiosBase = <Response>(url: string, method: Method, options?: Options) =>
-  useAxios<Response, ApiError>({ baseURL: url, method: method }, { ...options, useCache: false });
+const useAxiosBase = <Response>(url: string, method: Method, config?: AxiosRequestConfig, options?: Options) =>
+  useAxios<Response, ApiError>({ ...config, url: url, method: method }, { ...options, useCache: false });
 
-export const useAxiosGet = <Response>(url: string) => useAxiosBase<Response>(url, 'GET');
+export const useAxiosGet = <Response>(url: string, config?: AxiosRequestConfig) =>
+  useAxiosBase<Response>(url, 'GET', config);
 
-const useLazyAxiosBase = <Response>(url: string, method: Method, options?: Options) =>
-  useAxiosBase<Response>(url, method, { ...options, manual: true });
+const useLazyAxiosBase = <Response>(url: string, method: Method, config?: AxiosRequestConfig, options?: Options) =>
+  useAxiosBase<Response>(url, method, config, { ...options, manual: true });
 
 export const useLazyAxiosGet = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'GET');
 export const useLazyAxiosPost = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'POST');

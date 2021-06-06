@@ -1,6 +1,7 @@
 import { AxiosError, AxiosPromise, AxiosRequestConfig, Method } from 'axios';
 import useAxios, { Options, RefetchOptions } from 'axios-hooks';
 import { ApiError } from '@sin-nihongo/api-interfaces';
+import { Length } from 'class-validator';
 
 export const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,6 +18,32 @@ export const errorMessage = (error: AxiosError<ApiError>) => {
   return error.message;
 };
 
+type Params = { [key: string]: string | number | boolean };
+
+const checkedParams = (params?: Params) => {
+  if (params) {
+    const permitParams = Object.keys(params).reduce((acc, key) => {
+      switch (typeof params[key]) {
+        case 'number':
+          if (Number.isNaN(params[key])) {
+            break;
+          }
+        // eslint-disable-next-line no-fallthrough
+        case 'string':
+          if (!params[key]) {
+            break;
+          }
+        // eslint-disable-next-line no-fallthrough
+        case 'boolean':
+          acc[key] = params[key];
+      }
+      return acc;
+    }, {} as Params);
+    return Object.keys(permitParams).length ? permitParams : undefined;
+  }
+  return undefined;
+};
+
 type Execute<Response> = (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<Response>;
 
 export const fetch = <Response>(execute: Execute<Response>) => execute().catch(errorHandler);
@@ -26,7 +53,10 @@ export const fetchWithTokenAndData = <Params, Response>(execute: Execute<Respons
   execute({ headers: accessTokenHeader(token), data: data }).catch(errorHandler);
 
 const useAxiosBase = <Response>(url: string, method: Method, config?: AxiosRequestConfig, options?: Options) =>
-  useAxios<Response, ApiError>({ ...config, url: url, method: method }, { ...options, useCache: false });
+  useAxios<Response, ApiError>(
+    { ...config, params: checkedParams(config?.params), url: url, method: method },
+    { ...options, useCache: false }
+  );
 
 export const useAxiosGet = <Response>(url: string, config?: AxiosRequestConfig) =>
   useAxiosBase<Response>(url, 'GET', config);

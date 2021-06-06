@@ -1,6 +1,6 @@
 import { JsonController, Get } from 'routing-controllers';
+import { RadicalsQueryParams } from '@sin-nihongo/api-interfaces';
 import { ValidateQueryParams } from '../libs/decorators';
-import { RadicalsQueryParams } from '../forms/RadicalForm';
 import { RadicalRepository } from '../repositories/RadicalRepository';
 import { RadicalResponse } from '../responses/RadicalResponse';
 

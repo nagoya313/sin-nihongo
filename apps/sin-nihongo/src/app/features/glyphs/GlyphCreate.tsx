@@ -44,7 +44,7 @@ export const GlyphCreate: React.FC = () => {
           <IconButton onClick={onDraw} icon={<BrushIcon />} />
         </Box>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <div style={{ width: 400, display: 'flex', flexDirection: 'column' }}>
+          <Box display="flex" flexDirection="column">
             <Controller
               name="name"
               control={control}
@@ -74,7 +74,7 @@ export const GlyphCreate: React.FC = () => {
               )}
             />
             <SubmitButton text="登録する" />
-          </div>
+          </Box>
         </Form>
       </CardContent>
     </Card>

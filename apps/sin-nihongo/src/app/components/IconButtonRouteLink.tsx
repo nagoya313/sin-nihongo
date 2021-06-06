@@ -1,12 +1,12 @@
 import React, { useMemo, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Location, LocationDescriptor } from 'history';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
 
 type Props = {
   to: LocationDescriptor<unknown> | ((location: Location<unknown>) => LocationDescriptor<unknown>);
   icon: React.ReactElement;
-};
+} & IconButtonProps;
 
 export const IconButtonRouteLink: React.FC<Props> = ({ to, icon }) => {
   const CustomLink = useMemo(

@@ -18,14 +18,15 @@ import { glyphToBuhin } from '../../utils/kageData';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
 const resolver = classValidatorResolver(GlyphwikiQueryParams);
+const initialWord = '一';
 
 type Props = {
   isAdmin: boolean;
 };
 
 export const Glyphwiki: React.FC<Props> = ({ isAdmin }) => {
-  const methods = useForm<GlyphwikiQueryParams>({ resolver, defaultValues: { q: '一' } });
-  const [searchWord, setSearchWord] = useState('一');
+  const methods = useForm<GlyphwikiQueryParams>({ resolver, defaultValues: { q: initialWord } });
+  const [searchWord, setSearchWord] = useState(initialWord);
   const [{ data, loading, error }] = useAxiosGet<Glyph>('api/v1/glyphwiki', {
     params: { q: searchWord },
   });

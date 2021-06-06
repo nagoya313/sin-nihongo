@@ -1,4 +1,4 @@
-import { GlyphwikiQueryParams } from '../../app/forms/GlyphwikiForm';
+import { GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
 
 describe('GlyphwikiQueryParams', () => {
   describe('validation', () => {

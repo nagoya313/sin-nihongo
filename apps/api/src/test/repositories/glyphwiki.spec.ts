@@ -1,7 +1,7 @@
 jest.mock('axios');
 import axios from 'axios';
+import { GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
 import { GlyphwikiRepository } from '../../app/repositories/GlyphwikiRepository';
-import { GlyphwikiQueryParams } from '../../app/forms/GlyphwikiForm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (axios.get as any).mockImplementation(async (url, { params }) => {

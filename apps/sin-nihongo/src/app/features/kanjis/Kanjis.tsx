@@ -6,12 +6,10 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Check from '@material-ui/icons/Check';
 import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
+import { Buhin } from '@kurgm/kage-engine';
 import { Pagination as ApiPagination, Kanji, KanjisQueryParams } from '@sin-nihongo/api-interfaces';
 import { CardHeader } from '../../components/CardHeader';
+import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { NewTabLink } from '../../components/NewTabLink';
@@ -66,6 +64,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
   const [searchRegular, setSearchRegular] = useState('');
   const [searchForName, setSearchForName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
+  const [buhin, setBuhin] = useState(new Buhin());
   const [{ data, loading, error }] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis', {
     params: {
       ucs: searchUcs,
@@ -78,7 +77,6 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
       page: pageNumber,
     },
   });
-  const [kanjis, setKanjis] = useState<Kanji[]>();
 
   const onPageChange = (page: number) => setPageNumber(page);
 
@@ -104,22 +102,12 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
     setPageNumber(1);
   }, [searchUcs, searchRead, searchNumberOfStrokes, searchJisLevel, searchRegular, searchForName]);
 
-  useEffect(() => {
-    if (!loading) {
-      if (error) {
-        setKanjis(undefined);
-      } else if (typeof data !== 'undefined') {
-        setKanjis(data.items);
-      }
-    }
-  }, [data, loading, error]);
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = kanjis?.map((kanji): { [key in Fields | 'key']: any } => ({
+  const rows = data?.items?.map((kanji): { [key in Fields | 'key']: any } => ({
     key: `kanji_${kanji.ucs}`,
     ucs: kanji.ucs,
     character: <NewTabLink url={`https://glyphwiki.org/wiki/${kanji.ucs}`} text={kanji.character} />,
-    kage: null,
+    kage: <GlyphCanvas buhin={buhin} />,
     radical: kanji.radical.character,
     numberOfStrokes: kanji.numberOfStrokes,
     regular: kanji.regular && <Check />,

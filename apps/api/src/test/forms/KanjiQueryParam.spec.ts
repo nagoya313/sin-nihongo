@@ -1,4 +1,4 @@
-import { KanjisQueryParams } from '../../app/forms/KanjiForm';
+import { KanjisQueryParams } from '@sin-nihongo/api-interfaces';
 
 describe('KanjisQueryParams', () => {
   describe('validation', () => {

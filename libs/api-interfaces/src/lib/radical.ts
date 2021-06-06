@@ -1,6 +1,7 @@
 import { IsInt, Min, IsOptional, Matches } from 'class-validator';
-import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
-import { PaginationQueryParams } from '../libs/pagination';
+import { PaginationQueryParams } from './pagination';
+
+export const RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER = /^(?!.*[ぢづゐゑを])[\u3040-\u3093ー]*$/;
 
 export class RadicalsQueryParams extends PaginationQueryParams {
   @IsOptional()

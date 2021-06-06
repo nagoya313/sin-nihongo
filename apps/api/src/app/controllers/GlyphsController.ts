@@ -1,8 +1,7 @@
 import { Authorized, JsonController, Delete, Get, Param, Patch, Post } from 'routing-controllers';
 import { Types } from 'mongoose';
-import { GlyphParams } from '@sin-nihongo/api-interfaces';
+import { GlyphParams, GlyphsQueryParams } from '@sin-nihongo/api-interfaces';
 import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
-import { GlyphsQueryParams } from '../forms/GlyphsForm';
 import { GlyphModel } from '../models/glyph';
 import { GlyphResponse } from '../responses/GlyphResponse';
 import { GlyphRepository } from '../repositories/GlyphRepository';

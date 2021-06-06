@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { IsNotEmpty, Length } from 'class-validator';
+import { Pagination } from './pagination';
 
 export interface Message {
   readonly message: string;
@@ -15,19 +15,6 @@ export interface ApiError {
   readonly name: string;
   readonly message: string;
   readonly errors?: ValidationError;
-}
-
-interface PaginationMetaData {
-  readonly totalItems: number;
-  readonly itemsPerPage: number;
-  readonly itemCount: number;
-  readonly totalPages: number;
-  readonly currentPage: number;
-}
-
-export interface Pagination<T> {
-  readonly items: T[];
-  readonly meta: PaginationMetaData;
 }
 
 export interface Radical {
@@ -65,25 +52,8 @@ export interface Glyphs extends Pagination<Glyph> {
   readonly includeGlyphs: Glyph[];
 }
 
-export class GlyphForm {
-  @Length(1, 20)
-  readonly name: string;
-
-  @IsNotEmpty()
-  readonly data: string;
-}
-
-export class GlyphParams {
-  constructor(glyph: GlyphForm) {
-    this.glyph = glyph;
-  }
-
-  @IsNotEmpty()
-  readonly glyph: GlyphForm;
-}
-
-export const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_@]+|.)$/;
-export const KANJI_USC_QUERY_PARAMS_MATCHER = /^((u[\da-f]{4})|[\u4E00-\u9FFF])$/;
-export const RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER = /^(?!.*[ぢづゐゑを])[\u3040-\u3093ー]*$/;
-
+export * from './kanji';
+export * from './glyph';
 export * from './glyphwiki';
+export * from './radical';
+export * from './pagination';

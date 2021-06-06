@@ -1,12 +1,4 @@
-import { IsInt, Min, IsOptional } from 'class-validator';
-import { Pagination } from '@sin-nihongo/api-interfaces';
-
-export class PaginationQueryParams {
-  @IsOptional()
-  @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください。' })
-  @IsInt({ message: 'ページ番号わ整数で入力してください。' })
-  page?: number;
-}
+import { Pagination, PaginationQueryParams } from '@sin-nihongo/api-interfaces';
 
 export const addPageData = <T>(data: T[], count: number, query: PaginationQueryParams): Pagination<T> => {
   return {

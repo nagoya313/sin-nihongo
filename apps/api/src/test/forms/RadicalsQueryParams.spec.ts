@@ -1,4 +1,4 @@
-import { RadicalsQueryParams } from '../../app/forms/RadicalForm';
+import { RadicalsQueryParams } from '@sin-nihongo/api-interfaces';
 
 describe('RadicalsQueryParams', () => {
   describe('validation', () => {

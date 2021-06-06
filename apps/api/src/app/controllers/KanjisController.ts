@@ -1,7 +1,7 @@
 import { JsonController, Get } from 'routing-controllers';
+import { KanjisQueryParams } from '@sin-nihongo/api-interfaces';
 import { KanjiRepository } from '../repositories/KanjiRepository';
 import { KanjiResponse } from '../responses/KanjiResponse';
-import { KanjisQueryParams } from '../forms/KanjiForm';
 import { ValidateQueryParams } from '../libs/decorators';
 
 @JsonController()

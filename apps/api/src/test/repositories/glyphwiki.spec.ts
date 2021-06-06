@@ -4,7 +4,7 @@ import { GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
 import { GlyphwikiRepository } from '../../app/repositories/GlyphwikiRepository';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(axios.get as any).mockImplementation(async (url, { params }) => {
+(axios.get as any).mockImplementation(async (url: string, { params }) => {
   switch (params.name) {
     case 'u4e00': {
       return { data: { data: '99:0:0:0:0:200:200:u4e00-j', related: 'U+4E00', version: 18, name: 'u4e00' } };

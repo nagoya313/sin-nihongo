@@ -1,7 +1,9 @@
 import { IsInt, Min, Max, IsBoolean, IsOptional, Matches } from 'class-validator';
 import * as mojiJS from 'mojijs';
-import { KANJI_USC_QUERY_PARAMS_MATCHER, RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '@sin-nihongo/api-interfaces';
-import { PaginationQueryParams } from '../libs/pagination';
+import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from './radical';
+import { PaginationQueryParams } from './pagination';
+
+export const KANJI_USC_QUERY_PARAMS_MATCHER = /^((u[\da-f]{4})|[\u4E00-\u9FFF])$/;
 
 export class KanjisQueryParams extends PaginationQueryParams {
   @IsOptional()

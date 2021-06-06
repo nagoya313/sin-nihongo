@@ -1,4 +1,4 @@
-import { PaginationQueryParams } from '../../app/libs/pagination';
+import { PaginationQueryParams } from '@sin-nihongo/api-interfaces';
 
 describe('PaginationQueryParams', () => {
   describe('validation', () => {

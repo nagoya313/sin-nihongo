@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import Check from '@material-ui/icons/Check';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
@@ -10,19 +9,19 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Link from '@material-ui/core/Link';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import Typography from '@material-ui/core/Typography';
 import {
   KANJI_USC_QUERY_PARAMS_MATCHER,
   RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
   Pagination as ApiPagination,
   Kanji,
 } from '@sin-nihongo/api-interfaces';
-import { CardAvatar } from '../../components/CardAvatar';
-import { ErrorTypography } from '../../components/ErrorTypography';
+import { CardHeader } from '../../components/CardHeader';
 import { Form } from '../../components/Form';
+import { ResponseNotice } from '../../components/ResponseNotice';
 import { SearchNumberField } from '../../components/SearchNumberField';
 import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
+import { Text } from '../../components/Text';
 import { useAxiosGet } from '../../utils/axios';
 
 const ucsValidation = (word: string) => word.match(KANJI_USC_QUERY_PARAMS_MATCHER) !== null || word === '';
@@ -55,9 +54,9 @@ const columns: { field: Fields; headerName: string }[] = [
   { field: 'action', headerName: '' },
 ];
 
-interface Props {
-  readonly radicalId?: string;
-}
+type Props = {
+  radicalId?: string;
+};
 
 export const Kanjis: React.FC<Props> = ({ radicalId }) => {
   const [searchUcs, setSearchUcs] = useState('');
@@ -149,12 +148,12 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
 
   return (
     <Card>
-      <CardHeader avatar={<CardAvatar>漢</CardAvatar>} title="新日本語漢字" titleTypographyProps={{ variant: 'h4' }} />
+      <CardHeader avatarText="漢" title="新日本語漢字" />
       <CardContent>
-        <Typography variant="body1" gutterBottom>
+        <Text>
           JIS第一、第二水準の漢字お検索できます。それ以外の漢字わ新日本語でわサポートしません。
           音読み・訓読みの検索わ表音式ひらがなの前方一致です。
-        </Typography>
+        </Text>
         <Form noValidate autoComplete="off">
           <SearchTextField
             label="漢字、UCS"
@@ -208,8 +207,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
           </FormControl>
         </Form>
         <Divider />
-        {error && <ErrorTypography>{error.response?.data?.message}</ErrorTypography>}
-        {loading && <Typography>検索中...</Typography>}
+        <ResponseNotice loading={loading} error={error} />
         <Table<Fields>
           columns={columns}
           rows={rows}

@@ -11,11 +11,11 @@ import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { splitData } from '../../utils/kageData';
 
-interface Props {
-  readonly name?: string;
-  readonly data?: string;
-  readonly buhin: Buhin;
-}
+type Props = {
+  name?: string;
+  data?: string;
+  buhin: Buhin;
+};
 
 export const GlyphwikiContent: React.FC<Props> = ({ name, data, buhin }) => {
   return (

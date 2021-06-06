@@ -1,6 +1,6 @@
-import { AxiosError, AxiosPromise, AxiosRequestConfig } from 'axios';
-import useAxios, { RefetchOptions } from 'axios-hooks';
-import { Error } from '@sin-nihongo/api-interfaces';
+import { AxiosError, AxiosPromise, AxiosRequestConfig, Method } from 'axios';
+import useAxios, { Options, RefetchOptions } from 'axios-hooks';
+import { ApiError } from '@sin-nihongo/api-interfaces';
 
 const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,7 +15,7 @@ export const getAccessTokenOptions = {
   audience: process.env.NX_API_IDENTIFIER!,
 };
 
-export const errorMessage = (error: AxiosError<Error>) => {
+export const errorMessage = (error: AxiosError<ApiError>) => {
   if (error.response) {
     return error.response.data.message;
   }
@@ -31,42 +31,15 @@ export const fetch = <Params, Form, Response>(
   token: string
 ) => execute({ data: new wrapper(data), headers: accessTokenHeader(token) }).catch(errorHandler);
 
-export const useAxiosGet = <T>(url: string) => {
-  return useAxios<T, Error>(
-    {
-      baseURL: url,
-      method: 'GET', // prodでビルドするとこゝを明示的に指定しないとtoUpperCase undefinedエラーになる
-    },
-    { useCache: false }
-  );
-};
+const useAxiosBase = <Response>(url: string, method: Method, options?: Options) =>
+  useAxios<Response, ApiError>({ baseURL: url, method: method }, { ...options, useCache: false });
 
-export const useLazyAxiosGet = <T>(url: string) => {
-  return useAxios<T, Error>(
-    {
-      baseURL: url,
-      method: 'GET', // prodでビルドするとこゝを明示的に指定しないとtoUpperCase undefinedエラーになる
-    },
-    { useCache: false, manual: true }
-  );
-};
+export const useAxiosGet = <Response>(url: string) => useAxiosBase<Response>(url, 'GET');
 
-export const useLazyAxiosPost = <T>(url: string) => {
-  return useAxios<T, Error>(
-    {
-      baseURL: url,
-      method: 'POST',
-    },
-    { useCache: false, manual: true }
-  );
-};
+const useLazyAxiosBase = <Response>(url: string, method: Method, options?: Options) =>
+  useAxiosBase<Response>(url, method, { ...options, manual: true });
 
-export const useLazyAxiosDelete = <T>(url: string) => {
-  return useAxios<T, Error>(
-    {
-      baseURL: url,
-      method: 'DELETE',
-    },
-    { useCache: false, manual: true }
-  );
-};
+export const useLazyAxiosGet = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'GET');
+export const useLazyAxiosPost = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'POST');
+export const useLazyAxiosPatch = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'PATCH');
+export const useLazyAxiosDelete = <Response>(url: string) => useLazyAxiosBase<Response>(url, 'DELETE');

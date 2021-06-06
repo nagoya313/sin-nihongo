@@ -10,7 +10,7 @@ export interface ValidationError {
   readonly constraints: { [key: string]: string };
 }
 
-export interface Error {
+export interface ApiError {
   readonly name: string;
   readonly message: string;
   readonly errors?: ValidationError;

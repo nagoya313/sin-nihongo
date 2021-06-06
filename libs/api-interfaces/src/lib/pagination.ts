@@ -1,4 +1,5 @@
-import { IsInt, Min, IsOptional } from 'class-validator';
+import { IsInt, Min } from 'class-validator';
+import { IsOptional } from './decorator';
 
 interface PaginationMetaData {
   readonly totalItems: number;

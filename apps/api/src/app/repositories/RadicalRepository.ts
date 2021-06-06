@@ -1,5 +1,5 @@
 import { Radical } from '../entities/Radical';
-import { RadicalsQueryParams } from '../forms/RadicalForm';
+import { RadicalsQueryParams } from '@sin-nihongo/api-interfaces';
 import { findAndCount, makeWhereConditions, permit, unnestLike } from '../libs/queryBuilder';
 
 export class RadicalRepository {

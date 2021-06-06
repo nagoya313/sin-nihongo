@@ -50,8 +50,8 @@ export const Glyphwiki: React.FC<Props> = ({ isAdmin }) => {
           からグリフお検索します。漢字一文字或いわグリフウィキのグリフ名から検索できます。
         </Text>
         <FormProvider {...methods}>
-          <Form onSubmit={methods.handleSubmit(onSubmit)}>
-            <FormTextField name="q" label="漢字・USC・グリフ名" helperText="例：一、u4e00、aj1-10186" />
+          <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+            <FormTextField name="q" label="漢字・USC・グリフ名" type="search" helperText="例：一、u4e00、aj1-10186" />
           </Form>
         </FormProvider>
         <Divider />

@@ -1,4 +1,5 @@
-import { IsOptional, IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
+import { IsOptional } from './decorator';
 import { PaginationQueryParams } from './pagination';
 
 export class GlyphsQueryParams extends PaginationQueryParams {
@@ -8,10 +9,10 @@ export class GlyphsQueryParams extends PaginationQueryParams {
 
 export class GlyphForm {
   @Length(1, 20)
-  readonly name: string;
+  name: string;
 
   @IsNotEmpty()
-  readonly data: string;
+  data: string;
 }
 
 export class GlyphParams {
@@ -20,5 +21,5 @@ export class GlyphParams {
   }
 
   @IsNotEmpty()
-  readonly glyph: GlyphForm;
+  glyph: GlyphForm;
 }

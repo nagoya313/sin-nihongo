@@ -2,10 +2,9 @@ import { Types } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import { flatten, uniq } from 'underscore';
 import { NotFoundError } from 'routing-controllers';
-import { Glyph as ApiGlyph } from '@sin-nihongo/api-interfaces';
+import { Glyph as ApiGlyph, GlyphsQueryParams } from '@sin-nihongo/api-interfaces';
 import { glyphData, includesGlyphData } from '../libs/glyph';
 import { Glyph, GlyphModel } from '../models/glyph';
-import { GlyphsQueryParams } from '../forms/GlyphsForm';
 
 export class GlyphRepository {
   static async findAndCount(params: GlyphsQueryParams): Promise<[PaginationModel<Glyph>, ApiGlyph[]]> {

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { NotFoundError } from 'routing-controllers';
-import { Glyph } from '@sin-nihongo/api-interfaces';
-import { GlyphwikiQueryParams } from '../forms/GlyphwikiForm';
+import { Glyph, GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
 import { glyphData } from '../libs/glyph';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';

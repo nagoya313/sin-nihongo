@@ -1,32 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import styled from 'styled-components';
+import { classValidatorResolver } from '@hookform/resolvers/class-validator';
+import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import FindInPage from '@material-ui/icons/FindInPage';
-import { withTheme } from '@material-ui/core/styles';
-import {
-  RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER,
-  Pagination as ApiPagination,
-  Radical,
-} from '@sin-nihongo/api-interfaces';
+import { RadicalsQueryParams, Pagination as ApiPagination, Radical } from '@sin-nihongo/api-interfaces';
 import { CardHeader } from '../../components/CardHeader';
+import { Form } from '../../components/Form';
+import { FormTextField } from '../../components/FormTextField';
 import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { ResponseNotice } from '../../components/ResponseNotice';
-import { SearchNumberField } from '../../components/SearchNumberField';
-import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
 import { useAxiosGet } from '../../utils/axios';
 
-const validation = (word: string) => word.match(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER) !== null || word === '';
-
-const StyledForm = withTheme(styled.form`
-  & > * {
-    margin: ${(props) => props.theme.spacing(1)}px;
-  }
-`);
+const resolver = classValidatorResolver(RadicalsQueryParams);
 
 type Fields = 'id' | 'radical' | 'read' | 'numberOfStrokes' | 'show';
 
@@ -39,44 +29,28 @@ const columns: { field: Fields; headerName: string }[] = [
 ];
 
 export const Radicals: React.FC = () => {
+  const methods = useForm<RadicalsQueryParams>({
+    resolver,
+    defaultValues: { nameLike: '', numberOfStrokes: NaN },
+  });
   const [searchName, setSearchName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
-  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState('');
-  const [radicals, setRadicals] = useState<Radical[]>();
-  const [{ data, loading, error }, refetch] = useAxiosGet<ApiPagination<Radical>>('api/v1/radicals');
+  const [searchNumberOfStrokes, setSearchNumberOfStrokes] = useState(0);
+  const [{ data, loading, error }] = useAxiosGet<ApiPagination<Radical>>('api/v1/radicals', {
+    params: { page: pageNumber, nameLike: searchName, numberOfStrokes: searchNumberOfStrokes },
+  });
 
-  const onPageChange = (page: number) => {
-    setPageNumber(page);
+  const onSubmit = (data: RadicalsQueryParams) => {
+    setSearchName(data.nameLike ?? '');
+    setSearchNumberOfStrokes(data.numberOfStrokes ?? NaN);
   };
 
-  useEffect(() => {
-    setPageNumber(1);
-  }, [searchName, searchNumberOfStrokes]);
+  const onPageChange = (page: number) => setPageNumber(page);
 
-  useEffect(() => {
-    // ""を送るとclass-validatorが誤作動してエラーを返すのでundefinedを明示的に入れる
-    refetch({
-      params: {
-        page: pageNumber,
-        nameLike: searchName || undefined,
-        numberOfStrokes: searchNumberOfStrokes || undefined,
-      },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-    }).catch(() => {});
-  }, [refetch, searchName, searchNumberOfStrokes, pageNumber]);
-
-  useEffect(() => {
-    if (!loading) {
-      if (error) {
-        setRadicals(undefined);
-      } else if (typeof data !== 'undefined') {
-        setRadicals(data.items);
-      }
-    }
-  }, [data, loading, error]);
+  useEffect(() => setPageNumber(1), [searchName, searchNumberOfStrokes]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = radicals?.map((radical): { [key in Fields | 'key']: any } => ({
+  const rows = data?.items?.map((radical): { [key in Fields | 'key']: any } => ({
     key: `radical_${radical.id}`,
     id: radical.id,
     radical: radical.character,
@@ -90,22 +64,17 @@ export const Radicals: React.FC = () => {
       <CardHeader avatarText="部" title="部首索引" />
       <CardContent>
         <Text>部首名（表音式ひらがなの前方一致）か画数で検索できます。</Text>
-        <StyledForm noValidate autoComplete="off">
-          <SearchTextField
-            label="なまえ"
-            onSearchWordChange={setSearchName}
-            validation={validation}
-            hint="例：いち、しょー、つずみ"
-            errorMessage="検索ワードが不正です"
-          />
-          <SearchNumberField
-            label="画数"
-            inputProps={{
-              inputProps: { min: 1 },
-            }}
-            onSearchNumberChange={setSearchNumberOfStrokes}
-          />
-        </StyledForm>
+        <FormProvider {...methods}>
+          <Box display="flex">
+            {/* 各入力欄毎にエンターで検索が発火するやうに分割 */}
+            <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+              <FormTextField name="nameLike" label="なまえ" type="search" helperText="例：いち、しょー、つずみ" />
+            </Form>
+            <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+              <FormTextField name="numberOfStrokes" label="画数" type="number" />
+            </Form>
+          </Box>
+        </FormProvider>
         <Divider />
         <ResponseNotice loading={loading} error={error} />
         <Table<Fields>

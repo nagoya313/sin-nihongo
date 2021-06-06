@@ -1,6 +1,6 @@
 import { Raw } from 'typeorm';
+import { KanjisQueryParams } from '@sin-nihongo/api-interfaces';
 import { Kanji } from '../entities/Kanji';
-import { KanjisQueryParams } from '../forms/KanjiForm';
 import { findAndCount, makeWhereConditions, permit } from '../libs/queryBuilder';
 import { toQueryYomigana } from '../libs/kana';
 

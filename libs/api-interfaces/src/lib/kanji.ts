@@ -1,5 +1,6 @@
-import { IsInt, Min, Max, IsBoolean, IsOptional, Matches } from 'class-validator';
+import { IsInt, Min, Max, IsBoolean, Matches } from 'class-validator';
 import * as mojiJS from 'mojijs';
+import { IsOptional } from './decorator';
 import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from './radical';
 import { PaginationQueryParams } from './pagination';
 

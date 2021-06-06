@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { IsNotEmpty, Length } from 'class-validator';
 
 export interface Message {

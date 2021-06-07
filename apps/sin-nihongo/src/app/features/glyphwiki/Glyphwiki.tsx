@@ -21,10 +21,10 @@ const resolver = classValidatorResolver(GlyphwikiQueryParams);
 const initialWord = '一';
 
 type Props = {
-  isAdmin: boolean;
+  isEditable?: boolean;
 };
 
-export const Glyphwiki: React.FC<Props> = ({ isAdmin }) => {
+export const Glyphwiki: React.FC<Props> = ({ isEditable }) => {
   const methods = useForm<GlyphwikiQueryParams>({ resolver, defaultValues: { q: initialWord } });
   const [searchWord, setSearchWord] = useState(initialWord);
   const [{ data, loading, error }] = useAxiosGet<Glyph>('api/v1/glyphwiki', {
@@ -58,10 +58,16 @@ export const Glyphwiki: React.FC<Props> = ({ isAdmin }) => {
         <ResponseNotice loading={loading} error={error} />
         {data && (
           <React.Fragment>
-            <GlyphwikiContent isAdmin={isAdmin} name={data.name} data={data.data} buhin={buhin} />
+            <GlyphwikiContent isEditable={isEditable} name={data.name} data={data.data} buhin={buhin} />
             <SubText>参照グリフ</SubText>
             {data.includeGlyphs?.map((glyph) => (
-              <GlyphwikiContent key={glyph.name} isAdmin={isAdmin} name={glyph.name} data={glyph.data} buhin={buhin} />
+              <GlyphwikiContent
+                key={glyph.name}
+                isEditable={isEditable}
+                name={glyph.name}
+                data={glyph.data}
+                buhin={buhin}
+              />
             ))}
           </React.Fragment>
         )}

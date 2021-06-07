@@ -19,13 +19,13 @@ import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../uti
 import { splitData } from '../../utils/kageData';
 
 type Props = {
-  isAdmin: boolean;
+  isEditable?: boolean;
   name?: string;
   data?: string;
   buhin: Buhin;
 };
 
-export const GlyphwikiContent: React.FC<Props> = ({ isAdmin, name, data, buhin }) => {
+export const GlyphwikiContent: React.FC<Props> = ({ isEditable, name, data, buhin }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [{ data: postData, error }, execute] = useLazyAxiosPost<Message>('api/v1/glyphs');
   const noticeDispatch = useContext(NoticeDispatchContext);
@@ -59,7 +59,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ isAdmin, name, data, buhin }
             rel="noopener"
           >
             <ListItemText>{name}</ListItemText>
-            {isAdmin && (
+            {isEditable && (
               <ListItemSecondaryAction>
                 <ListItemIcon icon={<IconButton onClick={onBuild} icon={<BuildIcon />} />} />
                 <ListItemIcon icon={<ClipBoard data={name} title="複製了" />} />
@@ -69,7 +69,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ isAdmin, name, data, buhin }
           <Divider />
           <ListItem alignItems="flex-start">
             <ListItemText>{splitData(data)}</ListItemText>
-            {isAdmin && <ListItemIcon icon={<ClipBoard data={data} title="複製了" />} />}
+            {isEditable && <ListItemIcon icon={<ClipBoard data={data} title="複製了" />} />}
           </ListItem>
         </List>
       </Box>

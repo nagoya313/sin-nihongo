@@ -17,6 +17,7 @@ import { SubmitButton } from '../../components/SubmitButton';
 import { GlyphCreateForm } from './GlyphCreateForm';
 import { Glyphwiki } from '../glyphwiki/Glyphwiki';
 import { EdiableProvider } from '../../providers/Editable';
+import { BuhinProvider } from '../../providers/Buhin';
 
 const resolver = classValidatorResolver(GlyphForm);
 
@@ -59,7 +60,9 @@ export const GlyphCreate: React.FC = () => {
       </Grid>
       <Grid item xs={8}>
         <EdiableProvider>
-          <Glyphwiki />
+          <BuhinProvider>
+            <Glyphwiki />
+          </BuhinProvider>
         </EdiableProvider>
       </Grid>
     </StyledGrid>

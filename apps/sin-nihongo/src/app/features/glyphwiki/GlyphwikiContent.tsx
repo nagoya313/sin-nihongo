@@ -24,12 +24,10 @@ type Props = {
 };
 
 export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
-  console.log('aaaaaaaaaaaaaaaaa');
   const { getAccessTokenSilently } = useAuth0();
   const [{ data: postData, error }, execute] = useLazyAxiosPost<Message>('api/v1/glyphs');
   const noticeDispatch = useContext(NoticeDispatchContext);
   const isEditable = useContext(EditableContext);
-  console.log(isEditable);
 
   const onBuild = async () => {
     if (name && data) {

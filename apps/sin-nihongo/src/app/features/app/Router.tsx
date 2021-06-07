@@ -27,7 +27,15 @@ export const Router: React.FC = () => {
         )}
       />
       <Route exact path="/radicals" component={Radicals} />
-      <Route exact path="/kanjis" component={Kanjis} />
+      <Route
+        exact
+        path="/kanjis"
+        render={() => (
+          <BuhinProvider>
+            <Kanjis />
+          </BuhinProvider>
+        )}
+      />
       <Route
         exact
         path="/glyphs"

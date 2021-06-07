@@ -12,21 +12,24 @@ import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
 import { ListItemIcon } from '../../components/ListItemIcon';
+import { EditableContext } from '../../providers/Editable';
 import { NoticeDispatchContext } from '../../providers/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
 import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 
 type Props = {
-  isEditable?: boolean;
   name?: string;
   data?: string;
 };
 
-export const GlyphwikiContent: React.FC<Props> = ({ isEditable, name, data }) => {
+export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
+  console.log('aaaaaaaaaaaaaaaaa');
   const { getAccessTokenSilently } = useAuth0();
   const [{ data: postData, error }, execute] = useLazyAxiosPost<Message>('api/v1/glyphs');
   const noticeDispatch = useContext(NoticeDispatchContext);
+  const isEditable = useContext(EditableContext);
+  console.log(isEditable);
 
   const onBuild = async () => {
     if (name && data) {

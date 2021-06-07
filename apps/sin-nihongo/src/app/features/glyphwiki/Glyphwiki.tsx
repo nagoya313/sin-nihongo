@@ -25,11 +25,7 @@ const isGlyph = (response: ResponseType | undefined): response is Glyph => (resp
 const isGlyphwikiHealth = (response: ResponseType | undefined): response is GlyphwikiHealth =>
   (response && 'accessible' in response) || false;
 
-type Props = {
-  isEditable?: boolean;
-};
-
-export const Glyphwiki: React.FC<Props> = ({ isEditable }) => {
+export const Glyphwiki: React.FC = () => {
   const methods = useForm<GlyphwikiQueryParams>({ resolver, defaultValues: { q: '' } });
   const [searchWord, setSearchWord] = useState('');
   const [accessible, setAccessible] = useState(false);
@@ -75,10 +71,10 @@ export const Glyphwiki: React.FC<Props> = ({ isEditable }) => {
         )}
         {isGlyph(data) && (
           <React.Fragment>
-            <GlyphwikiContent isEditable={isEditable} name={data.name} data={data.data} />
+            <GlyphwikiContent {...data} />
             <SubText>参照グリフ</SubText>
             {data.includeGlyphs?.map((glyph) => (
-              <GlyphwikiContent key={glyph.name} isEditable={isEditable} name={glyph.name} data={glyph.data} />
+              <GlyphwikiContent key={glyph.name} {...data} />
             ))}
           </React.Fragment>
         )}

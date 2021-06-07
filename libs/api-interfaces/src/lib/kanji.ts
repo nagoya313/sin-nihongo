@@ -40,14 +40,14 @@ export class KanjisQueryParams extends PaginationQueryParams {
   radicalId?: number;
 
   get ucsParam() {
-    return this.ucs.match(/^u[\da-f]{4,5}$/) ? parseInt(this.ucs.replace('u', ''), 16) : undefined;
+    return this.ucs?.match(/^u[\da-f]{4,5}$/) ? parseInt(this.ucs.replace('u', ''), 16) : undefined;
   }
 
   get kanjiParam() {
-    return this.mojiData.type.is_kanji ? this.ucs.charCodeAt(0) : undefined;
+    return this.mojiData.type.is_kanji ? this.ucs?.charCodeAt(0) : undefined;
   }
 
   private get mojiData() {
-    return mojiJS.getMojiData(mojiJS.codePointAt(this.ucs[0]));
+    return this.ucs && mojiJS.getMojiData(mojiJS.codePointAt(this.ucs[0]));
   }
 }

@@ -1,5 +1,6 @@
 import { BaseEntity } from 'typeorm';
-import { addPageData, PaginationQueryParams } from '../libs/pagination';
+import { PaginationQueryParams } from '@sin-nihongo/api-interfaces';
+import { addPageData } from '../libs/pagination';
 
 export abstract class EntityResponse<T extends BaseEntity, R, Q extends PaginationQueryParams = PaginationQueryParams> {
   abstract toResponse(radical: T, query?: Q): R;

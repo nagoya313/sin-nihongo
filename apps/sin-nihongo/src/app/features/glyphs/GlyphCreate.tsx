@@ -57,7 +57,7 @@ export const GlyphCreate: React.FC = () => {
         </Card>
       </Grid>
       <Grid item xs={8}>
-        <Glyphwiki isAdmin={true} />
+        <Glyphwiki isEditable={true} />
       </Grid>
     </StyledGrid>
   );

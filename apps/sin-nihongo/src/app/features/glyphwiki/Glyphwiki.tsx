@@ -5,7 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import { Glyph, GlyphwikiQueryParams, GlyphwikiHealth } from '@sin-nihongo/api-interfaces';
-import { BuhinDispatchContext } from '../../components/BuhinProvider';
+import { BuhinDispatchContext } from '../../providers/Buhin';
 import { CardHeader } from '../../components/CardHeader';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { Form } from '../../components/Form';

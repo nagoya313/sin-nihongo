@@ -12,7 +12,7 @@ import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
 import { ListItemIcon } from '../../components/ListItemIcon';
-import { NoticeDispatchContext } from '../notice/Notice';
+import { NoticeDispatchContext } from '../../providers/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
 import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';

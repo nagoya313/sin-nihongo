@@ -9,7 +9,7 @@ import { Kanjis } from '../kanjis/Kanjis';
 import { Radicals } from '../radicals/Radicals';
 import { RadicalKanjis } from '../radicals/RadicalKanjis';
 import { GlyphCreate } from '../glyphs/GlyphCreate';
-import { BuhinProvider } from '../../components/BuhinProvider';
+import { BuhinProvider } from '../.././providers/Buhin';
 
 export const Router: React.FC = () => {
   const { isAuthenticated } = useAuth0();

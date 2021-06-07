@@ -6,7 +6,7 @@ import { GlyphForm, GlyphParams, Message } from '@sin-nihongo/api-interfaces';
 import { Form } from '../../components/Form';
 import { getAccessTokenOptions } from '../../utils/auth0';
 import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../utils/axios';
-import { NoticeDispatchContext } from '../notice/Notice';
+import { NoticeDispatchContext } from '../../providers/Notice';
 
 export const GlyphCreateForm: React.FC = ({ children }) => {
   const { getAccessTokenSilently } = useAuth0();

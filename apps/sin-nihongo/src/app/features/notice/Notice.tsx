@@ -32,7 +32,6 @@ export const NoticeDispatchContext = createContext<React.Dispatch<ActionType>>((
 const reducer = (state: StateType, action: ActionType): StateType => {
   switch (action.type) {
     case 'open':
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return { open: true, message: action.message, severity: action.severity };
     case 'close':
       return { ...state, open: false };

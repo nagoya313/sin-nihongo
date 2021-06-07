@@ -1,6 +1,12 @@
-import React, { ReactHTMLElement } from 'react';
+import React from 'react';
+import styled from 'styled-components';
+import Avatar from '@material-ui/core/Avatar';
 import { CardHeader as MuiCardHeader } from '@material-ui/core';
-import { CardAvatar } from './CardAvatar';
+import { red } from '@material-ui/core/colors';
+
+const CardAvatar = styled(Avatar)`
+  background-color: ${red[500]};
+`;
 
 type Props = {
   avatarText: string;

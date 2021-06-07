@@ -41,7 +41,7 @@ export const GlyphCreate: React.FC = () => {
           <CardHeader avatarText="グ" title="グリフ新規作成" />
           <CardContent>
             <Box display="flex" alignItems="flex-end">
-              <GlyphCanvas buhin={buhin} name="preview" />
+              <GlyphCanvas name="preview" />
               <IconButton onClick={onDraw} icon={<BrushIcon />} />
             </Box>
             <FormProvider {...methods}>

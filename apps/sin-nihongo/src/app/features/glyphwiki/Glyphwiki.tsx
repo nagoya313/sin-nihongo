@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
-import { Buhin } from '@kurgm/kage-engine';
 import { Glyph, GlyphwikiQueryParams, GlyphwikiHealth } from '@sin-nihongo/api-interfaces';
+import { BuhinDispatchContext } from '../../components/BuhinProvider';
 import { CardHeader } from '../../components/CardHeader';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { Form } from '../../components/Form';
@@ -15,7 +15,6 @@ import { ResponseNotice } from '../../components/ResponseNotice';
 import { SubText } from '../../components/SubText';
 import { Text } from '../../components/Text';
 import { useAxiosGet } from '../../utils/axios';
-import { glyphToBuhin } from '../../utils/kageData';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
 const resolver = classValidatorResolver(GlyphwikiQueryParams);
@@ -38,14 +37,14 @@ export const Glyphwiki: React.FC<Props> = ({ isEditable }) => {
     searchWord === '' ? 'api/v1/glyphwiki/health' : 'api/v1/glyphwiki',
     searchWord === '' ? {} : { params: { q: searchWord } }
   );
-  const [buhin, setBuhin] = useState(new Buhin());
+  const buhinDispatch = useContext(BuhinDispatchContext);
 
   const onSubmit = (data: GlyphwikiQueryParams) => setSearchWord(data.q);
 
   useEffect(() => {
-    isGlyph(data) && setBuhin(glyphToBuhin(data));
+    isGlyph(data) && buhinDispatch({ type: 'setGlyph', glyph: data });
     isGlyphwikiHealth(data) && setAccessible(data.accessible);
-  }, [data]);
+  }, [data, buhinDispatch]);
 
   return (
     <Card>
@@ -76,16 +75,10 @@ export const Glyphwiki: React.FC<Props> = ({ isEditable }) => {
         )}
         {isGlyph(data) && (
           <React.Fragment>
-            <GlyphwikiContent isEditable={isEditable} name={data.name} data={data.data} buhin={buhin} />
+            <GlyphwikiContent isEditable={isEditable} name={data.name} data={data.data} />
             <SubText>参照グリフ</SubText>
             {data.includeGlyphs?.map((glyph) => (
-              <GlyphwikiContent
-                key={glyph.name}
-                isEditable={isEditable}
-                name={glyph.name}
-                data={glyph.data}
-                buhin={buhin}
-              />
+              <GlyphwikiContent key={glyph.name} isEditable={isEditable} name={glyph.name} data={glyph.data} />
             ))}
           </React.Fragment>
         )}

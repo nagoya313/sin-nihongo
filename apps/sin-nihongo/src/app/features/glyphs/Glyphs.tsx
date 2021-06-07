@@ -6,8 +6,8 @@ import Divider from '@material-ui/core/Divider';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { Buhin } from '@kurgm/kage-engine';
-import { Glyphs as ApiGlyphs, Glyph, Message } from '@sin-nihongo/api-interfaces';
+import { Glyphs as ApiGlyphs, Message } from '@sin-nihongo/api-interfaces';
+import { BuhinDispatchContext } from '../../components/BuhinProvider';
 import { CardHeader } from '../../components/CardHeader';
 import { Dialog } from '../../components/Dialog';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
@@ -39,8 +39,7 @@ export const Glyphs = () => {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [searchName, setSearchName] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
-  const [glyphs, setGlyphs] = useState<Glyph[]>();
-  const [buhin, setBuhin] = useState(new Buhin());
+  const buhinDispatch = useContext(BuhinDispatchContext);
   const [{ data: getData, loading: getLoading, error: getError }, getRefetch] = useAxiosGet<ApiGlyphs>(
     'api/v1/glyphs',
     {
@@ -64,28 +63,16 @@ export const Glyphs = () => {
 
   useEffect(() => setPageNumber(1), [searchName]);
   useEffect(() => {
-    getError && setGlyphs(undefined);
-  }, [getError]);
-  useEffect(() => {
     if (getData) {
-      setGlyphs(getData.items);
-      const b = new Buhin();
-      getData.items.forEach((glyph) => {
-        b.push(glyph.name, glyph.data);
-      });
-      getData.includeGlyphs?.forEach((glyph) => {
-        b.push(glyph.name, glyph.data);
-      });
-      setBuhin(b);
+      buhinDispatch({ type: 'setGlyphs', glyphs: getData });
     }
-  }, [getData]);
+  }, [getData, buhinDispatch]);
   useEffect(() => {
     if (deleteData) {
       noticeDispatch({ type: 'open', message: deleteData.message, severity: 'success' });
     }
   }, [deleteData, noticeDispatch]);
   useEffect(() => {
-    console.log(deleteError);
     if (deleteError) {
       noticeDispatch({ type: 'open', message: deleteError.message, severity: 'error' });
     }
@@ -97,10 +84,10 @@ export const Glyphs = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = glyphs?.map((glyph): { [key in Fields | 'key']: any } => ({
+  const rows = getData?.items?.map((glyph): { [key in Fields | 'key']: any } => ({
     key: `glyph_${glyph.id}`,
     name: glyph.name,
-    glyph: <GlyphCanvas buhin={buhin} name={glyph.name} />,
+    glyph: <GlyphCanvas name={glyph.name} />,
     data: splitData(glyph.data),
     show: <IconButtonRouteLink to="/" icon={<DescriptionIcon />} />,
     delete: isAuthenticated && (

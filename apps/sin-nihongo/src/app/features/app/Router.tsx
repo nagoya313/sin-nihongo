@@ -9,6 +9,7 @@ import { Kanjis } from '../kanjis/Kanjis';
 import { Radicals } from '../radicals/Radicals';
 import { RadicalKanjis } from '../radicals/RadicalKanjis';
 import { GlyphCreate } from '../glyphs/GlyphCreate';
+import { BuhinProvider } from '../../components/BuhinProvider';
 
 export const Router: React.FC = () => {
   const { isAuthenticated } = useAuth0();
@@ -16,10 +17,26 @@ export const Router: React.FC = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route exact path="/glyphwiki" component={Glyphwiki} />
+      <Route
+        exact
+        path="/glyphwiki"
+        render={() => (
+          <BuhinProvider>
+            <Glyphwiki />
+          </BuhinProvider>
+        )}
+      />
       <Route exact path="/radicals" component={Radicals} />
       <Route exact path="/kanjis" component={Kanjis} />
-      <Route exact path="/glyphs" component={Glyphs} />
+      <Route
+        exact
+        path="/glyphs"
+        render={() => (
+          <BuhinProvider>
+            <Glyphs />
+          </BuhinProvider>
+        )}
+      />
       <Route exact path="/radicals/:id/kanjis" component={RadicalKanjis} />
       {isAuthenticated ? <Route exact path="/glyphs/new" component={GlyphCreate} /> : null}
       <Route component={NotFound} />

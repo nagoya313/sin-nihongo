@@ -107,7 +107,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
     key: `kanji_${kanji.ucs}`,
     ucs: kanji.ucs,
     character: <NewTabLink url={`https://glyphwiki.org/wiki/${kanji.ucs}`} text={kanji.character} />,
-    kage: <GlyphCanvas buhin={buhin} />,
+    kage: <GlyphCanvas />,
     radical: kanji.radical.character,
     numberOfStrokes: kanji.numberOfStrokes,
     regular: kanji.regular && <Check />,

@@ -7,8 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import BuildIcon from '@material-ui/icons/Build';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Buhin } from '@kurgm/kage-engine';
-import { GlyphForm, GlyphParams, Message } from '@sin-nihongo/api-interfaces';
+import { GlyphParams, Message } from '@sin-nihongo/api-interfaces';
 import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
@@ -22,10 +21,9 @@ type Props = {
   isEditable?: boolean;
   name?: string;
   data?: string;
-  buhin: Buhin;
 };
 
-export const GlyphwikiContent: React.FC<Props> = ({ isEditable, name, data, buhin }) => {
+export const GlyphwikiContent: React.FC<Props> = ({ isEditable, name, data }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [{ data: postData, error }, execute] = useLazyAxiosPost<Message>('api/v1/glyphs');
   const noticeDispatch = useContext(NoticeDispatchContext);
@@ -47,7 +45,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ isEditable, name, data, buhi
 
   return (
     <Box display="flex" p={1}>
-      <GlyphCanvas buhin={buhin} name={name} />
+      <GlyphCanvas name={name} />
       <Box flexGrow={1}>
         <List>
           <ListItem

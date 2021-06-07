@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NotFoundError } from 'routing-controllers';
-import { Glyph } from '@sin-nihongo/api-interfaces';
+import { Glyph, GlyphwikiHealth as ApiGlyphwikiHealth } from '@sin-nihongo/api-interfaces';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
 
@@ -27,14 +27,14 @@ export const glyphwikiDataGet = async (code: string): Promise<Glyph> => {
 
 type GlyphwikiHealth = Record<string, never>;
 
-export const glyphwikiHelth = async () => {
+export const glyphwikiHelth = async (): Promise<ApiGlyphwikiHealth> => {
   try {
     const response = await axios.get<GlyphwikiHealth>(GLYPHWIKI_API_ENDPOINT);
     if (Object.keys(response.data).length === 0) {
-      return { message: 'Glyphwikiから検索わ利用可能です。' };
+      return { message: 'Glyphwikiから検索わ利用可能です。', accessible: true };
     }
   } catch (error) {
     console.error('glyphwiki access error.');
   }
-  return { message: 'Glyphwikiから検索わ利用不能です。' };
+  return { message: 'Glyphwikiから検索わ利用不能です。', accessible: false };
 };

@@ -30,10 +30,11 @@ type GlyphwikiHealth = Record<string, never>;
 export const glyphwikiHelth = async () => {
   try {
     const response = await axios.get<GlyphwikiHealth>(GLYPHWIKI_API_ENDPOINT);
-    console.log(response);
-    if (response.data === {}) {
+    if (Object.keys(response.data).length === 0) {
       return { message: 'Glyphwikiから検索わ利用可能です。' };
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error('glyphwiki access error.');
+  }
   return { message: 'Glyphwikiから検索わ利用不能です。' };
 };

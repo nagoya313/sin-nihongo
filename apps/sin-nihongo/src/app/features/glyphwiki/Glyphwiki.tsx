@@ -22,8 +22,9 @@ const resolver = classValidatorResolver(GlyphwikiQueryParams);
 
 type ResponseType = Glyph | GlyphwikiHealth;
 
-const isGlyph = (response: ResponseType): response is Glyph => 'name' in response;
-const isGlyphwikiHealth = (response: ResponseType): response is GlyphwikiHealth => 'accessible' in response;
+const isGlyph = (response: ResponseType | undefined): response is Glyph => (response && 'name' in response) || false;
+const isGlyphwikiHealth = (response: ResponseType | undefined): response is GlyphwikiHealth =>
+  (response && 'accessible' in response) || false;
 
 type Props = {
   isEditable?: boolean;
@@ -42,10 +43,8 @@ export const Glyphwiki: React.FC<Props> = ({ isEditable }) => {
   const onSubmit = (data: GlyphwikiQueryParams) => setSearchWord(data.q);
 
   useEffect(() => {
-    if (data) {
-      isGlyph(data) && setBuhin(glyphToBuhin(data));
-      isGlyphwikiHealth(data) && setAccessible(data.accessible);
-    }
+    isGlyph(data) && setBuhin(glyphToBuhin(data));
+    isGlyphwikiHealth(data) && setAccessible(data.accessible);
   }, [data]);
 
   return (
@@ -72,10 +71,10 @@ export const Glyphwiki: React.FC<Props> = ({ isEditable }) => {
         </FormProvider>
         <Divider />
         <ResponseNotice loading={loading} error={error} />
-        {data && isGlyphwikiHealth(data) && !data.accessible && (
+        {isGlyphwikiHealth(data) && !data.accessible && (
           <ErrorTypography>グリフウィキわ現在利用不能です。</ErrorTypography>
         )}
-        {data && isGlyph(data) && (
+        {isGlyph(data) && (
           <React.Fragment>
             <GlyphwikiContent isEditable={isEditable} name={data.name} data={data.data} buhin={buhin} />
             <SubText>参照グリフ</SubText>

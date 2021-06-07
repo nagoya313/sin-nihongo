@@ -17,11 +17,11 @@ const Canvas = styled.canvas`
   background-color: white;
 `;
 
-type Props = {
+export type GlyphCanvasProps = {
   name?: string;
 };
 
-export const GlyphCanvas: React.FC<Props> = ({ name }) => {
+export const GlyphCanvas: React.FC<GlyphCanvasProps> = ({ name }) => {
   const buhin = useContext(BuhinContext);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 

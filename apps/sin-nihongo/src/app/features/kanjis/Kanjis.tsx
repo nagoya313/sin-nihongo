@@ -9,7 +9,6 @@ import Divider from '@material-ui/core/Divider';
 import { Buhin } from '@kurgm/kage-engine';
 import { Pagination as ApiPagination, Kanji, KanjisQueryParams } from '@sin-nihongo/api-interfaces';
 import { CardHeader } from '../../components/CardHeader';
-import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { NewTabLink } from '../../components/NewTabLink';
@@ -18,6 +17,8 @@ import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
 import { useAxiosGet } from '../../utils/axios';
+import { EdiableProvider } from '../../providers/Editable';
+import { ClickableGlyphCanvas } from './ClickableGlyphCanvas';
 
 const resolver = classValidatorResolver(KanjisQueryParams);
 
@@ -107,7 +108,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
     key: `kanji_${kanji.ucs}`,
     ucs: kanji.ucs,
     character: <NewTabLink url={`https://glyphwiki.org/wiki/${kanji.ucs}`} text={kanji.character} />,
-    kage: <GlyphCanvas />,
+    kage: <ClickableGlyphCanvas />,
     radical: kanji.radical.character,
     numberOfStrokes: kanji.numberOfStrokes,
     regular: kanji.regular && <Check />,
@@ -178,13 +179,15 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
         </FormProvider>
         <Divider />
         <ResponseNotice loading={loading} error={error} />
-        <Table<Fields>
-          columns={columns}
-          rows={rows}
-          pageNumber={pageNumber}
-          totalPages={data?.meta?.totalPages}
-          onPageChange={onPageChange}
-        />
+        <EdiableProvider>
+          <Table<Fields>
+            columns={columns}
+            rows={rows}
+            pageNumber={pageNumber}
+            totalPages={data?.meta?.totalPages}
+            onPageChange={onPageChange}
+          />
+        </EdiableProvider>
       </CardContent>
     </Card>
   );

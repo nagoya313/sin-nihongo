@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import { useAuth0 } from '@auth0/auth0-react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -6,21 +8,24 @@ import Divider from '@material-ui/core/Divider';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { Glyphs as ApiGlyphs, Message } from '@sin-nihongo/api-interfaces';
+import { Glyphs as ApiGlyphs, GlyphsQueryParams, Message } from '@sin-nihongo/api-interfaces';
 import { BuhinDispatchContext } from '../../components/BuhinProvider';
 import { CardHeader } from '../../components/CardHeader';
 import { Dialog } from '../../components/Dialog';
+import { Form } from '../../components/Form';
+import { FormTextField } from '../../components/FormTextField';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
 import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { ResponseNotice } from '../../components/ResponseNotice';
-import { SearchTextField } from '../../components/SearchTextField';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
 import { NoticeDispatchContext } from '../notice/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
 import { fetchWithToken, useAxiosGet, useLazyAxiosDelete } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
+
+const resolver = classValidatorResolver(GlyphsQueryParams);
 
 type Fields = 'glyph' | 'name' | 'data' | 'show' | 'delete';
 
@@ -33,6 +38,7 @@ const columns: { field: Fields; headerName: string }[] = [
 ];
 
 export const Glyphs = () => {
+  const methods = useForm<GlyphsQueryParams>({ resolver, defaultValues: { nameLike: '' } });
   const [open, setOpen] = React.useState(false);
   const noticeDispatch = useContext(NoticeDispatchContext);
   const [deleteID, setDeleteId] = React.useState('');
@@ -50,6 +56,7 @@ export const Glyphs = () => {
     `api/v1/glyphs/${deleteID}`
   );
   const onPageChange = (page: number) => setPageNumber(page);
+  const onSubmit = (data: GlyphsQueryParams) => setSearchName(data.nameLike);
 
   const onClose = async (yes: boolean) => {
     if (yes) {
@@ -111,7 +118,11 @@ export const Glyphs = () => {
           新日本語で採用された字形およびその部品のKAGEデータとその生成グリフお閲覧できます。
           グリフ名で検索もできます（グリフ名わグリフウィキとおーむね一致です）。
         </Text>
-        <SearchTextField label="グリフ名" onSearchWordChange={setSearchName} hint="例：u4e00" />
+        <FormProvider {...methods}>
+          <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
+            <FormTextField name="nameLike" label="グリフ名" type="search" helperText="例：u4e00-j" />
+          </Form>
+        </FormProvider>
         <Divider />
         <ResponseNotice loading={getLoading} error={getError} />
         <Table<Fields>

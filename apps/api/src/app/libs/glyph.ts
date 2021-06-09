@@ -28,7 +28,7 @@ const scanRecursion = async (data: Glyph, getter: GetterType) => {
   return flatten(strokes);
 };
 
-const firstRecursionData = async (data: Glyph, getter: GetterType) => await scanRecursion(data, getter);
+const firstRecursionData = async (data: Glyph, getter: GetterType) => scanRecursion(data, getter);
 
 const recursionData = async (data: Glyph, getter: GetterType): Promise<Glyph[]> => {
   const scan = await scanRecursion(data, getter);

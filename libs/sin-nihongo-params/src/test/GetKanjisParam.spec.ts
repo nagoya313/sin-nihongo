@@ -1,8 +1,8 @@
-import { KanjisQueryParams } from '@sin-nihongo/api-interfaces';
+import { GetKanjisParams } from '../../src/index';
 
-describe('KanjisQueryParams', () => {
+describe('GetKanjisParams', () => {
   describe('validation', () => {
-    const subject = KanjisQueryParams;
+    const subject = GetKanjisParams;
 
     it('ucs', async (done) => {
       await Promise.all([expect(subject).allowValueProperty('ucs', '一')]);
@@ -69,34 +69,6 @@ describe('KanjisQueryParams', () => {
         expect(subject).minProperty('radicalId', 1),
       ]);
       done();
-    });
-  });
-
-  describe('ucsParam', () => {
-    it('漢字一文字の場合はundefinedを返すこと', () => {
-      const params = new KanjisQueryParams();
-      params.ucs = '一';
-      expect(params.ucsParam).toBeUndefined();
-    });
-
-    it('uxxxxの時はcode pointの数値を返すこと', () => {
-      const params = new KanjisQueryParams();
-      params.ucs = 'u4e00';
-      expect(params.ucsParam).toBe(19968);
-    });
-  });
-
-  describe('kanjiParam', () => {
-    it('漢字一文字の場合はcode pointの数字を返すこと', () => {
-      const params = new KanjisQueryParams();
-      params.ucs = '一';
-      expect(params.kanjiParam).toBe(19968);
-    });
-
-    it('uxxxxの時はundefinedを返すこと', () => {
-      const params = new KanjisQueryParams();
-      params.ucs = 'u4e00';
-      expect(params.kanjiParam).toBeUndefined();
     });
   });
 });

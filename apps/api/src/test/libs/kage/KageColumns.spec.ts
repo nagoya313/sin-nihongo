@@ -1,4 +1,4 @@
-import { KageColumns } from '../../../app/libs/kage';
+import { KageColumns } from '../../../app/libs/kage/KageColumns';
 
 describe('KageColumns', () => {
   it('直線の画が正しく解析できること', () => {

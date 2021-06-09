@@ -76,8 +76,8 @@ export class PostGlyphParamsBody implements PostGlyphRequestBody {
   data: string;
 }
 
-export class PostGlyphParams {
-  glyph: PostGlyphParams;
+export class PostGlyphParams implements PostGlyphRequest {
+  glyph: PostGlyphParamsBody;
 }
 
 export class PaginationParams implements PaginationRequest {

@@ -1,9 +1,9 @@
 import { PaginationModel } from 'mongoose-paginate-ts';
-import { Glyph as ApiGlyph, Glyphs } from '@sin-nihongo/api-interfaces';
+import { Glyphs, GlyphResponse as ApiGlyphResponse } from '@sin-nihongo/api-interfaces';
 import { Glyph } from '../models/glyph';
 
 export class GlyphResponse {
-  toResponse(glyph: Glyph): ApiGlyph {
+  toResponse(glyph: Glyph): ApiGlyphResponse {
     return {
       id: glyph._id.toString(),
       name: glyph.name,
@@ -11,17 +11,18 @@ export class GlyphResponse {
     };
   }
 
-  toIndexResponse(data: PaginationModel<Glyph>, incldeGlyphs: ApiGlyph[]): Glyphs {
+  async toIndexResponse(glyphsAndincludeGlyphs: Promise<[PaginationModel<Glyph>, ApiGlyphResponse[]]>): Glyphs {
+    const [glyphs, includeGlyphs] = await glyphsAndincludeGlyphs;
     return {
-      items: data.docs.map((doc) => this.toResponse(doc)),
+      items: glyphs.docs.map((doc) => this.toResponse(doc)),
       meta: {
-        totalItems: data.totalDocs,
+        totalItems: glyphs.totalDocs,
         itemsPerPage: 20,
-        itemCount: data.docs.length,
-        totalPages: data.totalPages,
-        currentPage: data.page || 1,
+        itemCount: glyphs.docs.length,
+        totalPages: glyphs.totalPages,
+        currentPage: glyphs.page || 1,
       },
-      includeGlyphs: incldeGlyphs,
+      includeGlyphs: includeGlyphs,
     };
   }
 }

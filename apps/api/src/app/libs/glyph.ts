@@ -9,11 +9,11 @@ export const glyphData = async (key: string, getter: GetterType, firstGetter = g
   return {
     name: base.name,
     data: base.data,
-    includeGlyphs: await includesGlyphData(base, getter),
+    includeGlyphs: await includeGlyphData(base, getter),
   };
 };
 
-export const includesGlyphData = async (data: GlyphResponse, getter: GetterType): Promise<GlyphResponse[]> => {
+export const includeGlyphData = async (data: GlyphResponse, getter: GetterType): Promise<GlyphResponse[]> => {
   const glyphs = await firstRecursionData(data, getter);
   return uniq(glyphs, 'name');
 };

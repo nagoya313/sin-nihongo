@@ -1,21 +1,19 @@
 import { Authorized, Body, JsonController, Delete, Get, Param, Patch, Post, QueryParams } from 'routing-controllers';
-import { Types } from 'mongoose';
 import { GetGlyphsParams, PostGlyphParams } from '@sin-nihongo/sin-nihongo-params';
-import { GlyphModel } from '../models/glyph';
+import { PaginationQueryParams } from '../params/PaginationQueryParams';
 import { GlyphResponse } from '../responses/GlyphResponse';
 import { GlyphRepository } from '../repositories/GlyphRepository';
 
 @JsonController()
 export class GlyphsController {
   @Get('/glyphs')
-  async index(@QueryParams() searchParams: GetGlyphsParams) {
-    const [glyphs, includeGlyphs] = await GlyphRepository.findAndCount(searchParams);
-    return this.responser.toIndexResponse(glyphs, includeGlyphs);
+  index(@QueryParams() searchParams: GetGlyphsParams, @QueryParams() pageParams: PaginationQueryParams) {
+    return this.responser.toIndexResponse(GlyphRepository.findAndCount(searchParams, pageParams));
   }
 
   @Get('/glyphs/:id')
-  async show(@Param('id') id: string) {
-    return await GlyphRepository.findOne(id);
+  show(@Param('id') id: string) {
+    return GlyphRepository.findOne(id);
   }
 
   @Post('/glyphs')
@@ -28,7 +26,7 @@ export class GlyphsController {
   @Patch('/glyphs/:id')
   @Authorized()
   async update(@Param('id') id: string, @Body() params: PostGlyphParams) {
-    await GlyphModel.findByIdAndUpdate(Types.ObjectId(id), params, { new: true }).exec();
+    await GlyphRepository.update(id, params);
     return { message: 'グリフデータを更新しました。' };
   }
 

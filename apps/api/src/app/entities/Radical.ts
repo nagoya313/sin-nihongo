@@ -14,7 +14,7 @@ export class Radical extends TimeStampEntity {
   @PrimaryColumn()
   @IsInt()
   @Min(1)
-  readonly id?: number;
+  readonly id: number;
 
   @Column()
   @IsInt()

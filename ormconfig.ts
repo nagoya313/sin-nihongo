@@ -1,5 +1,5 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import TypeOrmNamingStrategy from './apps/api/src/app/libs/TypeOrmNamingStrategy';
+import TypeOrmNamingStrategy from './apps/api/src/app/config/TypeOrmNamingStrategy';
 
 const dbProductionConfig: PostgresConnectionOptions = {
   type: 'postgres',

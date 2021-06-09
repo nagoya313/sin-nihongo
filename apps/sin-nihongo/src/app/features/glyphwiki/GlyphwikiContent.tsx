@@ -15,12 +15,12 @@ import { ListItemIcon } from '../../components/ListItemIcon';
 import { EditableContext } from '../../providers/Editable';
 import { NoticeDispatchContext } from '../../providers/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
-import { errorMessage, fetchWithTokenAndData, useFetch } from '../../utils/axios';
+import { errorMessage, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 
 type Props = {
-  name?: string;
-  data?: string;
+  name: string;
+  data: string;
 };
 
 export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
@@ -30,13 +30,11 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
   const isEditable = useContext(EditableContext);
 
   const onBuild = async () => {
-    if (name && data) {
-      const token = await getAccessTokenSilently(getAccessTokenOptions);
-      execute({
-        headers: { Authorization: `Bearer ${token}` },
-        data: { glyph: { name: name, data: data } },
-      }).catch(() => {});
-    }
+    const token = await getAccessTokenSilently(getAccessTokenOptions);
+    execute({
+      headers: { Authorization: `Bearer ${token}` },
+      data: { glyph: { name: name, data: data } },
+    }).catch(() => {});
   };
 
   useEffect(() => {

@@ -1,24 +1,12 @@
-import 'reflect-metadata';
-import { Express, Request } from 'express';
+import { Express } from 'express';
 import { authenticate } from 'passport';
-import { Action, ExpressMiddlewareInterface, Middleware, useExpressServer } from 'routing-controllers';
+import { Action, useExpressServer } from 'routing-controllers';
 import { routePrefix } from '@sin-nihongo/api-interfaces';
 import { GlyphsController } from '../controllers/GlyphsController';
 import { GlyphwikiController } from '../controllers/GlyphwikiController';
 import { KanjisController } from '../controllers/KanjisController';
 import { RadicalsController } from '../controllers/RadicalsController';
-
-@Middleware({ type: 'before' })
-export class LoggingMiddleware implements ExpressMiddlewareInterface {
-  use(request: Request, response: unknown, next: () => unknown) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('URL: ', request.url);
-      console.log('Query: ', request.query);
-      console.log('Params: ', request.params);
-    }
-    next();
-  }
-}
+import { LoggingMiddleware } from '../middlewares/LoggingMiddleware';
 
 export const initRoutingController = (app: Express) => {
   useExpressServer(app, {

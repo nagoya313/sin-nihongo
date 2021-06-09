@@ -1,16 +1,16 @@
 import React, { createContext, useReducer } from 'react';
 import { Buhin } from '@kurgm/kage-engine';
-import { Glyph, Glyphs } from '@sin-nihongo/api-interfaces';
+import { GlyphResponse, GlyphsResponse } from '@sin-nihongo/api-interfaces';
 import { glyphToBuhin, glyphsToBuhin } from '../utils/kageData';
 
 type ActionType =
   | {
       type: 'setGlyph';
-      glyph: Glyph;
+      glyph: GlyphResponse;
     }
   | {
       type: 'setGlyphs';
-      glyphs: Glyphs;
+      glyphs: GlyphsResponse;
     };
 
 export const BuhinContext = createContext(new Buhin());

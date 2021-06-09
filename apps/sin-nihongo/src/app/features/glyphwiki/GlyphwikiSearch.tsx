@@ -23,7 +23,7 @@ export const GlyphwikiSearch: React.FC<Props> = ({ name }) => {
       <ResponseNotice loading={loading} error={error} />
       {data && (
         <React.Fragment>
-          <GlyphwikiContent name={data.name} data={data.data} />
+          <GlyphwikiContent name={data.data.name} data={data.data.data} />
           <SubText>参照グリフ</SubText>
           {data.includeGlyphs?.map((glyph) => (
             <GlyphwikiContent key={glyph.name} name={glyph.name} data={glyph.data} />

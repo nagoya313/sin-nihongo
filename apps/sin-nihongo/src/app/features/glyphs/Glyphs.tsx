@@ -90,7 +90,7 @@ export const Glyphs = () => {
   }, [isValidating, isValid]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = getData?.items?.map((glyph): { [key in Fields | 'key']: any } => ({
+  const rows = getData?.data.items?.map((glyph): { [key in Fields | 'key']: any } => ({
     key: `glyph_${glyph.id}`,
     name: glyph.name,
     glyph: <GlyphCanvas name={glyph.name} />,
@@ -100,7 +100,7 @@ export const Glyphs = () => {
       <IconButton
         icon={<DeleteIcon />}
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        onClick={() => onDelete(glyph.id!)}
+        onClick={() => onDelete(glyph.data.id!)}
       />
     ),
   }));
@@ -133,7 +133,7 @@ export const Glyphs = () => {
           columns={columns}
           rows={rows}
           pageNumber={pageNumber}
-          totalPages={getData?.meta?.totalPages}
+          totalPages={getData?.data.meta?.totalPages}
           onPageChange={onPageChange}
         />
       </CardContent>

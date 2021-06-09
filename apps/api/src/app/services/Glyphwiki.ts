@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NotFoundError } from 'routing-controllers';
-import { GlyphResponse, GlyphwikiHealthResponse } from '@sin-nihongo/api-interfaces';
+import { Glyph, GlyphwikiHealthResponse } from '@sin-nihongo/api-interfaces';
 import { glyphData } from '../libs/glyph';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
@@ -32,7 +32,7 @@ export class Glyphwiki {
   }
 }
 
-const glyphwikiDataGet = async (name: string): Promise<GlyphResponse> => {
+const glyphwikiDataGet = async (name: string): Promise<Glyph> => {
   const response = await axios.get<GlyphwikiData>(GLYPHWIKI_API_ENDPOINT, {
     params: { name: name },
   });

@@ -66,6 +66,11 @@ export interface PaginationResponse<T> {
   readonly meta: PaginationMetaData;
 }
 
+export interface WithIncludeGlyphsResponse<T> {
+  readonly data: T;
+  readonly includeGlyphs: Glyph[];
+}
+
 export interface KanjiResponse {
   readonly id: number;
   readonly regular: boolean;
@@ -82,12 +87,14 @@ export interface GlyphwikiHealthResponse extends MessageResponse {
   readonly accessible: boolean;
 }
 
-export interface GlyphResponse {
+export interface Glyph {
   readonly id?: number;
   readonly name: string;
   readonly data: string;
-  readonly includeGlyphs?: GlyphResponse[];
 }
+
+export type GlyphResponse = WithIncludeGlyphsResponse<Glyph>;
+export type GlyphsResponse = WithIncludeGlyphsResponse<PaginationResponse<Glyph>>;
 
 export interface RadicalResponse {
   readonly id: number;
@@ -124,7 +131,7 @@ export const apiRoutes = {
   getGlyphs: {
     url: 'glyphs',
     method: 'GET',
-  } as ApiMapping<GetGlyphsRequest & PaginationRequest, PaginationResponse<GlyphResponse>>,
+  } as ApiMapping<GetGlyphsRequest & PaginationRequest, GlyphsResponse>,
   postGlyph: {
     url: 'glyphs',
     method: 'POST',

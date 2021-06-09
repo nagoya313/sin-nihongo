@@ -1,19 +1,16 @@
-import { JsonController, Get } from 'routing-controllers';
-import { GlyphwikiSearchParams } from '@sin-nihongo/api-interfaces';
-import { GlyphwikiQueryParams } from '../forms/glyphwiki';
-import { ValidateQueryParams } from '../libs/decorators';
-import { glyphData } from '../libs/glyph';
-import { glyphwikiDataGet, glyphwikiHelth } from '../services/glyphwiki';
+import { Get, JsonController, QueryParams } from 'routing-controllers';
+import { GetGlyphwikiQueryParams } from '@sin-nihongo/sin-nihongo-params';
+import { Glyphwiki } from '../services/glyphwiki';
 
 @JsonController()
 export class GlyphwikiController {
   @Get('/glyphwiki')
-  async show(@ValidateQueryParams params: GlyphwikiSearchParams) {
-    return await glyphData(new GlyphwikiQueryParams(params).name, glyphwikiDataGet);
+  show(@QueryParams() params: GetGlyphwikiQueryParams) {
+    return Glyphwiki.findByNameOrFail(params.name);
   }
 
   @Get('/glyphwiki/health')
-  async health() {
-    return await glyphwikiHelth();
+  health() {
+    return Glyphwiki.health();
   }
 }

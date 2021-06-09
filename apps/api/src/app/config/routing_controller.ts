@@ -12,6 +12,7 @@ export const initRoutingController = (app: Express) => {
     routePrefix: '/api/v1',
     defaultErrorHandler: true,
     controllers: [GlyphsController, GlyphwikiController, KanjisController, RadicalsController],
+    validation: { whitelist: true, forbidNonWhitelisted: true },
     authorizationChecker: async (action: Action) =>
       new Promise<boolean>((resolve, reject) => {
         passport.authenticate('jwt', (err, user) => {

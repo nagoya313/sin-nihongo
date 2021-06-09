@@ -1,37 +1,38 @@
 import 'reflect-metadata';
 
-export interface Kanji {
-  readonly id: number;
-  readonly ucs: string;
-  readonly regular: boolean;
-  readonly forName: boolean;
-  readonly jisLevel: number;
-  readonly numberOfStrokes: number;
-  readonly numberOfStrokesInRadicals: number;
-  readonly radical: {
-    readonly id: number;
-    readonly character: string;
-  };
-  readonly kunyomis: string[];
-  readonly onyomis: string[];
-  readonly character: string;
+export interface MessageResponse {
+  readonly message: string;
 }
 
-export interface Glyph {
-  readonly id?: string;
+export interface GetGlyphwikiRequest {
+  q: string;
+}
+
+export interface GlyphwikiHealthResponse extends MessageResponse {
+  readonly accessible: boolean;
+}
+
+export interface PaginationRequest {
+  page?: number;
+  limit?: number;
+}
+
+interface PaginationMetaData {
+  readonly totalItems: number;
+  readonly itemsPerPage: number;
+  readonly itemCount: number;
+  readonly totalPages: number;
+  readonly currentPage: number;
+}
+
+export interface PaginationResponse<T> {
+  readonly items: T[];
+  readonly meta: PaginationMetaData;
+}
+
+export interface GlyphResponse {
+  readonly id?: number;
   readonly name: string;
   readonly data: string;
-  readonly includeGlyphs?: Glyph[];
+  readonly includeGlyphs?: GlyphResponse[];
 }
-
-/*export interface Glyphs extends Pagination<Glyph> {
-  readonly includeGlyphs: Glyph[];
-}*/
-
-export * from './error';
-export * from './kanji';
-export * from './glyph';
-export * from './glyphwiki';
-export * from './message';
-export * from './pagination';
-export * from './radical';

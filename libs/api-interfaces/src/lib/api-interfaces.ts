@@ -25,6 +25,10 @@ export interface GetRadicalsRequest {
   numberOfStrokes?: number;
 }
 
+export interface GetGlyphsRequest {
+  nameLike?: string;
+}
+
 export interface PaginationRequest {
   page?: number;
   limit?: number;
@@ -82,4 +86,15 @@ export const apiRoutes = {
     url: 'radicals',
     method: 'GET',
   } as ApiMapping<GetRadicalsRequest & PaginationRequest, PaginationResponse<RadicalResponse>>,
+  getGlyphs: {
+    url: 'glyphs',
+    method: 'GET',
+  } as ApiMapping<GetGlyphsRequest & PaginationRequest, PaginationResponse<GlyphResponse>>,
+  deleteGlyph: (id: string) =>
+    ({
+      url: `glyphs/${id}`,
+      method: 'DELETE',
+      lazy: true,
+      auth: true,
+    } as ApiMapping<never, MessageResponse>),
 };

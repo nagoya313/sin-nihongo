@@ -1,5 +1,10 @@
 import { IsInt, IsOptional, Matches, Max, Min } from 'class-validator';
-import { GetGlyphwikiRequest, GetRadicalsRequest, PaginationRequest } from '@sin-nihongo/api-interfaces';
+import {
+  GetGlyphsRequest,
+  GetGlyphwikiRequest,
+  GetRadicalsRequest,
+  PaginationRequest,
+} from '@sin-nihongo/api-interfaces';
 
 const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_]+(@\d+)?|.)$/;
 const RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER = /^(?!.*[ぢづゐゑを])[\u3040-\u3093ー]+$/;
@@ -18,6 +23,11 @@ export class GetRadicalsParams implements GetRadicalsRequest {
   @IsInt({ message: '画数わ整数で入力してください' })
   @Min(1, { message: '画数わ$constraint1以上で入力してください' })
   numberOfStrokes?: number;
+}
+
+export class GetGlyphsParams implements GetGlyphsRequest {
+  @IsOptional()
+  nameLike?: string;
 }
 
 export class PaginationParams implements PaginationRequest {

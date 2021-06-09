@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import FindInPage from '@material-ui/icons/FindInPage';
-import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { apiRoutes, GetRadicalsRequest } from '@sin-nihongo/api-interfaces';
 import { GetRadicalsParams } from '@sin-nihongo/sin-nihongo-params';
 import { CardHeader } from '../../components/CardHeader';
 import { Form } from '../../components/Form';
@@ -44,7 +44,7 @@ export const Radicals: React.FC = () => {
     resolver,
     defaultValues: initialState,
   });
-  const [searchParams, setSearchParams] = useState<GetRadicalsParams>();
+  const [searchParams, setSearchParams] = useState<GetRadicalsRequest>();
   const [pageNumber, setPageNumber] = useState(1);
   const [{ data, loading, error }] = useFetch(apiRoutes.getRadicals, {
     ...searchParams,

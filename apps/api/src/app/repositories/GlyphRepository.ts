@@ -3,6 +3,7 @@ import { PaginationModel } from 'mongoose-paginate-ts';
 import { flatten, uniq } from 'underscore';
 import { NotFoundError, BadRequestError } from 'routing-controllers';
 import { Glyph as ApiGlyph, GlyphsSearchParams, GlyphParams } from '@sin-nihongo/api-interfaces';
+import { PostGlyphParams } from '@sin-nihongo/sin-nihongo-params';
 import { glyphData, includesGlyphData } from '../libs/glyph';
 import { Glyph, GlyphModel } from '../models/glyph';
 
@@ -22,7 +23,7 @@ export class GlyphRepository {
     return glyphData(id, this.findOneOrFail, this.findByIdOrFail);
   }
 
-  static async create(params: GlyphParams) {
+  static async create(params: PostGlyphParams) {
     try {
       await includesGlyphData(params.glyph, this.findOneOrFail);
     } catch (error) {

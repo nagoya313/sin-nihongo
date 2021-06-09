@@ -39,6 +39,15 @@ export interface GetGlyphsRequest {
   nameLike?: string;
 }
 
+export interface PostGlyphRequestBody {
+  name: string;
+  data: string;
+}
+
+export interface PostGlyphRequest {
+  glyph: PostGlyphRequestBody;
+}
+
 export interface PaginationRequest {
   page?: number;
   limit?: number;
@@ -116,6 +125,12 @@ export const apiRoutes = {
     url: 'glyphs',
     method: 'GET',
   } as ApiMapping<GetGlyphsRequest & PaginationRequest, PaginationResponse<GlyphResponse>>,
+  postGlyph: {
+    url: 'glyphs',
+    method: 'POST',
+    lazy: true,
+    auth: true,
+  } as ApiMapping<never, MessageResponse>,
   deleteGlyph: (id: string) =>
     ({
       url: `glyphs/${id}`,

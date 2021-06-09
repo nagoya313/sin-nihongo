@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import BuildIcon from '@material-ui/icons/Build';
 import ListItemText from '@material-ui/core/ListItemText';
-import { GlyphParams, Message } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
@@ -15,7 +15,7 @@ import { ListItemIcon } from '../../components/ListItemIcon';
 import { EditableContext } from '../../providers/Editable';
 import { NoticeDispatchContext } from '../../providers/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
-import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../utils/axios';
+import { errorMessage, fetchWithTokenAndData, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 
 type Props = {
@@ -25,14 +25,17 @@ type Props = {
 
 export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
   const { getAccessTokenSilently } = useAuth0();
-  const [{ data: postData, error }, execute] = useLazyAxiosPost<Message>('api/v1/glyphs');
+  const [{ data: postData, error }, execute] = useFetch(apiRoutes.postGlyph);
   const noticeDispatch = useContext(NoticeDispatchContext);
   const isEditable = useContext(EditableContext);
 
   const onBuild = async () => {
     if (name && data) {
       const token = await getAccessTokenSilently(getAccessTokenOptions);
-      fetchWithTokenAndData(execute, token, new GlyphParams({ name: name, data: data }));
+      execute({
+        headers: { Authorization: `Bearer ${token}` },
+        data: { glyph: { name: name, data: data } },
+      }).catch(() => {});
     }
   };
 

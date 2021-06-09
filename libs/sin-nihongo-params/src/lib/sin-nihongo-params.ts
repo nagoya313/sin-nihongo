@@ -1,10 +1,12 @@
-import { IsBoolean, IsInt, IsOptional, Matches, Max, Min } from 'class-validator';
+import { Length, IsBoolean, IsInt, IsNotEmpty, IsOptional, Matches, Max, Min } from 'class-validator';
 import {
   GetKanjisRequest,
   GetGlyphsRequest,
   GetGlyphwikiRequest,
   GetRadicalsRequest,
   PaginationRequest,
+  PostGlyphRequest,
+  PostGlyphRequestBody,
 } from '@sin-nihongo/api-interfaces';
 
 const GLYPHWIKI_QUERY_PARAMS_MATCHER = /^([\da-z-_]+(@\d+)?|.)$/;
@@ -64,6 +66,18 @@ export class GetKanjisParams implements GetKanjisRequest {
 export class GetGlyphsParams implements GetGlyphsRequest {
   @IsOptional()
   nameLike?: string;
+}
+
+export class PostGlyphParamsBody implements PostGlyphRequestBody {
+  @Length(1, 20, { message: 'グリフ名わ$constraint1文字以上$constraint2文字以内で入力してください' })
+  name: string;
+
+  @IsNotEmpty({ message: 'KAGEデータお入力してください' })
+  data: string;
+}
+
+export class PostGlyphParams {
+  glyph: PostGlyphParams;
 }
 
 export class PaginationParams implements PaginationRequest {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Controller, useFormContext } from 'react-hook-form';
+import { DeepMap, FieldError, FieldValues, Path, UseFormRegister } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { TextField, TextFieldProps } from '@material-ui/core';
 
@@ -8,17 +8,23 @@ export const StyledTextField = styled(TextField)`
   margin-bottom: 10px;
 `;
 
-type Props = {
-  name: string;
-} & TextFieldProps;
+type Props<Values> = TextFieldProps & {
+  register: UseFormRegister<Values>;
+  errors: DeepMap<FieldValues, FieldError>;
+  name: Path<Values>;
+};
 
-export const FormTextField: React.FC<Props> = ({ label, name, helperText, type, ...others }) => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+export function FormTextField<Values>({ register, errors, label, name, helperText, type, ...others }: Props<Values>) {
   const isError = errors[name] != null;
-  const { ref, ...rest } = register(name, type === 'number' ? { valueAsNumber: true } : undefined);
+
+  // IsOptionalがnull or undefinedでないとバリデーションスキップが発動しないので空の値にはnullを返す
+  // undefinedではフォームのバリデーションをサボる模様
+  const { ref, ...rest } = register(
+    name,
+    type === 'number'
+      ? { setValueAs: (value) => (isNaN(value) ? null : parseInt(value, 10)) }
+      : { setValueAs: (value) => value || null }
+  );
 
   return (
     <StyledTextField
@@ -31,4 +37,4 @@ export const FormTextField: React.FC<Props> = ({ label, name, helperText, type, 
       helperText={isError ? <ErrorMessage errors={errors} name={name} /> : helperText}
     />
   );
-};
+}

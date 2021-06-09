@@ -13,7 +13,7 @@ import { CardHeader } from '../../components/CardHeader';
 import { FormTextField } from '../../components/FormTextField';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
-import { SubmitButton } from '../../components/SubmitButton';
+import { SubmitButton } from '../../components/FormButton';
 import { GlyphCreateForm } from './GlyphCreateForm';
 import { Glyphwiki } from '../glyphwiki/Glyphwiki';
 import { EdiableProvider } from '../../providers/Editable';

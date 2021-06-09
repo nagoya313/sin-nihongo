@@ -1,46 +1,35 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
-import { Glyph, GlyphwikiQueryParams, GlyphwikiHealth } from '@sin-nihongo/api-interfaces';
-import { BuhinDispatchContext } from '../../providers/Buhin';
+import { GlyphwikiSearchParams, GlyphwikiHealthResponse } from '@sin-nihongo/api-interfaces';
 import { CardHeader } from '../../components/CardHeader';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { NewTabLink } from '../../components/NewTabLink';
-import { ResponseNotice } from '../../components/ResponseNotice';
-import { SubText } from '../../components/SubText';
 import { Text } from '../../components/Text';
 import { useAxiosGet } from '../../utils/axios';
-import { GlyphwikiContent } from './GlyphwikiContent';
+import { GlyphwikiSearch } from './GlyphwikiSearch';
 
-const resolver = classValidatorResolver(GlyphwikiQueryParams);
-
-type ResponseType = Glyph | GlyphwikiHealth;
-
-const isGlyph = (response: ResponseType | undefined): response is Glyph => (response && 'name' in response) || false;
-const isGlyphwikiHealth = (response: ResponseType | undefined): response is GlyphwikiHealth =>
-  (response && 'accessible' in response) || false;
+const resolver = classValidatorResolver(GlyphwikiSearchParams);
 
 export const Glyphwiki: React.FC = () => {
-  const methods = useForm<GlyphwikiQueryParams>({ resolver, defaultValues: { q: '' } });
+  const {
+    register,
+    handleSubmit,
+    formState: { isValidating, isValid, errors },
+  } = useForm<GlyphwikiSearchParams>({ mode: 'onChange', resolver, defaultValues: { q: '' } });
   const [searchWord, setSearchWord] = useState('');
-  const [accessible, setAccessible] = useState(false);
-  const [{ data, loading, error }] = useAxiosGet<ResponseType>(
-    searchWord === '' ? 'api/v1/glyphwiki/health' : 'api/v1/glyphwiki',
-    searchWord === '' ? {} : { params: { q: searchWord } }
-  );
-  const buhinDispatch = useContext(BuhinDispatchContext);
+  const [{ data }] = useAxiosGet<GlyphwikiHealthResponse>('api/v1/glyphwiki/health');
 
-  const onSubmit = (data: GlyphwikiQueryParams) => setSearchWord(data.q);
+  const onSubmit = (data: GlyphwikiSearchParams) => setSearchWord(data.q);
 
   useEffect(() => {
-    isGlyph(data) && buhinDispatch({ type: 'setGlyph', glyph: data });
-    isGlyphwikiHealth(data) && setAccessible(data.accessible);
-  }, [data, buhinDispatch]);
+    !isValidating && isValid && handleSubmit(onSubmit)();
+  }, [isValidating, isValid]);
 
   return (
     <Card>
@@ -53,31 +42,24 @@ export const Glyphwiki: React.FC = () => {
           />
           からグリフお検索します。漢字一文字或いわグリフウィキのグリフ名から検索できます。
         </Text>
-        <FormProvider {...methods}>
-          <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
-            <FormTextField
-              name="q"
-              disabled={!accessible}
-              label="漢字・USC・グリフ名"
-              type="search"
-              helperText="例：一、u4e00、aj1-10186"
-            />
-          </Form>
-        </FormProvider>
+        <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <FormTextField
+            register={register}
+            errors={errors}
+            name="q"
+            disabled={!data?.accessible}
+            label="漢字・USC・グリフ名"
+            type="search"
+            helperText="例：一、u4e00、aj1-10186"
+          />
+        </Form>
         <Divider />
-        <ResponseNotice loading={loading} error={error} />
-        {isGlyphwikiHealth(data) && !data.accessible && (
-          <ErrorTypography>グリフウィキわ現在利用不能です。</ErrorTypography>
-        )}
-        {isGlyph(data) && (
-          <React.Fragment>
-            <GlyphwikiContent {...data} />
-            <SubText>参照グリフ</SubText>
-            {data.includeGlyphs?.map((glyph) => (
-              <GlyphwikiContent key={glyph.name} {...data} />
-            ))}
-          </React.Fragment>
-        )}
+        {data &&
+          (data.accessible ? (
+            searchWord && <GlyphwikiSearch name={searchWord} />
+          ) : (
+            <ErrorTypography>グリフウィキわ現在利用不能です。</ErrorTypography>
+          ))}
       </CardContent>
     </Card>
   );

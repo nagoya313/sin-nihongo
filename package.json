@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "nx": "nx",
+    "s": "nx run-many --target=serve --projects=sin-nihongo,api --parallel=true",
     "start": "node dist/apps/api/main.js",
     "build": "nx run-many --target=build --projects=sin-nihongo,api --parallel=true --prod",
     "test": "nx test",

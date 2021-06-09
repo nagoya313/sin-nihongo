@@ -1,8 +1,8 @@
-import { GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
+import { GlyphwikiSearchParams, GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
 
-describe('GlyphwikiQueryParams', () => {
+describe('GlyphwikiSearchParams', () => {
   describe('validation', () => {
-    const subject = GlyphwikiQueryParams;
+    const subject = GlyphwikiSearchParams;
     it('q', async (done) => {
       await Promise.all(
         // 一文字は許可
@@ -40,11 +40,11 @@ describe('GlyphwikiQueryParams', () => {
     it('一文字の場合はcode pointに変換すること', () => {
       const params = new GlyphwikiQueryParams();
       params.q = 'a';
-      expect(params.glyphwikiApiRequestParam).toBe('u0061');
+      expect(params.name).toBe('u0061');
       params.q = '一';
-      expect(params.glyphwikiApiRequestParam).toBe('u4e00');
+      expect(params.name).toBe('u4e00');
       params.q = '𠀋';
-      expect(params.glyphwikiApiRequestParam).toBe('u2000b');
+      expect(params.name).toBe('u2000b');
     });
 
     it('二文字以上の場合はそのままを返すこと', () => {
@@ -60,7 +60,7 @@ describe('GlyphwikiQueryParams', () => {
       ].forEach((q) => {
         const params = new GlyphwikiQueryParams();
         params.q = q;
-        expect(params.glyphwikiApiRequestParam).toBe(q);
+        expect(params.name).toBe(q);
       });
     });
   });

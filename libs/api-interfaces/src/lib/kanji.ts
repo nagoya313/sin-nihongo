@@ -1,53 +1,93 @@
-import { IsInt, Min, Max, IsBoolean, Matches } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsOptional } from 'class-validator';
+import { Raw } from 'typeorm';
 import * as mojiJS from 'mojijs';
-import { IsOptional } from './decorator';
 import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from './radical';
-import { PaginationQueryParams } from './pagination';
+import { IsBoolean, IsInt, Matches, Max, Min, ParamsExpose, QueryExpose, CustomQueryExpose } from './decorator';
 
 export const KANJI_USC_QUERY_PARAMS_MATCHER = /^((u[\da-f]{4})|[\u4E00-\u9FFF])$/;
 
-export class KanjisQueryParams extends PaginationQueryParams {
+export class KanjisSearchParams {
+  @ParamsExpose
   @IsOptional()
-  @Matches(KANJI_USC_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能な漢字です` })
-  ucs?: string;
+  @Matches(KANJI_USC_QUERY_PARAMS_MATCHER)
+  kanji?: string;
 
+  @ParamsExpose
   @IsOptional()
-  @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです` })
+  @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER)
   readLike?: string;
 
+  @QueryExpose
   @IsOptional()
-  @IsInt({ message: '画数わ整数で入力してください' })
-  @Min(1, { message: '画数わ$constraint1以上で入力してください' })
+  @IsInt
+  @Min(1)
   numberOfStrokes?: number;
 
+  @QueryExpose
   @IsOptional()
-  @IsInt({ message: 'JIS水準わ整数で入力してください' })
-  @Min(1, { message: 'JIS水準わ$constraint1以上で入力してください' })
-  @Max(2, { message: 'JIS水準わ$constraint1以下で入力してください' })
+  @IsInt
+  @Min(1)
+  @Max(2)
   jisLevel?: number;
 
+  @QueryExpose
   @IsOptional()
-  @IsBoolean({ message: '常用漢字かどうかわ真偽値で入力してください' })
+  @IsBoolean
   regular?: boolean;
 
+  @QueryExpose
   @IsOptional()
-  @IsBoolean({ message: '人名用漢字かどうかわ真偽値で入力してください' })
+  @IsBoolean
   forName?: boolean;
 
+  @QueryExpose
   @IsOptional()
-  @IsInt({ message: '部首番号わ整数で入力してください。' })
-  @Min(1, { message: '部首番号わ$constraint1以上で入力してください' })
+  @IsInt
+  @Min(1)
   radicalId?: number;
+}
+
+export class KanjisQueryParams extends KanjisSearchParams {
+  @CustomQueryExpose
+  @Transform(({ obj }) => {
+    if (obj.kanji) {
+      if (obj.ucsParam) {
+        return obj.ucsParam;
+      } else if (obj.kanjiParam) {
+        return obj.kanjiParam;
+      }
+    }
+    return undefined;
+  })
+  ucs: number;
+
+  @CustomQueryExpose
+  @Transform(
+    ({ obj }) =>
+      obj.readLike &&
+      Raw(
+        (alias) => {
+          return `EXISTS(SELECT FROM unnest(array_cat("Kanji"."onyomi", ${alias})) name WHERE name LIKE :name)`;
+        },
+        { name: `${obj.toQueryYomigana(obj.readLike)}%` }
+      )
+  )
+  kunyomi: typeof Raw;
 
   get ucsParam() {
-    return this.ucs?.match(/^u[\da-f]{4,5}$/) ? parseInt(this.ucs.replace('u', ''), 16) : undefined;
+    return this.kanji?.match(/^u[\da-f]{4,5}$/) ? parseInt(this.kanji.replace('u', ''), 16) : undefined;
   }
 
   get kanjiParam() {
-    return this.mojiData.type.is_kanji ? this.ucs?.charCodeAt(0) : undefined;
+    return this.mojiData.type.is_kanji ? this.kanji.charCodeAt(0) : undefined;
   }
 
   private get mojiData() {
-    return this.ucs && mojiJS.getMojiData(mojiJS.codePointAt(this.ucs[0]));
+    return this.kanji && mojiJS.getMojiData(mojiJS.codePointAt(this.kanji[0]));
+  }
+
+  private toQueryYomigana(text: string) {
+    return mojiJS.toHalfWidthKana(mojiJS.toKatakana(text));
   }
 }

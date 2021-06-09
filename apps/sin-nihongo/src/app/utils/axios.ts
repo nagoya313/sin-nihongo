@@ -17,32 +17,6 @@ export const errorMessage = (error: AxiosError<ApiError>) => {
   return error.message;
 };
 
-type Params = { [key: string]: string | number | boolean };
-
-const checkedParams = (params?: Params) => {
-  if (params) {
-    const permitParams = Object.keys(params).reduce((acc, key) => {
-      switch (typeof params[key]) {
-        case 'number':
-          if (Number.isNaN(params[key])) {
-            break;
-          }
-        // eslint-disable-next-line no-fallthrough
-        case 'string':
-          if (!params[key]) {
-            break;
-          }
-        // eslint-disable-next-line no-fallthrough
-        case 'boolean':
-          acc[key] = params[key];
-      }
-      return acc;
-    }, {} as Params);
-    return Object.keys(permitParams).length ? permitParams : undefined;
-  }
-  return undefined;
-};
-
 type Execute<Response> = (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<Response>;
 
 export const fetch = <Response>(execute: Execute<Response>) => execute().catch(errorHandler);
@@ -53,7 +27,7 @@ export const fetchWithTokenAndData = <Params, Response>(execute: Execute<Respons
 
 const useAxiosBase = <Response>(url: string, method: Method, config?: AxiosRequestConfig, options?: Options) =>
   useAxios<Response, ApiError>(
-    { ...config, params: checkedParams(config?.params), url: url, method: method },
+    { ...config, params: config?.params, url: url, method: method },
     { ...options, useCache: false }
   );
 

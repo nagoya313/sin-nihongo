@@ -2,17 +2,17 @@ import { Types } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import { flatten, uniq } from 'underscore';
 import { NotFoundError, BadRequestError } from 'routing-controllers';
-import { Glyph as ApiGlyph, GlyphsQueryParams, GlyphParams } from '@sin-nihongo/api-interfaces';
+import { Glyph as ApiGlyph, GlyphsSearchParams, GlyphParams } from '@sin-nihongo/api-interfaces';
 import { glyphData, includesGlyphData } from '../libs/glyph';
 import { Glyph, GlyphModel } from '../models/glyph';
 
 export class GlyphRepository {
-  static async findAndCount(params: GlyphsQueryParams): Promise<[PaginationModel<Glyph>, ApiGlyph[]]> {
+  static async findAndCount(search: GlyphsSearchParams): Promise<[PaginationModel<Glyph>, ApiGlyph[]]> {
     const glyphs = await GlyphModel.paginate({
-      query: params.nameLike && { name: { $regex: params.nameLike, $options: 'i' } },
+      query: search.nameLike && { name: { $regex: search.nameLike, $options: 'i' } },
       sort: { name: 'asc' },
-      limit: 20,
-      page: params.page,
+      limit: search.limit,
+      page: search.page,
     });
     const includeGlyphs = await Promise.all(glyphs.docs.map((glyph) => includesGlyphData(glyph, this.findOneOrFail)));
     return [glyphs, uniq(flatten(includeGlyphs), 'name')];

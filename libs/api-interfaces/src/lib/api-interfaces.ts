@@ -1,28 +1,4 @@
 import 'reflect-metadata';
-import { Pagination } from './pagination';
-
-export interface Message {
-  readonly message: string;
-}
-
-export interface ValidationError {
-  readonly property: string;
-  readonly value: string;
-  readonly constraints: { [key: string]: string };
-}
-
-export interface ApiError {
-  readonly name: string;
-  readonly message: string;
-  readonly errors?: ValidationError;
-}
-
-export interface Radical {
-  readonly id: number;
-  readonly numberOfStrokes: number;
-  readonly names: string[];
-  readonly character: string;
-}
 
 export interface Kanji {
   readonly id: number;
@@ -48,12 +24,14 @@ export interface Glyph {
   readonly includeGlyphs?: Glyph[];
 }
 
-export interface Glyphs extends Pagination<Glyph> {
+/*export interface Glyphs extends Pagination<Glyph> {
   readonly includeGlyphs: Glyph[];
-}
+}*/
 
+export * from './error';
 export * from './kanji';
 export * from './glyph';
 export * from './glyphwiki';
-export * from './radical';
+export * from './message';
 export * from './pagination';
+export * from './radical';

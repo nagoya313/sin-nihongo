@@ -1,6 +1,6 @@
 import { Authorized, JsonController, Delete, Get, Param, Patch, Post } from 'routing-controllers';
 import { Types } from 'mongoose';
-import { GlyphParams, GlyphsQueryParams } from '@sin-nihongo/api-interfaces';
+import { GlyphParams, GlyphsSearchParams } from '@sin-nihongo/api-interfaces';
 import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
 import { GlyphModel } from '../models/glyph';
 import { GlyphResponse } from '../responses/GlyphResponse';
@@ -9,8 +9,8 @@ import { GlyphRepository } from '../repositories/GlyphRepository';
 @JsonController()
 export class GlyphsController {
   @Get('/glyphs')
-  async index(@ValidateQueryParams params: GlyphsQueryParams) {
-    const [glyphs, includeGlyphs] = await GlyphRepository.findAndCount(params);
+  async index(@ValidateQueryParams search: GlyphsSearchParams) {
+    const [glyphs, includeGlyphs] = await GlyphRepository.findAndCount(search);
     return this.responser.toIndexResponse(glyphs, includeGlyphs);
   }
 

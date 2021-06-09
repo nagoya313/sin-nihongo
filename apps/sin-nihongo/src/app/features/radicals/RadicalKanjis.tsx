@@ -8,5 +8,5 @@ type ParamProps = {
 
 export const RadicalKanjis: React.FC = () => {
   const { id } = useParams<ParamProps>();
-  return <Kanjis radicalId={id} />;
+  return <Kanjis radicalId={parseInt(id)} />;
 };

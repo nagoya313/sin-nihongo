@@ -22,7 +22,7 @@ import { GlyphEditForm } from './GlyphEditForm';
 const resolver = classValidatorResolver(GetKanjisParams);
 
 type Props = {
-  radicalId?: string;
+  radicalId?: number;
 };
 
 const initialState = {
@@ -47,7 +47,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
   const [anchorEl, setAanchorEl] = useState<HTMLButtonElement>();
   const [{ data, loading, error }] = useFetch(apiRoutes.getKanjis, {
     ...params,
-    radicalId: radicalId ? parseInt(radicalId) : undefined,
+    radicalId: radicalId,
     page: pageNumber,
   });
 

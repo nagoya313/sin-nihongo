@@ -1,16 +1,25 @@
-import { classToClass, classToPlain, Expose } from 'class-transformer';
 import { BaseEntity } from 'typeorm';
-import { Pagination, PaginationQueryParams } from '@sin-nihongo/api-interfaces';
-import { addPageData } from '../libs/pagination';
-import { findAndCount } from '../libs/queryBuilder';
-import { EntityRepository } from '../repositories/EntityRepository';
+import { PaginationResponse } from '@sin-nihongo/api-interfaces';
+import { PaginationQueryParams } from '../params/PaginationQueryParams';
 
-export abstract class EntityResponse<T extends BaseEntity, R> {
-  abstract toResponse(radical: T): R;
+export abstract class EntityResponse<Entity extends BaseEntity, Response> {
+  abstract toResponse(entity: Entity): Response;
 
-  async toIndexResponse<Params>(entitiesType: any, params: Params) {
-    const [entities, count] = await EntityRepository.findAndCount(entitiesType, params);
+  async toIndexResponse(
+    entitiesAndCount: Promise<[Entity[], number]>,
+    pageParams: PaginationQueryParams
+  ): Promise<PaginationResponse<Response>> {
+    const [entities, count] = await entitiesAndCount;
     const items = entities.map((d) => this.toResponse(d));
-    return new Pagination(items, count, params);
+    return {
+      items: items,
+      meta: {
+        totalItems: count,
+        itemsPerPage: pageParams.take,
+        itemCount: items.length,
+        totalPages: Math.ceil(count / pageParams.take),
+        currentPage: pageParams.currentPage,
+      },
+    };
   }
 }

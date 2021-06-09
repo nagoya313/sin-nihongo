@@ -1,4 +1,4 @@
-import { FindConditions, FindOperator, Raw } from 'typeorm';
+import { Raw } from 'typeorm';
 import { GetRadicalsParams } from '@sin-nihongo/sin-nihongo-params';
 import { Radical } from '../entities/Radical';
 import { PaginationQueryParams } from '../params/PaginationQueryParams';

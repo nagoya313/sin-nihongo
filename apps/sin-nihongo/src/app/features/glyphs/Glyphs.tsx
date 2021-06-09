@@ -100,7 +100,7 @@ export const Glyphs = () => {
       <IconButton
         icon={<DeleteIcon />}
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        onClick={() => onDelete(glyph.data.id!)}
+        onClick={() => onDelete(glyph.id)}
       />
     ),
   }));

@@ -88,7 +88,7 @@ export interface GlyphwikiHealthResponse extends MessageResponse {
 }
 
 export interface Glyph {
-  readonly id?: number;
+  readonly id?: string;
   readonly name: string;
   readonly data: string;
 }

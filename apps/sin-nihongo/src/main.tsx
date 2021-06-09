@@ -1,9 +1,16 @@
 import 'reflect-metadata';
+import Axios from 'axios';
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom';
+import { configure } from 'axios-hooks';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { routePrefix } from '@sin-nihongo/api-interfaces';
 
 import App from './app/app';
+
+const axios = Axios.create({ baseURL: routePrefix });
+
+configure({ axios });
 
 ReactDOM.render(
   <StrictMode>

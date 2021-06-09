@@ -1,1 +1,1 @@
-export * from './lib/glyphwiki/GetGlyphwikiParams';
+export * from './lib/sin-nihongo-params';

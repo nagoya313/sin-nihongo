@@ -4,28 +4,29 @@ import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
-import { GlyphwikiSearchParams, GlyphwikiHealthResponse } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { GetGlyphwikiParams } from '@sin-nihongo/sin-nihongo-params';
 import { CardHeader } from '../../components/CardHeader';
 import { ErrorTypography } from '../../components/ErrorTypography';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { NewTabLink } from '../../components/NewTabLink';
 import { Text } from '../../components/Text';
-import { useAxiosGet } from '../../utils/axios';
+import { useFetch } from '../../utils/axios';
 import { GlyphwikiSearch } from './GlyphwikiSearch';
 
-const resolver = classValidatorResolver(GlyphwikiSearchParams);
+const resolver = classValidatorResolver(GetGlyphwikiParams);
 
 export const Glyphwiki: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { isValidating, isValid, errors },
-  } = useForm<GlyphwikiSearchParams>({ mode: 'onChange', resolver, defaultValues: { q: '' } });
+  } = useForm<GetGlyphwikiParams>({ mode: 'onChange', resolver, defaultValues: { q: '' } });
   const [searchWord, setSearchWord] = useState('');
-  const [{ data }] = useAxiosGet<GlyphwikiHealthResponse>('api/v1/glyphwiki/health');
+  const [{ data }] = useFetch(apiRoutes.getGlyphwikiHealth);
 
-  const onSubmit = (data: GlyphwikiSearchParams) => setSearchWord(data.q);
+  const onSubmit = (data: GetGlyphwikiParams) => setSearchWord(data.q);
 
   useEffect(() => {
     !isValidating && isValid && handleSubmit(onSubmit)();

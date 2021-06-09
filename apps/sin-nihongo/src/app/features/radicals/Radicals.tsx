@@ -6,7 +6,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import FindInPage from '@material-ui/icons/FindInPage';
-import { RadicalsSearchParams, Pagination as ApiPagination, RadicalResponse } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { GetRadicalsParams } from '@sin-nihongo/sin-nihongo-params';
 import { CardHeader } from '../../components/CardHeader';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
@@ -14,9 +15,9 @@ import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
-import { useAxiosGet } from '../../utils/axios';
+import { useFetch } from '../../utils/axios';
 
-const resolver = classValidatorResolver(RadicalsSearchParams);
+const resolver = classValidatorResolver(GetRadicalsParams);
 
 type Fields = 'id' | 'radical' | 'read' | 'numberOfStrokes' | 'show';
 
@@ -31,25 +32,29 @@ const columns: { field: Fields; headerName: string }[] = [
 const initialState = {
   nameLike: '',
   numberOfStrokes: NaN,
-} as RadicalsSearchParams;
+};
 
 export const Radicals: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { isValidating, isValid, errors },
-  } = useForm<RadicalsSearchParams>({
+  } = useForm<GetRadicalsParams>({
     mode: 'onChange',
     resolver,
     defaultValues: initialState,
   });
-  const [searchParams, setSearchParams] = useState(initialState);
+  const [searchParams, setSearchParams] = useState<GetRadicalsParams>();
   const [pageNumber, setPageNumber] = useState(1);
-  const [{ data, loading, error }] = useAxiosGet<ApiPagination<RadicalResponse>>('api/v1/radicals', {
-    params: { ...searchParams, page: pageNumber },
+  const [{ data, loading, error }] = useFetch(apiRoutes.getRadicals, {
+    ...searchParams,
+    page: pageNumber,
   });
 
-  const onSubmit = (data: RadicalsSearchParams) => setSearchParams({ ...data });
+  const onSubmit = (data: GetRadicalsParams) => {
+    console.log(data);
+    setSearchParams({ ...data });
+  };
   const onPageChange = (page: number) => setPageNumber(page);
   useEffect(() => setPageNumber(1), [searchParams]);
 

@@ -1,6 +1,6 @@
 import { Get, JsonController, QueryParams } from 'routing-controllers';
-import { GetGlyphwikiQueryParams } from '@sin-nihongo/sin-nihongo-params';
-import { Glyphwiki } from '../services/glyphwiki';
+import { GetGlyphwikiQueryParams } from '../params/GetGlyphwikiQueryParams';
+import { Glyphwiki } from '../services/Glyphwiki';
 
 @JsonController()
 export class GlyphwikiController {

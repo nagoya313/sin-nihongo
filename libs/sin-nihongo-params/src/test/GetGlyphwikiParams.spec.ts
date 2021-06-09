@@ -1,4 +1,4 @@
-import { GetGlyphwikiParams } from '../../lib/glyphwiki/GetGlyphwikiParams';
+import { GetGlyphwikiParams } from '../../src/index';
 
 describe('GetGlyphwikiParams', () => {
   describe('validation', () => {

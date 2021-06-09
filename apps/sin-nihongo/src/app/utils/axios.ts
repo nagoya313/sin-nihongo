@@ -1,6 +1,6 @@
 import { AxiosError, AxiosPromise, AxiosRequestConfig, Method } from 'axios';
 import useAxios, { Options, RefetchOptions } from 'axios-hooks';
-import { ApiError } from '@sin-nihongo/api-interfaces';
+import { ApiError, ApiMapping } from '@sin-nihongo/api-interfaces';
 
 export const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,6 +15,13 @@ export const errorMessage = (error: AxiosError<ApiError>) => {
     return error.response.data.message;
   }
   return error.message;
+};
+
+export const useFetch = <Params, Response>(mapping: ApiMapping<Params, Response>, params?: Params) => {
+  return useAxios<Response, ApiError>(
+    { url: mapping.url, method: mapping.method, params: params },
+    { manual: mapping.lazy, useCache: false }
+  );
 };
 
 type Execute<Response> = (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<Response>;

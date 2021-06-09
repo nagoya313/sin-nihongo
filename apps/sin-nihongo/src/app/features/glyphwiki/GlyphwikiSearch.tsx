@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import { GlyphResponse } from '@sin-nihongo/api-interfaces';
+import { apiRoutes, GlyphResponse } from '@sin-nihongo/api-interfaces';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { SubText } from '../../components/SubText';
 import { BuhinDispatchContext } from '../../providers/Buhin';
-import { useAxiosGet } from '../../utils/axios';
+import { useFetch } from '../../utils/axios';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
 type Props = {
@@ -11,9 +11,7 @@ type Props = {
 };
 
 export const GlyphwikiSearch: React.FC<Props> = ({ name }) => {
-  const [{ data, loading, error }] = useAxiosGet<GlyphResponse>('api/v1/glyphwiki', {
-    params: { q: name },
-  });
+  const [{ data, loading, error }] = useFetch(apiRoutes.getGlyphwiki, { q: name });
   const buhinDispatch = useContext(BuhinDispatchContext);
 
   useEffect(() => {

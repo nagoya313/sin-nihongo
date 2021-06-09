@@ -4,50 +4,22 @@ import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Check from '@material-ui/icons/Check';
 import Divider from '@material-ui/core/Divider';
-import { Pagination as ApiPagination, Kanji, KanjisSearchParams } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { GetKanjisParams } from '@sin-nihongo/sin-nihongo-params';
 import { CardHeader } from '../../components/CardHeader';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
-import { NewTabLink } from '../../components/NewTabLink';
 import { RadioGroup } from '../../components/RadioGroup';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
-import { useAxiosGet } from '../../utils/axios';
+import { useFetch } from '../../utils/axios';
 import { EdiableProvider } from '../../providers/Editable';
-import { ClickableGlyphCanvas } from './ClickableGlyphCanvas';
+import { columns, Fields, KanjiRows } from './KanjiRows';
 import { GlyphEditForm } from './GlyphEditForm';
 
-const resolver = classValidatorResolver(KanjisSearchParams);
-
-type Fields =
-  | 'ucs'
-  | 'character'
-  | 'kage'
-  | 'radical'
-  | 'numberOfStrokes'
-  | 'regular'
-  | 'forName'
-  | 'kunyomi'
-  | 'onyomi'
-  | 'jisLevel'
-  | 'action';
-
-const columns: { field: Fields; headerName: string }[] = [
-  { field: 'ucs', headerName: 'ID' },
-  { field: 'character', headerName: '漢字' },
-  { field: 'kage', headerName: '新日本語字形' },
-  { field: 'radical', headerName: '部首' },
-  { field: 'numberOfStrokes', headerName: '画数' },
-  { field: 'regular', headerName: '常用漢字' },
-  { field: 'forName', headerName: '人名用漢字' },
-  { field: 'kunyomi', headerName: '訓読み' },
-  { field: 'onyomi', headerName: '音読み' },
-  { field: 'jisLevel', headerName: 'JIS水準' },
-  { field: 'action', headerName: '' },
-];
+const resolver = classValidatorResolver(GetKanjisParams);
 
 type Props = {
   radicalId?: string;
@@ -60,7 +32,7 @@ const initialState = {
   jisLevel: undefined,
   regular: undefined,
   forName: undefined,
-} as KanjisSearchParams;
+} as GetKanjisParams;
 
 export const Kanjis: React.FC<Props> = ({ radicalId }) => {
   const {
@@ -68,18 +40,20 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
     control,
     handleSubmit,
     formState: { isValidating, isValid, errors },
-  } = useForm<KanjisSearchParams>({ mode: 'onChange', resolver, defaultValues: initialState });
-  const [params, setParams] = useState<KanjisSearchParams>();
+  } = useForm<GetKanjisParams>({ mode: 'onChange', resolver, defaultValues: initialState });
+  const [params, setParams] = useState<GetKanjisParams>();
   const [pageNumber, setPageNumber] = useState(1);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAanchorEl] = useState<HTMLButtonElement>();
-  const [{ data, loading, error }] = useAxiosGet<ApiPagination<Kanji>>('api/v1/kanjis', {
-    params: { ...params, radicalId: radicalId, page: pageNumber },
+  const [{ data, loading, error }] = useFetch(apiRoutes.getKanjis, {
+    ...params,
+    radicalId: radicalId ? parseInt(radicalId) : undefined,
+    page: pageNumber,
   });
 
   const onPageChange = (page: number) => setPageNumber(page);
 
-  const onSubmit = (data: KanjisSearchParams) => {
+  const onSubmit = (data: GetKanjisParams) => {
     console.log(data);
     setParams({ ...data });
   };
@@ -97,21 +71,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
 
   useEffect(() => setPageNumber(1), [params]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = data?.items?.map((kanji): { [key in Fields | 'key']: any } => ({
-    key: `kanji_${kanji.ucs}`,
-    ucs: kanji.ucs,
-    character: <NewTabLink url={`https://glyphwiki.org/wiki/${kanji.ucs}`} text={kanji.character} />,
-    kage: <ClickableGlyphCanvas onClick={onClick} />,
-    radical: kanji.radical.character,
-    numberOfStrokes: kanji.numberOfStrokes,
-    regular: kanji.regular && <Check />,
-    forName: kanji.forName && <Check />,
-    kunyomi: kanji.kunyomi.join('、'),
-    onyomi: kanji.onyomi.join('、'),
-    jisLevel: kanji.jisLevel,
-    action: null,
-  }));
+  const rows = KanjiRows(data?.items);
 
   return (
     <Card>

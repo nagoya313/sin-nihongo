@@ -16,6 +16,16 @@ export interface ApiError {
   readonly errors?: ValidationError;
 }
 
+export interface GetKanjisRequest {
+  ucs?: string;
+  readLike?: string;
+  numberOfStrokes?: number;
+  jisLevel?: number;
+  regular?: boolean;
+  forName?: boolean;
+  radicalId?: number;
+}
+
 export interface GetGlyphwikiRequest {
   q: string;
 }
@@ -47,6 +57,18 @@ export interface PaginationResponse<T> {
   readonly meta: PaginationMetaData;
 }
 
+export interface KanjiResponse {
+  readonly id: number;
+  readonly regular: boolean;
+  readonly forName: boolean;
+  readonly jisLevel: number;
+  readonly numberOfStrokes: number;
+  readonly numberOfStrokesInRadicals: number;
+  readonly radicalId: number;
+  readonly kunyomi: string[];
+  readonly onyomi: string[];
+}
+
 export interface GlyphwikiHealthResponse extends MessageResponse {
   readonly accessible: boolean;
 }
@@ -74,6 +96,10 @@ export type ApiMapping<Params, Response> = {
 };
 
 export const apiRoutes = {
+  getKanjis: {
+    url: 'kanjis',
+    method: 'GET',
+  } as ApiMapping<GetKanjisRequest & PaginationRequest, PaginationResponse<KanjiResponse>>,
   getGlyphwiki: {
     url: 'glyphwiki',
     method: 'GET',

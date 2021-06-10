@@ -1,42 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
-import { Buhin } from '@kurgm/kage-engine';
-import { Glyph, GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { GetGlyphwikiParams } from '@sin-nihongo/sin-nihongo-params';
 import { CardHeader } from '../../components/CardHeader';
+import { ErrorTypography } from '../../components/ErrorTypography';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { NewTabLink } from '../../components/NewTabLink';
-import { ResponseNotice } from '../../components/ResponseNotice';
-import { SubText } from '../../components/SubText';
 import { Text } from '../../components/Text';
-import { useAxiosGet } from '../../utils/axios';
-import { glyphToBuhin } from '../../utils/kageData';
-import { GlyphwikiContent } from './GlyphwikiContent';
+import { useFetch } from '../../utils/axios';
+import { GlyphwikiSearch } from './GlyphwikiSearch';
 
-const resolver = classValidatorResolver(GlyphwikiQueryParams);
-const initialWord = '一';
+const resolver = classValidatorResolver(GetGlyphwikiParams);
 
-type Props = {
-  isAdmin: boolean;
-};
+export const Glyphwiki: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { isValidating, isValid, errors },
+  } = useForm<GetGlyphwikiParams>({ mode: 'onChange', resolver, defaultValues: { q: '' } });
+  const [searchWord, setSearchWord] = useState('');
+  const [{ data }] = useFetch(apiRoutes.getGlyphwikiHealth);
 
-export const Glyphwiki: React.FC<Props> = ({ isAdmin }) => {
-  const methods = useForm<GlyphwikiQueryParams>({ resolver, defaultValues: { q: initialWord } });
-  const [searchWord, setSearchWord] = useState(initialWord);
-  const [{ data, loading, error }] = useAxiosGet<Glyph>('api/v1/glyphwiki', {
-    params: { q: searchWord },
-  });
-  const [buhin, setBuhin] = useState(new Buhin());
-
-  const onSubmit = (data: GlyphwikiQueryParams) => setSearchWord(data.q);
+  const onSubmit = (data: GetGlyphwikiParams) => setSearchWord(data.q);
 
   useEffect(() => {
-    data && setBuhin(glyphToBuhin(data));
-  }, [data]);
+    !isValidating && isValid && handleSubmit(onSubmit)();
+  }, [isValidating, isValid]);
 
   return (
     <Card>
@@ -49,22 +43,24 @@ export const Glyphwiki: React.FC<Props> = ({ isAdmin }) => {
           />
           からグリフお検索します。漢字一文字或いわグリフウィキのグリフ名から検索できます。
         </Text>
-        <FormProvider {...methods}>
-          <Form onSubmit={methods.handleSubmit(onSubmit)} autoComplete="off">
-            <FormTextField name="q" label="漢字・USC・グリフ名" type="search" helperText="例：一、u4e00、aj1-10186" />
-          </Form>
-        </FormProvider>
+        <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+          <FormTextField
+            register={register}
+            errors={errors}
+            name="q"
+            disabled={!data?.accessible}
+            label="漢字・USC・グリフ名"
+            type="search"
+            helperText="例：一、u4e00、aj1-10186"
+          />
+        </Form>
         <Divider />
-        <ResponseNotice loading={loading} error={error} />
-        {data && (
-          <React.Fragment>
-            <GlyphwikiContent isAdmin={isAdmin} name={data.name} data={data.data} buhin={buhin} />
-            <SubText>参照グリフ</SubText>
-            {data.includeGlyphs?.map((glyph) => (
-              <GlyphwikiContent key={glyph.name} isAdmin={isAdmin} name={glyph.name} data={glyph.data} buhin={buhin} />
-            ))}
-          </React.Fragment>
-        )}
+        {data &&
+          (data.accessible ? (
+            searchWord && <GlyphwikiSearch name={searchWord} />
+          ) : (
+            <ErrorTypography>グリフウィキわ現在利用不能です。</ErrorTypography>
+          ))}
       </CardContent>
     </Card>
   );

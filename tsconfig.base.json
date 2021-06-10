@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@sin-nihongo/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@sin-nihongo/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@sin-nihongo/sin-nihongo-params": ["libs/sin-nihongo-params/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

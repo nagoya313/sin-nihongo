@@ -1,15 +1,15 @@
-import { JsonController, Get } from 'routing-controllers';
-import { RadicalsQueryParams } from '@sin-nihongo/api-interfaces';
-import { ValidateQueryParams } from '../libs/decorators';
+import { Get, JsonController, QueryParams } from 'routing-controllers';
+import { GetRadicalsParams } from '@sin-nihongo/sin-nihongo-params';
+import { PaginationQueryParams } from '../params/PaginationQueryParams';
 import { RadicalRepository } from '../repositories/RadicalRepository';
 import { RadicalResponse } from '../responses/RadicalResponse';
 
 @JsonController()
 export class RadicalsController {
   @Get('/radicals')
-  async index(@ValidateQueryParams query: RadicalsQueryParams) {
-    return this.responser.toIndexResponse(await RadicalRepository.findAndCount(query), query);
+  index(@QueryParams() searchParams: GetRadicalsParams, @QueryParams() pageParams: PaginationQueryParams) {
+    return this.response.toIndexResponse(RadicalRepository.findAndCount(searchParams, pageParams), pageParams);
   }
 
-  private readonly responser = new RadicalResponse();
+  private response = new RadicalResponse();
 }

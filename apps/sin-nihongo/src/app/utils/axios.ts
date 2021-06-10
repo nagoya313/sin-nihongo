@@ -1,6 +1,6 @@
 import { AxiosError, AxiosPromise, AxiosRequestConfig, Method } from 'axios';
 import useAxios, { Options, RefetchOptions } from 'axios-hooks';
-import { ApiError } from '@sin-nihongo/api-interfaces';
+import { ApiError, ApiMapping } from '@sin-nihongo/api-interfaces';
 
 export const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,30 +17,11 @@ export const errorMessage = (error: AxiosError<ApiError>) => {
   return error.message;
 };
 
-type Params = { [key: string]: string | number | boolean };
-
-const checkedParams = (params?: Params) => {
-  if (params) {
-    const permitParams = Object.keys(params).reduce((acc, key) => {
-      switch (typeof params[key]) {
-        case 'number':
-          if (Number.isNaN(params[key])) {
-            break;
-          }
-        // eslint-disable-next-line no-fallthrough
-        case 'string':
-          if (!params[key]) {
-            break;
-          }
-        // eslint-disable-next-line no-fallthrough
-        case 'boolean':
-          acc[key] = params[key];
-      }
-      return acc;
-    }, {} as Params);
-    return Object.keys(permitParams).length ? permitParams : undefined;
-  }
-  return undefined;
+export const useFetch = <Params, Response>(mapping: ApiMapping<Params, Response>, params?: Params) => {
+  return useAxios<Response, ApiError>(
+    { url: mapping.url, method: mapping.method, params: params },
+    { manual: mapping.lazy, useCache: false }
+  );
 };
 
 type Execute<Response> = (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<Response>;
@@ -53,7 +34,7 @@ export const fetchWithTokenAndData = <Params, Response>(execute: Execute<Respons
 
 const useAxiosBase = <Response>(url: string, method: Method, config?: AxiosRequestConfig, options?: Options) =>
   useAxios<Response, ApiError>(
-    { ...config, params: checkedParams(config?.params), url: url, method: method },
+    { ...config, params: config?.params, url: url, method: method },
     { ...options, useCache: false }
   );
 

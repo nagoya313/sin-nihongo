@@ -1,12 +1,21 @@
-import { JsonController, Get } from 'routing-controllers';
-import { GlyphwikiQueryParams } from '@sin-nihongo/api-interfaces';
-import { ValidateQueryParams } from '../libs/decorators';
+import { Get, JsonController, QueryParams } from 'routing-controllers';
+import { GetGlyphwikiQueryParams } from '../params/GetGlyphwikiQueryParams';
 import { GlyphwikiRepository } from '../repositories/GlyphwikiRepository';
+import { Glyphwiki } from '../services/Glyphwiki';
 
 @JsonController()
 export class GlyphwikiController {
   @Get('/glyphwiki')
-  async show(@ValidateQueryParams params: GlyphwikiQueryParams) {
-    return await GlyphwikiRepository.findOne(params);
+  show(@QueryParams() params: GetGlyphwikiQueryParams) {
+    return GlyphwikiRepository.findByNameOrFail(params.name);
+  }
+
+  @Get('/glyphwiki/health')
+  async health() {
+    if (await Glyphwiki.health()) {
+      return { message: 'Glyphwikiから検索わ利用可能です。', accessible: true };
+    } else {
+      return { message: 'Glyphwikiから検索わ利用不能です。', accessible: false };
+    }
   }
 }

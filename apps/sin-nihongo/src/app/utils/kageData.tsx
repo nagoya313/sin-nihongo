@@ -1,5 +1,5 @@
 import { Buhin } from '@kurgm/kage-engine';
-import { Glyph } from '@sin-nihongo/api-interfaces';
+import { GlyphResponse, GlyphsResponse } from '@sin-nihongo/api-interfaces';
 
 export const splitData = (data: string | undefined) => {
   return data?.split('$')?.map((t, i) => {
@@ -12,9 +12,20 @@ export const splitData = (data: string | undefined) => {
   });
 };
 
-export const glyphToBuhin = (glyph: Glyph) => {
+export const glyphToBuhin = ({ data, includeGlyphs }: GlyphResponse) => {
   const buhin = new Buhin();
-  buhin.push(glyph.name, glyph.data);
-  glyph.includeGlyphs?.forEach((g) => buhin.push(g.name, g.data));
+  buhin.push(data.name, data.data);
+  includeGlyphs?.forEach((g) => buhin.push(g.name, g.data));
+  return buhin;
+};
+
+export const glyphsToBuhin = ({ data, includeGlyphs }: GlyphsResponse) => {
+  const buhin = new Buhin();
+  data.items.forEach((glyph) => {
+    buhin.push(glyph.name, glyph.data);
+  });
+  includeGlyphs?.forEach((glyph) => {
+    buhin.push(glyph.name, glyph.data);
+  });
   return buhin;
 };

@@ -185,6 +185,27 @@
           }
         }
       }
+    },
+    "sin-nihongo-params": {
+      "root": "libs/sin-nihongo-params",
+      "sourceRoot": "libs/sin-nihongo-params/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/sin-nihongo-params/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/sin-nihongo-params"],
+          "options": {
+            "jestConfig": "libs/sin-nihongo-params/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

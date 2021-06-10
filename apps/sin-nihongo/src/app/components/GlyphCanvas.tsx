@@ -1,16 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
-import CardHeader from '@material-ui/core/CardHeader';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import { withTheme } from '@material-ui/core/styles';
-import { Buhin } from '@kurgm/kage-engine';
+import { BuhinContext } from '../providers/Buhin';
 import { drawGlyph } from '../utils/canvas';
 
 const CanvasBox = withTheme(styled(Box)`
@@ -25,12 +17,12 @@ const Canvas = styled.canvas`
   background-color: white;
 `;
 
-type Props = {
-  buhin: Buhin;
+export type GlyphCanvasProps = {
   name?: string;
 };
 
-export const GlyphCanvas: React.FC<Props> = ({ buhin, name }) => {
+export const GlyphCanvas: React.FC<GlyphCanvasProps> = ({ name }) => {
+  const buhin = useContext(BuhinContext);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

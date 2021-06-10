@@ -1,15 +1,15 @@
-import { JsonController, Get } from 'routing-controllers';
-import { KanjisQueryParams } from '@sin-nihongo/api-interfaces';
+import { JsonController, Get, QueryParams } from 'routing-controllers';
+import { GetKanjisQueryParams } from '../params/GetKanjisQueryParams';
+import { PaginationQueryParams } from '../params/PaginationQueryParams';
 import { KanjiRepository } from '../repositories/KanjiRepository';
 import { KanjiResponse } from '../responses/KanjiResponse';
-import { ValidateQueryParams } from '../libs/decorators';
 
 @JsonController()
 export class KanjisController {
   @Get('/kanjis')
-  async index(@ValidateQueryParams query: KanjisQueryParams) {
-    return this.responser.toIndexResponse(await KanjiRepository.findAndCount(query), query);
+  async index(@QueryParams() searchParams: GetKanjisQueryParams, @QueryParams() pageParams: PaginationQueryParams) {
+    return this.response.toIndexResponse(KanjiRepository.findAndCount(searchParams, pageParams), pageParams);
   }
 
-  private readonly responser = new KanjiResponse();
+  private response = new KanjiResponse();
 }

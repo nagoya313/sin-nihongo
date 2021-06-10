@@ -2,19 +2,23 @@ import { Types } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import { flatten, uniq } from 'underscore';
 import { NotFoundError, BadRequestError } from 'routing-controllers';
-import { Glyph as ApiGlyph, GlyphsQueryParams, GlyphParams } from '@sin-nihongo/api-interfaces';
-import { glyphData, includesGlyphData } from '../libs/glyph';
+import { Glyph as ApiGlyph, PaginationRequest } from '@sin-nihongo/api-interfaces';
+import { GetGlyphsParams, PostGlyphParams } from '@sin-nihongo/sin-nihongo-params';
+import { glyphData, includeGlyphData } from '../libs/glyph';
 import { Glyph, GlyphModel } from '../models/glyph';
 
 export class GlyphRepository {
-  static async findAndCount(params: GlyphsQueryParams): Promise<[PaginationModel<Glyph>, ApiGlyph[]]> {
+  static async findAndCount(
+    searchParams: GetGlyphsParams,
+    pageParams: PaginationRequest
+  ): Promise<[PaginationModel<Glyph>, ApiGlyph[]]> {
     const glyphs = await GlyphModel.paginate({
-      query: params.nameLike && { name: { $regex: params.nameLike, $options: 'i' } },
+      query: searchParams.nameLike && { name: { $regex: searchParams.nameLike, $options: 'i' } },
       sort: { name: 'asc' },
-      limit: 20,
-      page: params.page,
+      limit: pageParams.limit,
+      page: pageParams.page,
     });
-    const includeGlyphs = await Promise.all(glyphs.docs.map((glyph) => includesGlyphData(glyph, this.findOneOrFail)));
+    const includeGlyphs = await Promise.all(glyphs.docs.map((glyph) => includeGlyphData(glyph, this.findOneOrFail)));
     return [glyphs, uniq(flatten(includeGlyphs), 'name')];
   }
 
@@ -22,16 +26,30 @@ export class GlyphRepository {
     return glyphData(id, this.findOneOrFail, this.findByIdOrFail);
   }
 
-  static async create(params: GlyphParams) {
+  static async create(params: PostGlyphParams) {
     try {
-      await includesGlyphData(params.glyph, this.findOneOrFail);
+      await includeGlyphData(params.glyph, this.findOneOrFail);
     } catch (error) {
       throw new BadRequestError(`未実装のグリフお含んでいます。${error.message}`);
     }
     return GlyphModel.create(params.glyph);
   }
 
+  static async update(id: string, params: PostGlyphParams) {
+    // 名前を変更しようとしてゐるグリフを参照してゐるグリフが存在する場合の確認
+    try {
+      await includeGlyphData(params.glyph, this.findOneOrFail);
+    } catch (error) {
+      throw new BadRequestError(`未実装のグリフお含んでいます。${error.message}`);
+    }
+    const glyph = await GlyphModel.findByIdAndUpdate(Types.ObjectId(id), params, { new: true }).exec();
+    if (!glyph) {
+      throw new NotFoundError(`"${id}"のグリフわ見つかりませんでした。`);
+    }
+  }
+
   static async deleteOne(id: string) {
+    // 消さうとしてゐるグリフを参照してゐる漢字、グリフが存在する場合の確認
     const glyph = await GlyphModel.findByIdAndDelete(Types.ObjectId(id)).exec();
     if (!glyph) {
       throw new NotFoundError(`"${id}"のグリフわ見つかりませんでした。`);

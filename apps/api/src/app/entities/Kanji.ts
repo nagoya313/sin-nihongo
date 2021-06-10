@@ -1,6 +1,5 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { IsInt, Min } from 'class-validator';
-import { Radical } from './Radical';
 import { TimeStampEntity } from './TimeStampEntity';
 
 @Entity()
@@ -20,32 +19,28 @@ export class Kanji extends TimeStampEntity {
 
   @Index({ unique: true })
   @Column()
-  ucs: number;
+  readonly ucs: number;
 
   @Column()
-  regular: boolean;
+  readonly regular: boolean;
 
   @Column()
-  forName: boolean;
+  readonly forName: boolean;
 
   @Column()
   @IsInt()
   @Min(1)
-  numberOfStrokes: number;
+  readonly numberOfStrokes: number;
 
   @Column()
   @IsInt()
-  numberOfStrokesInRadical: number;
+  readonly numberOfStrokesInRadical: number;
 
   @Column()
-  radicalId: number;
-
-  @ManyToOne(() => Radical, (radical) => radical.kanjis)
-  @JoinColumn()
-  radical: Radical;
+  readonly radicalId: number;
 
   @Column({ nullable: true })
-  jisLevel?: number | null;
+  readonly jisLevel?: number | null;
 
   @Column('varchar', { array: true, default: {} })
   onyomi: string[];

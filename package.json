@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "nx": "nx",
+    "s": "nx run-many --target=serve --projects=sin-nihongo,api --parallel=true",
     "start": "node dist/apps/api/main.js",
     "build": "nx run-many --target=build --projects=sin-nihongo,api --parallel=true --prod",
     "test": "nx test",
@@ -99,6 +100,7 @@
     "@types/node": "14.14.33",
     "@types/passport": "^1.0.6",
     "@types/passport-jwt": "^3.0.5",
+    "@types/pluralize": "^0.0.29",
     "@types/react": "17.0.3",
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/react-dom": "17.0.3",

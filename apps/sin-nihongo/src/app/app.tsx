@@ -9,7 +9,8 @@ import green from '@material-ui/core/colors/green';
 import { AppBar, HeaderDiv } from './features/app/AppBar';
 import { SideBar } from './features/app/SideBar';
 import { Router } from './features/app/Router';
-import { Notice, NoticeProvider } from './features/notice/Notice';
+import { Notice } from './features/notice/Notice';
+import { NoticeProvider } from './providers/Notice';
 
 const ContentMain = withTheme(styled.main`
   flex-grow: 1;

@@ -7,34 +7,34 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import BuildIcon from '@material-ui/icons/Build';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Buhin } from '@kurgm/kage-engine';
-import { GlyphForm, GlyphParams, Message } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
 import { ListItemIcon } from '../../components/ListItemIcon';
-import { NoticeDispatchContext } from '../notice/Notice';
+import { EditableContext } from '../../providers/Editable';
+import { NoticeDispatchContext } from '../../providers/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
-import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../utils/axios';
+import { errorMessage, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 
 type Props = {
-  isAdmin: boolean;
-  name?: string;
-  data?: string;
-  buhin: Buhin;
+  name: string;
+  data: string;
 };
 
-export const GlyphwikiContent: React.FC<Props> = ({ isAdmin, name, data, buhin }) => {
+export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
   const { getAccessTokenSilently } = useAuth0();
-  const [{ data: postData, error }, execute] = useLazyAxiosPost<Message>('api/v1/glyphs');
+  const [{ data: postData, error }, execute] = useFetch(apiRoutes.postGlyph);
   const noticeDispatch = useContext(NoticeDispatchContext);
+  const isEditable = useContext(EditableContext);
 
   const onBuild = async () => {
-    if (name && data) {
-      const token = await getAccessTokenSilently(getAccessTokenOptions);
-      fetchWithTokenAndData(execute, token, new GlyphParams({ name: name, data: data }));
-    }
+    const token = await getAccessTokenSilently(getAccessTokenOptions);
+    execute({
+      headers: { Authorization: `Bearer ${token}` },
+      data: { glyph: { name: name, data: data } },
+    }).catch(() => {});
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ isAdmin, name, data, buhin }
 
   return (
     <Box display="flex" p={1}>
-      <GlyphCanvas buhin={buhin} name={name} />
+      <GlyphCanvas name={name} />
       <Box flexGrow={1}>
         <List>
           <ListItem
@@ -59,7 +59,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ isAdmin, name, data, buhin }
             rel="noopener"
           >
             <ListItemText>{name}</ListItemText>
-            {isAdmin && (
+            {isEditable && (
               <ListItemSecondaryAction>
                 <ListItemIcon icon={<IconButton onClick={onBuild} icon={<BuildIcon />} />} />
                 <ListItemIcon icon={<ClipBoard data={name} title="複製了" />} />
@@ -69,7 +69,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ isAdmin, name, data, buhin }
           <Divider />
           <ListItem alignItems="flex-start">
             <ListItemText>{splitData(data)}</ListItemText>
-            {isAdmin && <ListItemIcon icon={<ClipBoard data={data} title="複製了" />} />}
+            {isEditable && <ListItemIcon icon={<ClipBoard data={data} title="複製了" />} />}
           </ListItem>
         </List>
       </Box>

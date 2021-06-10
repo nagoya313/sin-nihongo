@@ -1,5 +1,5 @@
 import { PaginationModel } from 'mongoose-paginate-ts';
-import { Glyph as ApiGlyph, Glyphs } from '@sin-nihongo/api-interfaces';
+import { Glyph as ApiGlyph, GlyphsResponse } from '@sin-nihongo/api-interfaces';
 import { Glyph } from '../models/glyph';
 
 export class GlyphResponse {
@@ -11,17 +11,22 @@ export class GlyphResponse {
     };
   }
 
-  toIndexResponse(data: PaginationModel<Glyph>, incldeGlyphs: ApiGlyph[]): Glyphs {
+  async toIndexResponse(
+    glyphsAndincludeGlyphs: Promise<[PaginationModel<Glyph>, ApiGlyph[]]>
+  ): Promise<GlyphsResponse> {
+    const [glyphs, includeGlyphs] = await glyphsAndincludeGlyphs;
     return {
-      items: data.docs.map((doc) => this.toResponse(doc)),
-      meta: {
-        totalItems: data.totalDocs,
-        itemsPerPage: 20,
-        itemCount: data.docs.length,
-        totalPages: data.totalPages,
-        currentPage: data.page || 1,
+      data: {
+        items: glyphs.docs.map((doc) => this.toResponse(doc)),
+        meta: {
+          totalItems: glyphs.totalDocs,
+          itemsPerPage: 20,
+          itemCount: glyphs.docs.length,
+          totalPages: glyphs.totalPages,
+          currentPage: glyphs.page || 1,
+        },
       },
-      includeGlyphs: incldeGlyphs,
+      includeGlyphs: includeGlyphs,
     };
   }
 }

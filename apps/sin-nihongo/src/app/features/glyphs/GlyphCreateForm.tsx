@@ -1,23 +1,27 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useFormContext } from 'react-hook-form';
+import { UseFormHandleSubmit } from 'react-hook-form';
 import { useAuth0 } from '@auth0/auth0-react';
-import { GlyphForm, GlyphParams, Message } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { PostGlyphParamsBody } from '@sin-nihongo/sin-nihongo-params';
 import { Form } from '../../components/Form';
 import { getAccessTokenOptions } from '../../utils/auth0';
-import { errorMessage, fetchWithTokenAndData, useLazyAxiosPost } from '../../utils/axios';
-import { NoticeDispatchContext } from '../notice/Notice';
+import { errorMessage, fetchWithTokenAndData, useFetch } from '../../utils/axios';
+import { NoticeDispatchContext } from '../../providers/Notice';
 
-export const GlyphCreateForm: React.FC = ({ children }) => {
+type Props = {
+  handleSubmit: UseFormHandleSubmit<any>;
+};
+
+export const GlyphCreateForm: React.FC<Props> = ({ handleSubmit, children }) => {
   const { getAccessTokenSilently } = useAuth0();
   const noticeDispatch = useContext(NoticeDispatchContext);
-  const { handleSubmit } = useFormContext();
   const history = useHistory();
-  const [{ data, error }, execute] = useLazyAxiosPost<Message>('api/v1/glyphs');
+  const [{ data, error }, execute] = useFetch(apiRoutes.postGlyph);
 
-  const onSubmit = async (data: GlyphForm) => {
+  const onSubmit = async (data: PostGlyphParamsBody) => {
     const token = await getAccessTokenSilently(getAccessTokenOptions);
-    fetchWithTokenAndData(execute, token, new GlyphParams(data));
+    execute({ headers: { Authorization: `Bearer ${token}` }, data: { glyph: data } }).catch();
   };
 
   useEffect(() => {

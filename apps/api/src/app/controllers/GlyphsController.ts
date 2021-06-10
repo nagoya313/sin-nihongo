@@ -1,35 +1,44 @@
-import { Authorized, JsonController, Delete, Get, Param, Patch, Post } from 'routing-controllers';
-import { Types } from 'mongoose';
-import { GlyphParams, GlyphsQueryParams } from '@sin-nihongo/api-interfaces';
-import { ValidateBody, ValidateQueryParams } from '../libs/decorators';
-import { GlyphModel } from '../models/glyph';
+import {
+  Authorized,
+  Body,
+  JsonController,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  QueryParams,
+} from 'routing-controllers';
+import { GetGlyphsParams, PostGlyphParams } from '@sin-nihongo/sin-nihongo-params';
+import { PaginationQueryParams } from '../params/PaginationQueryParams';
 import { GlyphResponse } from '../responses/GlyphResponse';
 import { GlyphRepository } from '../repositories/GlyphRepository';
 
 @JsonController()
 export class GlyphsController {
   @Get('/glyphs')
-  async index(@ValidateQueryParams params: GlyphsQueryParams) {
-    const [glyphs, includeGlyphs] = await GlyphRepository.findAndCount(params);
-    return this.responser.toIndexResponse(glyphs, includeGlyphs);
+  index(@QueryParams() searchParams: GetGlyphsParams, @QueryParams() pageParams: PaginationQueryParams) {
+    return this.responser.toIndexResponse(GlyphRepository.findAndCount(searchParams, pageParams));
   }
 
   @Get('/glyphs/:id')
-  async show(@Param('id') id: string) {
-    return await GlyphRepository.findOne(id);
+  show(@Param('id') id: string) {
+    return GlyphRepository.findOne(id);
   }
 
   @Post('/glyphs')
+  @HttpCode(201)
   @Authorized()
-  async create(@ValidateBody params: GlyphParams) {
+  async create(@Body() params: PostGlyphParams) {
     await GlyphRepository.create(params);
     return { message: 'グリフデータを作成しました。' };
   }
 
   @Patch('/glyphs/:id')
   @Authorized()
-  async update(@Param('id') id: string, @ValidateBody params: GlyphParams) {
-    await GlyphModel.findByIdAndUpdate(Types.ObjectId(id), params, { new: true }).exec();
+  async update(@Param('id') id: string, @Body() params: PostGlyphParams) {
+    await GlyphRepository.update(id, params);
     return { message: 'グリフデータを更新しました。' };
   }
 

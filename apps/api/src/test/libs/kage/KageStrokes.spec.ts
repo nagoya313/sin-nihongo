@@ -1,4 +1,4 @@
-import { KageStrokes } from '../../../app/libs/kage';
+import { KageStrokes } from '../../../app/libs/kage/KageStrokes';
 
 describe('KageStrokes', () => {
   it('一（一画の参照なしの単純な字）が正しく解析できること', () => {

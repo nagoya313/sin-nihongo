@@ -1,14 +1,24 @@
+import { Raw } from 'typeorm';
+import { GetRadicalsParams } from '@sin-nihongo/sin-nihongo-params';
 import { Radical } from '../entities/Radical';
-import { RadicalsQueryParams } from '@sin-nihongo/api-interfaces';
-import { findAndCount, makeWhereConditions, permit, unnestLike } from '../libs/queryBuilder';
+import { PaginationQueryParams } from '../params/PaginationQueryParams';
+import { findManyOptions, undefinedSkipParams } from './EntityRepository';
 
 export class RadicalRepository {
-  static findAndCount(params: RadicalsQueryParams) {
-    const whereConditions = makeWhereConditions<Radical>(permit(params, ['numberOfStrokes']));
-    if (params.nameLike) {
-      whereConditions.names = unnestLike(params.nameLike);
-    }
-
-    return findAndCount(Radical, whereConditions, params.page);
+  static findAndCount(searchParams: GetRadicalsParams, pageParams: PaginationQueryParams) {
+    return Radical.findAndCount(
+      findManyOptions<Radical>(
+        {
+          numberOfStrokes: undefinedSkipParams(searchParams.numberOfStrokes),
+          names: undefinedSkipParams(
+            searchParams.nameLike,
+            Raw((alias) => `EXISTS(SELECT FROM unnest(${alias}) name WHERE name LIKE :name)`, {
+              name: `${searchParams.nameLike}%`,
+            })
+          ),
+        },
+        pageParams
+      )
+    );
   }
 }

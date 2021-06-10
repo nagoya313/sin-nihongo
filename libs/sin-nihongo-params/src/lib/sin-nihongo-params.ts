@@ -1,4 +1,4 @@
-import { Length, IsBoolean, IsInt, IsNotEmpty, IsOptional, Matches, Max, Min } from 'class-validator';
+import { Length, IsBoolean, IsInt, IsNotEmpty, IsOptional, Matches, Max, Min, ValidateNested } from 'class-validator';
 import {
   GetKanjisRequest,
   GetGlyphsRequest,
@@ -15,80 +15,81 @@ const KANJI_USC_QUERY_PARAMS_MATCHER = /^((u[\da-f]{4})|[\u4E00-\u9FFF])$/;
 
 export class GetGlyphwikiParams implements GetGlyphwikiRequest {
   @Matches(GLYPHWIKI_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能なクエリです` })
-  q: string;
+  readonly q!: string;
 }
 
 export class GetRadicalsParams implements GetRadicalsRequest {
   @IsOptional()
   @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです` })
-  nameLike?: string;
+  readonly nameLike?: string;
 
   @IsOptional()
   @IsInt({ message: '画数わ整数で入力してください' })
   @Min(1, { message: '画数わ$constraint1以上で入力してください' })
-  numberOfStrokes?: number;
+  readonly numberOfStrokes?: number;
 }
 
 export class GetKanjisParams implements GetKanjisRequest {
   @IsOptional()
   @Matches(KANJI_USC_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能な漢字です` })
-  ucs?: string;
+  readonly ucs?: string;
 
   @IsOptional()
   @Matches(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER, { message: `"$value"わ検索不可能なよみがなです` })
-  readLike?: string;
+  readonly readLike?: string;
 
   @IsOptional()
   @IsInt({ message: '画数わ整数で入力してください' })
   @Min(1, { message: '画数わ$constraint1以上で入力してください' })
-  numberOfStrokes?: number;
+  readonly numberOfStrokes?: number;
 
   @IsOptional()
   @IsInt({ message: 'JIS水準わ整数で入力してください' })
   @Min(1, { message: 'JIS水準わ$constraint1以上で入力してください' })
   @Max(2, { message: 'JIS水準わ$constraint1以下で入力してください' })
-  jisLevel?: number;
+  readonly jisLevel?: number;
 
   @IsOptional()
   @IsBoolean({ message: '常用漢字かどうかわ真偽値で入力してください' })
-  regular?: boolean;
+  readonly regular?: boolean;
 
   @IsOptional()
   @IsBoolean({ message: '人名用漢字かどうかわ真偽値で入力してください' })
-  forName?: boolean;
+  readonly forName?: boolean;
 
   @IsOptional()
   @IsInt({ message: '部首番号わ整数で入力してください。' })
   @Min(1, { message: '部首番号わ$constraint1以上で入力してください' })
-  radicalId?: number;
+  readonly radicalId?: number;
 }
 
 export class GetGlyphsParams implements GetGlyphsRequest {
   @IsOptional()
-  nameLike?: string;
+  readonly nameLike?: string;
 }
 
 export class PostGlyphParamsBody implements PostGlyphRequestBody {
   @Length(1, 20, { message: 'グリフ名わ$constraint1文字以上$constraint2文字以内で入力してください' })
-  name: string;
+  readonly name!: string;
 
   @IsNotEmpty({ message: 'KAGEデータお入力してください' })
-  data: string;
+  readonly data!: string;
 }
 
 export class PostGlyphParams implements PostGlyphRequest {
-  glyph: PostGlyphParamsBody;
+  @ValidateNested()
+  readonly glyph!: PostGlyphParamsBody;
 }
 
 export class PaginationParams implements PaginationRequest {
   @IsOptional()
   @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください' })
   @IsInt({ message: 'ページ番号わ整数で入力してください' })
-  page?: number;
+  readonly page?: number;
 
   @IsOptional()
   @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください' })
   @Max(200, { message: 'ページ番号わ$constraint1以下で入力してください' })
   @IsInt({ message: 'ページ番号わ整数で入力してください' })
-  limit?: number;
+  readonly limit?: number;
 }

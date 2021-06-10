@@ -17,40 +17,43 @@ export interface ApiError {
 }
 
 export interface GetKanjisRequest {
-  ucs?: string;
-  readLike?: string;
-  numberOfStrokes?: number;
-  jisLevel?: number;
-  regular?: boolean;
-  forName?: boolean;
-  radicalId?: number;
+  readonly ucs?: string;
+  readonly readLike?: string;
+  readonly numberOfStrokes?: number;
+  readonly jisLevel?: number;
+  readonly regular?: boolean;
+  readonly forName?: boolean;
+  readonly radicalId?: number;
 }
 
 export interface GetGlyphwikiRequest {
-  q: string;
+  readonly q: string;
 }
 
 export interface GetRadicalsRequest {
-  nameLike?: string;
-  numberOfStrokes?: number;
+  readonly nameLike?: string;
+  readonly numberOfStrokes?: number;
 }
 
 export interface GetGlyphsRequest {
-  nameLike?: string;
+  readonly nameLike?: string;
 }
 
 export interface PostGlyphRequestBody {
-  name: string;
-  data: string;
+  readonly name: string;
+  readonly data: string;
 }
 
 export interface PostGlyphRequest {
-  glyph: PostGlyphRequestBody;
+  readonly glyph: {
+    readonly name: string;
+    readonly data: string;
+  };
 }
 
 export interface PaginationRequest {
-  page?: number;
-  limit?: number;
+  readonly page?: number;
+  readonly limit?: number;
 }
 
 interface PaginationMetaData {
@@ -103,12 +106,12 @@ export interface RadicalResponse {
 }
 
 export type ApiMapping<Params, Response> = {
-  url: string;
-  method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
-  lazy?: boolean;
-  auth?: boolean;
-  params: Params;
-  response: Response;
+  readonly url: string;
+  readonly method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  readonly lazy?: boolean;
+  readonly auth?: boolean;
+  readonly params?: Params;
+  readonly response?: Response;
 };
 
 export const apiRoutes = {
@@ -138,11 +141,10 @@ export const apiRoutes = {
     lazy: true,
     auth: true,
   } as ApiMapping<never, MessageResponse>,
-  deleteGlyph: (id: string) =>
-    ({
-      url: `glyphs/${id}`,
-      method: 'DELETE',
-      lazy: true,
-      auth: true,
-    } as ApiMapping<never, MessageResponse>),
+  deleteGlyph: (id: string): ApiMapping<never, MessageResponse> => ({
+    url: `glyphs/${id}`,
+    method: 'DELETE',
+    lazy: true,
+    auth: true,
+  }),
 };

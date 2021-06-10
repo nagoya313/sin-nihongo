@@ -1,4 +1,4 @@
-import { mojiJS } from 'mojijs';
+import { MojiJS } from 'mojijs';
 import { GetKanjisParams } from '@sin-nihongo/sin-nihongo-params';
 
 export class GetKanjisQueryParams extends GetKanjisParams {
@@ -23,6 +23,6 @@ export class GetKanjisQueryParams extends GetKanjisParams {
 
   private get mojiData() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return mojiJS.getMojiData(mojiJS.codePointAt(this.ucs![0]));
+    return MojiJS.getMojiData(MojiJS.codePointAt(this.ucs![0]));
   }
 }

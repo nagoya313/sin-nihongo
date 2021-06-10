@@ -34,6 +34,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
     execute({
       headers: { Authorization: `Bearer ${token}` },
       data: { glyph: { name: name, data: data } },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
     }).catch(() => {});
   };
 

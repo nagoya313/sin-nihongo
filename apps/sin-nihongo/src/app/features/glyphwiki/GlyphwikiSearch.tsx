@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { apiRoutes, GlyphResponse } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { SubText } from '../../components/SubText';
 import { BuhinDispatchContext } from '../../providers/Buhin';

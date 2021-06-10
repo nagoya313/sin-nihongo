@@ -21,9 +21,7 @@ export function FormTextField<Values>({ register, errors, label, name, helperTex
   // undefinedではフォームのバリデーションをサボる模様
   const { ref, ...rest } = register(
     name,
-    type === 'number'
-      ? { setValueAs: (value) => (isNaN(value) ? null : parseInt(value, 10)) }
-      : { setValueAs: (value) => value || null }
+    type === 'number' ? { setValueAs: (value) => (isNaN(value) ? null : parseInt(value, 10)) } : undefined
   );
 
   return (

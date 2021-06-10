@@ -20,7 +20,7 @@ const resolver = classValidatorResolver(GetRadicalsParams);
 
 const initialState = {
   nameLike: '',
-  numberOfStrokes: NaN,
+  numberOfStrokes: '',
 };
 
 export const Radicals: React.FC = () => {
@@ -28,7 +28,7 @@ export const Radicals: React.FC = () => {
     register,
     handleSubmit,
     formState: { isValidating, isValid, errors },
-  } = useForm<GetRadicalsParams>({
+  } = useForm({
     mode: 'onChange',
     resolver,
     defaultValues: initialState,

@@ -41,19 +41,3 @@ export class Glyphwiki {
     return false;
   }
 }
-
-/*static findByNameOrFail(name: string) {
-    return glyphData(name, glyphwikiDataGet);
-  }
-
-  static async health(): Promise<GlyphwikiHealthResponse> {
-    try {
-      const response = await axios.get<GlyphwikiHealth>(GLYPHWIKI_API_ENDPOINT);
-      if (Object.keys(response.data).length === 0) {
-        return { message: 'Glyphwikiから検索わ利用可能です。', accessible: true };
-      }
-    } catch (error) {
-      console.error('glyphwiki access error.');
-    }
-    return { message: 'Glyphwikiから検索わ利用不能です。', accessible: false };
-  } */

@@ -1,4 +1,15 @@
-import { Authorized, Body, JsonController, Delete, Get, Param, Patch, Post, QueryParams } from 'routing-controllers';
+import {
+  Authorized,
+  Body,
+  JsonController,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  QueryParams,
+} from 'routing-controllers';
 import { GetGlyphsParams, PostGlyphParams } from '@sin-nihongo/sin-nihongo-params';
 import { PaginationQueryParams } from '../params/PaginationQueryParams';
 import { GlyphResponse } from '../responses/GlyphResponse';
@@ -17,6 +28,7 @@ export class GlyphsController {
   }
 
   @Post('/glyphs')
+  @HttpCode(201)
   @Authorized()
   async create(@Body() params: PostGlyphParams) {
     await GlyphRepository.create(params);

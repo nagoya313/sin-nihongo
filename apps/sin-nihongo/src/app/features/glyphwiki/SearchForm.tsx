@@ -22,6 +22,7 @@ export const SearchForm: React.VFC<Props> = ({ disabled, setSearchWord }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValidating, isValid, setSearchWord]);
 
+  // 入力なしの時に赤いと鬱陶しいので
   const isError = !isValid && state.q !== '';
 
   return (

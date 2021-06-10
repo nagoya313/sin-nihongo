@@ -4,7 +4,7 @@ describe('PaginationQueryParams', () => {
   describe('currentPage', () => {
     it('pageがundefinedなら1を返すこと', () => {
       const params = new PaginationQueryParams();
-      expect(params.page).toBeUndefined();
+      params.page = undefined;
       expect(params.currentPage).toBe(1);
     });
 
@@ -29,7 +29,7 @@ describe('PaginationQueryParams', () => {
   describe('take', () => {
     it('limitがundefinedなら20を返すこと', () => {
       const params = new PaginationQueryParams();
-      expect(params.page).toBeUndefined();
+      params.limit = undefined;
       expect(params.take).toBe(20);
     });
 

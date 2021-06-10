@@ -9,12 +9,20 @@ export class GetKanjisQueryParams extends GetKanjisParams {
     return undefined;
   }
 
+  // ucsが非undefinedの時しか呼ばない
   private get ucsToNumber() {
-    return this.ucs.match(/^u[\da-f]{4,5}$/) ? parseInt(this.ucs.replace('u', ''), 16) : undefined;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.ucs!.match(/^u[\da-f]{4,5}$/) ? parseInt(this.ucs!.replace('u', ''), 16) : undefined;
   }
 
+  // ucsが非undefinedの時しか呼ばない
   private get kanjiToNumber() {
-    const mojiData = mojiJS.getMojiData(mojiJS.codePointAt(this.ucs[0]));
-    return mojiData.type.is_kanji ? this.ucs.charCodeAt(0) : undefined;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.mojiData.type.is_kanji ? this.ucs!.charCodeAt(0) : undefined;
+  }
+
+  private get mojiData() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return mojiJS.getMojiData(mojiJS.codePointAt(this.ucs![0]));
   }
 }

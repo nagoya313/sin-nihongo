@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import { uniq, filter, pluck } from 'underscore';
 import { KageColumns } from './KageColumns';
 
 export class KageStrokes {
@@ -11,18 +11,18 @@ export class KageStrokes {
   }
 
   get linkStrokes() {
-    return _.uniq(
-      _.filter(this.strokes, (stroke) => stroke.isLinkStroke),
+    return uniq(
+      filter(this.strokes, (stroke) => stroke.isLinkStroke),
       'linkStrokeId'
     );
   }
 
   get linkIds() {
-    return _.pluck(this.linkStrokes, 'linkStrokeId');
+    return pluck(this.linkStrokes, 'linkStrokeId');
   }
 
   get data() {
-    return _.pluck(this.strokes, 'data').join('$');
+    return pluck(this.strokes, 'data').join('$');
   }
 
   get numberOfStrokes() {

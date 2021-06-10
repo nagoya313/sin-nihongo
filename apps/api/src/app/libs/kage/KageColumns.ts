@@ -15,5 +15,5 @@ export class KageColumns {
     return this.columns.join(':');
   }
 
-  readonly columns: (string | undefined)[];
+  readonly columns: string[];
 }

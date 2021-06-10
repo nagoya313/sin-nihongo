@@ -1,51 +1,40 @@
+import { plainToClass } from 'class-transformer';
 import { PaginationQueryParams } from '../../app/params/PaginationQueryParams';
 
 describe('PaginationQueryParams', () => {
   describe('currentPage', () => {
     it('pageがundefinedなら1を返すこと', () => {
-      const params = new PaginationQueryParams();
-      params.page = undefined;
-      expect(params.currentPage).toBe(1);
+      expect(plainToClass(PaginationQueryParams, {}).currentPage).toBe(1);
     });
 
     it('pageが真値ならその値を返すこと', () => {
-      const params = new PaginationQueryParams();
-      params.page = 5;
-      expect(params.currentPage).toBe(5);
+      expect(plainToClass(PaginationQueryParams, { page: 5 }).currentPage).toBe(5);
     });
   });
 
   describe('skip', () => {
     it('飛ばすべき要素数を返すこと', () => {
-      const params = new PaginationQueryParams();
-      params.limit = 20;
-      params.page = 1;
-      expect(params.skip).toBe(0);
-      params.page = 5;
-      expect(params.skip).toBe(80);
+      expect(plainToClass(PaginationQueryParams, { limit: 20, page: 1 }).skip).toBe(0);
+      expect(plainToClass(PaginationQueryParams, { limit: 20, page: 5 }).skip).toBe(80);
     });
   });
 
   describe('take', () => {
     it('limitがundefinedなら20を返すこと', () => {
-      const params = new PaginationQueryParams();
-      params.limit = undefined;
-      expect(params.take).toBe(20);
+      expect(plainToClass(PaginationQueryParams, {}).take).toBe(20);
     });
 
     it('limitが真値ならその値を返すこと', () => {
-      const params = new PaginationQueryParams();
-      params.limit = 5;
-      expect(params.take).toBe(5);
+      expect(plainToClass(PaginationQueryParams, { limit: 5 }).take).toBe(5);
     });
   });
 
   describe('pageParams', () => {
     it('skipとtakeの組を返すこと', () => {
-      const params = new PaginationQueryParams();
-      params.page = 1;
-      params.limit = 20;
-      expect(params.pageParams).toStrictEqual({ skip: 0, take: 20 });
+      expect(plainToClass(PaginationQueryParams, { limit: 20, page: 1 }).pageParams).toStrictEqual({
+        skip: 0,
+        take: 20,
+      });
     });
   });
 });

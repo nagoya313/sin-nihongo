@@ -11,6 +11,7 @@ import { ClipBoard } from '../../components/ClipBoard';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
 import { ListItemIcon } from '../../components/ListItemIcon';
+import { NewTabLinkListItem } from '../../components/NewTabLinkListItem';
 import { EditableContext } from '../../providers/Editable';
 import { NoticeDispatchContext } from '../../providers/Notice';
 import { errorMessage, useFetch } from '../../utils/axios';
@@ -49,14 +50,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ glyph }) => {
       <GlyphCanvas name={glyph.name} />
       <Box flexGrow={1}>
         <List>
-          <ListItem
-            alignItems="flex-start"
-            button
-            component="a"
-            href={glyph.glyphwikiLink}
-            target="_blank"
-            rel="noopener"
-          >
+          <NewTabLinkListItem url={glyph.glyphwikiLink}>
             <ListItemText>{glyph.name}</ListItemText>
             {isEditable && (
               <ListItemSecondaryAction>
@@ -64,7 +58,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ glyph }) => {
                 <ListItemIcon icon={<ClipBoard data={glyph.name} title="複製了" />} />
               </ListItemSecondaryAction>
             )}
-          </ListItem>
+          </NewTabLinkListItem>
           <Divider />
           <ListItem alignItems="flex-start">
             <ListItemText>{splitData(glyph.data)}</ListItemText>

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { DeepMap, FieldError, FieldValues, Path, UseFormRegister } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { TextField, TextFieldProps } from '@material-ui/core';
+import { TextFieldProps } from '@material-ui/core';
+import { TextField } from './TextField';
 
 export const StyledTextField = styled(TextField)`
   margin-top: 10px;
@@ -21,7 +22,9 @@ export function FormTextField<Values>({ register, errors, label, name, helperTex
   // undefinedではフォームのバリデーションをサボる模様
   const { ref, ...rest } = register(
     name,
-    type === 'number' ? { setValueAs: (value) => (isNaN(value) ? null : parseInt(value, 10)) } : undefined
+    type === 'number'
+      ? { setValueAs: (value) => (isNaN(value) ? null : parseInt(value, 10)) }
+      : { setValueAs: (value) => value || null }
   );
 
   return (

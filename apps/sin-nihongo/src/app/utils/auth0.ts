@@ -5,11 +5,13 @@ const getAccessTokenOptions = {
   audience: process.env.NX_API_IDENTIFIER!,
 };
 
+const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
+
 export const useAccessToken = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   return async () => {
     const token = await getAccessTokenSilently(getAccessTokenOptions);
-    return { Authorization: `Bearer ${token}` };
+    return accessTokenHeader(token);
   };
 };

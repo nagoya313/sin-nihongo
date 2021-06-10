@@ -17,7 +17,7 @@ import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
 import { NoticeDispatchContext } from '../../providers/Notice';
-import { useFetch } from '../../utils/axios';
+import { errorHandler, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 import { useAccessToken } from '../../utils/auth0';
 import { SearchForm } from './SearchForm';
@@ -50,11 +50,9 @@ export const Glyphs = () => {
 
   const onClose = async (yes: boolean) => {
     if (yes) {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      await deleteExecute({ headers: await getAccessToken() }).catch(() => {});
+      await deleteExecute({ headers: await getAccessToken() }).catch(errorHandler);
       setDeleteId('');
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      getRefetch().catch(() => {});
+      getRefetch().catch(errorHandler);
     }
     setOpen(false);
   };

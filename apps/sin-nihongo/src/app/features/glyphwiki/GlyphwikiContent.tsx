@@ -14,7 +14,7 @@ import { ListItemIcon } from '../../components/ListItemIcon';
 import { NewTabLinkListItem } from '../../components/NewTabLinkListItem';
 import { EditableContext } from '../../providers/Editable';
 import { NoticeDispatchContext } from '../../providers/Notice';
-import { errorMessage, useFetch } from '../../utils/axios';
+import { errorMessage, errorHandler, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 import { Glyph } from '../../model/Glyph';
 import { useAccessToken } from '../../utils/auth0';
@@ -30,11 +30,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ glyph }) => {
   const isEditable = useContext(EditableContext);
 
   const onBuild = async () => {
-    execute({
-      headers: await getAccessToken(),
-      data: { glyph: glyph },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-    }).catch(() => {});
+    execute({ headers: await getAccessToken(), data: { glyph: glyph } }).catch(errorHandler);
   };
 
   useEffect(() => {

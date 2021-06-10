@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
@@ -14,26 +13,25 @@ import { IconButton } from '../../components/IconButton';
 import { ListItemIcon } from '../../components/ListItemIcon';
 import { EditableContext } from '../../providers/Editable';
 import { NoticeDispatchContext } from '../../providers/Notice';
-import { getAccessTokenOptions } from '../../utils/auth0';
 import { errorMessage, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
+import { Glyph } from '../../model/Glyph';
+import { useAccessToken } from '../../utils/auth0';
 
 type Props = {
-  name: string;
-  data: string;
+  glyph: Glyph;
 };
 
-export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
-  const { getAccessTokenSilently } = useAuth0();
-  const [{ data: postData, error }, execute] = useFetch(apiRoutes.postGlyph);
+export const GlyphwikiContent: React.FC<Props> = ({ glyph }) => {
+  const getAccessToken = useAccessToken();
+  const [{ data, error }, execute] = useFetch(apiRoutes.postGlyph);
   const noticeDispatch = useContext(NoticeDispatchContext);
   const isEditable = useContext(EditableContext);
 
   const onBuild = async () => {
-    const token = await getAccessTokenSilently(getAccessTokenOptions);
     execute({
-      headers: { Authorization: `Bearer ${token}` },
-      data: { glyph: { name: name, data: data } },
+      headers: await getAccessToken(),
+      data: { glyph: glyph },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
     }).catch(() => {});
   };
@@ -43,34 +41,34 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
   }, [error, noticeDispatch]);
 
   useEffect(() => {
-    postData && noticeDispatch({ type: 'open', message: postData.message, severity: 'success' });
-  }, [postData, noticeDispatch]);
+    data && noticeDispatch({ type: 'open', message: data.message, severity: 'success' });
+  }, [data, noticeDispatch]);
 
   return (
     <Box display="flex" p={1}>
-      <GlyphCanvas name={name} />
+      <GlyphCanvas name={glyph.name} />
       <Box flexGrow={1}>
         <List>
           <ListItem
             alignItems="flex-start"
             button
             component="a"
-            href={`https://glyphwiki.org/wiki/${name}`}
+            href={glyph.glyphwikiLink}
             target="_blank"
             rel="noopener"
           >
-            <ListItemText>{name}</ListItemText>
+            <ListItemText>{glyph.name}</ListItemText>
             {isEditable && (
               <ListItemSecondaryAction>
                 <ListItemIcon icon={<IconButton onClick={onBuild} icon={<BuildIcon />} />} />
-                <ListItemIcon icon={<ClipBoard data={name} title="複製了" />} />
+                <ListItemIcon icon={<ClipBoard data={glyph.name} title="複製了" />} />
               </ListItemSecondaryAction>
             )}
           </ListItem>
           <Divider />
           <ListItem alignItems="flex-start">
-            <ListItemText>{splitData(data)}</ListItemText>
-            {isEditable && <ListItemIcon icon={<ClipBoard data={data} title="複製了" />} />}
+            <ListItemText>{splitData(glyph.data)}</ListItemText>
+            {isEditable && <ListItemIcon icon={<ClipBoard data={glyph.data} title="複製了" />} />}
           </ListItem>
         </List>
       </Box>

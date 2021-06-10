@@ -24,7 +24,7 @@ jobs:
           command: yarn format:check
       - run:
           name: test
-          command: yarn nx run-many --target=test --projects=sin-nihongo,api,sin-nihongo-lib
+          command: yarn nx run-many --target=test --projects=sin-nihongo,api,sin-nihongo-params
       - store_artifacts:
           path: test-results.xml
       - store_test_results:

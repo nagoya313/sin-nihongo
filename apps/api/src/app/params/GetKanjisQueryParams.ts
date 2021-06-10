@@ -1,4 +1,4 @@
-import { MojiJS } from 'mojijs';
+import * as MojiJS from 'mojijs';
 import { GetKanjisParams } from '@sin-nihongo/sin-nihongo-params';
 
 export class GetKanjisQueryParams extends GetKanjisParams {

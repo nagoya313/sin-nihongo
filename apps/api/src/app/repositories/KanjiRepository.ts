@@ -1,28 +1,12 @@
 import { Raw } from 'typeorm';
-import * as mojiJS from 'mojijs';
-import { GetKanjisParams } from '@sin-nihongo/sin-nihongo-params';
 import { Kanji } from '../entities/Kanji';
+import { GetKanjisQueryParams } from '../params/GetKanjisQueryParams';
 import { PaginationQueryParams } from '../params/PaginationQueryParams';
 import { findManyOptions, undefinedSkipParams } from './EntityRepository';
 import { toQueryYomigana } from '../libs/kana';
 
-const ucsParams = (ucs: string) => {
-  if (ucs) {
-    const ucsParams = ucs.match(/^u[\da-f]{4,5}$/) ? parseInt(ucs.replace('u', ''), 16) : undefined;
-    if (ucsParams) {
-      return ucsParams;
-    }
-    const mojiData = mojiJS.getMojiData(mojiJS.codePointAt(ucs[0]));
-    const kanjiParams = mojiData.type.is_kanji ? ucs.charCodeAt(0) : undefined;
-    if (kanjiParams) {
-      return kanjiParams;
-    }
-  }
-  return undefined;
-};
-
 export class KanjiRepository {
-  static findAndCount(searchParams: GetKanjisParams, pageParams: PaginationQueryParams) {
+  static findAndCount(searchParams: GetKanjisQueryParams, pageParams: PaginationQueryParams) {
     return Kanji.findAndCount(
       findManyOptions<Kanji>(
         {
@@ -31,7 +15,7 @@ export class KanjiRepository {
           jisLevel: undefinedSkipParams(searchParams.jisLevel),
           radicalId: undefinedSkipParams(searchParams.radicalId),
           numberOfStrokes: undefinedSkipParams(searchParams.numberOfStrokes),
-          ucs: undefinedSkipParams(ucsParams(searchParams.ucs)),
+          ucs: undefinedSkipParams(searchParams.ucsParam),
           kunyomi: undefinedSkipParams(
             searchParams.readLike,
             Raw(

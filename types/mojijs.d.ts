@@ -1,4 +1,9 @@
 /**
+ * node_modules下のmojijs/build/index.d.tsがうまく読まれないので微修正して移動
+ * npmパッケージが修正されたら除去する
+ */
+
+/**
  * 面区点情報
  * @typedef {Object} _MenKuTen_
  * @property {string} [text] 面-区-点

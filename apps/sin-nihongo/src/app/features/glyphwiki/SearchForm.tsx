@@ -10,7 +10,6 @@ type Props = {
 };
 
 export const SearchForm: React.VFC<Props> = ({ disabled, setSearchWord }) => {
-  console.log('再びょうが');
   const [state, setState] = useState({ q: '' });
   const { isValidating, isValid, errors } = useValidation(GetGlyphwikiParams, state);
 

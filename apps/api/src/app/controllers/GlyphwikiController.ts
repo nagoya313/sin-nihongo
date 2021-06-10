@@ -12,8 +12,7 @@ export class GlyphwikiController {
 
   @Get('/glyphwiki/health')
   async health() {
-    const result = await Glyphwiki.health();
-    if (result) {
+    if (await Glyphwiki.health()) {
       return { message: 'Glyphwikiから検索わ利用可能です。', accessible: true };
     } else {
       return { message: 'Glyphwikiから検索わ利用不能です。', accessible: false };

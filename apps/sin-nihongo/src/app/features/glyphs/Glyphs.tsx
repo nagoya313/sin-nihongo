@@ -23,7 +23,7 @@ import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
 import { NoticeDispatchContext } from '../../providers/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
-import { fetchWithToken, useLazyAxiosDelete, useFetch } from '../../utils/axios';
+import { fetchWithToken, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 
 const resolver = classValidatorResolver(GetGlyphsParams);
@@ -100,7 +100,7 @@ export const Glyphs = () => {
       <IconButton
         icon={<DeleteIcon />}
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        onClick={() => onDelete(glyph.id)}
+        onClick={() => onDelete(glyph.id!)}
       />
     ),
   }));

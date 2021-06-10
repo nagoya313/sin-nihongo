@@ -30,18 +30,21 @@ export const columns: { field: Fields; headerName: string }[] = [
   { field: 'action', headerName: '' },
 ];
 export const KanjiRows = (kanjis?: KanjiResponse[]) => {
-  return kanjis?.map((kanji): { [key in Fields | 'key']: unknown } => ({
-    key: `kanji_${kanji.id}`,
-    ucs: `u${kanji.id.toString(16)}`,
-    character: <NewTabLink url={`https://glyphwiki.org/wiki/${kanji.ucs}`} text={String.fromCodePoint(kanji.id)} />,
-    kage: <ClickableGlyphCanvas />,
-    radical: String.fromCodePoint(kanji.radicalId + 0x2eff),
-    numberOfStrokes: kanji.numberOfStrokes,
-    regular: kanji.regular && <Check />,
-    forName: kanji.forName && <Check />,
-    kunyomi: kanji.kunyomi.join('、'),
-    onyomi: kanji.onyomi.join('、'),
-    jisLevel: kanji.jisLevel,
-    action: null,
-  }));
+  return kanjis?.map((kanji): { [key in Fields | 'key']: unknown } => {
+    const ucs = `u${kanji.id.toString(16)}`;
+    return {
+      key: `kanji_${kanji.id}`,
+      ucs: ucs,
+      character: <NewTabLink url={`https://glyphwiki.org/wiki/${ucs}`} text={String.fromCodePoint(kanji.id)} />,
+      kage: <ClickableGlyphCanvas />,
+      radical: String.fromCodePoint(kanji.radicalId + 0x2eff),
+      numberOfStrokes: kanji.numberOfStrokes,
+      regular: kanji.regular && <Check />,
+      forName: kanji.forName && <Check />,
+      kunyomi: kanji.kunyomi.join('、'),
+      onyomi: kanji.onyomi.join('、'),
+      jisLevel: kanji.jisLevel,
+      action: null,
+    };
+  });
 };

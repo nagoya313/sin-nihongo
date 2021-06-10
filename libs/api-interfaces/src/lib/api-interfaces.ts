@@ -78,7 +78,7 @@ export interface KanjiResponse {
   readonly id: number;
   readonly regular: boolean;
   readonly forName: boolean;
-  readonly jisLevel: number;
+  readonly jisLevel?: number;
   readonly numberOfStrokes: number;
   readonly numberOfStrokesInRadicals: number;
   readonly radicalId: number;

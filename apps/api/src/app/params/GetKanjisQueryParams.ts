@@ -2,6 +2,10 @@ import * as MojiJS from 'mojijs';
 import { GetKanjisParams } from '@sin-nihongo/sin-nihongo-params';
 
 export class GetKanjisQueryParams extends GetKanjisParams {
+  get readLikeQuery() {
+    return this.readLike ? `${MojiJS.toHalfWidthKana(MojiJS.toKatakana(this.readLike))}%` : undefined;
+  }
+
   get ucsParam() {
     if (this.ucs) {
       return this.ucsToNumber || this.kanjiToNumber;

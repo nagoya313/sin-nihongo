@@ -1,4 +1,4 @@
-import { Control, Controller, Path } from 'react-hook-form';
+import { Control, Controller, Path, PathValue } from 'react-hook-form';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -41,7 +41,8 @@ const stringToBoolean = (value: string) => {
 };
 
 export function RadioGroup<Values>({ name, title, labels, control, type }: Props<Values>) {
-  const input = type === 'number' ? numberToString : booleanToString;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const input: (value: any) => string = type === 'number' ? numberToString : booleanToString;
   const output = type === 'number' ? stringToNumber : stringToBoolean;
 
   return (

@@ -8,6 +8,8 @@ const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
 export const initExpress = () => {
   const app = express();
   app.use(express.static(CLIENT_BUILD_PATH));
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   app.use(passport.initialize());
 
   initRoutingController(app);

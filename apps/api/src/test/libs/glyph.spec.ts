@@ -1,14 +1,11 @@
 import { glyphData, includeGlyphData } from '../../app/libs/glyph';
+import * as testData from './testData';
 
 describe('glyphData', () => {
   describe('取得函数が常に同じ時', () => {
     it('最初の取得函数の結果がグリフを含まない時の結果が正しいこと', async (done) => {
-      const getter = async (key: string) => {
-        return { name: key, data: '1:0:0:14:101:186:101' };
-      };
-
-      expect(await glyphData('u4e00', getter)).toStrictEqual({
-        data: { name: 'u4e00', data: '1:0:0:14:101:186:101' },
+      expect(await glyphData(testData.simpleStrokeGlyphName, testData.testGetter)).toStrictEqual({
+        data: { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
         includeGlyphs: [],
       });
 
@@ -16,84 +13,45 @@ describe('glyphData', () => {
     });
 
     it('最初の取得函数の結果がグリフを1つ含む時の結果が正しいこと', async (done) => {
-      const getter = async (key: string) => {
-        switch (key) {
-          case 'u4e00':
-            return { name: key, data: '99:0:0:0:0:200:200:u4e00-j' };
-          case 'u4e00-j':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-        }
-      };
-
-      expect(await glyphData('u4e00', getter)).toStrictEqual({
-        data: { name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' },
-        includeGlyphs: [{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }],
+      expect(await glyphData(testData.singleHasGlyphName, testData.testGetter)).toStrictEqual({
+        data: { name: testData.singleHasGlyphName, data: testData.singleHasGlyphKageData },
+        includeGlyphs: [{ name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData }],
       });
 
       done();
     });
 
     it('最初の取得函数の結果がグリフを2つ含む時の結果が正しいこと', async (done) => {
-      const getter = async (key: string) => {
-        switch (key) {
-          case 'u4e00':
-            return { name: key, data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-g' };
-          case 'u4e00-j':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-          case 'u4e00-g':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-        }
-      };
+      const data = await glyphData(testData.multipleHasGlyphsOnlyGlyphName, testData.testGetter);
 
-      const data = await glyphData('u4e00', getter);
-
-      expect(data.data).toStrictEqual({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-g' });
+      expect(data.data).toStrictEqual({
+        name: testData.multipleHasGlyphsOnlyGlyphName,
+        data: testData.multipleHasGlyphsOnlyKageData,
+      });
       expect(data.includeGlyphs).toIncludeAllMembers([
-        { name: 'u4e00-j', data: '1:0:0:14:101:186:101' },
-        { name: 'u4e00-g', data: '1:0:0:14:101:186:101' },
+        { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
+        { name: testData.simpleStrokeGlyphName2, data: testData.singleStrokeKageData2 },
       ]);
 
       done();
     });
 
     it('最初の取得函数の結果がグリフを含むグリフを含む時の結果が正しいこと', async (done) => {
-      const getter = async (key: string) => {
-        switch (key) {
-          case 'u4e00':
-            return { name: key, data: '99:0:0:0:0:200:200:u4e00-j' };
-          case 'u4e00-j':
-            return { name: key, data: '99:0:0:0:0:200:200:u4e00-g' };
-          case 'u4e00-g':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-        }
-      };
+      const data = await glyphData(testData.hasNestGlyphName, testData.testGetter);
 
-      const data = await glyphData('u4e00', getter);
-
-      expect(data.data).toStrictEqual({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' });
+      expect(data.data).toStrictEqual({ name: testData.hasNestGlyphName, data: testData.hasNestGlyphKageData });
       expect(data.includeGlyphs).toIncludeAllMembers([
-        { name: 'u4e00-j', data: '99:0:0:0:0:200:200:u4e00-g' },
-        { name: 'u4e00-g', data: '1:0:0:14:101:186:101' },
+        { name: testData.singleHasGlyphName, data: testData.singleHasGlyphKageData },
+        { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
       ]);
 
       done();
     });
 
     it('最初の取得函数の結果が同じグリフを2つ含む時の結果が正しいこと', async (done) => {
-      const getter = async (key: string) => {
-        switch (key) {
-          case 'u4e00':
-            return { name: key, data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-j' };
-          case 'u4e00-j':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-          case 'u4e00-g':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-        }
-      };
-
-      expect(await glyphData('u4e00', getter)).toStrictEqual({
-        data: { name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-j' },
-        includeGlyphs: [{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }],
+      expect(await glyphData(testData.hasDuplicateGlyphName, testData.testGetter)).toStrictEqual({
+        data: { name: testData.hasDuplicateGlyphName, data: testData.hasDuplicateGlyphsKageData },
+        includeGlyphs: [{ name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData }],
       });
 
       done();
@@ -102,15 +60,9 @@ describe('glyphData', () => {
 
   describe('最初の取得函数が違ふ時', () => {
     it('最初の取得函数の結果がグリフを含まない時の結果が正しいこと', async (done) => {
-      const firstgetter = async (key: string) => {
-        return { name: key, data: '1:0:0:14:101:186:101' };
-      };
-      const getter = async (key: string) => {
-        return { name: key, data: '1:0:0:14:101:186:101' };
-      };
-
-      expect(await glyphData('u4e00', getter, firstgetter)).toStrictEqual({
-        data: { name: 'u4e00', data: '1:0:0:14:101:186:101' },
+      const firstgetter = async (key: string) => ({ name: key, data: testData.singleStrokeKageData });
+      expect(await glyphData(testData.simpleStrokeGlyphName, testData.testGetter, firstgetter)).toStrictEqual({
+        data: { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
         includeGlyphs: [],
       });
 
@@ -118,87 +70,49 @@ describe('glyphData', () => {
     });
 
     it('最初の取得函数の結果がグリフを1つ含む時の結果が正しいこと', async (done) => {
-      const firstgetter = async (key: string) => {
-        return { name: key, data: '99:0:0:0:0:200:200:u4e00-j' };
-      };
-      const getter = async (key: string) => {
-        return { name: key, data: '1:0:0:14:101:186:101' };
-      };
-
-      expect(await glyphData('u4e00', getter, firstgetter)).toStrictEqual({
-        data: { name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' },
-        includeGlyphs: [{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }],
+      const firstgetter = async (key: string) => ({ name: key, data: testData.singleHasGlyphKageData });
+      expect(await glyphData(testData.singleHasGlyphName, testData.testGetter, firstgetter)).toStrictEqual({
+        data: { name: testData.singleHasGlyphName, data: testData.singleHasGlyphKageData },
+        includeGlyphs: [{ name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData }],
       });
 
       done();
     });
 
     it('最初の取得函数の結果がグリフを2つ含む時の結果が正しいこと', async (done) => {
-      const firstgetter = async (key: string) => {
-        return { name: key, data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-g' };
-      };
-      const getter = async (key: string) => {
-        switch (key) {
-          case 'u4e00-j':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-          case 'u4e00-g':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-        }
-      };
+      const firstgetter = async (key: string) => ({ name: key, data: testData.multipleHasGlyphsOnlyKageData });
+      const data = await glyphData(testData.multipleHasGlyphsOnlyGlyphName, testData.testGetter, firstgetter);
 
-      const data = await glyphData('u4e00', getter, firstgetter);
-
-      expect(data.data).toStrictEqual({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-g' });
+      expect(data.data).toStrictEqual({
+        name: testData.multipleHasGlyphsOnlyGlyphName,
+        data: testData.multipleHasGlyphsOnlyKageData,
+      });
       expect(data.includeGlyphs).toIncludeAllMembers([
-        { name: 'u4e00-j', data: '1:0:0:14:101:186:101' },
-        { name: 'u4e00-g', data: '1:0:0:14:101:186:101' },
+        { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
+        { name: testData.simpleStrokeGlyphName2, data: testData.singleStrokeKageData2 },
       ]);
 
       done();
     });
 
     it('最初の取得函数の結果がグリフを含むグリフを含む時の結果が正しいこと', async (done) => {
-      const firstgetter = async (key: string) => {
-        return { name: key, data: '99:0:0:0:0:200:200:u4e00-j' };
-      };
-      const getter = async (key: string) => {
-        switch (key) {
-          case 'u4e00-j':
-            return { name: key, data: '99:0:0:0:0:200:200:u4e00-g' };
-          case 'u4e00-g':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-        }
-      };
+      const firstgetter = async (key: string) => ({ name: key, data: testData.hasNestGlyphKageData });
+      const data = await glyphData(testData.hasNestGlyphName, testData.testGetter, firstgetter);
 
-      const data = await glyphData('u4e00', getter, firstgetter);
-
-      expect(data.data).toStrictEqual({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' });
+      expect(data.data).toStrictEqual({ name: testData.hasNestGlyphName, data: testData.hasNestGlyphKageData });
       expect(data.includeGlyphs).toIncludeAllMembers([
-        { name: 'u4e00-j', data: '99:0:0:0:0:200:200:u4e00-g' },
-        { name: 'u4e00-g', data: '1:0:0:14:101:186:101' },
+        { name: testData.singleHasGlyphName, data: testData.singleHasGlyphKageData },
+        { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
       ]);
 
       done();
     });
 
     it('最初の取得函数の結果が同じグリフを2つ含む時の結果が正しいこと', async (done) => {
-      const firstgetter = async (key: string) => {
-        return { name: key, data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-j' };
-      };
-      const getter = async (key: string) => {
-        switch (key) {
-          case 'u4e00':
-            return { name: key, data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-j' };
-          case 'u4e00-j':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-          case 'u4e00-g':
-            return { name: key, data: '1:0:0:14:101:186:101' };
-        }
-      };
-
-      expect(await glyphData('u4e00', getter, firstgetter)).toStrictEqual({
-        data: { name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-j' },
-        includeGlyphs: [{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }],
+      const firstgetter = async (key: string) => ({ name: key, data: testData.hasDuplicateGlyphsKageData });
+      expect(await glyphData(testData.hasDuplicateGlyphName, testData.testGetter, firstgetter)).toStrictEqual({
+        data: { name: testData.hasDuplicateGlyphName, data: testData.hasDuplicateGlyphsKageData },
+        includeGlyphs: [{ name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData }],
       });
 
       done();
@@ -208,94 +122,65 @@ describe('glyphData', () => {
 
 describe('includeGlyphData', () => {
   it('グリフを含まないデータの時の結果が正しいこと', async (done) => {
-    const getter = async (key: string) => {
-      return { name: key, data: '1:0:0:14:101:186:101' };
-    };
-
-    expect(await includeGlyphData({ name: 'u4e00', data: '1:0:0:14:101:186:101' }, getter)).toStrictEqual([]);
+    expect(
+      await includeGlyphData(
+        { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
+        testData.testGetter
+      )
+    ).toStrictEqual([]);
 
     done();
   });
 
   it('グリフを1つ含むデータの時の結果が正しいこと', async (done) => {
-    const getter = async (key: string) => {
-      switch (key) {
-        case 'u4e00':
-          return { name: key, data: '99:0:0:0:0:200:200:u4e00-j' };
-        case 'u4e00-j':
-          return { name: key, data: '1:0:0:14:101:186:101' };
-      }
-    };
-
-    expect(await includeGlyphData({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' }, getter)).toStrictEqual([
-      { name: 'u4e00-j', data: '1:0:0:14:101:186:101' },
-    ]);
+    expect(
+      await includeGlyphData(
+        { name: testData.singleHasGlyphName, data: testData.singleHasGlyphKageData },
+        testData.testGetter
+      )
+    ).toStrictEqual([{ name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData }]);
 
     done();
   });
 
   it('最初の取得函数の結果がグリフを2つ含む時の結果が正しいこと', async (done) => {
-    const getter = async (key: string) => {
-      switch (key) {
-        case 'u4e00':
-          return { name: key, data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-g' };
-        case 'u4e00-j':
-          return { name: key, data: '1:0:0:14:101:186:101' };
-        case 'u4e00-g':
-          return { name: key, data: '1:0:0:14:101:186:101' };
-      }
-    };
-
     const data = await includeGlyphData(
-      { name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-g' },
-      getter
+      {
+        name: testData.multipleHasGlyphsOnlyGlyphName,
+        data: testData.multipleHasGlyphsOnlyKageData,
+      },
+      testData.testGetter
     );
 
     expect(data).toIncludeAllMembers([
-      { name: 'u4e00-j', data: '1:0:0:14:101:186:101' },
-      { name: 'u4e00-g', data: '1:0:0:14:101:186:101' },
+      { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
+      { name: testData.simpleStrokeGlyphName2, data: testData.singleStrokeKageData2 },
     ]);
 
     done();
   });
 
   it('最初の取得函数の結果がグリフを含むグリフを含む時の結果が正しいこと', async (done) => {
-    const getter = async (key: string) => {
-      switch (key) {
-        case 'u4e00':
-          return { name: key, data: '99:0:0:0:0:200:200:u4e00-j' };
-        case 'u4e00-j':
-          return { name: key, data: '99:0:0:0:0:200:200:u4e00-g' };
-        case 'u4e00-g':
-          return { name: key, data: '1:0:0:14:101:186:101' };
-      }
-    };
-
-    const data = await includeGlyphData({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j' }, getter);
+    const data = await includeGlyphData(
+      { name: testData.hasNestGlyphName, data: testData.hasNestGlyphKageData },
+      testData.testGetter
+    );
 
     expect(data).toIncludeAllMembers([
-      { name: 'u4e00-j', data: '99:0:0:0:0:200:200:u4e00-g' },
-      { name: 'u4e00-g', data: '1:0:0:14:101:186:101' },
+      { name: testData.singleHasGlyphName, data: testData.singleHasGlyphKageData },
+      { name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData },
     ]);
 
     done();
   });
 
   it('最初の取得函数の結果が同じグリフを2つ含む時の結果が正しいこと', async (done) => {
-    const getter = async (key: string) => {
-      switch (key) {
-        case 'u4e00':
-          return { name: key, data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-j' };
-        case 'u4e00-j':
-          return { name: key, data: '1:0:0:14:101:186:101' };
-        case 'u4e00-g':
-          return { name: key, data: '1:0:0:14:101:186:101' };
-      }
-    };
-
     expect(
-      await includeGlyphData({ name: 'u4e00', data: '99:0:0:0:0:200:200:u4e00-j$99:0:0:0:0:200:200:u4e00-j' }, getter)
-    ).toStrictEqual([{ name: 'u4e00-j', data: '1:0:0:14:101:186:101' }]);
+      await includeGlyphData(
+        { name: testData.hasDuplicateGlyphName, data: testData.hasDuplicateGlyphsKageData },
+        testData.testGetter
+      )
+    ).toStrictEqual([{ name: testData.simpleStrokeGlyphName, data: testData.singleStrokeKageData }]);
 
     done();
   });

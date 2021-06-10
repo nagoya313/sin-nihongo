@@ -1,17 +1,18 @@
 import { KageColumns } from '../../../app/libs/kage/KageColumns';
+import * as testData from '../testData';
 
 describe('KageColumns', () => {
   it('直線の画が正しく解析できること', () => {
-    const stroke = new KageColumns('1:0:0:14:101:186:101');
-    expect(stroke.data).toBe('1:0:0:14:101:186:101');
+    const stroke = new KageColumns(testData.simpleKageStroke);
+    expect(stroke.data).toBe(testData.simpleKageStroke);
     expect(stroke.isLinkStroke).toBeFalse();
     expect(stroke.linkStrokeId).toBeUndefined();
   });
 
   it('参照を持つ画が正しく解析できること', () => {
-    const stroke = new KageColumns('99:0:0:10:5:190:105:u4e03-j');
-    expect(stroke.data).toBe('99:0:0:10:5:190:105:u4e03-j');
+    const stroke = new KageColumns(testData.hasGlyphKageStroke);
+    expect(stroke.data).toBe(testData.hasGlyphKageStroke);
     expect(stroke.isLinkStroke).toBeTrue();
-    expect(stroke.linkStrokeId).toBe('u4e03-j');
+    expect(stroke.linkStrokeId).toBe(testData.hasGlyphId);
   });
 });

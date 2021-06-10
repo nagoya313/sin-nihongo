@@ -8,6 +8,7 @@
     "start": "node dist/apps/api/main.js",
     "build": "nx run-many --target=build --projects=sin-nihongo,api --parallel=true --prod",
     "test": "nx test",
+    "test:all": "nx run-many --target=test --projects=sin-nihongo,api,sin-nihongo-params --collectCoverage",
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",
     "affected:apps": "nx affected:apps",

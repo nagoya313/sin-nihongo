@@ -19,10 +19,10 @@ export class GlyphResponse {
       data: {
         items: glyphs.docs.map((doc) => this.toResponse(doc)),
         meta: {
-          totalItems: glyphs.totalDocs,
+          totalItems: glyphs.totalDocs || 0,
           itemsPerPage: 20,
           itemCount: glyphs.docs.length,
-          totalPages: glyphs.totalPages,
+          totalPages: glyphs.totalPages || 0,
           currentPage: glyphs.page || 1,
         },
       },

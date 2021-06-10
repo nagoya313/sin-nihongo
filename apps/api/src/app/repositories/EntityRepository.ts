@@ -11,9 +11,9 @@ export const findManyOptions = <Entity>(
 ): FindManyOptions<Entity> => {
   return {
     where: where,
-    order: {
+    /*order: {
       id: 'ASC',
-    },
+    },*/
     ...pageParams.pageParams,
   };
 };

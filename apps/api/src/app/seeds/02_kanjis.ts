@@ -5,7 +5,6 @@ import * as util from 'util';
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import { Kanji } from '../entities/Kanji';
-import { toKanjiYomigana } from '../libs/kana';
 
 interface CsvKanji {
   readonly ucs: number;
@@ -25,16 +24,17 @@ export default class CreateKanjis implements Seeder {
     const kanjis: Kanji[] = [];
     const rs = fs.createReadStream('db/seeds/kanjis.csv', { encoding: 'utf8' });
     const parser = parse({ columns: true }).on('data', (row: CsvKanji) => {
-      const kanji = new Kanji();
-      kanji.ucs = row.ucs;
-      kanji.radicalId = row.radicalId;
-      kanji.numberOfStrokesInRadical = row.numberOfStrokesInRadical;
-      kanji.numberOfStrokes = row.numberOfStrokes;
-      kanji.onyomi = row.onyomi.split(',').map((read) => toKanjiYomigana(read));
-      kanji.kunyomi = row.kunyomi.split(',').map((read) => toKanjiYomigana(read));
-      kanji.jisLevel = row.jisLevel;
-      kanji.regular = row.regular == 'true';
-      kanji.forName = row.forName == 'true';
+      const kanji = new Kanji(
+        row.ucs,
+        row.regular == 'true',
+        row.forName == 'true',
+        row.numberOfStrokes,
+        row.numberOfStrokesInRadical,
+        row.radicalId,
+        row.jisLevel
+      );
+      kanji.onyomi = row.onyomi.split(',');
+      kanji.kunyomi = row.kunyomi.split(',');
       kanjis.push(kanji);
     });
     const pipeline = util.promisify(stream.pipeline);

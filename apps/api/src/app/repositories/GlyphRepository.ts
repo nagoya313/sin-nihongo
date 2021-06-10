@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import { flatten, uniq } from 'underscore';
-import { NotFoundError, BadRequestError } from 'routing-controllers';
+import { NotFoundError, BadRequestError, InternalServerError } from 'routing-controllers';
 import { Glyph as ApiGlyph, PaginationRequest } from '@sin-nihongo/api-interfaces';
 import { GetGlyphsParams, PostGlyphParams } from '@sin-nihongo/sin-nihongo-params';
 import { glyphData, includeGlyphData } from '../libs/glyph';
@@ -18,8 +18,12 @@ export class GlyphRepository {
       limit: pageParams.limit,
       page: pageParams.page,
     });
-    const includeGlyphs = await Promise.all(glyphs.docs.map((glyph) => includeGlyphData(glyph, this.findOneOrFail)));
-    return [glyphs, uniq(flatten(includeGlyphs), 'name')];
+    if (glyphs) {
+      const includeGlyphs = await Promise.all(glyphs.docs.map((glyph) => includeGlyphData(glyph, this.findOneOrFail)));
+      return [glyphs, uniq(flatten(includeGlyphs), 'name')];
+    } else {
+      throw InternalServerError;
+    }
   }
 
   static async findOne(id: string) {
@@ -56,7 +60,7 @@ export class GlyphRepository {
     }
   }
 
-  private static async findOneOrFail(name) {
+  private static async findOneOrFail(name: string) {
     const glyph: Glyph | null = await GlyphModel.findOne({ name: name }).exec();
     if (!glyph) {
       throw new NotFoundError(`"${name}"のグリフわ見つかりませんでした。`);
@@ -64,7 +68,7 @@ export class GlyphRepository {
     return glyph;
   }
 
-  private static async findByIdOrFail(id) {
+  private static async findByIdOrFail(id: string) {
     const glyph: Glyph | null = await GlyphModel.findById(Types.ObjectId(id)).exec();
     if (!glyph) {
       throw new NotFoundError(`"${id}"のグリフわグリフウィキから見つかりませんでした。`);

@@ -4,10 +4,23 @@ import { TimeStampEntity } from './TimeStampEntity';
 
 @Entity()
 export class Kanji extends TimeStampEntity {
-  constructor() {
+  constructor(
+    ucs: number,
+    regular: boolean,
+    forName: boolean,
+    numberOfStrokes: number,
+    numberOfStrokesInRadical: number,
+    radicalId: number,
+    jisLevel: number
+  ) {
     super();
-    this.regular = false;
-    this.forName = false;
+    this.ucs = ucs;
+    this.regular = regular;
+    this.forName = forName;
+    this.numberOfStrokes = numberOfStrokes;
+    this.numberOfStrokesInRadical = numberOfStrokesInRadical;
+    this.radicalId = radicalId;
+    this.jisLevel = jisLevel;
     this.kunyomi = [];
     this.onyomi = [];
   }
@@ -40,7 +53,7 @@ export class Kanji extends TimeStampEntity {
   readonly radicalId: number;
 
   @Column({ nullable: true })
-  readonly jisLevel?: number | null;
+  readonly jisLevel?: number;
 
   @Column('varchar', { array: true, default: {} })
   onyomi: string[];
@@ -49,5 +62,5 @@ export class Kanji extends TimeStampEntity {
   kunyomi: string[];
 
   @Column({ nullable: true })
-  glyphId: string;
+  glyphId?: string;
 }

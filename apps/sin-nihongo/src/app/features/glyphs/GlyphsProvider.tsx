@@ -1,20 +1,16 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { ResponseValues } from 'axios-hooks';
-import { apiRoutes, GetGlyphsRequest, GlyphsResponse, ApiError } from '@sin-nihongo/api-interfaces';
+import { apiRoutes, GetGlyphsRequest, GlyphsResponse, ApiError, PaginationRequest } from '@sin-nihongo/api-interfaces';
 import { GetGlyphsParams } from '@sin-nihongo/sin-nihongo-params';
 import { useFetch } from '../../utils/axios';
-import { useValidation, ValidationProvider } from '../../utils/useValidation';
+import { ValidationProvider } from '../../utils/useValidation';
 
 type Store = {
-  searchQuery: {
-    page: number;
-    nameLike?: string;
-  };
+  searchQuery: GetGlyphsRequest & PaginationRequest;
   rowQuery?: GetGlyphsRequest;
   currentPage: number;
   deleteId: string;
   deleteDialogOpen: boolean;
-  glyphsLoading: boolean;
 };
 
 type Action =
@@ -48,7 +44,6 @@ const initialState: Store = {
   currentPage: 1,
   deleteId: '',
   deleteDialogOpen: false,
-  glyphsLoading: false,
 };
 
 const reducer: React.Reducer<Store, Action> = (state, action): Store => {
@@ -76,12 +71,6 @@ export const GlyphsDataContext = createContext<ResponseValues<GlyphsResponse, Ap
   data: undefined,
   loading: false,
   error: undefined,
-});
-type UseValidationResult = ReturnType<typeof useValidation>;
-export const ErrorContext = createContext<UseValidationResult>({
-  isValidating: false,
-  isValid: true,
-  errors: undefined,
 });
 const PageContext = createContext(0);
 const FormContext = createContext<GetGlyphsRequest | undefined>(undefined);

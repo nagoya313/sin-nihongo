@@ -2,21 +2,22 @@ import { Types } from 'mongoose';
 import { PaginationModel } from 'mongoose-paginate-ts';
 import { flatten, uniq } from 'underscore';
 import { NotFoundError, BadRequestError, InternalServerError } from 'routing-controllers';
-import { Glyph as ApiGlyph, PaginationRequest } from '@sin-nihongo/api-interfaces';
+import { Glyph as ApiGlyph } from '@sin-nihongo/api-interfaces';
 import { GetGlyphsParams, PostGlyphParams } from '@sin-nihongo/sin-nihongo-params';
+import { PaginationQueryParams } from '../params/PaginationQueryParams';
 import { glyphData, includeGlyphData } from '../libs/glyph';
 import { Glyph, GlyphModel } from '../models/glyph';
 
 export class GlyphRepository {
   static async findAndCount(
     searchParams: GetGlyphsParams,
-    pageParams: PaginationRequest
+    pageParams: PaginationQueryParams
   ): Promise<[PaginationModel<Glyph>, ApiGlyph[]]> {
     const glyphs = await GlyphModel.paginate({
       query: searchParams.nameLike && { name: { $regex: searchParams.nameLike, $options: 'i' } },
       sort: { name: 'asc' },
-      limit: pageParams.limit,
-      page: pageParams.page,
+      limit: pageParams.take,
+      page: pageParams.currentPage,
     });
     if (glyphs) {
       const includeGlyphs = await Promise.all(glyphs.docs.map((glyph) => includeGlyphData(glyph, this.findOneOrFail)));
@@ -65,14 +66,22 @@ export class GlyphRepository {
     if (!glyph) {
       throw new NotFoundError(`"${name}"のグリフわ見つかりませんでした。`);
     }
-    return glyph;
+    return this.toFindableGlyphData(glyph);
   }
 
   private static async findByIdOrFail(id: string) {
     const glyph: Glyph | null = await GlyphModel.findById(Types.ObjectId(id)).exec();
     if (!glyph) {
-      throw new NotFoundError(`"${id}"のグリフわグリフウィキから見つかりませんでした。`);
+      throw new NotFoundError(`"${id}"のグリフわ見つかりませんでした。`);
     }
-    return glyph;
+    return this.toFindableGlyphData(glyph);
+  }
+
+  private static toFindableGlyphData(glyph: Glyph) {
+    return {
+      id: glyph._id.toString(),
+      name: glyph.name,
+      data: glyph.data,
+    };
   }
 }

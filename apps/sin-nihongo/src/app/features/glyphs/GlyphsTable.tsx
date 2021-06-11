@@ -9,7 +9,7 @@ import { Table } from '../../components/Table';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { splitData } from '../../utils/kageData';
 import { BuhinDispatchContext } from '../../providers/Buhin';
-import { GlyphsContext, GlyphsDispatchContext, GlyphsDataContext } from './GlyphsProvider';
+import { GlyphsDataContext } from './GlyphsProvider';
 import { useDispatch, usePage } from './GlyphsProvider';
 
 type Fields = 'glyph' | 'name' | 'data' | 'show' | 'delete';

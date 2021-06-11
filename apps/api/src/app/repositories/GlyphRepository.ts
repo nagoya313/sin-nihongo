@@ -66,7 +66,11 @@ export class GlyphRepository {
     if (!glyph) {
       throw new NotFoundError(`"${name}"のグリフわ見つかりませんでした。`);
     }
-    return glyph;
+    return {
+      id: glyph._id.toString(),
+      name: glyph.name,
+      data: glyph.data,
+    };
   }
 
   private static async findByIdOrFail(id: string) {
@@ -74,6 +78,10 @@ export class GlyphRepository {
     if (!glyph) {
       throw new NotFoundError(`"${id}"のグリフわグリフウィキから見つかりませんでした。`);
     }
-    return glyph;
+    return {
+      id: glyph._id.toString(),
+      name: glyph.name,
+      data: glyph.data,
+    };
   }
 }

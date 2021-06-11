@@ -9,7 +9,8 @@ import { Kanjis } from '../kanjis/Kanjis';
 import { Radicals } from '../radicals/Radicals';
 import { RadicalKanjis } from '../radicals/RadicalKanjis';
 import { GlyphCreate } from '../glyphs/GlyphCreate';
-import { BuhinProvider } from '../.././providers/Buhin';
+import { BuhinProvider } from '../../providers/Buhin';
+import { GlyphsProvider } from '../glyphs/GlyphsProvider';
 
 export const Router: React.FC = () => {
   const { isAuthenticated } = useAuth0();
@@ -41,7 +42,9 @@ export const Router: React.FC = () => {
         path="/glyphs"
         render={() => (
           <BuhinProvider>
-            <Glyphs />
+            <GlyphsProvider>
+              <Glyphs />
+            </GlyphsProvider>
           </BuhinProvider>
         )}
       />

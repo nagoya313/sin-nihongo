@@ -65,6 +65,7 @@ export class GetKanjisParams implements GetKanjisRequest {
 
 export class GetGlyphsParams implements GetGlyphsRequest {
   @IsOptional()
+  @Matches(GLYPHWIKI_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能なクエリです` })
   readonly nameLike?: string;
 }
 

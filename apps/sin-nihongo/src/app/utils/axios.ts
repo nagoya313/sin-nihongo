@@ -3,8 +3,8 @@ import useAxios from 'axios-hooks';
 import { ApiError, ApiMapping } from '@sin-nihongo/api-interfaces';
 
 export const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const errorHandler = (error: any) => {
+
+export const errorHandler = (error: unknown) => {
   if (process.env.NODE_ENV !== 'production') {
     console.error(error);
   }

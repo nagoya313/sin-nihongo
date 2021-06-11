@@ -2,12 +2,10 @@ import { Kage, Polygons, Buhin } from '@kurgm/kage-engine';
 
 export const clearGlyph = (canvas: HTMLCanvasElement) => {
   const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
-  // Non Null Assertion OperatorだとESLintの警告が鬱陶しいので
-  if (ctx === null) {
-    throw new Error('ctx is not CanvasRenderingContext2D');
-  }
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  return ctx;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  ctx!.clearRect(0, 0, canvas.width, canvas.height);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return ctx!;
 };
 
 export const drawGlyph = (buhin: Buhin, canvas: HTMLCanvasElement, key?: string) => {

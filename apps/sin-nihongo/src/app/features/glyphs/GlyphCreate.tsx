@@ -16,8 +16,8 @@ import { IconButton } from '../../components/IconButton';
 import { SubmitButton } from '../../components/FormButton';
 import { GlyphCreateForm } from './GlyphCreateForm';
 import { Glyphwiki } from '../glyphwiki/Glyphwiki';
-import { EdiableProvider } from '../../providers/Editable';
 import { BuhinProvider } from '../../providers/Buhin';
+import { EdiableProvider } from '../../utils/useEditable';
 
 const resolver = classValidatorResolver(PostGlyphParamsBody);
 

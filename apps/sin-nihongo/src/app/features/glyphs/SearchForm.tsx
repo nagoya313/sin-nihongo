@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Form } from '../../components/Form';
 import { TextField } from '../../components/TextField';
+import { useDispatch, useForm } from './GlyphsProvider';
 import { useValidation } from '../../utils/useValidation';
-import { GetGlyphsParams } from '@sin-nihongo/sin-nihongo-params';
 
-type Props = {
-  setSearchWord: (word?: string) => void;
-};
-
-export const SearchForm: React.VFC<Props> = ({ setSearchWord }) => {
-  const [state, setState] = useState({ nameLike: '' });
-  const { isValidating, isValid, errors } = useValidation(GetGlyphsParams, state);
-
+export const SearchForm: React.VFC = () => {
+  console.log('検索フォーム');
+  const dispatch = useDispatch();
+  const form = useForm();
+  const { isValidating, isValid, errors } = useValidation();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ nameLike: event.target.value });
+    dispatch({ type: 'SEARCH_WORD_CHANGE', params: { nameLike: event.target.value || undefined } });
   };
 
   useEffect(() => {
-    !isValidating && isValid && setSearchWord(state.nameLike || undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isValidating, isValid, setSearchWord]);
+    !isValidating && isValid && dispatch({ type: 'SET_SEARCH_WORD', name: form?.nameLike });
+  }, [isValidating, isValid, dispatch, form]);
 
   return (
     <Form autoComplete="off">

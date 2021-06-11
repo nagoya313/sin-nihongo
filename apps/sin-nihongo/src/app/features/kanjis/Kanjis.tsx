@@ -15,7 +15,7 @@ import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
 import { Text } from '../../components/Text';
 import { useFetch } from '../../utils/axios';
-import { EdiableProvider } from '../../providers/Editable';
+import { EdiableProvider } from '../../utils/useEditable';
 import { columns, Fields, KanjiRows } from './KanjiRows';
 import { GlyphEditForm } from './GlyphEditForm';
 

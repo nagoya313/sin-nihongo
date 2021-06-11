@@ -12,12 +12,12 @@ import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { IconButton } from '../../components/IconButton';
 import { ListItemIcon } from '../../components/ListItemIcon';
 import { NewTabLinkListItem } from '../../components/NewTabLinkListItem';
-import { EditableContext } from '../../providers/Editable';
 import { NoticeDispatchContext } from '../../providers/Notice';
 import { errorMessage, errorHandler, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 import { Glyph } from '../../model/Glyph';
 import { useAccessToken } from '../../utils/auth0';
+import { useEditable } from '../../utils/useEditable';
 
 type Props = {
   glyph: Glyph;
@@ -27,7 +27,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ glyph }) => {
   const getAccessToken = useAccessToken();
   const [{ data, error }, execute] = useFetch(apiRoutes.postGlyph);
   const noticeDispatch = useContext(NoticeDispatchContext);
-  const isEditable = useContext(EditableContext);
+  const isEditable = useEditable();
 
   const onBuild = async () => {
     execute({ headers: await getAccessToken(), data: { glyph: glyph } }).catch(errorHandler);

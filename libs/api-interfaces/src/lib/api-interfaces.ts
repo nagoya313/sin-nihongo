@@ -99,6 +99,12 @@ export interface Glyph {
 export type GlyphResponse = WithIncludeGlyphsResponse<Glyph>;
 export type GlyphsResponse = WithIncludeGlyphsResponse<PaginationResponse<Glyph>>;
 
+export interface InfosResponse {
+  infos: {
+    glyphwikiAccessible: boolean;
+  };
+}
+
 export interface RadicalResponse {
   readonly id: number;
   readonly numberOfStrokes: number;
@@ -123,10 +129,10 @@ export const apiRoutes = {
     url: 'glyphwiki',
     method: 'GET',
   } as ApiMapping<GetGlyphwikiRequest, GlyphResponse>,
-  getGlyphwikiHealth: {
-    url: 'glyphwiki/health',
+  getInfos: {
+    url: 'infos',
     method: 'GET',
-  } as ApiMapping<never, GlyphwikiHealthResponse>,
+  } as ApiMapping<never, InfosResponse>,
   getRadicals: {
     url: 'radicals',
     method: 'GET',

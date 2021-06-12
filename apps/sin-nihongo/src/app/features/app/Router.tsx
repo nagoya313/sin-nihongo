@@ -17,6 +17,7 @@ export const Router: React.FC = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
+      {/*
       <Route
         exact
         path="/glyphwiki"
@@ -46,7 +47,7 @@ export const Router: React.FC = () => {
         )}
       />
       <Route exact path="/radicals/:id/kanjis" component={RadicalKanjis} />
-      {isAuthenticated && <Route exact path="/glyphs/new" component={GlyphCreate} />}
+        {isAuthenticated && <Route exact path="/glyphs/new" component={GlyphCreate} />}*/}
       <Route component={NotFound} />
     </Switch>
   );

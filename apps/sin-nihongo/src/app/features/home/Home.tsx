@@ -1,5 +1,5 @@
 import React from 'react';
-import { NewTabLink } from '../../components/NewTabLink';
+import { NewTabLink } from '../../components/Link';
 import { SubSubTitle, SubText, SubTitle, Text, Title } from '../../components/Typography';
 
 export const Home: React.VFC = () => {
@@ -36,7 +36,7 @@ export const Home: React.VFC = () => {
         <NewTabLink url="https://www.npmjs.com/package/@kurgm/kage-engine" text="@kurgm/kage-engine" />
         お使っているので、グリフウィキとわ表示されるグリフに差異が生じる場合があります。
       </Text>
-      <SubText>2681 新日本語漢字形制定委員会</SubText>
+      <SubText align="right">2681 新日本語漢字形制定委員会</SubText>
     </React.Fragment>
   );
 };

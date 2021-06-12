@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import BrushIcon from '@material-ui/icons/Brush';
 import { Buhin } from '@kurgm/kage-engine';
 import { PostGlyphParamsBody } from '@sin-nihongo/sin-nihongo-params';
 import { FlexBox } from '../../components/Box';
@@ -11,6 +10,7 @@ import { FormTextField } from '../../components/FormTextField';
 import { ContainerGrid, ItemGrid } from '../../components/Grid';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
 import { SubmitButton } from '../../components/FormButton';
+import { BrushIcon } from '../../components/Icons';
 import { GlyphCreateForm } from './GlyphCreateForm';
 import { Glyphwiki } from '../glyphwiki/Glyphwiki';
 import { EdiableProvider } from '../../providers/Editable';

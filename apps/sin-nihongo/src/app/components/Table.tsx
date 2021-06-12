@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Table as MuiTable } from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';

@@ -1,17 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import BuildIcon from '@material-ui/icons/Build';
-import ListItemText from '@material-ui/core/ListItemText';
 import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { Box, FlexBox } from '../../components/Box';
 import { IconButton } from '../../components/Button';
 import { ClipBoard } from '../../components/ClipBoard';
 import { Divider } from '../../components/Divider';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
-import { ListItemIcon } from '../../components/ListItemIcon';
+import { BuildIcon } from '../../components/Icons';
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction } from '../../components/List';
 import { useDisplayNotice } from '../../components/Notice';
 import { EditableContext } from '../../providers/Editable';
 import { getAccessTokenOptions } from '../../utils/auth0';
@@ -58,7 +54,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
             target="_blank"
             rel="noopener"
           >
-            <ListItemText>{name}</ListItemText>
+            <ListItemText primary={name} />
             {isEditable && (
               <ListItemSecondaryAction>
                 <ListItemIcon icon={<IconButton onClick={onBuild} icon={<BuildIcon />} />} />
@@ -68,7 +64,7 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
           </ListItem>
           <Divider />
           <ListItem alignItems="flex-start">
-            <ListItemText>{splitData(data)}</ListItemText>
+            <ListItemText primary={splitData(data)} />
             {isEditable && <ListItemIcon icon={<ClipBoard data={data} title="複製了" />} />}
           </ListItem>
         </List>

@@ -28,4 +28,4 @@ export const IconButtonRouteLink: React.FC<Props> = ({ to, icon }) => (
   </MuiIconButton>
 );
 
-export { Button } from '@material-ui/core';
+export { Button };

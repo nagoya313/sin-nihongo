@@ -1,6 +1,6 @@
 import FindInPage from '@material-ui/icons/FindInPage';
 import { RadicalResponse } from '@sin-nihongo/api-interfaces';
-import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
+import { IconButtonRouteLink } from '../../components/Button';
 
 export type Fields = 'id' | 'radical' | 'read' | 'numberOfStrokes' | 'show';
 

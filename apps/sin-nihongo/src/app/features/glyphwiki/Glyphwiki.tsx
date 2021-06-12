@@ -24,7 +24,7 @@ export const Glyphwiki: React.FC = () => {
     formState: { isValidating, isValid, errors },
   } = useForm<GetGlyphwikiParams>({ mode: 'onChange', resolver, defaultValues: { q: '' } });
   const [searchWord, setSearchWord] = useState('');
-  const [{ data }] = useFetch(apiRoutes.getGlyphwikiHealth);
+  const [{ data }] = useFetch(apiRoutes.getInfos);
 
   const onSubmit = (data: GetGlyphwikiParams) => setSearchWord(data.q);
 
@@ -48,7 +48,7 @@ export const Glyphwiki: React.FC = () => {
             register={register}
             errors={errors}
             name="q"
-            disabled={!data?.accessible}
+            disabled={!data?.infos?.glyphwikiAccessible}
             label="漢字・USC・グリフ名"
             type="search"
             helperText="例：一、u4e00、aj1-10186"
@@ -56,7 +56,7 @@ export const Glyphwiki: React.FC = () => {
         </Form>
         <Divider />
         {data &&
-          (data.accessible ? (
+          (data.infos.glyphwikiAccessible ? (
             searchWord && <GlyphwikiSearch name={searchWord} />
           ) : (
             <ErrorTypography>グリフウィキわ現在利用不能です。</ErrorTypography>

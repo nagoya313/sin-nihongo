@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import Button from '@material-ui/core/Button';
+import { Button } from '../../components/Button';
 import { GlyphCanvas, GlyphCanvasProps } from '../../components/GlyphCanvas';
 import { EditableContext } from '../../providers/Editable';
 

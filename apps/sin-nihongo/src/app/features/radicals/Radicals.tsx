@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Divider from '@material-ui/core/Divider';
 import { apiRoutes, GetRadicalsRequest } from '@sin-nihongo/api-interfaces';
 import { GetRadicalsParams } from '@sin-nihongo/sin-nihongo-params';
-import { CardHeader } from '../../components/CardHeader';
+import { FlexBox } from '../../components/Box';
+import { Card, CardContent, CardHeader } from '../../components/Card';
+import { Divider } from '../../components/Divider';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
-import { Text } from '../../components/Text';
+import { Text } from '../../components/Typography';
 import { useFetch } from '../../utils/axios';
 import { columns, Fields, RadicalRows } from './RadicalRows';
 
@@ -59,7 +57,7 @@ export const Radicals: React.FC = () => {
       <CardHeader avatarText="部" title="部首索引" />
       <CardContent>
         <Text>部首名（表音式ひらがなの前方一致）か画数で検索できます。</Text>
-        <Box display="flex">
+        <FlexBox>
           <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <FormTextField
               register={register}
@@ -71,7 +69,7 @@ export const Radicals: React.FC = () => {
             />
             <FormTextField register={register} errors={errors} name="numberOfStrokes" label="画数" type="number" />
           </Form>
-        </Box>
+        </FlexBox>
         <Divider />
         <ResponseNotice loading={loading} error={error} />
         <Table<Fields>

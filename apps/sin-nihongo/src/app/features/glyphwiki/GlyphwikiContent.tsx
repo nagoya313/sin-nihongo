@@ -1,19 +1,19 @@
 import React, { useContext, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import BuildIcon from '@material-ui/icons/Build';
 import ListItemText from '@material-ui/core/ListItemText';
 import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { Box, FlexBox } from '../../components/Box';
+import { IconButton } from '../../components/Button';
 import { ClipBoard } from '../../components/ClipBoard';
+import { Divider } from '../../components/Divider';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
-import { IconButton } from '../../components/IconButton';
 import { ListItemIcon } from '../../components/ListItemIcon';
+import { useDisplayNotice } from '../../components/Notice';
 import { EditableContext } from '../../providers/Editable';
-import { NoticeDispatchContext } from '../../providers/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
 import { errorMessage, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
@@ -26,7 +26,7 @@ type Props = {
 export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [{ data: postData, error }, execute] = useFetch(apiRoutes.postGlyph);
-  const noticeDispatch = useContext(NoticeDispatchContext);
+  const { displayError, displaySuccess } = useDisplayNotice();
   const isEditable = useContext(EditableContext);
 
   const onBuild = async () => {
@@ -38,15 +38,15 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
   };
 
   useEffect(() => {
-    error && noticeDispatch({ type: 'open', message: errorMessage(error), severity: 'error' });
-  }, [error, noticeDispatch]);
+    error && displayError(errorMessage(error));
+  }, [error, displayError]);
 
   useEffect(() => {
-    postData && noticeDispatch({ type: 'open', message: postData.message, severity: 'success' });
-  }, [postData, noticeDispatch]);
+    postData && displaySuccess(postData.message);
+  }, [postData, displaySuccess]);
 
   return (
-    <Box display="flex" p={1}>
+    <FlexBox p={1}>
       <GlyphCanvas name={name} />
       <Box flexGrow={1}>
         <List>
@@ -73,6 +73,6 @@ export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
           </ListItem>
         </List>
       </Box>
-    </Box>
+    </FlexBox>
   );
 };

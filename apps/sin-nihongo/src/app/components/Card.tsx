@@ -24,3 +24,5 @@ export const CardHeader: React.FC<Props> = ({ avatarText, title, action }) => {
     />
   );
 };
+
+export { Card, CardActions, CardContent } from '@material-ui/core';

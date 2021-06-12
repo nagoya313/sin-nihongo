@@ -1,21 +1,21 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { UseFormHandleSubmit } from 'react-hook-form';
 import { useAuth0 } from '@auth0/auth0-react';
 import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { PostGlyphParamsBody } from '@sin-nihongo/sin-nihongo-params';
 import { Form } from '../../components/Form';
+import { useDisplayNotice } from '../../components/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
-import { errorMessage, fetchWithTokenAndData, useFetch } from '../../utils/axios';
-import { NoticeDispatchContext } from '../../providers/Notice';
+import { errorMessage, useFetch } from '../../utils/axios';
 
 type Props = {
-  handleSubmit: UseFormHandleSubmit<any>;
+  handleSubmit: UseFormHandleSubmit<PostGlyphParamsBody>;
 };
 
 export const GlyphCreateForm: React.FC<Props> = ({ handleSubmit, children }) => {
   const { getAccessTokenSilently } = useAuth0();
-  const noticeDispatch = useContext(NoticeDispatchContext);
+  const { displayError, displaySuccess } = useDisplayNotice();
   const history = useHistory();
   const [{ data, error }, execute] = useFetch(apiRoutes.postGlyph);
 
@@ -25,15 +25,15 @@ export const GlyphCreateForm: React.FC<Props> = ({ handleSubmit, children }) => 
   };
 
   useEffect(() => {
-    error && noticeDispatch({ type: 'open', message: errorMessage(error), severity: 'error' });
-  }, [error, noticeDispatch]);
+    error && displayError(errorMessage(error));
+  }, [error, displayError]);
 
   useEffect(() => {
     if (data) {
       history.push('/glyphs');
-      noticeDispatch({ type: 'open', message: data.message, severity: 'success' });
+      displaySuccess(data.message);
     }
-  }, [data, history, noticeDispatch]);
+  }, [data, history, displaySuccess]);
 
   return <Form onSubmit={handleSubmit(onSubmit)}>{children}</Form>;
 };

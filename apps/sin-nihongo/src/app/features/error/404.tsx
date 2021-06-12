@@ -1,8 +1,4 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
+import { SubSubTitle } from '../../components/Typography';
 
-export const NotFound = () => (
-  <Typography variant="h6" gutterBottom>
-    このページわ存在しません。
-  </Typography>
-);
+export const NotFound: React.VFC = () => <SubSubTitle>このページわ存在しません。</SubSubTitle>;

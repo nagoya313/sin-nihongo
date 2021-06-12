@@ -4,7 +4,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { TextButton } from './TextButton';
+import { TextButton } from './Button';
 
 type Props = {
   open: boolean;
@@ -15,22 +15,18 @@ type Props = {
 };
 
 export const Dialog: React.FC<Props> = ({ open, title, onClose, yesText, noText }) => {
-  const noClose = () => {
-    onClose && onClose(false);
-  };
-
-  const yesClose = () => {
-    onClose && onClose(true);
+  const handleClose = (yes: boolean) => () => {
+    onClose && onClose(yes);
   };
 
   return (
-    <MuiDialog open={open} onClose={noClose}>
+    <MuiDialog open={open} onClose={handleClose(false)}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           <DialogActions>
-            <TextButton onClick={noClose} text={noText || 'いーえ'} />
-            <TextButton onClick={yesClose} text={yesText || 'はい'} />
+            <TextButton onClick={handleClose(false)} text={noText || 'いーえ'} />
+            <TextButton onClick={handleClose(true)} text={yesText || 'はい'} />
           </DialogActions>
         </DialogContentText>
       </DialogContent>

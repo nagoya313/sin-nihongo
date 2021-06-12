@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Divider from '@material-ui/core/Divider';
 import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { GetKanjisParams } from '@sin-nihongo/sin-nihongo-params';
-import { CardHeader } from '../../components/CardHeader';
+import { FlexBox } from '../../components/Box';
+import { Card, CardContent, CardHeader } from '../../components/Card';
+import { Divider } from '../../components/Divider';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { RadioGroup } from '../../components/RadioGroup';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
-import { Text } from '../../components/Text';
+import { Text } from '../../components/Typography';
 import { useFetch } from '../../utils/axios';
 import { EdiableProvider } from '../../providers/Editable';
 import { columns, Fields, KanjiRows } from './KanjiRows';
@@ -81,7 +79,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
           JIS第一、第二水準の漢字お検索できます。それ以外の漢字わ新日本語でわサポートしません。
           音読み・訓読みの検索わ表音式ひらがなの前方一致です。
         </Text>
-        <Box display="flex">
+        <FlexBox>
           <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <FormTextField
               errors={errors}
@@ -134,7 +132,7 @@ export const Kanjis: React.FC<Props> = ({ radicalId }) => {
               ]}
             />
           </Form>
-        </Box>
+        </FlexBox>
         <Divider />
         <ResponseNotice loading={loading} error={error} />
         <EdiableProvider>

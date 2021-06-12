@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Divider from '@material-ui/core/Divider';
 import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { GetGlyphwikiParams } from '@sin-nihongo/sin-nihongo-params';
-import { CardHeader } from '../../components/CardHeader';
-import { ErrorTypography } from '../../components/ErrorTypography';
+import { Card, CardContent, CardHeader } from '../../components/Card';
+import { Divider } from '../../components/Divider';
+import { ErrorTypography, Text } from '../../components/Typography';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { NewTabLink } from '../../components/NewTabLink';
-import { Text } from '../../components/Text';
 import { useFetch } from '../../utils/axios';
 import { GlyphwikiSearch } from './GlyphwikiSearch';
 

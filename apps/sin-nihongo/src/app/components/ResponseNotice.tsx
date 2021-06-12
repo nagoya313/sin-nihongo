@@ -2,7 +2,7 @@ import React from 'react';
 import { AxiosError } from 'axios';
 import Typography from '@material-ui/core/Typography';
 import { ApiError } from '@sin-nihongo/api-interfaces';
-import { ErrorTypography } from './ErrorTypography';
+import { ErrorTypography } from './Typography';
 
 type Props = {
   loading?: boolean;

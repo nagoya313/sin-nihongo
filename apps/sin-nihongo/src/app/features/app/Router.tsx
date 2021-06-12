@@ -46,7 +46,7 @@ export const Router: React.FC = () => {
         )}
       />
       <Route exact path="/radicals/:id/kanjis" component={RadicalKanjis} />
-      {isAuthenticated ? <Route exact path="/glyphs/new" component={GlyphCreate} /> : null}
+      {isAuthenticated && <Route exact path="/glyphs/new" component={GlyphCreate} />}
       <Route component={NotFound} />
     </Switch>
   );

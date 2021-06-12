@@ -6,8 +6,8 @@ import CategorIcon from '@material-ui/icons/Category';
 import FormatSizeIcon from '@material-ui/icons/FormatSize';
 import SearchIcon from '@material-ui/icons/Search';
 import TranslateIcon from '@material-ui/icons/Translate';
+import { HeaderDiv } from '../../components/AppBar';
 import { ListItemRouteLink } from '../../components/ListItemRouteLink';
-import { HeaderDiv } from './AppBar';
 
 const MenuDiv = styled.div`
   overflow: auto;

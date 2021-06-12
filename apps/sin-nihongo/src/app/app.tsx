@@ -1,16 +1,15 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, withTheme, ThemeProvider } from '@material-ui/core/styles';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import green from '@material-ui/core/colors/green';
-import { AppBar, HeaderDiv } from './features/app/AppBar';
+import { AppBar, HeaderDiv } from './components/AppBar';
+import { FlexBox } from './components/Box';
+import { Notice, NoticeProvider } from './components/Notice';
 import { SideBar } from './features/app/SideBar';
 import { Router } from './features/app/Router';
-import { Notice } from './features/notice/Notice';
-import { NoticeProvider } from './providers/Notice';
 
 const ContentMain = withTheme(styled.main`
   flex-grow: 1;
@@ -33,17 +32,17 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <NoticeProvider>
-        <Box display="flex">
+        <FlexBox>
           <CssBaseline />
           <BrowserRouter>
-            <AppBar />
+            <AppBar title="新日本語" />
             <SideBar />
             <ContentMain>
               <HeaderDiv />
               <Router />
             </ContentMain>
           </BrowserRouter>
-        </Box>
+        </FlexBox>
         <Notice />
       </NoticeProvider>
     </ThemeProvider>

@@ -1,14 +1,12 @@
 import React, { useContext, useEffect } from 'react';
-import { apiRoutes, GlyphResponse } from '@sin-nihongo/api-interfaces';
+import { apiRoutes } from '@sin-nihongo/api-interfaces';
 import { ResponseNotice } from '../../components/ResponseNotice';
-import { SubText } from '../../components/SubText';
+import { SubText } from '../../components/Typography';
 import { BuhinDispatchContext } from '../../providers/Buhin';
 import { useFetch } from '../../utils/axios';
 import { GlyphwikiContent } from './GlyphwikiContent';
 
-type Props = {
-  name: string;
-};
+type Props = { name: string };
 
 export const GlyphwikiSearch: React.FC<Props> = ({ name }) => {
   const [{ data, loading, error }] = useFetch(apiRoutes.getGlyphwiki, { q: name });

@@ -1,12 +1,8 @@
 import React from 'react';
 import { NewTabLink } from '../../components/NewTabLink';
-import { SubSubTitle } from '../../components/SubSubTitle';
-import { SubText } from '../../components/SubText';
-import { SubTitle } from '../../components/SubTitle';
-import { Text } from '../../components/Text';
-import { Title } from '../../components/Title';
+import { SubSubTitle, SubText, SubTitle, Text, Title } from '../../components/Typography';
 
-export const Home = () => {
+export const Home: React.VFC = () => {
   return (
     <React.Fragment>
       <Title>新日本語の世界えよーこそ！</Title>

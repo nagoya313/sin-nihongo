@@ -2,26 +2,23 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { classValidatorResolver } from '@hookform/resolvers/class-validator';
 import { useAuth0 } from '@auth0/auth0-react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Divider from '@material-ui/core/Divider';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { apiRoutes, GetGlyphsRequest } from '@sin-nihongo/api-interfaces';
 import { GetGlyphsParams } from '@sin-nihongo/sin-nihongo-params';
+import { IconButton, IconButtonRouteLink } from '../../components/Button';
 import { BuhinDispatchContext } from '../../providers/Buhin';
-import { CardHeader } from '../../components/CardHeader';
+import { Card, CardContent, CardHeader } from '../../components/Card';
 import { Dialog } from '../../components/Dialog';
+import { Divider } from '../../components/Divider';
 import { Form } from '../../components/Form';
 import { FormTextField } from '../../components/FormTextField';
 import { GlyphCanvas } from '../../components/GlyphCanvas';
-import { IconButton } from '../../components/IconButton';
-import { IconButtonRouteLink } from '../../components/IconButtonRouteLink';
 import { ResponseNotice } from '../../components/ResponseNotice';
 import { Table } from '../../components/Table';
-import { Text } from '../../components/Text';
-import { NoticeDispatchContext } from '../../providers/Notice';
+import { Text } from '../../components/Typography';
+import { useDisplayNotice } from '../../components/Notice';
 import { getAccessTokenOptions } from '../../utils/auth0';
 import { fetchWithToken, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
@@ -45,7 +42,7 @@ export const Glyphs = () => {
     formState: { isValidating, isValid, errors },
   } = useForm<GetGlyphsParams>({ mode: 'onChange', resolver, defaultValues: { nameLike: '' } });
   const [open, setOpen] = React.useState(false);
-  const noticeDispatch = useContext(NoticeDispatchContext);
+  const { displaySuccess, displayError } = useDisplayNotice();
   const [deleteID, setDeleteId] = React.useState('');
   const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [searchParams, setSearchParams] = useState<GetGlyphsRequest>();
@@ -74,11 +71,11 @@ export const Glyphs = () => {
     getData && buhinDispatch({ type: 'setGlyphs', glyphs: getData });
   }, [getData, buhinDispatch]);
   useEffect(() => {
-    deleteData && noticeDispatch({ type: 'open', message: deleteData.message, severity: 'success' });
-  }, [deleteData, noticeDispatch]);
+    deleteData && displaySuccess(deleteData.message);
+  }, [deleteData, displaySuccess]);
   useEffect(() => {
-    deleteError && noticeDispatch({ type: 'open', message: deleteError.message, severity: 'error' });
-  }, [deleteError, noticeDispatch]);
+    deleteError && displayError(deleteError.message);
+  }, [deleteError, displayError]);
 
   const onDelete = (id: string) => {
     setDeleteId(id);

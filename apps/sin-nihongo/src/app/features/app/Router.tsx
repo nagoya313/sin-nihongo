@@ -17,15 +17,7 @@ export const Router: React.FC = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route
-        exact
-        path="/glyphwiki"
-        render={() => (
-          <BuhinProvider>
-            <Glyphwiki />
-          </BuhinProvider>
-        )}
-      />
+      <Route exact path="/glyphwiki" component={Glyphwiki} />
       {/*
       <Route exact path="/radicals" component={Radicals} />
       <Route

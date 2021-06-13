@@ -6,7 +6,7 @@ import { ParamsPayload } from './useSearchForm';
 
 const toErrorMessage = (error: ValidationError) => Object.values(error.constraints || {});
 
-type ValidationErrorMap<T> = { [key in keyof T]?: string[] };
+export type ValidationErrorMap<T> = { [key in keyof T]?: string[] };
 
 const makeErrorMap = <T>(errors: ValidationError[]) =>
   errors.reduce((acc, value): ValidationErrorMap<T> => {
@@ -21,10 +21,11 @@ type UseValidatorResultType<T> = [UseValidatorStateType<T>, UseValidatorAsyncFun
 
 export const useValidator = <T extends ParamsPayload<T>>(schema: ClassConstructor<T>) => {
   const [valid, fetch] = useAsyncFn(
-    async (s: ParamsPayload<T>) => {
-      const errors = await validate(plainToClass<T, ParamsPayload<T>>(schema, s));
+    async (params: ParamsPayload<T>) => {
+      const errors = await validate(plainToClass<T, ParamsPayload<T>>(schema, params));
       const errorMap = makeErrorMap<T>(errors);
-      return { errors: errorMap, isValid: errors.length === 0 };
+      const isValid = errors.length === 0;
+      return { errors: errorMap, isValid };
     },
     [schema]
   );

@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import {
   createClient,
   RequestInterceptor,
   ResponseInterceptor,
   useQuery,
+  useMutation,
   useSuspenseQuery,
 } from 'react-fetching-library';
 import { ErrorResponse, routePrefix } from '@sin-nihongo/api-interfaces';
@@ -29,7 +31,8 @@ export const apiClient = createClient({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isErrorResponse = (response: any): response is ErrorResponse => typeof response.errorResponse !== 'undefined';
+export const isErrorResponse = (response: any): response is ErrorResponse =>
+  typeof response.errorResponse !== 'undefined';
 
 export const useApiQuery = <R>(action: ApiAction<R>): { payload?: R; error?: ErrorResponse } => {
   const { payload } = useQuery(action);
@@ -45,12 +48,27 @@ export const useApiQuery = <R>(action: ApiAction<R>): { payload?: R; error?: Err
   }
 };
 
-export const useSuspenseApiQuery = <R>(action: ApiAction<R>): { payload?: R; error?: ErrorResponse } => {
-  const { payload } = useSuspenseQuery(action);
+export const useSuspenseApiQuery = <R, P>(
+  action: ApiAction<R> | ((p: P) => ApiAction<R>),
+  params?: P
+): { payload?: R; error?: ErrorResponse } => {
+  const memoAction = useMemo(() => {
+    if (typeof action === 'function') {
+      return action(params!);
+    } else {
+      return action;
+    }
+  }, [action, params]);
+  const { payload } = useSuspenseQuery(memoAction);
 
   if (isErrorResponse(payload)) {
     return { payload: undefined, error: payload };
   } else {
     return { payload, error: undefined };
   }
+};
+
+export const useApiMutation = (action: Parameters<typeof useMutation>[0]) => {
+  const { mutate } = useMutation(action);
+  return mutate;
 };

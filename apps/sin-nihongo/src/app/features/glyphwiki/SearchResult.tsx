@@ -1,37 +1,36 @@
-import React, { useContext, useEffect, Suspense } from 'react';
-import { useSuspenseQuery } from 'react-fetching-library';
-import { GetGlyphwikiRequest, GlyphResponse } from '@sin-nihongo/api-interfaces';
-import { ResponseNotice } from '../../components/ResponseNotice';
+import React, { useContext, useEffect } from 'react';
+import { GetGlyphwikiRequest } from '@sin-nihongo/api-interfaces';
 import { ErrorTypography, SubText } from '../../components/Typography';
 import { BuhinDispatchContext } from '../../providers/Buhin';
-import { useFetch } from '../../utils/axios';
-import { GlyphwikiContent } from './GlyphwikiContent';
+import { Content } from './Content';
 import { useSuspenseApiQuery } from '../../apiClient';
 import { fetchGlyphwiki } from '../../routes';
 
 type Props = { params: GetGlyphwikiRequest };
 
 export const SearchResult: React.FC<Props> = ({ params }) => {
-  const { payload, error } = useSuspenseApiQuery(fetchGlyphwiki(params));
+  const { payload, error } = useSuspenseApiQuery(fetchGlyphwiki, params);
   const buhinDispatch = useContext(BuhinDispatchContext);
 
-  /*useEffect(() => {
-    data && buhinDispatch({ type: 'setGlyph', glyph: data });
-  }, [data, buhinDispatch]);*/
+  useEffect(() => {
+    payload && buhinDispatch({ type: 'setGlyph', glyph: payload });
+  }, [payload, buhinDispatch]);
+
+  if (payload) {
+    return (
+      <>
+        <Content glyph={payload.data} />
+        <SubText>参照グリフ</SubText>
+        {payload?.includeGlyphs?.map((glyph) => (
+          <Content key={glyph.name} glyph={glyph} />
+        ))}
+      </>
+    );
+  }
 
   if (error) {
     return <ErrorTypography>{error.message}</ErrorTypography>;
   }
 
-  console.log(error, payload);
-
-  return (
-    <React.Fragment>
-      <GlyphwikiContent glyph={payload?.data} />
-      <SubText>参照グリフ</SubText>
-      {payload?.includeGlyphs?.map((glyph) => (
-        <GlyphwikiContent key={glyph.name} glyph={glyph} />
-      ))}
-    </React.Fragment>
-  );
+  throw Error;
 };

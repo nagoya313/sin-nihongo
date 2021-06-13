@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import { withTheme } from '@material-ui/core/styles';
-import { BuhinContext } from '../providers/Buhin';
+import { useBuhin } from '../components/Buhin';
 import { drawGlyph } from '../utils/canvas';
 
 const CanvasBox = withTheme(styled(Box)`
@@ -22,7 +22,7 @@ export type GlyphCanvasProps = {
 };
 
 export const GlyphCanvas: React.FC<GlyphCanvasProps> = ({ name }) => {
-  const buhin = useContext(BuhinContext);
+  const buhin = useBuhin();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

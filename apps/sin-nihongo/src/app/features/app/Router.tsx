@@ -4,9 +4,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Home } from '../home/Home';
 import { NotFound } from '../error/404';
 import { Glyphs } from '../glyphs/Glyphs';
-import { Glyphwiki } from '../glyphwiki/Glyphwiki';
+import { Index as Glyphwiki } from '../glyphwiki/Index';
 import { Kanjis } from '../kanjis/Kanjis';
-import { Radicals } from '../radicals/Radicals';
+import { Index as Radicals } from '../radicals/Index';
 import { RadicalKanjis } from '../radicals/RadicalKanjis';
 import { GlyphCreate } from '../glyphs/GlyphCreate';
 import { BuhinProvider } from '../../components/Buhin';
@@ -18,8 +18,8 @@ export const Router: React.FC = () => {
     <Switch>
       <Route exact path="/" component={Home} />
       <Route exact path="/glyphwiki" component={Glyphwiki} />
-      {/*
       <Route exact path="/radicals" component={Radicals} />
+      {/*
       <Route
         exact
         path="/kanjis"

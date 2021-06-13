@@ -1,12 +1,16 @@
 import { Action } from 'react-fetching-library';
-import * as qs from 'qs';
+import qs from 'qs';
 import {
   ErrorResponse,
   GetGlyphwikiRequest,
+  GetRadicalsRequest,
   GlyphResponse,
   InfosResponse,
-  PostGlyphRequest,
   MessageResponse,
+  PaginationRequest,
+  PaginationResponse,
+  PostGlyphRequest,
+  RadicalResponse,
 } from '@sin-nihongo/api-interfaces';
 
 const accessTokenHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
@@ -18,6 +22,12 @@ export const fetchInfos: ApiAction<InfosResponse> = { method: 'GET', endpoint: '
 export const fetchGlyphwiki = (params: GetGlyphwikiRequest): ApiAction<GlyphResponse> => ({
   method: 'GET',
   endpoint: `/glyphwiki?${qs.stringify(params)}`,
+});
+export const fetchRadicals = (
+  params?: GetRadicalsRequest & PaginationRequest
+): ApiAction<PaginationResponse<RadicalResponse>> => ({
+  method: 'GET',
+  endpoint: `/radicals?${qs.stringify(params)}`,
 });
 export const fetchAddGlyph = (formValues: { body: PostGlyphRequest; token: string }): ApiAction<MessageResponse> => ({
   method: 'POST',

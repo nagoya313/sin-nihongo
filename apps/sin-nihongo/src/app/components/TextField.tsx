@@ -14,17 +14,40 @@ export const SearchTextField: React.VFC<TextFieldProps> = (props) => <StyledText
 
 type Props<P> = { name: keyof P; control: SearchFormControl<P> } & Omit<TextFieldProps, 'name'>;
 
-export function SearchFormTextField<T extends ParamsPayload<T>>({ control, name, ...others }: Props<T>) {
+export function SearchFormTextField<T extends ParamsPayload<T>>({ control, name, helperText, ...others }: Props<T>) {
   const error = typeof control.errors !== 'undefined' && control.errors[name];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    control.setValue(name, e.target.value as T[keyof T]);
+    // IsOptionalが空文字を受付けないため
+    control.setValue(name, (e.target.value || undefined) as T[keyof T]);
   };
 
   return (
     <SearchTextField
       {...others}
-      helperText={error ? error : '例：一、u4e00、aj1-10186'}
+      type="search"
+      helperText={error ? error : helperText}
+      error={!!error}
+      onChange={handleChange}
+    />
+  );
+}
+
+export function SearchFormNumberField<T extends ParamsPayload<T>>({ control, name, helperText, ...others }: Props<T>) {
+  const error = typeof control.errors !== 'undefined' && control.errors[name];
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    console.log(value);
+    // IsOptionalがNaNを受付けないため
+    control.setValue(name, (isNaN(value) ? undefined : value) as T[keyof T]);
+  };
+
+  return (
+    <MuiTextField
+      {...others}
+      type="number"
+      helperText={error ? error : helperText}
       error={!!error}
       onChange={handleChange}
     />

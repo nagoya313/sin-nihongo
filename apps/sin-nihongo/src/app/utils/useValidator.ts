@@ -6,12 +6,12 @@ import { ParamsPayload } from './useSearchForm';
 
 const toErrorMessage = (error: ValidationError) => Object.values(error.constraints || {});
 
-export type ValidationErrorMap<T> = { [key in keyof T]?: string[] };
+export type ValidationErrorMap<T> = { [key in keyof T]?: string };
 
 const makeErrorMap = <T>(errors: ValidationError[]) =>
   errors.reduce((acc, value): ValidationErrorMap<T> => {
     const tmp = { ...acc };
-    tmp[value.property as keyof T] = toErrorMessage(value);
+    tmp[value.property as keyof T] = toErrorMessage(value)[0];
     return tmp;
   }, {} as ValidationErrorMap<T>);
 

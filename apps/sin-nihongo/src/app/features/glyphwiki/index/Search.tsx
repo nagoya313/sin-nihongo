@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react';
 import { GetGlyphwikiParams } from '@sin-nihongo/sin-nihongo-params';
-import { Divider } from '../../components/Divider';
-import { SearchForm } from '../../components/Form';
-import { SearchFormTextField } from '../../components/TextField';
-import { useSearchForm } from '../../utils/useSearchForm';
+import { Divider } from '../../../components/Divider';
+import { SearchForm } from '../../../components/Form';
+import { SearchFormTextField } from '../../../components/TextField';
+import { Text } from '../../../components/Typography';
+import { useSearchForm } from '../../../utils/useSearchForm';
 import { SearchResult } from './SearchResult';
 
 export const Search: React.VFC = () => {
@@ -21,7 +22,7 @@ export const Search: React.VFC = () => {
       </SearchForm>
       <Divider />
       {control.isValid && params && (
-        <Suspense fallback={<span>検索中</span>}>
+        <Suspense fallback={<Text>検索中</Text>}>
           <SearchResult params={params} />
         </Suspense>
       )}

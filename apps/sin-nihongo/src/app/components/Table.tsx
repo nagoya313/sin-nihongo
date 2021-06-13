@@ -7,6 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { withTheme } from '@material-ui/core/styles';
 import { Pagination } from './Pagination';
+import { ParamsPayload } from '../utils/useSearchForm';
 
 const HeaderTableCell = withTheme(styled(TableCell)`
   background-color: ${(props) => props.theme.palette.common.black};
@@ -19,17 +20,18 @@ const BodyTableRow = withTheme(styled(TableRow)`
   }
 `);
 
-type Props<Fields extends string> = {
-  columns: { field: Fields; headerName: string }[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  rows?: { [key in Fields | 'key']: any }[];
-  pageNumber: number;
+type ColumnsType<F> = { field: keyof F & string; headerName: string };
+type RowsType<R extends ParamsPayload<R>> = ParamsPayload<R> & { key: string };
+
+type Props<R> = {
+  columns: ColumnsType<ParamsPayload<R>>[];
+  rows?: RowsType<R>[];
+  pageNumber?: number;
   totalPages?: number;
-  onPageChange: (_: number) => void;
+  onPageChange?: (_: number) => void;
 };
 
-export function Table<Fields extends string>(props: Props<Fields>) {
-  const { columns, rows, pageNumber, totalPages, onPageChange } = props;
+export function Table<R extends ParamsPayload<R>>({ columns, rows, pageNumber, totalPages, onPageChange }: Props<R>) {
   return (
     <TableContainer>
       <Pagination page={pageNumber} totalPages={totalPages} onPageChange={onPageChange} />

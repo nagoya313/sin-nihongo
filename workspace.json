@@ -40,7 +40,7 @@
             "assets": ["apps/sin-nihongo/src/favicon.ico", "apps/sin-nihongo/src/assets"],
             "styles": [],
             "scripts": [],
-            "webpackConfig": "@nrwl/react/plugins/webpack"
+            "webpackConfig": "apps/sin-nihongo/webpackConfig"
           },
           "configurations": {
             "production": {

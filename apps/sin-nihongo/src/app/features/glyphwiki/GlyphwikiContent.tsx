@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { apiRoutes } from '@sin-nihongo/api-interfaces';
+import { apiRoutes, GlyphResponse } from '@sin-nihongo/api-interfaces';
 import { Box, FlexBox } from '../../components/Box';
 import { IconButton } from '../../components/Button';
 import { ClipBoard } from '../../components/ClipBoard';
@@ -15,11 +15,10 @@ import { errorMessage, useFetch } from '../../utils/axios';
 import { splitData } from '../../utils/kageData';
 
 type Props = {
-  name: string;
-  data: string;
+  glyph: GlyphResponse;
 };
 
-export const GlyphwikiContent: React.FC<Props> = ({ name, data }) => {
+export const GlyphwikiContent: React.FC<Props> = ({ glyph }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [{ data: postData, error }, execute] = useFetch(apiRoutes.postGlyph);
   const { displayError, displaySuccess } = useDisplayNotice();

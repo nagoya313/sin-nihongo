@@ -10,7 +10,7 @@ export interface ValidationError {
   readonly constraints: Record<string, string>;
 }
 
-export interface ApiError {
+export interface ErrorResponse {
   readonly name: string;
   readonly message: string;
   readonly errors?: ValidationError;

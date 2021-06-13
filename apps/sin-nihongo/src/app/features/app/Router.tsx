@@ -17,7 +17,6 @@ export const Router: React.FC = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      {/*
       <Route
         exact
         path="/glyphwiki"
@@ -27,6 +26,7 @@ export const Router: React.FC = () => {
           </BuhinProvider>
         )}
       />
+      {/*
       <Route exact path="/radicals" component={Radicals} />
       <Route
         exact

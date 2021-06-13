@@ -1,33 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { classValidatorResolver } from '@hookform/resolvers/class-validator';
-import { apiRoutes } from '@sin-nihongo/api-interfaces';
-import { GetGlyphwikiParams } from '@sin-nihongo/sin-nihongo-params';
+import React from 'react';
 import { Card, CardContent, CardHeader } from '../../components/Card';
-import { Divider } from '../../components/Divider';
-import { ErrorTypography, Text } from '../../components/Typography';
-import { Form } from '../../components/Form';
-import { FormTextField } from '../../components/FormTextField';
-import { NewTabLink } from '../../components/NewTabLink';
-import { useFetch } from '../../utils/axios';
-import { GlyphwikiSearch } from './GlyphwikiSearch';
-
-const resolver = classValidatorResolver(GetGlyphwikiParams);
+import { Text } from '../../components/Typography';
+import { NewTabLink } from '../../components/Link';
+import { Search } from './Search';
 
 export const Glyphwiki: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { isValidating, isValid, errors },
-  } = useForm<GetGlyphwikiParams>({ mode: 'onChange', resolver, defaultValues: { q: '' } });
-  const [searchWord, setSearchWord] = useState('');
-  const [{ data }] = useFetch(apiRoutes.getInfos);
-
-  const onSubmit = (data: GetGlyphwikiParams) => setSearchWord(data.q);
-
-  useEffect(() => {
-    !isValidating && isValid && handleSubmit(onSubmit)();
-  }, [isValidating, isValid]);
+  console.log('グリフウィキ');
 
   return (
     <Card>
@@ -40,24 +18,7 @@ export const Glyphwiki: React.FC = () => {
           />
           からグリフお検索します。漢字一文字或いわグリフウィキのグリフ名から検索できます。
         </Text>
-        <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-          <FormTextField
-            register={register}
-            errors={errors}
-            name="q"
-            disabled={!data?.infos?.glyphwikiAccessible}
-            label="漢字・USC・グリフ名"
-            type="search"
-            helperText="例：一、u4e00、aj1-10186"
-          />
-        </Form>
-        <Divider />
-        {data &&
-          (data.infos.glyphwikiAccessible ? (
-            searchWord && <GlyphwikiSearch name={searchWord} />
-          ) : (
-            <ErrorTypography>グリフウィキわ現在利用不能です。</ErrorTypography>
-          ))}
+        <Search />
       </CardContent>
     </Card>
   );

@@ -66,7 +66,7 @@ export class GlyphRepository {
     if (!glyph) {
       throw new NotFoundError(`"${name}"のグリフわ見つかりませんでした。`);
     }
-    return this.toFindableGlyphData(glyph);
+    return toFindableGlyphData(glyph);
   }
 
   private static async findByIdOrFail(id: string) {
@@ -74,14 +74,12 @@ export class GlyphRepository {
     if (!glyph) {
       throw new NotFoundError(`"${id}"のグリフわ見つかりませんでした。`);
     }
-    return this.toFindableGlyphData(glyph);
-  }
-
-  private static toFindableGlyphData(glyph: Glyph) {
-    return {
-      id: glyph._id.toString(),
-      name: glyph.name,
-      data: glyph.data,
-    };
+    return toFindableGlyphData(glyph);
   }
 }
+
+const toFindableGlyphData = (glyph: Glyph) => ({
+  id: glyph._id.toString(),
+  name: glyph.name,
+  data: glyph.data,
+});

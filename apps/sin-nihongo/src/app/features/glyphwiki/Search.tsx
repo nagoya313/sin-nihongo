@@ -7,7 +7,6 @@ import { useSearchForm } from '../../utils/useSearchForm';
 import { SearchResult } from './SearchResult';
 
 export const Search: React.VFC = () => {
-  console.log('グリフウィキ検索');
   const { params, control } = useSearchForm(GetGlyphwikiParams);
 
   return (

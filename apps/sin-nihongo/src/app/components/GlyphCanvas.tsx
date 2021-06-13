@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import { withTheme } from '@material-ui/core/styles';
+import { Buhin } from '@kurgm/kage-engine';
 import { useBuhin } from '../components/Buhin';
 import { drawGlyph } from '../utils/canvas';
 
@@ -19,14 +20,14 @@ const Canvas = styled.canvas`
 
 export type GlyphCanvasProps = {
   name?: string;
+  buhin?: Buhin;
 };
 
-export const GlyphCanvas: React.FC<GlyphCanvasProps> = ({ name }) => {
-  const buhin = useBuhin();
+export const GlyphCanvas: React.FC<GlyphCanvasProps> = ({ name, buhin }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRef.current && buhin) {
       drawGlyph(buhin, canvasRef.current, name);
     }
   }, [buhin, name]);

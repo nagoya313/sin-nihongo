@@ -1,6 +1,7 @@
 import React from 'react';
 import { useMutation } from 'react-fetching-library';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Buhin } from '@kurgm/kage-engine';
 import { Glyph } from '@sin-nihongo/api-interfaces';
 import { Box, FlexBox } from '../../components/Box';
 import { IconButton } from '../../components/Button';
@@ -23,9 +24,9 @@ import { splitData } from '../../utils/kageData';
 import { fetchAddGlyph } from '../../routes';
 import { isErrorResponse } from '../../apiClient';
 
-type Props = { glyph: Glyph };
+type Props = { glyph: Glyph; buhin: Buhin };
 
-export const Content: React.FC<Props> = ({ glyph }) => {
+export const Content: React.VFC<Props> = ({ glyph, buhin }) => {
   const { name, data } = glyph;
   const { mutate } = useMutation(fetchAddGlyph);
   const { getAccessTokenSilently } = useAuth0();
@@ -46,7 +47,7 @@ export const Content: React.FC<Props> = ({ glyph }) => {
 
   return (
     <FlexBox p={1}>
-      <GlyphCanvas name={name} />
+      <GlyphCanvas name={name} buhin={buhin} />
       <Box flexGrow={1}>
         <List>
           <ListItemLink href={`https://glyphwiki.org/wiki/${name}`}>

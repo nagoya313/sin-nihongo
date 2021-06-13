@@ -4,7 +4,7 @@ import { Text } from '../../components/Typography';
 import { NewTabLink } from '../../components/Link';
 import { Search } from './Search';
 
-export const Glyphwiki: React.FC = () => {
+export const Glyphwiki: React.VFC = () => {
   console.log('グリフウィキ');
 
   return (

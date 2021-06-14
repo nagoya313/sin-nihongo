@@ -1,7 +1,9 @@
+import { Field, ID, Int, InterfaceType } from 'type-graphql';
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { IsInt, Min } from 'class-validator';
 import { TimeStampEntity } from './TimeStampEntity';
 
+@InterfaceType('KanjiEntity', { implements: TimeStampEntity })
 @Entity()
 export class Kanji extends TimeStampEntity {
   constructor(
@@ -25,26 +27,33 @@ export class Kanji extends TimeStampEntity {
     this.onyomi = [];
   }
 
+  @Field(() => ID, { description: 'ID' })
   @PrimaryGeneratedColumn()
   @IsInt()
   @Min(1)
   readonly id?: number;
 
+  @Field(() => Int, { description: 'UCS' })
   @Index({ unique: true })
   @Column()
   readonly ucs: number;
 
+  @Field({ description: '常用漢字か否か' })
+  @Field()
   @Column()
-  readonly regular: boolean;
+  regular: boolean;
 
+  @Field({ description: '人名用漢字か否か' })
   @Column()
-  readonly forName: boolean;
+  forName: boolean;
 
+  @Field(() => Int, { description: '画数' })
   @Column()
   @IsInt()
   @Min(1)
   readonly numberOfStrokes: number;
 
+  @Field(() => Int, { description: '部首内画数' })
   @Column()
   @IsInt()
   readonly numberOfStrokesInRadical: number;
@@ -52,12 +61,15 @@ export class Kanji extends TimeStampEntity {
   @Column()
   readonly radicalId: number;
 
+  @Field(() => Int, { description: 'JIS水準' })
   @Column({ nullable: true })
-  readonly jisLevel?: number;
+  jisLevel: number;
 
+  @Field(() => [String], { description: '訓読み' })
   @Column('varchar', { array: true, default: {} })
   onyomi: string[];
 
+  @Field(() => [String], { description: '音読み' })
   @Column('varchar', { array: true, default: {} })
   kunyomi: string[];
 

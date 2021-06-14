@@ -18,8 +18,7 @@
     "baseUrl": ".",
     "paths": {
       "mojijs": ["types/mojijs"],
-      "@sin-nihongo/api-interfaces": ["libs/api-interfaces/src/index.ts"],
-      "@sin-nihongo/sin-nihongo-params": ["libs/sin-nihongo-params/src/index.ts"]
+      "@sin-nihongo/api-interfaces": ["libs/api-interfaces/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

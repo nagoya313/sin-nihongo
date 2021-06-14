@@ -11,5 +11,9 @@ module.exports = (config, _context) => {
         Buffer: ['buffer', 'Buffer'],
       }),
     ],
+    node: {
+      ...config.node,
+      fs: 'empty',
+    },
   };
 };

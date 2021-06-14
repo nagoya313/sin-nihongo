@@ -10,13 +10,20 @@ export const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
 
 (async () => {
   try {
-    await createConnection(dbConfig());
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await mongoose.connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true });
+    await createConnection(dbConfig()).catch((error) => {
+      console.error(error);
+    });
+
+    await mongoose
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      .connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true })
+      .catch((error) => {
+        console.error(error);
+      });
 
     initPaspport();
 
-    const app = initExpress();
+    const app = await initExpress();
 
     const port = process.env.PORT || 3333;
     const server = app.listen(port, () => {

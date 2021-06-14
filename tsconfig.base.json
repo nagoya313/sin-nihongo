@@ -18,7 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "mojijs": ["types/mojijs"],
-      "@sin-nihongo/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@sin-nihongo/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@sin-nihongo/graphql-interfaces": ["libs/graphql-interfaces/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

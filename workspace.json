@@ -185,6 +185,27 @@
           }
         }
       }
+    },
+    "graphql-interfaces": {
+      "root": "libs/graphql-interfaces",
+      "sourceRoot": "libs/graphql-interfaces/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/graphql-interfaces/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/graphql-interfaces"],
+          "options": {
+            "jestConfig": "libs/graphql-interfaces/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

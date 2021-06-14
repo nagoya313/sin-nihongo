@@ -1,9 +1,9 @@
 import { IsInt, Min } from 'class-validator';
-import { Field, ID, Int, InterfaceType } from 'type-graphql';
+import { Field, ID, Int, ObjectType } from 'type-graphql';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { TimeStampEntity } from './TimeStampEntity';
 
-@InterfaceType('RadicalEntity', { implements: TimeStampEntity })
+@ObjectType({ implements: TimeStampEntity, description: '部首' })
 @Entity()
 export class Radical extends TimeStampEntity {
   constructor(id: number, numberOfStrokes: number, names: string[]) {
@@ -28,4 +28,9 @@ export class Radical extends TimeStampEntity {
   @Field(() => [String], { description: 'なまえ' })
   @Column('varchar', { array: true })
   names: string[];
+
+  @Field(() => String, { description: '部首' })
+  get character() {
+    return String.fromCodePoint(this.id + 0x2eff);
+  }
 }

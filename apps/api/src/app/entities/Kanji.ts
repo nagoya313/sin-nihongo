@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { BooleanFieldColumn, IntFieldColumn, StringArrayFieldColumn } from '@sin-nihongo/graphql-interfaces';
 import { Radical } from './Radical';
 import { TimeStamp } from './TimeStamp';
@@ -46,7 +46,10 @@ export class Kanji extends TimeStamp {
   @IntFieldColumn({ name: '部首内画数' })
   readonly numberOfStrokesInRadical: number;
 
-  @Column()
+  @ManyToOne(() => Radical, (radical) => radical.kanjis)
+  readonly radical!: Radical;
+
+  @RelationId((kanji: Kanji) => kanji.radical)
   readonly radicalId: number;
 
   @IntFieldColumn({ name: 'JIS水準', optional: true, validations: { min: 1, max: 4 } })

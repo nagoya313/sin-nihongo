@@ -18,7 +18,7 @@ export const StringProperty = ({
     Property({
       optional,
       field: field && { ...field, description },
-      column: column,
+      column: column && { ...column, options: { ...column.options, length: validations?.max } },
       validations: validations,
     }),
   ];

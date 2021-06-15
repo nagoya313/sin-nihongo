@@ -4,7 +4,7 @@ import * as pluralize from 'pluralize';
 
 export default class TypeOrmNamingStrategy extends DefaultNamingStrategy {
   tableName(targetName: string, userSpecifiedName: string | undefined) {
-    return userSpecifiedName || pluralize(snakeCase(targetName));
+    return userSpecifiedName || pluralize.plural(snakeCase(targetName));
   }
 
   columnName(propertyName: string, customName: string, embeddedPrefixes: string[]) {

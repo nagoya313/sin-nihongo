@@ -31,7 +31,7 @@
     "db:migrate:run": "yarn typeorm migration:run",
     "db:drop": "yarn typeorm schema:drop",
     "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
-    "seed:run": "ts-node --transpile-only -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm-seeding/dist/cli.js seed"
+    "seed:run": "ts-node --transpile-only -r tsconfig-paths/register -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "private": true,
   "dependencies": {

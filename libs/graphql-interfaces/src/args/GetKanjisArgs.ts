@@ -5,9 +5,10 @@ import {
   KANJI_UNICODE_PARAMS_MATCHER,
 } from '../lib/const';
 import { BooleanOptionalField, IntOptionalField, StringOptionalField } from '../lib/decorator';
+import { TypeOrmQueries, WhereQuery } from './TypeOrmQueries';
 
 @ArgsType()
-export class GetKanjisArgs {
+export class GetKanjisArgs extends TypeOrmQueries<GetKanjisArgs> {
   @StringOptionalField({ name: '漢字', validations: { match: KANJI_QUERY_PARAMS_MATCHER } })
   readonly character?: string;
 
@@ -42,5 +43,6 @@ export class GetKanjisArgs {
   readonly forName?: boolean;
 
   @IntOptionalField({ name: '部首番号', validations: { min: 1 } })
-  readonly radicalId?: number;
+  @WhereQuery()
+  radicalId?: number;
 }

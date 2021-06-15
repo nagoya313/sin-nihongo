@@ -1,11 +1,6 @@
-import { Field, ObjectType } from 'type-graphql';
-import { Kanji as KanjiEntity } from '../entities/Kanji';
-import { TimeStampEntity } from '../entities/TimeStampEntity';
+import { ObjectType } from 'type-graphql';
+import { Kanji } from '../entities/Kanji';
+import { Connection } from './Connection';
 
-@ObjectType({ implements: [KanjiEntity, TimeStampEntity], description: '漢字' })
-export class Kanji extends KanjiEntity {
-  @Field(() => String, { description: '漢字' })
-  get character() {
-    return String.fromCodePoint(this.ucs);
-  }
-}
+@ObjectType()
+export class KanjiConnection extends Connection(Kanji) {}

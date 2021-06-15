@@ -1,11 +1,12 @@
 import { IsInt, Min } from 'class-validator';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { TimeStampEntity } from './TimeStampEntity';
+import { KanjiConnection } from '../responses/Kanji';
+import { TimeStamp } from './TimeStamp';
 
-@ObjectType({ implements: TimeStampEntity, description: '部首' })
+@ObjectType({ implements: TimeStamp, description: '部首' })
 @Entity()
-export class Radical extends TimeStampEntity {
+export class Radical extends TimeStamp {
   constructor(id: number, numberOfStrokes: number, names: string[]) {
     super();
     this.id = id;
@@ -28,6 +29,9 @@ export class Radical extends TimeStampEntity {
   @Field(() => [String], { description: 'なまえ' })
   @Column('varchar', { array: true })
   names: string[];
+
+  @Field(() => KanjiConnection, { description: '漢字' })
+  kanjis!: KanjiConnection;
 
   @Field(() => String, { description: '部首' })
   get character() {

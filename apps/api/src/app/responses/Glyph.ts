@@ -1,4 +1,4 @@
-import { Field, InterfaceType, ObjectType } from 'type-graphql';
+import { Field, ID, InterfaceType, ObjectType } from 'type-graphql';
 
 @InterfaceType({ description: '抽象グリフ' })
 abstract class IGlyph {
@@ -11,7 +11,7 @@ abstract class IGlyph {
 
 @ObjectType({ implements: IGlyph, description: 'グリフ' })
 export class Glyph extends IGlyph {
-  @Field({ description: 'ID' })
+  @Field(() => ID, { description: 'ID' })
   readonly id!: string;
 
   @Field({ description: '作成日時' })

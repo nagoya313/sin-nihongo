@@ -1,6 +1,6 @@
 import { ObjectType } from 'type-graphql';
 import { Radical } from '../entities/Radical';
-import { Paginated } from './Paginated';
+import { Connection } from './Connection';
 
 @ObjectType()
-export class PaginatedRadical extends Paginated(Radical) {}
+export class RadicalConnection extends Connection(Radical) {}

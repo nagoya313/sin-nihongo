@@ -2,7 +2,7 @@ import { Field, InterfaceType } from 'type-graphql';
 import { CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
 
 @InterfaceType({ description: 'タイムスタンプ' })
-export abstract class TimeStampEntity extends BaseEntity {
+export abstract class TimeStamp extends BaseEntity {
   @Field({ description: '作成日時' })
   @CreateDateColumn()
   readonly createdAt?: Date;

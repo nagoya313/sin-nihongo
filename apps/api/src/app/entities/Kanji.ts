@@ -1,11 +1,12 @@
-import { Field, ID, Int, InterfaceType } from 'type-graphql';
+import { Field, ID, Int, ObjectType } from 'type-graphql';
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { IsInt, Min } from 'class-validator';
-import { TimeStampEntity } from './TimeStampEntity';
+import { Radical } from './Radical';
+import { TimeStamp } from './TimeStamp';
 
-@InterfaceType('KanjiEntity', { implements: TimeStampEntity })
+@ObjectType({ implements: TimeStamp })
 @Entity()
-export class Kanji extends TimeStampEntity {
+export class Kanji extends TimeStamp {
   constructor(
     ucs: number,
     regular: boolean,
@@ -75,4 +76,9 @@ export class Kanji extends TimeStampEntity {
 
   @Column({ nullable: true })
   glyphId?: string;
+
+  @Field(() => String)
+  get character() {
+    return String.fromCodePoint(this.ucs);
+  }
 }

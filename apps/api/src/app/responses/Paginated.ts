@@ -8,10 +8,10 @@ export const Paginated = <T>(T: ClassType<T>) => {
     readonly paginated!: PaginatedArgs;
 
     @Field(() => [T])
-    readonly items!: T[];
+    readonly nodes!: T[];
 
     @Field(() => Int)
-    get totalItems() {
+    get totalCount() {
       return this.count;
     }
 

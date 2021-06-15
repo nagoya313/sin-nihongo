@@ -1,19 +1,12 @@
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
-import { ArgsType, Field, Int } from 'type-graphql';
+import { ArgsType } from 'type-graphql';
+import { IntField } from '../lib/decorator';
 
 @ArgsType()
 export class PaginatedArgs {
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください' })
-  @IsInt({ message: 'ページ番号わ整数で入力してください' })
+  @IntField({ name: 'ページ番号', optional: true, validations: { min: 1 } })
   readonly page?: number;
 
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
-  @Min(1, { message: 'ページ番号わ$constraint1以上で入力してください' })
-  @Max(200, { message: 'ページ番号わ$constraint1以下で入力してください' })
-  @IsInt({ message: 'ページ番号わ整数で入力してください' })
+  @IntField({ name: '取得件数', optional: true, validations: { min: 1, max: 200 } })
   readonly limit?: number;
 
   get currentPage() {

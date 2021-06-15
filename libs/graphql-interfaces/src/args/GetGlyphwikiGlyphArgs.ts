@@ -1,11 +1,10 @@
-import { Matches } from 'class-validator';
-import { ArgsType, Field } from 'type-graphql';
+import { ArgsType } from 'type-graphql';
 import { GLYPHWIKI_QUERY_PARAMS_MATCHER } from '../lib/const';
+import { StringField } from '../lib/decorator';
 
 @ArgsType()
 export class GetGlyphwikiGlyphArgs {
-  @Field({ description: '検索ワード' })
-  @Matches(GLYPHWIKI_QUERY_PARAMS_MATCHER, { message: `"$value"わ検索不可能なクエリです` })
+  @StringField({ name: '検索ワード', validations: { match: GLYPHWIKI_QUERY_PARAMS_MATCHER } })
   q!: string;
 
   get name() {

@@ -1,6 +1,6 @@
-import { Field, ID, Int, ObjectType } from 'type-graphql';
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import { IsInt, Min } from 'class-validator';
+import { Field, ObjectType } from 'type-graphql';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BooleanFieldColumn, IntFieldColumn, StringArrayFieldColumn } from '@sin-nihongo/graphql-interfaces';
 import { Radical } from './Radical';
 import { TimeStamp } from './TimeStamp';
 
@@ -28,56 +28,40 @@ export class Kanji extends TimeStamp {
     this.onyomi = [];
   }
 
-  @Field(() => ID, { description: 'ID' })
-  @PrimaryGeneratedColumn()
-  @IsInt()
-  @Min(1)
+  @PrimaryGeneratedColumn({ name: 'ID' })
   readonly id?: number;
 
-  @Field(() => Int, { description: 'UCS' })
-  @Index({ unique: true })
-  @Column()
+  @IntFieldColumn({ name: 'JIS水準', optional: true, column: { unique: true }, validations: { min: 1, max: 4 } })
   readonly ucs: number;
 
-  @Field({ description: '常用漢字か否か' })
-  @Field()
-  @Column()
+  @BooleanFieldColumn({ name: '常用漢字' })
   regular: boolean;
 
-  @Field({ description: '人名用漢字か否か' })
-  @Column()
+  @BooleanFieldColumn({ name: '人名用漢字' })
   forName: boolean;
 
-  @Field(() => Int, { description: '画数' })
-  @Column()
-  @IsInt()
-  @Min(1)
+  @IntFieldColumn({ name: '画数', validations: { min: 1 } })
   readonly numberOfStrokes: number;
 
-  @Field(() => Int, { description: '部首内画数' })
-  @Column()
-  @IsInt()
+  @IntFieldColumn({ name: '部首内画数' })
   readonly numberOfStrokesInRadical: number;
 
   @Column()
   readonly radicalId: number;
 
-  @Field(() => Int, { description: 'JIS水準' })
-  @Column({ nullable: true })
+  @IntFieldColumn({ name: 'JIS水準', optional: true, validations: { min: 1, max: 4 } })
   jisLevel: number;
 
-  @Field(() => [String], { description: '訓読み' })
-  @Column('varchar', { array: true, default: {} })
+  @StringArrayFieldColumn({ name: '訓読み', validations: { presence: true, format: { min: 1, max: 20 } } })
   onyomi: string[];
 
-  @Field(() => [String], { description: '音読み' })
-  @Column('varchar', { array: true, default: {} })
+  @StringArrayFieldColumn({ name: '音読み', validations: { presence: true, format: { min: 1, max: 20 } } })
   kunyomi: string[];
 
   @Column({ nullable: true })
   glyphId?: string;
 
-  @Field(() => String)
+  @Field(() => String, { description: 'キャラクタ' })
   get character() {
     return String.fromCodePoint(this.ucs);
   }

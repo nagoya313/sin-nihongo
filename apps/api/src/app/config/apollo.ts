@@ -1,6 +1,8 @@
 import { Express } from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
+import { ApolloServerLoaderPlugin } from 'type-graphql-dataloader';
+import { getConnection } from 'typeorm';
 import { GlyphResolver } from '../resolvers/GlyphResolver';
 import { GlyphqikiResolver } from '../resolvers/GlyphwikiRespolver';
 import { InfoResolver } from '../resolvers/InfoResolver';
@@ -16,6 +18,11 @@ export const initApolloServer = async (app: Express) => {
     schema,
     introspection: true,
     playground: true,
+    plugins: [
+      ApolloServerLoaderPlugin({
+        typeormGetConnection: getConnection,
+      }),
+    ],
   });
 
   server.applyMiddleware({ app });

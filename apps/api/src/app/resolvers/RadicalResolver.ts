@@ -1,4 +1,7 @@
+import * as DataLoader from 'dataloader';
+import { groupBy } from 'underscore';
 import { Arg, Args, FieldResolver, ID, Query, Resolver, Root } from 'type-graphql';
+import { Loader } from 'type-graphql-dataloader';
 import { GetRadicalsArgs, PaginatedArgs } from '@sin-nihongo/graphql-interfaces';
 import { Kanji } from '../entities/Kanji';
 import { Radical } from '../entities/Radical';
@@ -19,8 +22,15 @@ export class RadicalResolver {
   }
 
   @FieldResolver(() => Radical)
-  async kanjis(@Root() radical: Radical): Promise<Partial<KanjiConnection>> {
+  /*@Loader<number, KanjiConnection>(async (ids) => {
+    // batchLoadFn
+    const kanjis = await Kanji.findByIds([...ids]);
+    const kanjisById = groupBy(kanjis, 'radicalId');
+    return ids.map((id) => ({ nodes: kanjisById[id] ?? [], count: kanjis.length }));
+  })*/
+  async kanjis(@Root() radical: Radical) {
     const [kanjis, count] = await Kanji.findAndCount({ where: { radicalId: radical.id } });
+    //return (dataloader: DataLoader<number, Kanji[]>) => dataloader.load(radical.id);
     return { nodes: kanjis, count };
   }
 }

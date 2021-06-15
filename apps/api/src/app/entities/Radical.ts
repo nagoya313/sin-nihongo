@@ -1,6 +1,6 @@
-import { IsInt, Min } from 'class-validator';
-import { Field, ID, Int, ObjectType } from 'type-graphql';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Field, ObjectType } from 'type-graphql';
+import { Column, Entity } from 'typeorm';
+import { IntFieldColumn, PrimaryFieldColumn, StringArrayFieldColumn } from '@sin-nihongo/graphql-interfaces';
 import { KanjiConnection } from '../responses/Kanji';
 import { TimeStamp } from './TimeStamp';
 
@@ -14,26 +14,19 @@ export class Radical extends TimeStamp {
     this.names = names;
   }
 
-  @Field(() => ID, { description: 'ID' })
-  @PrimaryColumn()
-  @IsInt()
-  @Min(1)
+  @PrimaryFieldColumn({ name: 'ID', validations: { min: 1 } })
   readonly id: number;
 
-  @Field(() => Int, { description: '画数' })
-  @Column()
-  @IsInt()
-  @Min(1)
-  readonly numberOfStrokes?: number;
+  @IntFieldColumn({ name: '画数', validations: { min: 1 } })
+  readonly numberOfStrokes: number;
 
-  @Field(() => [String], { description: 'なまえ' })
-  @Column('varchar', { array: true })
+  @StringArrayFieldColumn({ name: 'なまえ', validations: { presence: true, format: { min: 1, max: 20 } } })
   names: string[];
 
   @Field(() => KanjiConnection, { description: '漢字' })
   kanjis!: KanjiConnection;
 
-  @Field(() => String, { description: '部首' })
+  @Field(() => String, { description: 'キャラクタ' })
   get character() {
     return String.fromCodePoint(this.id + 0x2eff);
   }

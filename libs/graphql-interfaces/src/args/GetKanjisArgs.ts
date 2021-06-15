@@ -1,42 +1,46 @@
 import { ArgsType } from 'type-graphql';
-import { KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER, KANJI_USC_QUERY_PARAMS_MATCHER } from '../lib/const';
-import { BooleanField, IntField, StringField } from '../lib/decorator';
+import {
+  KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER,
+  KANJI_QUERY_PARAMS_MATCHER,
+  KANJI_UNICODE_PARAMS_MATCHER,
+} from '../lib/const';
+import { BooleanOptionalField, IntOptionalField, StringOptionalField } from '../lib/decorator';
 
 @ArgsType()
 export class GetKanjisArgs {
-  @StringField({ name: '漢字', optional: true, validations: { match: KANJI_USC_QUERY_PARAMS_MATCHER } })
+  @StringOptionalField({ name: '漢字', validations: { match: KANJI_QUERY_PARAMS_MATCHER } })
   readonly character?: string;
 
-  @IntField({ name: 'コードポイント', optional: true, validations: { min: 1 } })
-  readonly codePoint?: string;
+  @IntOptionalField({ name: 'コードポイント', validations: { min: 1 } })
+  readonly codePoint?: number;
 
-  @StringField({ name: 'ユニコード', optional: true, validations: { match: KANJI_USC_QUERY_PARAMS_MATCHER } })
+  @StringOptionalField({ name: 'ユニコード', validations: { match: KANJI_UNICODE_PARAMS_MATCHER } })
   readonly unicode?: string;
 
-  @StringField({ name: 'よみ', optional: true, validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
+  @StringOptionalField({ name: 'よみ', validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
   readonly read?: string;
 
-  @StringField({ name: '訓読み', optional: true, validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
+  @StringOptionalField({ name: '訓読み', validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
   readonly kunyomi?: string;
 
-  @StringField({ name: '音読み', optional: true, validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
+  @StringOptionalField({ name: '音読み', validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
   readonly onyomi?: string;
 
-  @IntField({ name: '画数', optional: true, validations: { min: 1 } })
+  @IntOptionalField({ name: '画数', validations: { min: 1 } })
   readonly numberOfStrokes?: number;
 
-  @IntField({ name: '部首内画数', optional: true, validations: { min: 1 } })
+  @IntOptionalField({ name: '部首内画数', validations: { min: 1 } })
   readonly numberOfStrokesInRadical?: number;
 
-  @IntField({ name: 'JIS水準', optional: true, validations: { min: 1, max: 4 } })
+  @IntOptionalField({ name: 'JIS水準', validations: { min: 1, max: 4 } })
   readonly jisLevel?: number;
 
-  @BooleanField({ name: '常用漢字', optional: true })
+  @BooleanOptionalField({ name: '常用漢字' })
   readonly regular?: boolean;
 
-  @BooleanField({ name: '人名用漢字', optional: true })
+  @BooleanOptionalField({ name: '人名用漢字' })
   readonly forName?: boolean;
 
-  @IntField({ name: '部首番号', optional: true, validations: { min: 1 } })
+  @IntOptionalField({ name: '部首番号', validations: { min: 1 } })
   readonly radicalId?: number;
 }

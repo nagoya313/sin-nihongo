@@ -1,34 +1,22 @@
-import * as fs from 'fs';
-import * as parse from 'csv-parse';
-import * as stream from 'stream';
-import * as util from 'util';
+import fs from 'fs';
+import parse from 'csv-parse';
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
-import { Radical } from '../entities/Radical';
-
-interface CsvRadical {
-  readonly id: number;
-  readonly names: string;
-  readonly numberOfStrokes: number;
-}
+import { Radical } from '../entities/pg/Radical';
 
 export default class CreateRaicals implements Seeder {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async run(_factory: Factory, connection: Connection): Promise<any> {
+  public async run(_factory: Factory, connection: Connection): Promise<void> {
     const radicals: Radical[] = [];
-    const rs = fs.createReadStream('db/seeds/radicals.csv', { encoding: 'utf8' });
-    const parser = parse({ columns: true }).on('data', (row: CsvRadical) => {
-      radicals.push(new Radical(row.id, row.numberOfStrokes, row.names.split(',')));
-    });
-    const pipeline = util.promisify(stream.pipeline);
-
-    await pipeline(rs, parser);
+    const rs = fs.createReadStream('db/seeds/radicals.csv', { encoding: 'utf8' }).pipe(parse({ columns: true }));
+    for await (const row of rs) {
+      radicals.push(new Radical(parseInt(row.id) + 0x2eff, parseInt(row.numberOfStrokes), row.names.split(',')));
+    }
     await connection
       .createQueryBuilder()
       .insert()
       .into(Radical)
       .values(radicals)
-      //.orUpdate({ conflict_target: ['id'], overwrite: ['names'] })
+      //.orUpdate({ conflict_target: ['codePoint'], overwrite: ['names'] })
       .orIgnore()
       .execute();
   }

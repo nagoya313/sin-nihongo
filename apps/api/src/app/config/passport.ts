@@ -1,4 +1,4 @@
-import * as passport from 'passport';
+import passport from 'passport';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 

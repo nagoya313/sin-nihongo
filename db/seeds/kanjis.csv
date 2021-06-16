@@ -1,4 +1,4 @@
-ucs,radicalId,numberOfStrokesInRadical,numberOfStrokes,onyomi,kunyomi,jisLevel,regular,forName
+codePoint,radicalId,numberOfStrokesInRadical,numberOfStrokes,onyomi,kunyomi,jisLevel,regular,forName
 19968,1,0,1,"ICHI,ITSU","HITOTSU,HITOTABI,HAJIME",1,true,true
 19969,1,1,2,"TEI,CHOU,TOU","HINOTO,ATARU,YOBORO",1,true,true
 19971,1,1,2,"SHICHI,SHITSU","NANATSU,NANATABI",1,true,true

@@ -1,52 +1,33 @@
-import * as fs from 'fs';
-import * as parse from 'csv-parse';
-import * as stream from 'stream';
-import * as util from 'util';
+import fs from 'fs';
+import parse from 'csv-parse';
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
-import { Kanji } from '../entities/Kanji';
-
-interface CsvKanji {
-  readonly ucs: number;
-  readonly radicalId: number;
-  readonly numberOfStrokesInRadical: number;
-  readonly numberOfStrokes: number;
-  readonly onyomi: string;
-  readonly kunyomi: string;
-  readonly jisLevel: number;
-  readonly regular: string;
-  readonly forName: string;
-}
+import { Kanji } from '../entities/pg/Kanji';
 
 export default class CreateKanjis implements Seeder {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async run(_factory: Factory, connection: Connection): Promise<any> {
+  public async run(_factory: Factory, connection: Connection): Promise<void> {
     const kanjis: Kanji[] = [];
-    const rs = fs.createReadStream('db/seeds/kanjis.csv', { encoding: 'utf8' });
-    const parser = parse({ columns: true }).on('data', (row: CsvKanji) => {
+    const rs = fs.createReadStream('db/seeds/kanjis.csv', { encoding: 'utf8' }).pipe(parse({ columns: true }));
+    for await (const row of rs) {
       const kanji = new Kanji(
-        row.ucs,
+        parseInt(row.codePoint),
         row.regular == 'true',
         row.forName == 'true',
-        row.numberOfStrokes,
-        row.numberOfStrokesInRadical,
-        row.radicalId,
-        row.jisLevel
+        parseInt(row.numberOfStrokes),
+        parseInt(row.numberOfStrokesInRadical),
+        parseInt(row.radicalId),
+        parseInt(row.jisLevel),
+        row.kunyomi.split(','),
+        row.onyomi.split(',')
       );
-      kanji.onyomi = row.onyomi.split(',');
-      kanji.kunyomi = row.kunyomi.split(',');
       kanjis.push(kanji);
-    });
-    const pipeline = util.promisify(stream.pipeline);
-
-    await pipeline(rs, parser);
-
+    }
     await connection
       .createQueryBuilder()
       .insert()
       .into(Kanji)
       .values(kanjis)
-      //.orUpdate({ conflict_target: ['ucs'], overwrite: ['onyomi', 'kunyomi'] })
+      //.orUpdate({ conflict_target: ['codePoint'], overwrite: ['kunyomi', 'onyomi'] })
       .orIgnore()
       .execute();
   }

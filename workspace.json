@@ -157,6 +157,12 @@
             "buildTarget": "api:build"
           }
         },
+        "ts-serve": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "TS_NODE_PROJECT=apps/api/tsconfig.app.json yarn tsnd apps/api/src/main.ts"
+          }
+        },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {

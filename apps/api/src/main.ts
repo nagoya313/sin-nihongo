@@ -1,25 +1,17 @@
 import 'reflect-metadata';
-import * as path from 'path';
-import * as mongoose from 'mongoose';
-import { createConnection } from 'typeorm';
-import { dbConfig } from './app/config/db';
+import path from 'path';
+import { createConnections } from 'typeorm';
 import { initExpress } from './app/config/express';
+import dbConfig from './app/config/ormconfig';
 import { initPaspport } from './app/config/passport';
 
 export const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
 
 (async () => {
   try {
-    await createConnection(dbConfig()).catch((error) => {
+    await createConnections(dbConfig).catch((error) => {
       console.error(error);
     });
-
-    await mongoose
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      .connect(process.env.MONGO_URI!, { useNewUrlParser: true, useUnifiedTopology: true })
-      .catch((error) => {
-        console.error(error);
-      });
 
     initPaspport();
 

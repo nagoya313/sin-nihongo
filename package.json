@@ -6,6 +6,7 @@
     "nx": "nx",
     "s": "nx run-many --target=serve --projects=sin-nihongo,api --parallel=true",
     "start": "node dist/apps/api/main.js",
+    "s:api": "nx serve api",
     "build": "nx run-many --target=build --projects=sin-nihongo,api --parallel=true --prod",
     "test": "nx test",
     "test:all": "nx run-many --target=test --projects=sin-nihongo,api,sin-nihongo-params --collectCoverage",
@@ -26,12 +27,14 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "typeorm": "ts-node --transpile-only -r tsconfig-paths/register -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm/cli.js",
+    "tsn": "ts-node -r tsconfig-paths/register -P apps/api/tsconfig.app.json -O '{\"module\":\"commonjs\"}'",
+    "tsnd": "NODE_ENV=development ts-node-dev -r tsconfig-paths/register",
+    "typeorm": "yarn tsn ./node_modules/typeorm/cli.js -c pg -f apps/api/src/app/config/ormconfig.ts",
     "db:migrate:generate": "yarn typeorm migration:generate -o",
     "db:migrate:run": "yarn typeorm migration:run",
     "db:drop": "yarn typeorm schema:drop",
-    "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
-    "seed:run": "ts-node --transpile-only -r tsconfig-paths/register -P tsconfig.base.json -O '{\"module\":\"commonjs\"}' ./node_modules/typeorm-seeding/dist/cli.js seed"
+    "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config -c pg -n apps/api/src/app/config/ormconfig.ts",
+    "seed:run": "yarn tsn ./node_modules/typeorm-seeding/dist/cli.js seed -c pg -n apps/api/src/app/config/ormconfig.ts"
   },
   "private": true,
   "dependencies": {
@@ -124,6 +127,7 @@
     "babel-plugin-styled-components": "1.10.7",
     "cypress": "^6.0.1",
     "dotenv": "8.2.0",
+    "esbuild-register": "^2.6.0",
     "eslint": "7.22.0",
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-cypress": "^2.10.3",
@@ -135,6 +139,8 @@
     "jest-extended": "^0.11.5",
     "prettier": "2.2.1",
     "ts-jest": "26.5.5",
+    "ts-node-dev": "^1.1.6",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^4.3.2"
   },
   "resolutions": {

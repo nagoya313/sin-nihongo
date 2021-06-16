@@ -1,8 +1,9 @@
-import { ArgsType } from 'type-graphql';
-import { StringOptionalField } from '../lib/decorator';
+import { ArgsType, Field } from 'type-graphql';
+import * as Jf from 'joiful';
 
 @ArgsType()
 export class GetGlyphsArgs {
-  @StringOptionalField({ name: 'グリフ名' })
+  @Field({ nullable: true, description: 'グリフ名' })
+  @(Jf.string().optional())
   readonly name?: string;
 }

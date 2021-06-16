@@ -1,10 +1,11 @@
-import { ArgsType } from 'type-graphql';
+import { ArgsType, Field } from 'type-graphql';
+import * as Jf from 'joiful';
 import { GLYPHWIKI_QUERY_PARAMS_MATCHER } from '../lib/const';
-import { StringField } from '../lib/decorator';
 
 @ArgsType()
 export class GetGlyphwikiGlyphArgs {
-  @StringField({ name: '検索ワード', validations: { match: GLYPHWIKI_QUERY_PARAMS_MATCHER } })
+  @Field({ description: '検索ワード' })
+  @(Jf.string().required().regex(GLYPHWIKI_QUERY_PARAMS_MATCHER))
   q!: string;
 
   get name() {

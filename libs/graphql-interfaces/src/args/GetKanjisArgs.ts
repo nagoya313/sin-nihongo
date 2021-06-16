@@ -1,48 +1,60 @@
-import { ArgsType } from 'type-graphql';
+import { ArgsType, Field, Int } from 'type-graphql';
+import * as Jf from 'joiful';
 import {
   KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER,
   KANJI_QUERY_PARAMS_MATCHER,
   KANJI_UNICODE_PARAMS_MATCHER,
 } from '../lib/const';
-import { BooleanOptionalField, IntOptionalField, StringOptionalField } from '../lib/decorator';
 import { TypeOrmQueries, WhereQuery } from './TypeOrmQueries';
 
 @ArgsType()
 export class GetKanjisArgs extends TypeOrmQueries<GetKanjisArgs> {
-  @StringOptionalField({ name: '漢字', validations: { match: KANJI_QUERY_PARAMS_MATCHER } })
+  @Field({ nullable: true, description: '漢字' })
+  @(Jf.string().optional().regex(KANJI_QUERY_PARAMS_MATCHER))
   readonly character?: string;
 
-  @IntOptionalField({ name: 'コードポイント', validations: { min: 1 } })
+  @Field(() => Int, { nullable: true, description: 'コードポイント' })
+  @(Jf.number().integer().optional())
   readonly codePoint?: number;
 
-  @StringOptionalField({ name: 'ユニコード', validations: { match: KANJI_UNICODE_PARAMS_MATCHER } })
+  @Field({ nullable: true, description: 'ユニコード' })
+  @(Jf.string().optional().regex(KANJI_UNICODE_PARAMS_MATCHER))
   readonly unicode?: string;
 
-  @StringOptionalField({ name: 'よみ', validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
+  @Field({ nullable: true, description: 'よみ' })
+  @(Jf.string().optional().regex(KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER))
   readonly read?: string;
 
-  @StringOptionalField({ name: '訓読み', validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
+  @Field({ nullable: true, description: '訓読み' })
+  @(Jf.string().optional().regex(KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER))
   readonly kunyomi?: string;
 
-  @StringOptionalField({ name: '音読み', validations: { match: KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER } })
+  @Field({ nullable: true, description: '音読み' })
+  @(Jf.string().optional().regex(KANJIS_QUERY_PARAMS_READ_LIKE_MATCHER))
   readonly onyomi?: string;
 
-  @IntOptionalField({ name: '画数', validations: { min: 1 } })
+  @Field(() => Int, { nullable: true, description: '画数' })
+  @(Jf.number().integer().optional().min(1))
   readonly numberOfStrokes?: number;
 
-  @IntOptionalField({ name: '部首内画数', validations: { min: 1 } })
+  @Field(() => Int, { nullable: true, description: '部首内画数' })
+  @(Jf.number().integer().optional().min(1))
   readonly numberOfStrokesInRadical?: number;
 
-  @IntOptionalField({ name: 'JIS水準', validations: { min: 1, max: 4 } })
+  @Field(() => Int, { nullable: true, description: 'JIS水準' })
+  @(Jf.number().integer().optional().min(1).max(2))
   readonly jisLevel?: number;
 
-  @BooleanOptionalField({ name: '常用漢字' })
+  @Field({ nullable: true, description: '常用漢字' })
+  @(Jf.boolean().optional())
   readonly regular?: boolean;
 
-  @BooleanOptionalField({ name: '人名用漢字' })
+  @Field({ nullable: true, description: '人名用漢字' })
+  @(Jf.boolean().optional())
   readonly forName?: boolean;
 
-  @IntOptionalField({ name: '部首番号', validations: { min: 1 } })
+  @Field(() => Int, { nullable: true, description: '部首番号' })
+  @(Jf.number().integer().optional().min(1))
   @WhereQuery()
-  radicalId?: number;
+  readonly radicalId?: number;
 }

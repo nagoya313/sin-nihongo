@@ -1,23 +1,17 @@
-import { ArgsType } from 'type-graphql';
-import { IntField } from '../lib/decorator';
+import { ArgsType, Field, Int } from 'type-graphql';
+import * as Jf from 'joiful';
 
 @ArgsType()
 export class PaginatedArgs {
-  @IntField({ name: 'ページ番号', optional: true, validations: { min: 1 } })
-  readonly page?: number;
+  @Field(() => Int, { description: 'ページ番号' })
+  @(Jf.number().integer().required().min(1))
+  readonly page!: number;
 
-  @IntField({ name: '取得件数', optional: true, validations: { min: 1, max: 200 } })
-  readonly limit?: number;
-
-  get currentPage() {
-    return this.page || 1;
-  }
+  @Field(() => Int, { description: '取得件数' })
+  @(Jf.number().integer().required().min(1).max(200))
+  readonly limit!: number;
 
   get skip() {
-    return this.take * (this.currentPage - 1);
-  }
-
-  get take() {
-    return this.limit || 20;
+    return this.limit * (this.page - 1);
   }
 }

@@ -1,6 +1,5 @@
 import { Field, ID, Int, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
-import { BooleanFieldColumn, IntFieldColumn, StringArrayFieldColumn } from '@sin-nihongo/graphql-interfaces';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { Radical } from './Radical';
 import { TimeStamp } from '../TimeStamp';
 

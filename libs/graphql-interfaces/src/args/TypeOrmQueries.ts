@@ -10,7 +10,7 @@ export const WhereQuery = (query?: (value: unknown) => unknown, name?: string): 
   Reflect.defineMetadata(WHERE_QUERY_KEY, [query, name], target, propertyKey);
 };
 
-export abstract class TypeOrmQueries<Args extends TypeOrmQueries<Args>> {
+export abstract class TypeOrmQueries<Args> {
   get whereQuery(): FindConditions<unknown> {
     const queries: Record<string, unknown> = {};
     for (const key of Object.keys(this) as (keyof Args)[]) {

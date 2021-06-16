@@ -27,7 +27,7 @@ export default class CreateKanjis implements Seeder {
       .insert()
       .into(Kanji)
       .values(kanjis)
-      //.orUpdate({ conflict_target: ['codePoint'], overwrite: ['kunyomi', 'onyomi'] })
+      //.orUpdate({ conflict_target: ['code_point'], overwrite: ['kunyomi', 'onyomi'] })
       .orIgnore()
       .execute();
   }

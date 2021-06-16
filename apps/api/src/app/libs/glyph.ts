@@ -1,23 +1,18 @@
 import { uniq, flatten } from 'underscore';
-import { Glyph, GlyphResponse } from '@sin-nihongo/api-interfaces';
 import { KageStrokes } from './kage/KageStrokes';
+import { IGlyph } from '../responses/Glyph';
 
-type GetterType = (key: string) => Promise<Glyph>;
+type GetterType<Glyph> = (key: string) => Promise<Glyph>;
 
-export const glyphData = async (key: string, getter: GetterType, firstGetter = getter): Promise<GlyphResponse> => {
-  const base = await firstGetter(key);
-  return {
-    data: base,
-    includeGlyphs: await includeGlyphData(base, getter),
-  };
+export const includeGlyphs = async <Glyph extends IGlyph>(data: Glyph, getter: GetterType<Glyph>): Promise<Glyph[]> => {
+  const linkStrokes = new KageStrokes(data.data).linkStrokes;
+  return await Promise.all(linkStrokes.map(async (stroke) => await getter(stroke.linkStrokeId)));
 };
 
-export const includeGlyphData = async (data: Glyph, getter: GetterType): Promise<Glyph[]> => {
-  const glyphs = await firstRecursionData(data, getter);
-  return uniq(glyphs, 'name');
-};
+export const drawNecessaryGlyphs = async <Glyph extends IGlyph>(data: Glyph, getter: GetterType<Glyph>) =>
+  uniq(await scanRecursion(data, getter), 'name');
 
-const scanRecursion = async (data: Glyph, getter: GetterType) => {
+const scanRecursion = async <Glyph extends IGlyph>(data: Glyph, getter: GetterType<Glyph>) => {
   const linkStrokes = new KageStrokes(data.data).linkStrokes;
   const strokes = await Promise.all(
     linkStrokes.map(async (stroke) => {
@@ -28,9 +23,7 @@ const scanRecursion = async (data: Glyph, getter: GetterType) => {
   return flatten(strokes);
 };
 
-const firstRecursionData = async (data: Glyph, getter: GetterType) => scanRecursion(data, getter);
-
-const recursionData = async (data: Glyph, getter: GetterType): Promise<Glyph[]> => {
+const recursionData = async <Glyph extends IGlyph>(data: Glyph, getter: GetterType<Glyph>): Promise<Glyph[]> => {
   const scan = await scanRecursion(data, getter);
   return [data].concat(scan);
 };

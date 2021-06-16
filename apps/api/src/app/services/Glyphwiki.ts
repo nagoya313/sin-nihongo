@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { NotFoundError } from 'routing-controllers';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
 
@@ -21,7 +20,8 @@ export class Glyphwiki {
     // {"version":null,"related":null,"data":null,"name":"uuuuuuu"}等
     // 等のjsonが返つてくることがある
     if (!response.data.name || !response.data.data) {
-      throw new NotFoundError(`"${name}"のグリフわグリフウィキから見つかりませんでした。`);
+      // responseを検討
+      return { name: name, data: 'KAGEデータの取得に失敗しました' };
     }
     // バージョン名@附きで検索結果を取得した場合、nameに@はつかないので検索codeの方を返す
     return { name: name, data: response.data.data };

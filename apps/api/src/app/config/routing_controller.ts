@@ -1,8 +1,7 @@
 import { Express } from 'express';
 import { authenticate } from 'passport';
-import { Action, useExpressServer } from 'routing-controllers';
 import { routePrefix } from '@sin-nihongo/api-interfaces';
-
+/*
 export const initRoutingController = (app: Express) => {
   useExpressServer(app, {
     routePrefix: routePrefix,
@@ -22,3 +21,4 @@ export const initRoutingController = (app: Express) => {
       }),
   });
 };
+*/

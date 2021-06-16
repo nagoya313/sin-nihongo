@@ -1,5 +1,10 @@
 import { ClassType, Field, Int, ObjectType } from 'type-graphql';
-import { PaginatedArgs } from '@sin-nihongo/graphql-interfaces';
+import { PaginatedArgs, TypeOrmQueries } from '@sin-nihongo/graphql-interfaces';
+
+export interface ConnectionBase {
+  readonly args: TypeOrmQueries<unknown>;
+  readonly paginated: PaginatedArgs;
+}
 
 export const Connection = <T>(T: ClassType<T>) => {
   @ObjectType({ isAbstract: true })

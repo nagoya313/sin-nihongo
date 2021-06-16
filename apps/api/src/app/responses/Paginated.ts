@@ -17,22 +17,22 @@ export const Paginated = <T>(T: ClassType<T>) => {
 
     @Field(() => Int)
     get itemsPerPage() {
-      return this.paginated.take;
+      return this.paginated.limit;
     }
 
     @Field(() => Int)
     get itemCount() {
-      return this.items.length;
+      return this.nodes.length;
     }
 
     @Field(() => Int)
     get totalPages() {
-      return Math.ceil(this.count / this.paginated.take);
+      return Math.ceil(this.count / this.paginated.limit);
     }
 
     @Field(() => Int)
     get currentPage() {
-      return this.paginated.currentPage;
+      return this.paginated.page;
     }
   }
   return PaginatedResponseClass;

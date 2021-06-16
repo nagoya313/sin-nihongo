@@ -1,6 +1,6 @@
 import { DefaultNamingStrategy } from 'typeorm';
 import { snakeCase } from 'typeorm/util/StringUtils';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 
 export default class TypeOrmNamingStrategy extends DefaultNamingStrategy {
   tableName(targetName: string, userSpecifiedName: string | undefined) {
@@ -19,14 +19,7 @@ export default class TypeOrmNamingStrategy extends DefaultNamingStrategy {
     return snakeCase(pluralize.singular(relationName) + '_' + referencedColumnName);
   }
 
-  joinTableName(
-    firstTableName: string,
-    secondTableName: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _firstPropertyName: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _secondPropertyName: string
-  ) {
+  joinTableName(firstTableName: string, secondTableName: string) {
     return snakeCase(firstTableName + '_' + secondTableName);
   }
 

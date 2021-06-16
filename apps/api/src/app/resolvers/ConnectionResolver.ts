@@ -1,24 +1,24 @@
 import { ClassType, FieldResolver, Int, Resolver, Root } from 'type-graphql';
-import { BaseEntity, FindManyOptions } from 'typeorm';
-import { RadicalConnection } from '../responses/Radica';
+import { getRepository, Repository } from 'typeorm';
+import { ConnectionBase } from '../responses/Connection';
 
-type Entity<E extends BaseEntity> = {
-  count: (options: FindManyOptions<E>) => Promise<number>;
-  find: (options: FindManyOptions<E>) => Promise<E[]>;
-};
-
-export const ConnectionResolver = <T, R extends BaseEntity, U extends Entity<R>>(T: ClassType<T>, E: U) => {
-  @Resolver(() => T, { isAbstract: true })
-  abstract class ConnectionResolver {
+export const ConnectionResolver = <Connection extends ConnectionBase, Entity>(
+  C: ClassType<Connection>,
+  E: ClassType<Entity>
+) => {
+  @Resolver(() => C, { isAbstract: true })
+  abstract class ConnectionResolverClass {
     @FieldResolver(() => Int)
-    async totalCount(@Root() { args, paginated }: RadicalConnection) {
-      return E.count({ where: args.whereQuery, take: paginated.take, skip: paginated.skip });
+    totalCount(@Root() { args, paginated }: Connection) {
+      return this.repository.count({ where: args.whereQuery, take: paginated.limit, skip: paginated.skip });
     }
 
     @FieldResolver(() => [E])
-    async nodes(@Root() { args, paginated }: RadicalConnection) {
-      return E.find({ where: args.whereQuery, take: paginated.take, skip: paginated.skip });
+    nodes(@Root() { args, paginated }: Connection) {
+      return this.repository.find({ where: args.whereQuery, take: paginated.limit, skip: paginated.skip });
     }
+
+    private repository: Repository<Entity> = getRepository(E, 'pg');
   }
-  return ConnectionResolver;
+  return ConnectionResolverClass;
 };

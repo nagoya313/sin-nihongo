@@ -1,40 +1,44 @@
-import * as DataLoader from 'dataloader';
+import DataLoader from 'dataloader';
 import { groupBy } from 'underscore';
-import { Arg, Args, ClassType, FieldResolver, ID, Int, Query, Resolver, Root } from 'type-graphql';
-import { BaseEntity, FindManyOptions } from 'typeorm';
+import { Args, FieldResolver, Int, Resolver, Root } from 'type-graphql';
 import { Loader } from 'type-graphql-dataloader';
+import { getRepository, In, Repository } from 'typeorm';
 import { GetKanjisArgs, GetRadicalsArgs, PaginatedArgs } from '@sin-nihongo/graphql-interfaces';
-import { Kanji } from '../entities/Kanji';
-import { Radical } from '../entities/Radical';
-import { KanjiConnection } from '../responses/Kanji';
-import { RadicalConnection } from '../responses/Radica';
+import { Kanji } from '../entities/pg/Kanji';
+import { Radical } from '../entities/pg/Radical';
+import { RadicalConnection, RadicalKanjiConnection } from '../responses/Radica';
 import { ConnectionResolver } from './ConnectionResolver';
+import { NodeResolver } from './NodeResolver';
 
-@Resolver(RadicalConnection)
+@Resolver(() => RadicalKanjiConnection)
+export class RadicalKanjiConnectionResolver {
+  @FieldResolver(() => Int)
+  totalCount(@Root() { radicalId, args }: RadicalKanjiConnection) {
+    return getRepository(Kanji, 'pg').count({ where: { ...args.whereQuery, radicalId } });
+  }
+
+  @FieldResolver(() => [Kanji])
+  @Loader<RadicalKanjiConnection, [Kanji]>(async (queries) => {
+    const ids = queries.map((q) => q.radicalId);
+    const { args, paginated } = queries[0];
+    const kanjis = await getRepository(Kanji, 'pg').find({
+      where: { ...args.whereQuery, radicalId: In(ids) },
+    });
+    const kanjisByIds = groupBy(kanjis, 'radicalId');
+    return ids.map((id) => kanjisByIds[id].slice(paginated.skip, paginated.skip + paginated.limit) ?? []) as any;
+  })
+  nodes(@Root() root: RadicalKanjiConnection) {
+    return (dataloader: DataLoader<RadicalKanjiConnection, Radical>) => dataloader.load(root);
+  }
+}
+
+@Resolver(() => RadicalConnection)
 export class RadicalConnectionResolver extends ConnectionResolver(RadicalConnection, Radical) {}
 
 @Resolver(() => Radical)
-export class RadicalResolver {
-  @Query(() => RadicalConnection, { description: '部首おまとめて取得する' })
-  radicals(@Args() args: GetRadicalsArgs, @Args() paginated: PaginatedArgs): Partial<RadicalConnection> {
-    return { args, paginated };
-  }
-
-  @Query(() => Radical)
-  async radical(@Arg('id', () => ID) id: number) {
-    return Radical.findOne(id);
-  }
-
-  @FieldResolver(() => KanjiConnection)
-  /*@Loader<number, KanjiConnection>(async (ids) => {
-    // batchLoadFn
-    const kanjis = await Kanji.findByIds([...ids]);
-    const kanjisById = groupBy(kanjis, 'radicalId');
-    return ids.map((id) => ({ nodes: kanjisById[id] ?? [], count: kanjis.length }));
-  })*/
-  async kanjis(@Root() radical: Radical, @Args() args: GetKanjisArgs, @Args() paginated: PaginatedArgs) {
-    // readonlyであるべき
-    args.radicalId = radical.id;
-    return { args, paginated };
+export class RadicalResolver extends NodeResolver(GetRadicalsArgs, RadicalConnection, Radical) {
+  @FieldResolver(() => RadicalKanjiConnection, { description: '漢字' })
+  kanjis(@Root() radical: Radical, @Args() args: GetKanjisArgs, @Args() paginated: PaginatedArgs) {
+    return { radicalId: radical.id, args, paginated };
   }
 }

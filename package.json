@@ -6,7 +6,7 @@
     "nx": "nx",
     "s": "nx run-many --target=serve --projects=sin-nihongo,api --parallel=true",
     "start": "node dist/apps/api/main.js",
-    "s:api": "nx serve api",
+    "s:api": "nx ts-serve api",
     "build": "nx run-many --target=build --projects=sin-nihongo,api --parallel=true --prod",
     "test": "nx test",
     "test:all": "nx run-many --target=test --projects=sin-nihongo,api,sin-nihongo-params --collectCoverage",

@@ -1,3 +1,4 @@
+/*
 import { ClassType, Field, Int, ObjectType } from 'type-graphql';
 import { PaginatedArgs } from '@sin-nihongo/graphql-interfaces';
 
@@ -37,3 +38,4 @@ export const Paginated = <T>(T: ClassType<T>) => {
   }
   return PaginatedResponseClass;
 };
+*/

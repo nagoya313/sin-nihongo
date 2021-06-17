@@ -1,6 +1,6 @@
+/*
 import { Args, Query, Resolver } from 'type-graphql';
-import { GetGlyphsArgs } from '@sin-nihongo/graphql-interfaces';
-import { Glyph } from '../entities/mongo/Glyph';
+import { GetGlyphsArgs, Glyph } from '@sin-nihongo/graphql-interfaces';
 
 @Resolver()
 export class GlyphResolver {
@@ -9,3 +9,4 @@ export class GlyphResolver {
     return [];
   }
 }
+*/

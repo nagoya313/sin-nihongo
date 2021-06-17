@@ -1,6 +1,5 @@
 import { Args, FieldResolver, Query, Resolver, Root } from 'type-graphql';
-import { GetGlyphwikiGlyphArgs } from '@sin-nihongo/graphql-interfaces';
-import { GlyphwikiGlyph } from '../responses/Glyph';
+import { GetGlyphwikiGlyphArgs, GlyphwikiGlyph } from '@sin-nihongo/graphql-interfaces';
 import { Glyphwiki } from '../services/Glyphwiki';
 import { includeGlyphs } from '../libs/glyph';
 
@@ -11,8 +10,8 @@ export class GlyphqikiResolver {
     return Glyphwiki.getData(name);
   }
 
-  @FieldResolver(() => GlyphwikiGlyph)
+  /*@FieldResolver(() => GlyphwikiGlyph)
   async includes(@Root() glyph: GlyphwikiGlyph) {
     return await includeGlyphs(glyph, Glyphwiki.getData);
-  }
+  }*/
 }

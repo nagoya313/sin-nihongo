@@ -1,25 +1,22 @@
-import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
-import { TimeStamp } from '../TimeStamp';
+import { Glyph as GlyphType } from '@sin-nihongo/graphql-interfaces';
+import { NodedEntity } from '../Node';
+import { TimeStampedEntity } from '../TimeStamp';
 
-@ObjectType({ implements: TimeStamp, description: 'グリフ' })
 @Entity()
-export class Glyph extends TimeStamp {
+export class Glyph extends NodedEntity(TimeStampedEntity(GlyphType)) {
   constructor(name: string, data: string) {
     super();
     this.name = name;
     this.data = data;
   }
 
-  @Field(() => ID, { description: 'ID' })
   @ObjectIdColumn()
   readonly id?: ObjectID;
 
-  @Field({ description: '名称' })
   @Column({ unique: true })
   name!: string;
 
-  @Field({ description: 'KAGEデータ' })
   @Column()
   data!: string;
 }

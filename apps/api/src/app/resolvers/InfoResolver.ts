@@ -1,13 +1,11 @@
 import { Query, Resolver } from 'type-graphql';
-import { Info } from '../responses/Info';
+import { Info } from '@sin-nihongo/graphql-interfaces';
 import { Glyphwiki } from '../services/Glyphwiki';
 
 @Resolver()
 export class InfoResolver {
   @Query(() => Info, { description: 'サイト情報お取得する' })
-  async info(): Promise<Info> {
-    return {
-      glyphwikiAccessible: await Glyphwiki.health(),
-    };
+  async info() {
+    return { glyphwikiAccessible: await Glyphwiki.health() } as Info;
   }
 }

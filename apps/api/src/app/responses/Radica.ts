@@ -1,3 +1,4 @@
+/*
 import { ObjectType } from 'type-graphql';
 import { GetKanjisArgs, GetRadicalsArgs } from '@sin-nihongo/graphql-interfaces';
 import { Kanji } from '../entities/pg/Kanji';
@@ -14,3 +15,4 @@ export class RadicalKanjiConnection extends Connection(Kanji) {
 export class RadicalConnection extends Connection(Radical) {
   readonly args!: GetRadicalsArgs;
 }
+*/

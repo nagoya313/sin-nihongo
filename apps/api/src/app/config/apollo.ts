@@ -5,7 +5,6 @@ import { buildSchema } from 'type-graphql';
 import { ApolloServerLoaderPlugin } from 'type-graphql-dataloader';
 
 export const initApolloServer = async (app: Express) => {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   const resolvers = ['apps/api/src/app/resolvers/*.ts'] as const;
   const schema = await buildSchema({
     resolvers,

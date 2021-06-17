@@ -1,13 +1,14 @@
-import { Field, InterfaceType } from 'type-graphql';
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { AbstractClassType } from '../libs/ClassType';
 
-@InterfaceType({ description: 'タイムスタンプ' })
-export abstract class TimeStamp {
-  @Field({ description: '作成日時' })
-  @CreateDateColumn()
-  readonly createdAt?: Date;
+export const TimeStampedEntity = <TBase extends AbstractClassType>(Base: TBase) => {
+  abstract class TimeStampEntity extends Base {
+    @CreateDateColumn()
+    readonly createdAt?: Date;
 
-  @Field({ description: '更新日時' })
-  @UpdateDateColumn()
-  readonly updatedAt?: Date;
-}
+    @UpdateDateColumn()
+    readonly updatedAt?: Date;
+  }
+
+  return TimeStampEntity;
+};

@@ -2,10 +2,11 @@ import { ArgsType, Field, Int } from 'type-graphql';
 import { Raw } from 'typeorm';
 import * as Jf from 'joiful';
 import { RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER } from '../lib/const';
-import { TypeOrmQueries, WhereQuery } from './TypeOrmQueries';
+import { CursorConnectionArgs } from './CursorConnectionArgs';
+import { WhereQuery } from './TypeOrmQueries';
 
 @ArgsType()
-export class GetRadicalsArgs extends TypeOrmQueries<GetRadicalsArgs> {
+export class GetRadicalsArgs extends CursorConnectionArgs {
   @Field({ nullable: true, description: 'よみ' })
   @(Jf.string().optional().regex(RADICALS_QUERY_PARAMS_NAME_LIKE_MATCHER))
   @WhereQuery(

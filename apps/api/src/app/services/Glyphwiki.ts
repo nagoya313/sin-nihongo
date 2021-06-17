@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { plainToClass } from 'class-transformer';
+import { GlyphwikiGlyph } from '@sin-nihongo/graphql-interfaces';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
 
@@ -19,12 +21,13 @@ export class Glyphwiki {
     // 見つからなかつた時？には{}だけではなく
     // {"version":null,"related":null,"data":null,"name":"uuuuuuu"}等
     // 等のjsonが返つてくることがある
-    if (!response.data.name || !response.data.data) {
-      // responseを検討
-      return { name: name, data: 'KAGEデータの取得に失敗しました' };
-    }
-    // バージョン名@附きで検索結果を取得した場合、nameに@はつかないので検索codeの方を返す
-    return { name: name, data: response.data.data };
+    const plain =
+      !response.data.name || !response.data.data
+        ? // responseを検討
+          { name: name, data: 'グリフウィキからグリフが見つかりませんでした' }
+        : // バージョン名@附きで検索結果を取得した場合、nameに@はつかないので検索codeの方を返す
+          { name: name, data: response.data.data };
+    return plainToClass(GlyphwikiGlyph, plain);
   }
 
   static async health() {

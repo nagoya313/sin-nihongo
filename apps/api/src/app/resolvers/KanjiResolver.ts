@@ -1,3 +1,4 @@
+/*
 import DataLoader from 'dataloader';
 import { FieldResolver, Resolver, Root } from 'type-graphql';
 import { Loader } from 'type-graphql-dataloader';
@@ -26,3 +27,4 @@ export class RadicalResolver extends NodeResolver(GetKanjisArgs, KanjiConnection
     return (dataloader: DataLoader<number, Radical>) => dataloader.load(kanji.radicalId);
   }
 }
+*/

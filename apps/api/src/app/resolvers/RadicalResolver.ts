@@ -1,3 +1,4 @@
+/*
 import DataLoader from 'dataloader';
 import { groupBy } from 'underscore';
 import { Args, FieldResolver, Int, Resolver, Root } from 'type-graphql';
@@ -42,3 +43,4 @@ export class RadicalResolver extends NodeResolver(GetRadicalsArgs, RadicalConnec
     return { radicalId: radical.id, args, paginated };
   }
 }
+*/

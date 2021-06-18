@@ -4,7 +4,7 @@ import { NodedEntity } from '../Node';
 import { TimeStampedEntity } from '../TimeStamp';
 
 @Entity()
-export class Glyph extends NodedEntity(TimeStampedEntity(GlyphType)) {
+export class Glyph extends TimeStampedEntity(NodedEntity(GlyphType)) {
   constructor(name: string, data: string) {
     super();
     this.name = name;

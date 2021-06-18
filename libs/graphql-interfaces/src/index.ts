@@ -1,7 +1,9 @@
+export { CursorConnectionArgs } from './args/CursorConnectionArgs';
 export { GetGlyphsArgs } from './args/GetGlyphsArgs';
 export { GetGlyphwikiGlyphArgs } from './args/GetGlyphwikiGlyphArgs';
 export { GetKanjisArgs } from './args/GetKanjisArgs';
 export { GetRadicalsArgs } from './args/GetRadicalsArgs';
+export { OrderDirection } from './args/OrderArgs';
 export { TypeOrmQueries } from './args/TypeOrmQueries';
 export { Character } from './types/Character';
 export { Kanji } from './types/Kanji';

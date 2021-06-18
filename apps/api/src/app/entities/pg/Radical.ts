@@ -5,7 +5,7 @@ import { NodedEntity } from '../Node';
 import { TimeStampedEntity } from '../TimeStamp';
 
 @Entity()
-export class Radical extends NodedEntity(TimeStampedEntity(RadicalType)) {
+export class Radical extends TimeStampedEntity(NodedEntity(RadicalType)) {
   constructor(codePoint: number, numberOfStrokes: number, names: string[]) {
     super();
     this.codePoint = codePoint;

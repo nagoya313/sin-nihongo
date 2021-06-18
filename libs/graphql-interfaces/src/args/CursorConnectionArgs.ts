@@ -1,4 +1,4 @@
-import { ArgsType, ClassType, Field, Int } from 'type-graphql';
+import { ArgsType, Field, Int } from 'type-graphql';
 import * as Jf from 'joiful';
 
 @ArgsType()

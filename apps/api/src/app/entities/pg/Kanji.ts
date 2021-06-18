@@ -5,7 +5,7 @@ import { NodedEntity } from '../Node';
 import { TimeStampedEntity } from '../TimeStamp';
 
 @Entity()
-export class Kanji extends NodedEntity(TimeStampedEntity(KanjiType)) {
+export class Kanji extends TimeStampedEntity(NodedEntity(KanjiType)) {
   constructor(
     codePoint: number,
     regular: boolean,

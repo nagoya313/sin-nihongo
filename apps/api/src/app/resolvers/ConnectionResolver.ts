@@ -1,54 +1,32 @@
-import {
-  Arg,
-  Args,
-  ClassType,
-  Field,
-  FieldResolver,
-  Int,
-  ObjectType,
-  Query,
-  Resolver,
-  ResolverInterface,
-  Root,
-} from 'type-graphql';
-import { getRepository, Repository } from 'typeorm';
+import DataLoader from 'dataloader';
+import { Arg, Args, FieldResolver, Int, Query, Resolver } from 'type-graphql';
+import { Loader } from 'type-graphql-dataloader';
+import { getRepository } from 'typeorm';
 import pluralize from 'pluralize';
-import { Node, Radical as RadicalType, GetRadicalsArgs } from '@sin-nihongo/graphql-interfaces';
-import { AbstractClassType } from '../libs/ClassType';
+import { Connection } from './Connection';
+import { idDecoder } from './IdDecoder';
 
-export const Connection = <T extends Node>(T: AbstractClassType<T>) => {
-  @ObjectType({ isAbstract: true })
-  abstract class ConnectionClass {
-    @Field(() => [T])
-    readonly nodes!: T[];
+export const ConnectionResolver = <Con extends Connection>(C: Con, connectionName: string) => {
+  type ArgsType = InstanceType<typeof C.ArgsType>;
+  type Type = InstanceType<typeof C.Type>;
+  type EntityType = InstanceType<typeof C.EntityType>;
+  const entityName = C.EntityType.name;
 
-    @Field(() => Int)
-    readonly totalCount!: number;
-  }
-  return ConnectionClass;
-};
-
-export const ConnectionResolver = <Args, Connection, Entity>(
-  A: ClassType<Args>,
-  C: ClassType<Connection>,
-  E: AbstractClassType<Entity>
-) => {
   @Resolver(() => C, { isAbstract: true })
-  abstract class ConnectionResolverClass implements ResolverInterface<typeof C> {
-    @Query(() => E, { nullable: true, name: E.name.toLowerCase() })
-    async node(@Arg('id') id: string): Promise<Entity | undefined> {
-      const decodedId = parseInt(
-        Buffer.from(id, 'base64')
-          .toString()
-          .replace(new RegExp(`^${E.name}:`), '')
-      );
-      console.log(id, decodedId, E.name);
-      return decodedId ? await this.repository.findOne(decodedId) : undefined;
+  abstract class ConnectionResolverClass {
+    @Query(() => C.Type, { nullable: true, name: entityName.toLowerCase() })
+    @Loader<string, EntityType | undefined>(async (ids) => {
+      const decodedIds = ids.map((id) => idDecoder(id, entityName));
+      const entities = await getRepository(C.EntityType, connectionName).findByIds(decodedIds);
+      return ids.map((id) => entities.find((e) => e.encodedId === id));
+    })
+    node(@Arg('id') id: string) {
+      return (dataloader: DataLoader<string, EntityType | undefined>) => dataloader.load(id);
     }
 
-    @Query(() => C, { name: pluralize.plural(E.name.toLowerCase()) })
-    connection(@Args(() => A) args: Args) {
-      return { nodes: this.repository.find() };
+    @Query(() => C, { name: pluralize.plural(C.EntityType.name.toLowerCase()) })
+    connection(@Args(() => C.ArgsType) args: ArgsType) {
+      return { nodes: this.repository.find({ take: args.first }) };
     }
 
     @FieldResolver(() => Int)
@@ -56,18 +34,12 @@ export const ConnectionResolver = <Args, Connection, Entity>(
       return this.repository.count();
     }
 
-    @FieldResolver(() => [E])
+    @FieldResolver(() => [C.Type])
     nodes() {
       return this.repository.find();
     }
 
-    private repository: Repository<Entity> = getRepository(pluralize.plural(E.name.toLowerCase()), 'pg');
+    private repository = getRepository(C.EntityType, connectionName);
   }
   return ConnectionResolverClass;
 };
-
-@ObjectType()
-export class RadicalConnection extends Connection(RadicalType) {}
-
-@Resolver(() => RadicalConnection)
-export class RadicalConnectionResolver extends ConnectionResolver(GetRadicalsArgs, RadicalConnection, RadicalType) {}

@@ -8,9 +8,7 @@ import { Radical } from '../entities/pg/Radical';
 export class NodeResolver {
   @Query(() => Node, { nullable: true })
   node(@Arg('id') id: string): Promise<Node | undefined> {
-    console.log(id);
     const decodedId = Buffer.from(id, 'base64').toString();
-    console.log(decodedId);
     return getRepository(Radical, 'pg').findOne(1);
   }
 }

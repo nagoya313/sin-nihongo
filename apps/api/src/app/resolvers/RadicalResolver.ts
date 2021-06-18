@@ -1,11 +1,16 @@
-import { ObjectType, Resolver } from 'type-graphql';
-import { Connection } from './Connection';
+import { Resolver } from 'type-graphql';
 import { ConnectionResolver } from './ConnectionResolver';
-import { Radical, GetRadicalsArgs } from '@sin-nihongo/graphql-interfaces';
+import { RadicalConnection, Radical } from '@sin-nihongo/graphql-interfaces';
+import { QueryBuilder, unnestLike, WhereQuery } from '../services/QueryBuilder';
 import { Radical as RadicalEntity } from '../entities/pg/Radical';
 
-@ObjectType()
-export class RadicalConnection extends Connection(Radical, GetRadicalsArgs, RadicalEntity) {}
+class RadicalQueryBuilder extends QueryBuilder(RadicalEntity, Radical, 'pg') {
+  @WhereQuery(unnestLike, 'names')
+  name?: string;
+
+  @WhereQuery()
+  numberOfStrokes?: number;
+}
 
 @Resolver(() => RadicalConnection)
-export class RadicalConnectionResolver extends ConnectionResolver(RadicalConnection, 'pg') {}
+export class RadicalConnectionResolver extends ConnectionResolver(RadicalConnection, RadicalQueryBuilder) {}

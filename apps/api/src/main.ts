@@ -9,9 +9,7 @@ export const CLIENT_BUILD_PATH = path.join(__dirname, '../sin-nihongo');
 
 (async () => {
   try {
-    await createConnections(dbConfig).catch((error) => {
-      console.error(error);
-    });
+    await createConnections(dbConfig);
 
     initPaspport();
 

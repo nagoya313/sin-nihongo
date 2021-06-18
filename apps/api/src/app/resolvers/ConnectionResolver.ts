@@ -1,45 +1,56 @@
+import 'reflect-metadata';
 import DataLoader from 'dataloader';
-import { Arg, Args, FieldResolver, Int, Query, Resolver } from 'type-graphql';
+import { Arg, Args, ClassType, FieldResolver, Int, Query, Resolver, Root } from 'type-graphql';
 import { Loader } from 'type-graphql-dataloader';
 import { getRepository } from 'typeorm';
 import pluralize from 'pluralize';
-import { Connection } from './Connection';
-import { idDecoder } from './IdDecoder';
+import { Connection } from '@sin-nihongo/graphql-interfaces';
+import { AbstractClassType } from '../libs/ClassType';
+import { idDecoder } from '../services/QueryBuilder';
 
-export const ConnectionResolver = <Con extends Connection>(C: Con, connectionName: string) => {
-  type ArgsType = InstanceType<typeof C.ArgsType>;
-  type Type = InstanceType<typeof C.Type>;
-  type EntityType = InstanceType<typeof C.EntityType>;
-  const entityName = C.EntityType.name;
+type LoaderResult<T> = T | null;
+
+export const ConnectionResolver = <
+  C extends Connection,
+  E extends ClassType & { EntityType: ClassType; NodeType: AbstractClassType; connectionName: string }
+>(
+  C: C,
+  E: E
+) => {
+  const c = new C();
+  type ArgsType = InstanceType<typeof c.argsType>;
+  const nodeName = E.NodeType.name.toLowerCase();
+  const entityName = E.EntityType.name;
 
   @Resolver(() => C, { isAbstract: true })
   abstract class ConnectionResolverClass {
-    @Query(() => C.Type, { nullable: true, name: entityName.toLowerCase() })
-    @Loader<string, EntityType | undefined>(async (ids) => {
-      const decodedIds = ids.map((id) => idDecoder(id, entityName));
-      const entities = await getRepository(C.EntityType, connectionName).findByIds(decodedIds);
-      return ids.map((id) => entities.find((e) => e.encodedId === id));
+    @Query(() => c.type, { nullable: true, name: nodeName })
+    @Loader<string, LoaderResult<E>>(async (ids) => {
+      const decodedIds = ids.map((id) => idDecoder(id, entityName)).filter((id) => typeof id !== 'undefined');
+      const entities = await getRepository(E.EntityType, E.connectionName).findByIds(decodedIds);
+      return ids.map((id) => entities.find((e) => e.encodedId === id) ?? null);
     })
     node(@Arg('id') id: string) {
-      return (dataloader: DataLoader<string, EntityType | undefined>) => dataloader.load(id);
+      return (dataloader: DataLoader<string, LoaderResult<E>>) => dataloader.load(id);
     }
 
-    @Query(() => C, { name: pluralize.plural(C.EntityType.name.toLowerCase()) })
-    connection(@Args(() => C.ArgsType) args: ArgsType) {
-      return { nodes: this.repository.find({ take: args.first }) };
+    @Query(() => C, { name: pluralize.plural(nodeName) })
+    connection(@Args(() => c.argsType) args: ArgsType) {
+      console.log(args);
+      return args;
     }
 
     @FieldResolver(() => Int)
-    totalCount() {
-      return this.repository.count();
+    totalCount(@Root() root: ArgsType) {
+      return this.repository.count(root);
     }
 
-    @FieldResolver(() => [C.Type])
-    nodes() {
-      return this.repository.find();
+    @FieldResolver(() => [c.type])
+    nodes(@Root() root: ArgsType) {
+      return this.repository.find(root);
     }
 
-    private repository = getRepository(C.EntityType, connectionName);
+    private repository = new E();
   }
   return ConnectionResolverClass;
 };

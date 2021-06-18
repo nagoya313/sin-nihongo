@@ -1,6 +1,6 @@
 import { ArgsType, Field } from 'type-graphql';
 import * as Jf from 'joiful';
-import { GLYPHWIKI_QUERY_PARAMS_MATCHER } from '../lib/const';
+import { GLYPHWIKI_QUERY_PARAMS_MATCHER } from './const';
 
 @ArgsType()
 export class GetGlyphwikiGlyphArgs {

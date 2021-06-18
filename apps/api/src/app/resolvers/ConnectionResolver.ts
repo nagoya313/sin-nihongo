@@ -9,14 +9,9 @@ import { AbstractClassType } from '../libs/ClassType';
 import { idDecoder } from '../services/QueryBuilder';
 
 type LoaderResult<T> = T | null;
+type QueryBuilderType = ClassType & { EntityType: ClassType; NodeType: AbstractClassType; connectionName: string };
 
-export const ConnectionResolver = <
-  C extends Connection,
-  E extends ClassType & { EntityType: ClassType; NodeType: AbstractClassType; connectionName: string }
->(
-  C: C,
-  E: E
-) => {
+export const ConnectionResolver = <C extends Connection, E extends QueryBuilderType>(C: C, E: E) => {
   const c = new C();
   type ArgsType = InstanceType<typeof c.argsType>;
   const nodeName = E.NodeType.name.toLowerCase();

@@ -1,4 +1,4 @@
-import { AbstractClassType } from '../libs/ClassType';
+import { AbstractClassType } from '../utils/ClassType';
 
 export const NodedEntity = <TBase extends AbstractClassType>(Base: TBase) => {
   abstract class NodeEntity extends Base {

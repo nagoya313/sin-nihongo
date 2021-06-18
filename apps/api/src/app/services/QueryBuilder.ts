@@ -13,7 +13,7 @@ export const QueryBuilder = (Entity: ClassType, Node: AbstractClassType, connect
     static NodeType = Node;
     static connectionName = connectionName;
 
-    constructor(public entityName = Entity.name, private repository = getRepository(Entity, connectionName)) {}
+    constructor(private repository = getRepository(Entity, connectionName)) {}
 
     count(args: Args) {
       return this.repository.count(this.countQuery(args));

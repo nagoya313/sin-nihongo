@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import DataLoader from 'dataloader';
-import { Arg, Args, ClassType, FieldResolver, Int, Query, Resolver, Root } from 'type-graphql';
+import { Arg, Args, Authorized, ClassType, FieldResolver, Int, Query, Resolver, Root } from 'type-graphql';
 import { Loader } from 'type-graphql-dataloader';
 import { getRepository } from 'typeorm';
 import pluralize from 'pluralize';

@@ -7,4 +7,7 @@ export abstract class KageGlyph {
 
   @Field({ description: 'KAGEデータ' })
   abstract readonly data: string;
+
+  abstract readonly includeGlyphs: unknown;
+  abstract readonly drawNecessaryGlyphs: unknown;
 }

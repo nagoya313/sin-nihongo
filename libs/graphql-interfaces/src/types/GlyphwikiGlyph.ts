@@ -1,5 +1,9 @@
 import { Buffer } from 'buffer';
 import { ObjectType } from 'type-graphql';
+import {
+  GlyphwikiGlyphIncludeConnection,
+  GlyphwikiGlyphDrawNecessaryConnection,
+} from '../connections/GlyphwikiGlyphConnection';
 import { KageGlyph } from './KageGlyph';
 import { Node } from './Node';
 
@@ -11,4 +15,7 @@ export class GlyphwikiGlyph extends KageGlyph implements Node {
 
   readonly name!: string;
   readonly data!: string;
+
+  readonly includeGlyphs!: GlyphwikiGlyphIncludeConnection;
+  readonly drawNecessaryGlyphs!: GlyphwikiGlyphDrawNecessaryConnection;
 }

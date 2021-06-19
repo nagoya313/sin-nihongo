@@ -4,15 +4,17 @@ import { GlyphwikiGlyph } from '../types/GlyphwikiGlyph';
 
 @ObjectType({ isAbstract: true })
 abstract class GlyphwikiGlyphConnection {
-  @Field(() => [GlyphwikiGlyph])
+  @Field(() => [GlyphwikiGlyph], { description: 'グリフ一覧' })
   readonly nodes!: GlyphwikiGlyph[];
+
+  @Field(() => Int, { description: 'グリフ総数' })
+  abstract readonly totalCount: number;
 
   readonly root!: GlyphwikiGlyph;
 }
 
 @ObjectType()
 export class GlyphwikiGlyphIncludeConnection extends GlyphwikiGlyphConnection {
-  @Field(() => Int)
   get totalCount() {
     return new Strokes(this.root).linkStrokes.length;
   }
@@ -20,6 +22,5 @@ export class GlyphwikiGlyphIncludeConnection extends GlyphwikiGlyphConnection {
 
 @ObjectType()
 export class GlyphwikiGlyphDrawNecessaryConnection extends GlyphwikiGlyphConnection {
-  @Field(() => Int)
   readonly totalCount!: number;
 }

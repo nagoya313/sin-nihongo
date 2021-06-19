@@ -1,3 +1,4 @@
+import { plainToClass } from 'class-transformer';
 import { Args, FieldResolver, Query, Resolver, Root, ResolverInterface } from 'type-graphql';
 import {
   GlyphwikiGlyph,
@@ -9,7 +10,7 @@ import { GlyphLoader } from '@sin-nihongo/kage';
 import { Glyphwiki } from '../services/Glyphwiki';
 
 @Resolver(() => GlyphwikiGlyph)
-export class GlyphqikiResolver {
+export class GlyphqikiResolver implements ResolverInterface<GlyphwikiGlyph> {
   @Query(() => GlyphwikiGlyph, { description: 'グリフウィキからグリフお取得する', complexity: 10 })
   glyphwiki(@Args() { name }: GetGlyphwikiGlyphArgs) {
     return Glyphwiki.getData(name);
@@ -17,13 +18,13 @@ export class GlyphqikiResolver {
 
   @FieldResolver(() => GlyphwikiGlyphIncludeConnection, { description: '含むグリフ' })
   includeGlyphs(@Root() glyph: GlyphwikiGlyph) {
-    return { root: glyph };
+    return plainToClass(GlyphwikiGlyphIncludeConnection, { root: glyph });
   }
 
   @FieldResolver(() => GlyphwikiGlyphDrawNecessaryConnection, { description: '描画に必要なグリフ', complexity: 100 })
   async drawNecessaryGlyphs(@Root() glyph: GlyphwikiGlyph) {
     const glyphs = await this.loader.drawNecessaryGlyphs(glyph);
-    return { totalCount: glyphs.length, nodes: glyphs };
+    return plainToClass(GlyphwikiGlyphDrawNecessaryConnection, { totalCount: glyphs.length, nodes: glyphs });
   }
 
   private loader = new GlyphLoader(Glyphwiki.getData);

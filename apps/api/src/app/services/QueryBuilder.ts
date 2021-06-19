@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 import { ClassType } from 'type-graphql';
 import { getRepository, FindManyOptions, Raw } from 'typeorm';
 import { CursorConnectionArgs, OrdarArgs, OrderDirection } from '@sin-nihongo/graphql-interfaces';
-import { AbstractClassType } from '../libs/ClassType';
+import { AbstractClassType } from '../utils/ClassType';
 
 const WHERE_QUERY_KEY = Symbol('sin_nihongo:where_query');
 type Args = CursorConnectionArgs & OrdarArgs;

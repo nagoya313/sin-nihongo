@@ -5,7 +5,7 @@ import { Loader } from 'type-graphql-dataloader';
 import { getRepository } from 'typeorm';
 import pluralize from 'pluralize';
 import { Connection } from '@sin-nihongo/graphql-interfaces';
-import { AbstractClassType } from '../libs/ClassType';
+import { AbstractClassType } from '../utils/ClassType';
 import { idDecoder } from '../services/QueryBuilder';
 
 type LoaderResult<T> = T | null;

@@ -4,7 +4,7 @@ import { Glyphwiki } from '../services/Glyphwiki';
 
 @Resolver()
 export class InfoResolver {
-  @Query(() => Info, { description: 'サイト情報お取得する' })
+  @Query(() => Info, { description: 'サイト情報お取得する', complexity: 10 })
   async info() {
     return { glyphwikiAccessible: await Glyphwiki.health() } as Info;
   }

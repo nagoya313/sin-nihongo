@@ -2,9 +2,9 @@ import { Buffer } from 'buffer';
 import { ClassType } from 'type-graphql';
 import { getRepository, FindManyOptions, Raw } from 'typeorm';
 import { CursorConnectionArgs, OrdarArgs, OrderDirection } from '@sin-nihongo/graphql-interfaces';
+import { WHERE_QUERY_KEY } from '../decorators/WhereQuery';
 import { AbstractClassType } from '../utils/ClassType';
 
-const WHERE_QUERY_KEY = Symbol('sin_nihongo:where_query');
 type Args = CursorConnectionArgs & OrdarArgs;
 
 export const QueryBuilder = (Entity: ClassType, Node: AbstractClassType, connectionName: string) => {
@@ -38,32 +38,22 @@ export const QueryBuilder = (Entity: ClassType, Node: AbstractClassType, connect
     }
 
     private countQuery(args: CursorConnectionArgs & OrdarArgs) {
-      const queries = this.whereQuery(args);
+      const queries = { where: this.whereQuery(args) };
 
       if (args.field) {
-        return { where: queries, order: { [args.field]: args.direction ?? OrderDirection.ASC } };
+        Object.assign(queries, { order: { [args.field]: args.direction ?? OrderDirection.ASC } });
       }
 
-      return { where: queries };
+      return queries;
     }
 
     private findManyOptions(args: CursorConnectionArgs & OrdarArgs): FindManyOptions {
-      const queries = this.whereQuery(args);
-
-      if (args.field) {
-        return { where: queries, take: args.first, order: { [args.field]: args.direction ?? OrderDirection.ASC } };
-      }
-
-      return { where: queries, take: args.first };
+      const queries = this.countQuery(args);
+      Object.assign(queries, { take: args.first });
+      return queries;
     }
   }
   return QueryBuilderClass;
-};
-
-type WhereQuertType = (query?: (value: unknown) => unknown, name?: string) => PropertyDecorator;
-
-export const WhereQuery: WhereQuertType = (query?, name?): PropertyDecorator => (target, propertyKey) => {
-  Reflect.defineMetadata(WHERE_QUERY_KEY, [query, name], target, propertyKey);
 };
 
 export const unnestLike = (value: unknown) =>

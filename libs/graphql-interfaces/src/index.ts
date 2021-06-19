@@ -14,4 +14,5 @@ export { Node } from './types/Node';
 export { Radical } from './types/Radical';
 export { TimeStamp } from './types/TimeStamp';
 export { Connection } from './connections/Connection';
+export * from './connections/GlyphwikiGlyphConnection';
 export { RadicalConnection } from './connections/RadicalConnection';

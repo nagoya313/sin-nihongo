@@ -1,9 +1,10 @@
 import { uniqBy, filter, map } from 'lodash';
 import { Columns } from './Columns';
+import { Glyph } from './Glyph';
 
-export class Strokes {
-  constructor(data: string) {
-    this.strokes = data.split('$').map((stroke) => new Columns(stroke));
+export class Strokes<G extends Glyph> {
+  constructor(glyph: G) {
+    this.strokes = glyph.data.split('$').map((stroke) => new Columns(stroke));
   }
 
   strokeOf(id: number) {

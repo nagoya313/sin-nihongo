@@ -1,7 +1,7 @@
 import { Args, FieldResolver, Query, Resolver, Root } from 'type-graphql';
 import { GetGlyphwikiGlyphArgs, GlyphwikiGlyph } from '@sin-nihongo/graphql-interfaces';
+import { drawNecessaryGlyphs, includeGlyphs } from '@sin-nihongo/kage';
 import { Glyphwiki } from '../services/Glyphwiki';
-import { drawNecessaryGlyphs, includeGlyphs } from '../libs/glyph';
 
 @Resolver(() => GlyphwikiGlyph)
 export class GlyphqikiResolver {

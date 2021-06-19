@@ -9,7 +9,7 @@
     "s:api": "nx ts-serve api",
     "build": "nx run-many --target=build --projects=sin-nihongo,api --parallel=true --prod",
     "test": "nx test",
-    "test:all": "nx run-many --target=test --projects=sin-nihongo,api,sin-nihongo-params --collectCoverage",
+    "test:all": "nx run-many --target=test --projects=sin-nihongo,api,kage --collectCoverage",
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",
     "affected:apps": "nx affected:apps",
@@ -59,6 +59,7 @@
     "joiful": "^3.0.2",
     "jwks-rsa": "^2.0.3",
     "konva": "^8.0.4",
+    "lodash": "^4.17.21",
     "mojijs": "^3.1.0",
     "mongodb": "^3.6.9",
     "passport": "^0.4.1",
@@ -86,7 +87,6 @@
     "type-graphql-dataloader": "^0.4.0",
     "typeorm": "^0.2.32",
     "typeorm-seeding": "^1.6.1",
-    "underscore": "^1.13.1",
     "use-debounce": "^6.0.1"
   },
   "devDependencies": {
@@ -108,6 +108,7 @@
     "@testing-library/react": "11.2.6",
     "@types/express": "4.17.0",
     "@types/jest": "26.0.8",
+    "@types/lodash": "^4.14.170",
     "@types/node": "14.14.33",
     "@types/passport": "^1.0.6",
     "@types/passport-jwt": "^3.0.5",
@@ -118,7 +119,6 @@
     "@types/react-is": "17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "5.1.9",
-    "@types/underscore": "^1.11.2",
     "@typescript-eslint/eslint-plugin": "4.19.0",
     "@typescript-eslint/parser": "4.19.0",
     "babel-jest": "26.2.2",
@@ -138,9 +138,12 @@
     "ts-jest": "26.5.5",
     "ts-node-dev": "^1.1.6",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.4"
   },
   "resolutions": {
     "postcss": "^8.2.10"
-  }
+  },
+  "eslintIgnore": [
+    "/**/jest.config.js"
+  ]
 }

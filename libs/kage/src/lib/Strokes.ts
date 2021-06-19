@@ -1,4 +1,4 @@
-import { uniq, filter, pluck } from 'underscore';
+import { uniqBy, filter, map } from 'lodash';
 import { Columns } from './Columns';
 
 export class Strokes {
@@ -11,18 +11,15 @@ export class Strokes {
   }
 
   get linkStrokes() {
-    return uniq(
-      filter(this.strokes, (stroke) => stroke.isLinkStroke),
-      'linkStrokeId'
-    );
+    return uniqBy(filter(this.strokes, 'isLinkStroke'), 'linkStrokeId');
   }
 
   get linkIds() {
-    return pluck(this.linkStrokes, 'linkStrokeId');
+    return map(this.linkStrokes, 'linkStrokeId');
   }
 
   get data() {
-    return pluck(this.strokes, 'data').join('$');
+    return map(this.strokes, 'data').join('$');
   }
 
   get numberOfStrokes() {

@@ -4,7 +4,7 @@ export class Columns {
   }
 
   get isLinkStroke() {
-    return this.columns[0] === '99' && typeof this.columns[7] !== 'undefined';
+    return this.columns[0] === '99' && typeof this.linkStrokeId !== 'undefined';
   }
 
   get linkStrokeId() {
@@ -15,5 +15,5 @@ export class Columns {
     return this.columns.join(':');
   }
 
-  readonly columns: string[];
+  private readonly columns: string[];
 }

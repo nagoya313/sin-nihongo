@@ -1,4 +1,4 @@
-import { uniq, flatten } from 'underscore';
+import { uniqBy, flatten } from 'lodash';
 import { KageGlyph } from '@sin-nihongo/graphql-interfaces';
 import { Strokes } from './Strokes';
 
@@ -10,7 +10,7 @@ export const includeGlyphs = async <Glyph extends KageGlyph>(data: Glyph, getter
 };
 
 export const drawNecessaryGlyphs = async <Glyph extends KageGlyph>(data: Glyph, getter: GetterType<Glyph>) =>
-  uniq(await scanRecursion(data, getter), 'name');
+  uniqBy(await scanRecursion(data, getter), 'name');
 
 const scanRecursion = async <Glyph extends KageGlyph>(data: Glyph, getter: GetterType<Glyph>) => {
   const linkStrokes = new Strokes(data.data).linkStrokes;

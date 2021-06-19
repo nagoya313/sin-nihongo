@@ -1,9 +1,9 @@
 import { uniq, filter, pluck } from 'underscore';
-import { KageColumns } from './KageColumns';
+import { Columns } from './Columns';
 
-export class KageStrokes {
+export class Strokes {
   constructor(data: string) {
-    this.strokes = data.split('$').map((stroke) => new KageColumns(stroke));
+    this.strokes = data.split('$').map((stroke) => new Columns(stroke));
   }
 
   strokeOf(id: number) {
@@ -29,5 +29,5 @@ export class KageStrokes {
     return this.strokes.length;
   }
 
-  private readonly strokes: KageColumns[];
+  private readonly strokes: Columns[];
 }

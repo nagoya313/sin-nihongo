@@ -212,6 +212,27 @@
           }
         }
       }
+    },
+    "kage": {
+      "root": "libs/kage",
+      "sourceRoot": "libs/kage/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/kage/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/kage"],
+          "options": {
+            "jestConfig": "libs/kage/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

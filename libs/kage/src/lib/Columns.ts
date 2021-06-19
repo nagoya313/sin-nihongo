@@ -1,4 +1,4 @@
-export class KageColumns {
+export class Columns {
   constructor(stroke: string) {
     this.columns = stroke.split(':');
   }

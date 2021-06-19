@@ -1,14 +1,11 @@
 import { uniq, flatten } from 'underscore';
 import { KageGlyph } from '@sin-nihongo/graphql-interfaces';
-import { KageStrokes } from './kage/KageStrokes';
+import { Strokes } from './Strokes';
 
 type GetterType<Glyph> = (key: string) => Promise<Glyph>;
 
-export const includeGlyphs = async <Glyph extends KageGlyph>(
-  data: Glyph,
-  getter: GetterType<Glyph>
-): Promise<Glyph[]> => {
-  const linkStrokes = new KageStrokes(data.data).linkStrokes;
+export const includeGlyphs = async <Glyph extends KageGlyph>(data: Glyph, getter: GetterType<Glyph>) => {
+  const linkStrokes = new Strokes(data.data).linkStrokes;
   return await Promise.all(linkStrokes.map(async (stroke) => await getter(stroke.linkStrokeId)));
 };
 
@@ -16,7 +13,7 @@ export const drawNecessaryGlyphs = async <Glyph extends KageGlyph>(data: Glyph, 
   uniq(await scanRecursion(data, getter), 'name');
 
 const scanRecursion = async <Glyph extends KageGlyph>(data: Glyph, getter: GetterType<Glyph>) => {
-  const linkStrokes = new KageStrokes(data.data).linkStrokes;
+  const linkStrokes = new Strokes(data.data).linkStrokes;
   const strokes = await Promise.all(
     linkStrokes.map(async (stroke) => {
       const base = await getter(stroke.linkStrokeId);

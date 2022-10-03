@@ -4,6 +4,7 @@ import { type LinksFunction, type MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
+import Layout from './layout';
 import { theme } from './styles/theme';
 
 export const meta: MetaFunction = () => ({
@@ -62,7 +63,9 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
 const App = () => (
   <Document>
     <ChakraProvider theme={theme}>
-      <Outlet />
+      <Layout>
+        <Outlet />
+      </Layout>
     </ChakraProvider>
   </Document>
 );

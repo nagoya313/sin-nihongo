@@ -1,7 +1,7 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Text } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
 import { type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch } from '@remix-run/react';
 import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
 import Layout from './layout';
@@ -29,10 +29,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 type DocumentProps = {
+  title?: string;
   children: React.ReactNode;
 };
 
-const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) => {
+const Document = withEmotionCache(({ title, children }: DocumentProps, emotionCache) => {
   const serverStyleData = useContext(ServerStyleContext);
   const clientStyleData = useContext(ClientStyleContext);
 
@@ -50,6 +51,7 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
   return (
     <html lang="ja">
       <head>
+        {title != null && <title>{title}</title>}
         <Meta />
         <Links />
         {serverStyleData?.map(({ key, ids, css }) => (
@@ -65,6 +67,18 @@ const Document = withEmotionCache(({ children }: DocumentProps, emotionCache) =>
     </html>
   );
 });
+
+export const CatchBoundary = () => {
+  const caught = useCatch();
+
+  return (
+    <Document title={caught.status === 404 ? 'Page Not Found' : undefined}>
+      <ChakraProvider theme={theme}>
+        <Text p={4}>{caught.status === 404 ? 'お探しのページは見つかりませんでした。' : caught.statusText}</Text>
+      </ChakraProvider>
+    </Document>
+  );
+};
 
 const App = () => (
   <Document>

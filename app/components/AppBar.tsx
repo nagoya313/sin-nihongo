@@ -2,6 +2,7 @@ import { Avatar, Flex, Heading, HStack, IconButton, LinkBox, useColorModeValue }
 import { Link } from '@remix-run/react';
 import { MdMenu } from 'react-icons/md';
 import { HEADER_HEIGHT } from '~/styles/constants';
+import AuthButton from './AuthButton';
 import ColorChangeButton from './ColorChangeButton';
 
 type AppBarProps = {
@@ -42,6 +43,7 @@ const AppBar = ({ onSideBarOpen }: AppBarProps) => (
     </LinkBox>
     <HStack p={4}>
       <ColorChangeButton />
+      <AuthButton />
     </HStack>
   </Flex>
 );

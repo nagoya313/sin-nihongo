@@ -7854,6 +7854,29 @@ remark-rehype@^9.0.0:
     mdast-util-to-hast "^11.0.0"
     unified "^10.0.0"
 
+remix-auth-auth0@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/remix-auth-auth0/-/remix-auth-auth0-1.4.0.tgz#17c883647d09455f91027623424da7111fc08ef3"
+  integrity sha512-+/A84R+3NxytDgq1fxsKOzhEQ3lUuy1/TDzERyjCu1YFhRTrdcHwyadQvrCRJ6d6TZB5yj9ZpO64x2fAS7P9Ww==
+  dependencies:
+    remix-auth-oauth2 "^1.2.2"
+
+remix-auth-oauth2@^1.2.2:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/remix-auth-oauth2/-/remix-auth-oauth2-1.3.0.tgz#42cb8274e0b4ccecc6c5c5755642482456ff8824"
+  integrity sha512-vibb7jxzRmeTqkl2SORgTg5rZqSAt8VdAvz3JBJOAbjn1wScvEcHttAJDQHDhdtdDgJVaOjJ0K7QpQNEeZdi0A==
+  dependencies:
+    debug "^4.3.4"
+    remix-auth "^3.2.2"
+    uuid "^8.3.2"
+
+remix-auth@^3.2.2, remix-auth@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/remix-auth/-/remix-auth-3.3.0.tgz#38f2e8825c42c0ebd89737992787b11b663fb42c"
+  integrity sha512-sLY5s6DQF4OJp03HM/dIEw3tLfSOIowerS2QDTuvEVXoEA3IHVmk7QkvOKosWdVPbcnlRfwF6PbeBLKgo6vqsg==
+  dependencies:
+    uuid "^8.3.2"
+
 repeat-element@^1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/repeat-element/-/repeat-element-1.1.4.tgz#be681520847ab58c7568ac75fbfad28ed42d39e9"
@@ -8970,6 +8993,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
+
+uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 uvu@^0.5.0:
   version "0.5.6"

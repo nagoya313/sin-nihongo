@@ -1,10 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
-import { type LinksFunction, type MetaFunction } from '@remix-run/node';
+import { type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
 import Layout from './layout';
+import { authenticator } from './session.server';
 import { theme } from './styles/theme';
 
 export const meta: MetaFunction = () => ({
@@ -21,6 +22,11 @@ export const links: LinksFunction = () => [
     href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap',
   },
 ];
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const user = await authenticator.isAuthenticated(request);
+  return { user };
+};
 
 type DocumentProps = {
   children: React.ReactNode;

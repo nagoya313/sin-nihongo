@@ -2,8 +2,8 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev",
+    "build": "remix-routes && remix build",
+    "dev": "concurrently \"remix-routes -w\" \"remix dev\"",
     "format": "prettier --config .prettierrc.json --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "test": "vitest"
@@ -18,11 +18,13 @@
     "@remix-run/vercel": "^1.7.2",
     "@vercel/node": "^2.4.4",
     "framer-motion": "^7.5.1",
+    "jotai": "^1.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "remix-auth": "^3.3.0",
-    "remix-auth-auth0": "^1.4.0"
+    "remix-auth-auth0": "^1.4.0",
+    "remix-routes": "^0.5.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.7.2",
@@ -33,6 +35,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "concurrently": "^7.4.0",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
     "happy-dom": "^6.0.4",

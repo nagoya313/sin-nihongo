@@ -8,12 +8,13 @@ import {
   DrawerContent,
   DrawerHeader,
   Flex,
-  useDisclosure,
   VStack,
 } from '@chakra-ui/react';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { closeSidebarAtom, isOpenSidebarAtom } from '~/atoms/sidebarAtom';
 import AppBar from '~/components/AppBar';
 import Footer from '~/components/Footer';
-import SideBar from '~/components/SideBar';
+import SideBar from '~/components/Sidebar';
 import { HEADER_HEIGHT } from '~/styles/constants';
 
 type LayoutProps = {
@@ -21,11 +22,12 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const isOpen = useAtomValue(isOpenSidebarAtom);
+  const onClose = useSetAtom(closeSidebarAtom);
 
   return (
     <>
-      <AppBar onSideBarOpen={onOpen} />
+      <AppBar />
       <Box h={HEADER_HEIGHT} />
       <VStack
         p={2}
@@ -35,7 +37,7 @@ const Layout = ({ children }: LayoutProps) => {
         borderRightWidth="1px"
         display={{ base: 'none', md: 'block' }}
       >
-        <SideBar onClose={onClose} />
+        <SideBar />
       </VStack>
       <Drawer
         autoFocus={false}
@@ -53,7 +55,7 @@ const Layout = ({ children }: LayoutProps) => {
             新日本語
           </DrawerHeader>
           <DrawerBody>
-            <SideBar onClose={onClose} />
+            <SideBar />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

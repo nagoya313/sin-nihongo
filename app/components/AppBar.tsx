@@ -1,15 +1,14 @@
 import { Avatar, Flex, Heading, HStack, IconButton, LinkBox, useColorModeValue } from '@chakra-ui/react';
 import { Link } from '@remix-run/react';
+import { useSetAtom } from 'jotai';
 import { MdMenu } from 'react-icons/md';
+import { $path } from 'remix-routes';
+import { openSidebarAtom } from '~/atoms/sidebarAtom';
 import { HEADER_HEIGHT } from '~/styles/constants';
 import AuthButton from './AuthButton';
 import ColorChangeButton from './ColorChangeButton';
 
-type AppBarProps = {
-  onSideBarOpen: () => void;
-};
-
-const AppBar = ({ onSideBarOpen }: AppBarProps) => (
+const AppBar = () => (
   <Flex
     as="header"
     zIndex={3}
@@ -24,7 +23,7 @@ const AppBar = ({ onSideBarOpen }: AppBarProps) => (
     borderBottomWidth="1px"
   >
     <IconButton
-      onClick={onSideBarOpen}
+      onClick={useSetAtom(openSidebarAtom)}
       aria-label="open menu"
       icon={<MdMenu />}
       color="gray.400"
@@ -32,7 +31,7 @@ const AppBar = ({ onSideBarOpen }: AppBarProps) => (
       variant="ghost"
     />
     <LinkBox as="article">
-      <Link to="/">
+      <Link to={$path('/')}>
         <HStack>
           <Avatar size="sm" src="/favicon.ico" display={{ base: 'none', md: 'block' }} />
           <Heading as="h4" size="md">

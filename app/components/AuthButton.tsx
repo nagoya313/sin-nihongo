@@ -1,5 +1,6 @@
 import { Avatar, Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { Form } from '@remix-run/react';
+import { $path } from 'remix-routes';
 import { useOptionalUser } from '~/hooks/useUser';
 
 const AuthButton = () => {
@@ -11,14 +12,14 @@ const AuthButton = () => {
         <Avatar name={user?.displayName} src={user?.picture} />
       </MenuButton>
       <MenuList>
-        <Form action="/logout" method="post">
-          <MenuItem type="submit">サインアウト</MenuItem>
+        <Form action={$path('/logout')} method="post">
+          <MenuItem type="submit">登出</MenuItem>
         </Form>
       </MenuList>
     </Menu>
   ) : (
-    <Form action="/auth" method="post">
-      <Button type="submit">Sign in</Button>
+    <Form action={$path('/auth')} method="post">
+      <Button type="submit">登録</Button>
     </Form>
   );
 };

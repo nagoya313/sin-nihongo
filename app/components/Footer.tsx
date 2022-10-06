@@ -4,7 +4,7 @@ import { SiGithub } from 'react-icons/si';
 const Footer = () => (
   <HStack as="footer" p={4} ml="auto" mr={0}>
     <Link
-      href="https://github.com/nagoya313/sin-nihongo82"
+      href="https://github.com/nagoya313/sin-nihongo"
       isExternal
       color="gray.400"
       _hover={{ color: useColorModeValue('gray.700', 'gray.600') }}

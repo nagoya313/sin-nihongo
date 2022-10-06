@@ -10,8 +10,8 @@ const SideBar = () => (
     <Heading as="h5" size="sm" p={1}>
       メニュー
     </Heading>
-    <SideBarLink to={$path('/')} title="部首索引" icon={<Icon {...iconProps} as={MdOutlinePark} />} />
-    <SideBarLink to={$path('/')} title="このサイトについて" icon={<Icon {...iconProps} as={MdOutlineInfo} />} />
+    <SideBarLink to={$path('/radicals')} title="部首索引" icon={<Icon {...iconProps} as={MdOutlinePark} />} />
+    <SideBarLink to={$path('/info')} title="このサイトについて" icon={<Icon {...iconProps} as={MdOutlineInfo} />} />
   </Stack>
 );
 

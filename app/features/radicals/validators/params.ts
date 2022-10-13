@@ -10,6 +10,7 @@ export const MAX_STOREKE_COUNT = 17;
 export const radicalQueryParams = withZod(
   z.object({
     direction,
+    orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
     strokeCount: zfd.numeric(
       z
         .number()

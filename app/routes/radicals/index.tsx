@@ -1,10 +1,10 @@
 import { Icon } from '@chakra-ui/react';
-import { type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { MdOutlinePark } from 'react-icons/md';
 import { validationError } from 'remix-validated-form';
 import PageInfo from '~/components/PageInfo';
-import RadicalSearchPanel from '~/features/radicals/components/RadicalSearchPanel';
-import RadicalSearcResult from '~/features/radicals/components/RadicalSearchResult';
+import Radicals from '~/features/radicals/components/Radicals';
+import { radicalReadOrder, radicalStrokeCountOrder } from '~/features/radicals/models/radicals.server';
 import { radicalQueryParams } from '~/features/radicals/validators/params';
 
 export const meta: MetaFunction = () => ({
@@ -13,15 +13,20 @@ export const meta: MetaFunction = () => ({
 
 export const loader = async ({ request }: LoaderArgs) => {
   const result = await radicalQueryParams.validate(new URL(request.url).searchParams);
-  if (result.error) return validationError(result.error);
-  return {};
+  if (result.error) {
+    console.log(result.error.fieldErrors);
+    return validationError(result.error);
+  }
+  if (result.data.orderBy === 'read') {
+    return json(await radicalReadOrder(result.data));
+  }
+  return json(await radicalStrokeCountOrder(result.data));
 };
 
 const Index = () => (
   <>
     <PageInfo avatar={<Icon fontSize={24} as={MdOutlinePark} />} title="部首索引" />
-    <RadicalSearchPanel />
-    <RadicalSearcResult />
+    <Radicals />
   </>
 );
 

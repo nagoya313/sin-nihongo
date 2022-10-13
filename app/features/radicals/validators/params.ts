@@ -22,3 +22,9 @@ export const radicalQueryParams = withZod(
     read: zfd.text(hiragana.max(10, '10文字以内で入力してください').optional()),
   }),
 );
+
+export const radicalParams = withZod(
+  z.object({
+    codePoint: zfd.numeric(z.number().int()),
+  }),
+);

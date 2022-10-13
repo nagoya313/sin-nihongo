@@ -10,9 +10,10 @@ const strokeCount = (data: any) => ('stroke_count' in data ? data.stroke_count :
 
 type StrokeCountOrderProps = {
   data: ReadonlyArray<{ stroke_count?: number; in_radical_stroke_count?: string; code_points: ReadonlyArray<number> }>;
+  to: React.ComponentProps<typeof WordItem>['to'];
 };
 
-const StrokeCountOrder = ({ data }: StrokeCountOrderProps) => {
+const StrokeCountOrder = ({ data, to }: StrokeCountOrderProps) => {
   const virtuoso = useRef<GroupedVirtuosoHandle>(null);
 
   return (
@@ -27,7 +28,7 @@ const StrokeCountOrder = ({ data }: StrokeCountOrderProps) => {
           itemContent={(index) => (
             <Wrap p={4}>
               {data[index]!.code_points.map((codePoint) => (
-                <WordItem key={codePoint} codePoint={codePoint} />
+                <WordItem key={codePoint} codePoint={codePoint} to={to} />
               ))}
             </Wrap>
           )}

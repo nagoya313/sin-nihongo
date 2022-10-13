@@ -60,7 +60,9 @@ const Index = () => {
         </SearchPanel>
         <OrderTabs formId={RADICAL_SEARCH_FORM_ID} orders={ORDERS}>
           <TabPanel>
-            {'radicalStrokeCountOrder' in data && <StrokeCountOrder data={data.radicalStrokeCountOrder} />}
+            {'radicalStrokeCountOrder' in data && (
+              <StrokeCountOrder data={data.radicalStrokeCountOrder} to="/radicals" />
+            )}
           </TabPanel>
           <TabPanel>{'radicalReadOrder' in data && <ReadOrder data={data.radicalReadOrder} />}</TabPanel>
         </OrderTabs>

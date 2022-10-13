@@ -4,12 +4,13 @@ import { $path } from 'remix-routes';
 
 type WordItemProps = {
   codePoint: number;
+  to: '/radicals';
 };
 
-const WordItem = ({ codePoint }: WordItemProps) => (
+const WordItem = ({ codePoint, to }: WordItemProps) => (
   <WrapItem>
     <Center w="40px">
-      <Link to={$path('/radicals')}>
+      <Link to={$path(`${to}/:codePoint`, { codePoint })}>
         <Text fontSize="xl" fontWeight="bold">
           {String.fromCodePoint(codePoint)}
         </Text>

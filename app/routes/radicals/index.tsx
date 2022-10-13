@@ -3,6 +3,7 @@ import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdOutlinePark } from 'react-icons/md';
 import { ValidatedForm, validationError } from 'remix-validated-form';
+import { ORDERS } from '~/components/constants';
 import NumberInput from '~/components/NumberInput';
 import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
@@ -12,14 +13,9 @@ import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import TextInput from '~/components/TextInput';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
-import { radicalReadOrder, radicalStrokeCountOrder } from '~/features/radicals/models/radicals.server';
+import { radicalReadOrder, radicalStrokeCountOrder } from '~/features/radicals/models/radical.server';
 import { MAX_STOREKE_COUNT, MIN_STOREKE_COUNT, radicalQueryParams } from '~/features/radicals/validators/params';
 import useSearch from '~/hooks/useSearch';
-
-const ORDERS = Object.freeze([
-  { key: 'stroke_count', label: '画数順' },
-  { key: 'read', label: 'よみかた順' },
-]);
 
 export const meta: MetaFunction = () => ({
   title: '新日本語｜部首索引',
@@ -64,7 +60,7 @@ const Index = () => {
               <StrokeCountOrder data={data.radicalStrokeCountOrder} to="/radicals" />
             )}
           </TabPanel>
-          <TabPanel>{'radicalReadOrder' in data && <ReadOrder data={data.radicalReadOrder} />}</TabPanel>
+          <TabPanel>{'radicalReadOrder' in data && <ReadOrder data={data.radicalReadOrder} to="/radicals" />}</TabPanel>
         </OrderTabs>
       </ValidatedForm>
     </Page>

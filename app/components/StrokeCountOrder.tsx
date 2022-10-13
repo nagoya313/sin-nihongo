@@ -9,7 +9,7 @@ import QueryResult from './QueryResult';
 const strokeCount = (data: any) => ('stroke_count' in data ? data.stroke_count : data.in_radical_stroke_count);
 
 type StrokeCountOrderProps = {
-  data: ReadonlyArray<{ stroke_count?: number; in_radical_stroke_count?: string; code_points: ReadonlyArray<number> }>;
+  data: ReadonlyArray<{ stroke_count?: number; in_radical_stroke_count?: number; code_points: ReadonlyArray<number> }>;
   to: React.ComponentProps<typeof WordItem>['to'];
 };
 

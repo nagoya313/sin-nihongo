@@ -10,9 +10,10 @@ import WordItem from '~/components/WordItem';
 
 type ReadOrderProps = {
   data: ReadonlyArray<{ read_front: string; results: ReadonlyArray<{ code_point: number; read: string }> }>;
+  to: React.ComponentProps<typeof WordItem>['to'];
 };
 
-const ReadOrder = ({ data }: ReadOrderProps) => {
+const ReadOrder = ({ data, to }: ReadOrderProps) => {
   const virtuoso = useRef<GroupedVirtuosoHandle>(null);
 
   return (
@@ -31,7 +32,7 @@ const ReadOrder = ({ data }: ReadOrderProps) => {
                   {codePoints.map(({ code_point }, index) => (
                     <Fragment key={`${name}-${code_point}`}>
                       {index === 0 && <ReadBadge name={name} />}
-                      <WordItem codePoint={code_point} />
+                      <WordItem codePoint={code_point} to={to} />
                     </Fragment>
                   ))}
                 </Fragment>

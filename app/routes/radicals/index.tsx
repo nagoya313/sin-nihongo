@@ -14,7 +14,6 @@ export const meta: MetaFunction = () => ({
 export const loader = async ({ request }: LoaderArgs) => {
   const result = await radicalQueryParams.validate(new URL(request.url).searchParams);
   if (result.error) return validationError(result.error);
-  console.log(request.formData);
   return {};
 };
 

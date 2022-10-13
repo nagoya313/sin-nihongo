@@ -4,6 +4,7 @@ import { Fragment, useRef } from 'react';
 import { GroupedVirtuoso, type GroupedVirtuosoHandle } from 'react-virtuoso';
 import GroupLabel from '~/components/GroupLabel';
 import JumpList from '~/components/JumpList';
+import QueryResult from '~/components/QueryResult';
 import ReadBadge from '~/components/ReadBadge';
 import WordItem from '~/components/WordItem';
 
@@ -15,13 +16,12 @@ const ReadOrder = ({ data }: ReadOrderProps) => {
   const virtuoso = useRef<GroupedVirtuosoHandle>(null);
 
   return (
-    <>
+    <QueryResult>
       <Box w="full">
         <GroupedVirtuoso
           ref={virtuoso}
           groupCounts={data.map(() => 1)}
           groupContent={(index) => (
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             <GroupLabel label={`${data[index]!.read_front}（${data[index]!.results.length}件）`} />
           )}
           itemContent={(index) => (
@@ -44,7 +44,7 @@ const ReadOrder = ({ data }: ReadOrderProps) => {
       {data.length > 1 && (
         <JumpList label="よみかたジャンプ" virtuoso={virtuoso} headings={data.map(({ read_front }) => read_front)} />
       )}
-    </>
+    </QueryResult>
   );
 };
 

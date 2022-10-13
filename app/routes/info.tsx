@@ -2,15 +2,14 @@ import { Heading, Icon, ListItem, Text, UnorderedList } from '@chakra-ui/react';
 import { type MetaFunction } from '@remix-run/node';
 import { MdOutlineInfo } from 'react-icons/md';
 import ExternalLink from '~/components/ExternalLink';
-import PageInfo from '~/components/PageInfo';
+import Page from '~/components/Page';
 
 export const meta: MetaFunction = () => ({
   title: '新日本語｜info',
 });
 
 const Info = () => (
-  <>
-    <PageInfo avatar={<Icon fontSize={24} as={MdOutlineInfo} />} title="このサイトについて" />
+  <Page avatar={<Icon fontSize={24} as={MdOutlineInfo} />} title="このサイトについて">
     <Text mt={4} mb={4}>
       新日本語わ、現在日本で使われる漢字の字形の混乱お解決するため、徹底的な漢字の簡化お行うことお目的としたプロジェクトです。
       新日本語明朝とゆーフォントを生成して公開することで、誰でも自由にこの簡化された漢字お文書で使うことができるよーになる予定です。
@@ -51,7 +50,7 @@ const Info = () => (
       <ExternalLink href="https://www.npmjs.com/package/@kurgm/kage-engine">@kurgm/kage-engine</ExternalLink>
       お使っているので、グリフウィキとわ表示されるグリフに差異が生じる場合があります。
     </Text>
-  </>
+  </Page>
 );
 
 export default Info;

@@ -60,9 +60,7 @@ const Layout = ({ children }: LayoutProps) => {
         </DrawerContent>
       </Drawer>
       <Flex direction="column" ml={{ base: 0, md: 60 }} minH={`calc(100VH - ${HEADER_HEIGHT * 4}px)`}>
-        <Box flex={1} p={8}>
-          {children}
-        </Box>
+        {children}
         <Divider />
         <Footer />
       </Flex>

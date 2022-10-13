@@ -1,10 +1,10 @@
-import { useFetcher, useLoaderData } from '@remix-run/react';
+import { useFetcher } from '@remix-run/react';
 import { FormProps, useFormContext, type Validator } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { SEARCH_WAIT } from '~/components/constants';
 
-const useSearch = <TParamsType>(formId: string, validator: Validator<TParamsType>) => {
-  const fetcher = useFetcher();
+const useSearch = <TParamsType, TData>(formId: string, validator: Validator<TParamsType>, initialData: TData) => {
+  const fetcher = useFetcher<TData>();
   const { getValues, validate } = useFormContext(formId);
   const submit = () => fetcher.submit(getValues());
   const onChange = useDebouncedCallback(async () => {
@@ -17,11 +17,9 @@ const useSearch = <TParamsType>(formId: string, validator: Validator<TParamsType
     submit();
     preventDefault();
   };
-  const initialData = useLoaderData();
-  const data = fetcher.type === 'done' ? fetcher.data : initialData;
-  const isError = 'fieldErrors' in data;
+  const data = fetcher.type === 'init' ? initialData : fetcher.type === 'done' ? fetcher.data : {};
 
-  return { id: formId, fetcher, onChange, onSubmit, validator, data: isError ? [] : data };
+  return { id: formId, fetcher, onChange, onSubmit, validator, data };
 };
 
 export default useSearch;

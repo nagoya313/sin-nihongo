@@ -1,5 +1,5 @@
 import { IconButton } from '@chakra-ui/react';
-import { Link } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 import { MdEdit } from 'react-icons/md';
 import { useOptionalUser } from '~/hooks/useUser';
 
@@ -7,16 +7,13 @@ type EditButtonProps = {
   to: string;
 };
 
-const RadicalEditButton = ({ to }: EditButtonProps) => {
+const EditButton = ({ to }: EditButtonProps) => {
   const user = useOptionalUser();
+  const navigate = useNavigate();
 
   if (user == null) return null;
 
-  return (
-    <Link to={to}>
-      <IconButton aria-label="edit" icon={<MdEdit />} />
-    </Link>
-  );
+  return <IconButton aria-label="edit" icon={<MdEdit />} onClick={() => navigate(to)} />;
 };
 
-export default RadicalEditButton;
+export default EditButton;

@@ -1,3 +1,4 @@
+import { useColorModeValue } from '@chakra-ui/react';
 import { Kage, Polygons, type Buhin } from '@kurgm/kage-engine';
 import { Shape } from 'react-konva';
 import CanvasBase from './CanvasBase';
@@ -8,6 +9,7 @@ type GlyphCanvasProps = {
 };
 
 const GlyphCanvas = ({ name, buhin }: GlyphCanvasProps) => {
+  const fill = useColorModeValue('black', 'white');
   if (name == null || buhin == null) return <CanvasBase />;
 
   const kage = new Kage();
@@ -27,8 +29,8 @@ const GlyphCanvas = ({ name, buhin }: GlyphCanvasProps) => {
             ctx.fillStrokeShape(shape);
           })
         }
-        fill="black"
-        stroke="black"
+        fill={fill}
+        stroke={fill}
         strokeWidth={0.2}
       />
     </CanvasBase>

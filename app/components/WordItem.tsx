@@ -5,13 +5,13 @@ import { useLinkColor } from '~/hooks/useColor';
 
 type WordItemProps = {
   codePoint: number;
-  to: '/radicals';
+  to: '/radicals' | '/kanjis';
 };
 
 const WordItem = ({ codePoint, to }: WordItemProps) => (
   <WrapItem>
     <Center w="40px">
-      <CUILink as={Link} to={$path(`${to}/:codePoint`, { codePoint })} color={useLinkColor()}>
+      <CUILink as={Link} to={$path(`${to}/:codePoint` as any, { codePoint })} color={useLinkColor()}>
         <Text fontSize="xl" fontWeight="bold">
           {String.fromCodePoint(codePoint)}
         </Text>

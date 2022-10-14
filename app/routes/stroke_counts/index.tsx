@@ -1,42 +1,40 @@
 import { HStack, Icon, TabPanel, VStack } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { MdOutlinePark } from 'react-icons/md';
+import { MdFormatListNumbered } from 'react-icons/md';
 import { ValidatedForm, validationError } from 'remix-validated-form';
-import { ORDERS } from '~/components/constants';
-import NumberInput from '~/components/NumberInput';
+import { REGULAR_RADIO } from '~/components/constants';
 import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
-import ReadOrder from '~/components/ReadOrder';
+import RadioGroup from '~/components/RadioGroup';
 import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import TextInput from '~/components/TextInput';
-import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
-import { radicalReadOrder, radicalStrokeCountOrder } from '~/features/radicals/models/radical.server';
-import { MAX_STOREKE_COUNT, MIN_STOREKE_COUNT, radicalQueryParams } from '~/features/radicals/validators/params';
+import { STROKE_COUNT_SEARCH_FROM_ID } from '~/features/kanjis/constants';
+import { kanjiStrokeCountOrder } from '~/features/kanjis/models/kanji.server';
+import { kanjiQueryParams } from '~/features/kanjis/validators/params';
 import useSearch from '~/hooks/useSearch';
 
 export const meta: MetaFunction = () => ({
-  title: '新日本語｜部首索引',
+  title: '新日本語｜画数索引',
 });
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const result = await radicalQueryParams.validate(new URL(request.url).searchParams);
+  const result = await kanjiQueryParams.validate(new URL(request.url).searchParams);
   if (result.error) {
     console.log(result.error.fieldErrors);
     return validationError(result.error);
   }
-  if (result.data.orderBy === 'read') return json({ radicalReadOrder: await radicalReadOrder(result.data) });
-  return json({ radicalStrokeCountOrder: await radicalStrokeCountOrder(result.data) });
+  return json({ kanjiStrokeCountOrder: await kanjiStrokeCountOrder(result.data) });
 };
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
-  const { data, ...searchProps } = useSearch(RADICAL_SEARCH_FORM_ID, radicalQueryParams, initialData);
+  const { data, ...searchProps } = useSearch(STROKE_COUNT_SEARCH_FROM_ID, kanjiQueryParams, initialData);
 
   return (
-    <Page avatar={<Icon fontSize={24} as={MdOutlinePark} />} title="部首索引">
+    <Page avatar={<Icon fontSize={24} as={MdFormatListNumbered} />} title="画数索引">
       <ValidatedForm {...searchProps}>
         <SearchPanel>
           <VStack w="full" align="start">
@@ -48,24 +46,16 @@ const Index = () => {
               >
                 <TextInput name="read" placeholder="いち、しょー、つずみ" />
               </SearchFormControl>
-              <SearchFormControl name="strokeCount" label="画数">
-                <NumberInput
-                  name="strokeCount"
-                  placeholder={`${MIN_STOREKE_COUNT}〜${MAX_STOREKE_COUNT}`}
-                  min={MIN_STOREKE_COUNT}
-                  max={MAX_STOREKE_COUNT}
-                />
+              <SearchFormControl as="fieldset" name="regular" label="常用漢字">
+                <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
               </SearchFormControl>
             </HStack>
           </VStack>
         </SearchPanel>
-        <OrderTabs formId={RADICAL_SEARCH_FORM_ID} orders={ORDERS}>
+        <OrderTabs formId={STROKE_COUNT_SEARCH_FROM_ID} orders={[{ key: 'stroke_count', label: '画数順' }]}>
           <TabPanel>
-            {'radicalStrokeCountOrder' in data && (
-              <StrokeCountOrder data={data.radicalStrokeCountOrder} to="/radicals" />
-            )}
+            {'kanjiStrokeCountOrder' in data && <StrokeCountOrder data={data.kanjiStrokeCountOrder} to="/kanjis" />}
           </TabPanel>
-          <TabPanel>{'radicalReadOrder' in data && <ReadOrder data={data.radicalReadOrder} to="/radicals" />}</TabPanel>
         </OrderTabs>
       </ValidatedForm>
     </Page>

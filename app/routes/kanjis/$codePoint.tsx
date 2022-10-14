@@ -6,7 +6,7 @@ import Page from '~/components/Page';
 import { glyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 import KanjiDefine from '~/features/kanjis/components/KanjiDefine';
 import { kanji } from '~/features/kanjis/models/kanji.server';
-import { radicalParams } from '~/features/radicals/validators/params';
+import { kanjiParams } from '~/features/kanjis/validators/params';
 import { glyphToBuhin } from '~/kage/kageData';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -14,7 +14,7 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 export const loader = async ({ params }: LoaderArgs) => {
-  const paramsResult = await radicalParams.validate(params);
+  const paramsResult = await kanjiParams.validate(params);
   if (paramsResult.error) {
     console.log(paramsResult.error.fieldErrors);
     throw new Response('Not Found', { status: 404 });

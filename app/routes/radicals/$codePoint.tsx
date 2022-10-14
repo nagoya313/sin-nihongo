@@ -15,11 +15,15 @@ import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import TextInput from '~/components/TextInput';
 import { radicalKanjiReadOrder, radicalKanjiStrokeCountOrder } from '~/features/kanjis/models/radicalKanji.server';
-import { radicalKanjiQueryParams } from '~/features/kanjis/validators/params';
+import {
+  MAX_IN_RADICAL_STOREKE_COUNT,
+  MIN_IN_RADICAL_STOREKE_COUNT,
+  radicalKanjiQueryParams,
+} from '~/features/kanjis/validators/params';
 import RadicalDefine from '~/features/radicals/components/RadicalDefine';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
 import { radical } from '~/features/radicals/models/radical.server';
-import { MAX_STOREKE_COUNT, MIN_STOREKE_COUNT, radicalParams } from '~/features/radicals/validators/params';
+import { radicalParams } from '~/features/radicals/validators/params';
 import useSearch from '~/hooks/useSearch';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -74,7 +78,12 @@ const Radical = () => {
                 <TextInput name="read" placeholder="いち、しょー、つずみ" />
               </SearchFormControl>
               <SearchFormControl name="strokeCount" label="部首内画数">
-                <NumberInput name="strokeCount" placeholder={`${MIN_STOREKE_COUNT}〜${MAX_STOREKE_COUNT}`} />
+                <NumberInput
+                  name="strokeCount"
+                  placeholder={`${MIN_IN_RADICAL_STOREKE_COUNT}〜${MAX_IN_RADICAL_STOREKE_COUNT}`}
+                  min={MIN_IN_RADICAL_STOREKE_COUNT}
+                  max={MAX_IN_RADICAL_STOREKE_COUNT}
+                />
               </SearchFormControl>
               <SearchFormControl as="fieldset" name="regular" label="常用漢字">
                 <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />

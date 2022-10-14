@@ -1,11 +1,12 @@
-import { Link, useColorModeValue } from '@chakra-ui/react';
+import { Link } from '@chakra-ui/react';
+import { useLinkColor } from '~/hooks/useColor';
 
 type ExternalLinkProps = React.PropsWithChildren<{
   href: string;
 }>;
 
 const ExternalLink = ({ href, children }: ExternalLinkProps) => (
-  <Link ml={1} mr={1} href={href} isExternal color={useColorModeValue('purple.600', 'purple.300')}>
+  <Link ml={1} mr={1} href={href} isExternal color={useLinkColor()}>
     {children}
   </Link>
 );

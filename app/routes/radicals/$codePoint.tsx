@@ -84,9 +84,9 @@ const Radical = () => {
         </SearchPanel>
         <OrderTabs formId={RADICAL_SEARCH_FORM_ID} orders={ORDERS}>
           <TabPanel>
-            {'kanjiStrokeCountOrder' in kanji && <StrokeCountOrder data={kanji.kanjiStrokeCountOrder} to="/radicals" />}
+            {'kanjiStrokeCountOrder' in kanji && <StrokeCountOrder data={kanji.kanjiStrokeCountOrder} to="/kanjis" />}
           </TabPanel>
-          <TabPanel>{'kanjiReadOrder' in kanji && <ReadOrder data={kanji.kanjiReadOrder} to="/radicals" />}</TabPanel>
+          <TabPanel>{'kanjiReadOrder' in kanji && <ReadOrder data={kanji.kanjiReadOrder} to="/kanjis" />}</TabPanel>
         </OrderTabs>
       </ValidatedForm>
     </Page>

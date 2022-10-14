@@ -1,6 +1,7 @@
-import { Center, Text, WrapItem } from '@chakra-ui/react';
+import { Center, Link as CUILink, Text, WrapItem } from '@chakra-ui/react';
 import { Link } from '@remix-run/react';
 import { $path } from 'remix-routes';
+import { useLinkColor } from '~/hooks/useColor';
 
 type WordItemProps = {
   codePoint: number;
@@ -10,11 +11,11 @@ type WordItemProps = {
 const WordItem = ({ codePoint, to }: WordItemProps) => (
   <WrapItem>
     <Center w="40px">
-      <Link to={$path(`${to}/:codePoint`, { codePoint })}>
+      <CUILink as={Link} to={$path(`${to}/:codePoint`, { codePoint })} color={useLinkColor()}>
         <Text fontSize="xl" fontWeight="bold">
           {String.fromCodePoint(codePoint)}
         </Text>
-      </Link>
+      </CUILink>
     </Center>
   </WrapItem>
 );

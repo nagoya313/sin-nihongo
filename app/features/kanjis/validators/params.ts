@@ -18,6 +18,7 @@ export const kanjiQueryParams = withZod(
     strokeCount: zfd.numeric(intRange(MIN_STOREKE_COUNT, MAX_STOREKE_COUNT).optional()),
     read: zfd.text(kana.max(10, '10文字以内で入力してください').optional()),
     regular: booleanRadio,
+    offset: zfd.numeric(z.number().min(0).default(0)),
   }),
 );
 

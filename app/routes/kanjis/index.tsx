@@ -1,21 +1,21 @@
-import { HStack, Icon, TabPanel, VStack } from '@chakra-ui/react';
+import { HStack, Icon, VStack } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { useEffect, useState } from 'react';
 import { MdOutlineTranslate } from 'react-icons/md';
+import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm, validationError } from 'remix-validated-form';
-import { ORDERS, REGULAR_RADIO } from '~/components/constants';
+import { REGULAR_RADIO } from '~/components/constants';
 import NumberInput from '~/components/NumberInput';
-import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
 import RadioGroup from '~/components/RadioGroup';
-import ReadOrder from '~/components/ReadOrder';
 import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
-import StrokeCountOrder from '~/components/StrokeCountOrder';
 import TextInput from '~/components/TextInput';
+import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import { KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
+import { kanjiCodePointOrder } from '~/features/kanjis/models/kanji.server';
 import { kanjiQueryParams, MAX_STOREKE_COUNT, MIN_STOREKE_COUNT } from '~/features/kanjis/validators/params';
-import { radicalReadOrder, radicalStrokeCountOrder } from '~/features/radicals/models/radical.server';
 import useSearch from '~/hooks/useSearch';
 
 export const meta: MetaFunction = () => ({
@@ -28,13 +28,30 @@ export const loader = async ({ request }: LoaderArgs) => {
     console.log(result.error.fieldErrors);
     return validationError(result.error);
   }
-  if (result.data.orderBy === 'read') return json({ radicalReadOrder: await radicalReadOrder(result.data) });
-  return json({ radicalStrokeCountOrder: await radicalStrokeCountOrder(result.data) });
+  return json({ kajiCodePointOrder: await kanjiCodePointOrder(result.data), offset: result.data.offset });
 };
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
   const { data, ...searchProps } = useSearch(KANJI_SEARCH_FORM_ID, kanjiQueryParams, initialData);
+  const [kanjis, setKanjis] = useState<Awaited<ReturnType<typeof kanjiCodePointOrder>>>([]);
+  const kanjiMoreLoad = () => {
+    if ('kajiCodePointOrder' in data) {
+      const formData = searchProps.getValues();
+      formData.set('offset', (data.offset + 20).toString());
+      searchProps.fetcher.submit(formData);
+    }
+  };
+
+  useEffect(() => {
+    if ('kajiCodePointOrder' in data) {
+      if (data.offset) {
+        setKanjis((prev) => [...prev, ...data.kajiCodePointOrder]);
+      } else {
+        setKanjis(data.kajiCodePointOrder);
+      }
+    }
+  }, [data]);
 
   return (
     <Page avatar={<Icon fontSize={24} as={MdOutlineTranslate} />} title="新日本語漢字一覧">
@@ -63,14 +80,12 @@ const Index = () => {
             </HStack>
           </VStack>
         </SearchPanel>
-        <OrderTabs formId={KANJI_SEARCH_FORM_ID} orders={ORDERS}>
-          <TabPanel>
-            {'radicalStrokeCountOrder' in data && (
-              <StrokeCountOrder data={data.radicalStrokeCountOrder} to="/radicals" />
-            )}
-          </TabPanel>
-          <TabPanel>{'radicalReadOrder' in data && <ReadOrder data={data.radicalReadOrder} to="/radicals" />}</TabPanel>
-        </OrderTabs>
+        <Virtuoso
+          useWindowScroll
+          data={kanjis}
+          endReached={kanjiMoreLoad}
+          itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} />}
+        />
       </ValidatedForm>
     </Page>
   );

@@ -6,6 +6,29 @@ import { type kanjiQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
 
+export const kanjiCodePointOrder = ({ strokeCount, regular, read, offset }: QueryParams) =>
+  db
+    .selectFrom('kanji')
+    .innerJoin('radical', 'radical.code_point', 'radical_code_point')
+    .innerJoin('kanji_read', 'kanji_code_point', 'kanji.code_point')
+    .select([
+      sql<number>`kanji.code_point`.as('code_point'),
+      'kanji.stroke_count',
+      'regular',
+      'for_name',
+      'jis_level',
+      'radical_code_point',
+      sql<ReadonlyArray<string>>`array_agg(read order by read)`.as('reads'),
+    ])
+    .if(strokeCount != null, (qb) => qb.where('kanji.stroke_count', '=', strokeCount!))
+    .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
+    .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))
+    .groupBy('kanji.code_point')
+    .orderBy('code_point')
+    .offset(offset)
+    .limit(20)
+    .execute();
+
 export const kanjiStrokeCountOrder = ({ regular, read, direction }: QueryParams) =>
   db
     .selectFrom('kanji')

@@ -6,7 +6,7 @@ import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { kana } from '~/utils/schemas/regex';
 
-export const MIN_STOREKE_COUNT = -1;
+export const MIN_STOREKE_COUNT = 1;
 export const MAX_STOREKE_COUNT = 30;
 export const MIN_IN_RADICAL_STOREKE_COUNT = -1;
 export const MAX_IN_RADICAL_STOREKE_COUNT = 25;

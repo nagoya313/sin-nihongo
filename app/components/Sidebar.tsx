@@ -1,5 +1,11 @@
 import { Heading, Icon, Stack } from '@chakra-ui/react';
-import { MdFormatListNumbered, MdOutlineInfo, MdOutlinePark, MdOutlineTranslate } from 'react-icons/md';
+import {
+  MdOutlineFormatListNumbered,
+  MdOutlineInfo,
+  MdOutlineMic,
+  MdOutlinePark,
+  MdOutlineTranslate,
+} from 'react-icons/md';
 import { $path } from 'remix-routes';
 import SideBarLink from './SidebarLink';
 
@@ -19,8 +25,9 @@ const SideBar = () => (
     <SideBarLink
       to={$path('/stroke_counts')}
       title="画数索引"
-      icon={<Icon {...iconProps} as={MdFormatListNumbered} />}
+      icon={<Icon {...iconProps} as={MdOutlineFormatListNumbered} />}
     />
+    <SideBarLink to={$path('/reads')} title="音訓索引" icon={<Icon {...iconProps} as={MdOutlineMic} />} />
     <SideBarLink to={$path('/info')} title="このサイトについて" icon={<Icon {...iconProps} as={MdOutlineInfo} />} />
   </Stack>
 );

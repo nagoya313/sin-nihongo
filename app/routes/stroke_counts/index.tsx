@@ -1,4 +1,4 @@
-import { HStack, Icon, TabPanel, VStack } from '@chakra-ui/react';
+import { HStack, Icon, TabPanel } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdOutlineFormatListNumbered } from 'react-icons/md';
@@ -37,20 +37,18 @@ const Index = () => {
     <Page avatar={<Icon fontSize={24} as={MdOutlineFormatListNumbered} />} title="画数索引">
       <ValidatedForm {...searchProps}>
         <SearchPanel>
-          <VStack w="full" align="start">
-            <HStack align="start">
-              <SearchFormControl
-                name="read"
-                label="よみかた"
-                help="部首名は新日本語表音式によるひらがなでの前方一致で絞り込みができます。"
-              >
-                <TextInput name="read" placeholder="いち、しょー、つずみ" />
-              </SearchFormControl>
-              <SearchFormControl as="fieldset" name="regular" label="常用漢字">
-                <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
-              </SearchFormControl>
-            </HStack>
-          </VStack>
+          <HStack align="center">
+            <SearchFormControl
+              name="read"
+              label="よみかた"
+              help="部首名は新日本語表音式によるひらがなでの前方一致で絞り込みができます。"
+            >
+              <TextInput name="read" placeholder="いち、しょー、つずみ" />
+            </SearchFormControl>
+            <SearchFormControl as="fieldset" name="regular" label="常用漢字">
+              <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
+            </SearchFormControl>
+          </HStack>
         </SearchPanel>
         <OrderTabs formId={STROKE_COUNT_SEARCH_FROM_ID} orders={[{ key: 'stroke_count', label: '画数順' }]}>
           <TabPanel>

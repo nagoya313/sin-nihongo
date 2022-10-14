@@ -36,7 +36,11 @@ const SearchPanel = ({ children }: SearchPanelProps) => (
           </HStack>
           <AccordionIcon />
         </AccordionButton>
-        <AccordionPanel mt={4}>{children}</AccordionPanel>
+        <AccordionPanel mt={4}>
+          <VStack w="full" align="start">
+            {children}
+          </VStack>
+        </AccordionPanel>
       </AccordionItem>
     </Accordion>
   </VStack>

@@ -1,4 +1,4 @@
-import { HStack, Icon, TabPanel, VStack } from '@chakra-ui/react';
+import { HStack, Icon, TabPanel } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdOutlineMic } from 'react-icons/md';
@@ -38,28 +38,26 @@ const Index = () => {
     <Page avatar={<Icon fontSize={24} as={MdOutlineMic} />} title="音訓索引">
       <ValidatedForm {...searchProps}>
         <SearchPanel>
-          <VStack w="full" align="start">
-            <HStack align="start">
-              <SearchFormControl
-                name="read"
-                label="よみかた"
-                help="部首名は新日本語表音式によるひらがなでの前方一致で絞り込みができます。"
-              >
-                <TextInput name="read" placeholder="いち、しょー、つずみ" />
-              </SearchFormControl>
-              <SearchFormControl name="strokeCount" label="画数">
-                <NumberInput
-                  name="strokeCount"
-                  placeholder={`${MIN_STOREKE_COUNT}〜${MAX_STOREKE_COUNT}`}
-                  min={MIN_STOREKE_COUNT}
-                  max={MAX_STOREKE_COUNT}
-                />
-              </SearchFormControl>
-              <SearchFormControl as="fieldset" name="regular" label="常用漢字">
-                <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
-              </SearchFormControl>
-            </HStack>
-          </VStack>
+          <HStack align="center">
+            <SearchFormControl
+              name="read"
+              label="よみかた"
+              help="部首名は新日本語表音式によるひらがなでの前方一致で絞り込みができます。"
+            >
+              <TextInput name="read" placeholder="いち、しょー、つずみ" />
+            </SearchFormControl>
+            <SearchFormControl name="strokeCount" label="画数">
+              <NumberInput
+                name="strokeCount"
+                placeholder={`${MIN_STOREKE_COUNT}〜${MAX_STOREKE_COUNT}`}
+                min={MIN_STOREKE_COUNT}
+                max={MAX_STOREKE_COUNT}
+              />
+            </SearchFormControl>
+            <SearchFormControl as="fieldset" name="regular" label="常用漢字">
+              <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
+            </SearchFormControl>
+          </HStack>
         </SearchPanel>
         <OrderTabs formId={READ_SEARCH_FROM_ID} orders={[{ key: 'read', label: 'よみかた順' }]}>
           <TabPanel>{'kanjiReadOrder' in data && <ReadOrder data={data.kanjiReadOrder} to="/kanjis" />}</TabPanel>

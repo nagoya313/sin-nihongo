@@ -1,4 +1,4 @@
-import { HStack, TabPanel, VStack } from '@chakra-ui/react';
+import { HStack, TabPanel } from '@chakra-ui/react';
 import { json, Response, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { $path } from 'remix-routes';
@@ -68,28 +68,26 @@ const Radical = () => {
       <RadicalDefine radical={data.radical} />
       <ValidatedForm {...searchProps}>
         <SearchPanel>
-          <VStack w="full" align="start">
-            <HStack align="start">
-              <SearchFormControl
-                name="read"
-                label="よみかた"
-                help="漢字のよみかたは新日本語表音式によるひらがな（訓読み）、カタカナ（音読み）での前方一致で絞り込みができます。"
-              >
-                <TextInput name="read" placeholder="いち、しょー、つずみ" />
-              </SearchFormControl>
-              <SearchFormControl name="strokeCount" label="部首内画数">
-                <NumberInput
-                  name="strokeCount"
-                  placeholder={`${MIN_IN_RADICAL_STOREKE_COUNT}〜${MAX_IN_RADICAL_STOREKE_COUNT}`}
-                  min={MIN_IN_RADICAL_STOREKE_COUNT}
-                  max={MAX_IN_RADICAL_STOREKE_COUNT}
-                />
-              </SearchFormControl>
-              <SearchFormControl as="fieldset" name="regular" label="常用漢字">
-                <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
-              </SearchFormControl>
-            </HStack>
-          </VStack>
+          <HStack align="center">
+            <SearchFormControl
+              name="read"
+              label="よみかた"
+              help="漢字のよみかたは新日本語表音式によるひらがな（訓読み）、カタカナ（音読み）での前方一致で絞り込みができます。"
+            >
+              <TextInput name="read" placeholder="いち、しょー、つずみ" />
+            </SearchFormControl>
+            <SearchFormControl name="strokeCount" label="部首内画数">
+              <NumberInput
+                name="strokeCount"
+                placeholder={`${MIN_IN_RADICAL_STOREKE_COUNT}〜${MAX_IN_RADICAL_STOREKE_COUNT}`}
+                min={MIN_IN_RADICAL_STOREKE_COUNT}
+                max={MAX_IN_RADICAL_STOREKE_COUNT}
+              />
+            </SearchFormControl>
+            <SearchFormControl as="fieldset" name="regular" label="常用漢字">
+              <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
+            </SearchFormControl>
+          </HStack>
         </SearchPanel>
         <OrderTabs formId={RADICAL_SEARCH_FORM_ID} orders={ORDERS}>
           <TabPanel>

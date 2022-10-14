@@ -26,13 +26,13 @@ export const loader = async ({ params }: LoaderArgs) => {
 };
 
 const Kanji = () => {
-  const data = useLoaderData<typeof loader>();
+  const { kanji, glyph } = useLoaderData<typeof loader>();
 
   return (
-    <Page avatar={data.kanji.kanji} title="漢字詳細">
+    <Page avatar={kanji.kanji} title="漢字詳細">
       <HStack pt={8}>
-        <GlyphCanvasSuspense name={data.glyph.name} buhin={glyphToBuhin(data.glyph)} />
-        <KanjiDefine kanji={data.kanji} />
+        <GlyphCanvasSuspense name={glyph.name} buhin={glyphToBuhin(glyph)} />
+        <KanjiDefine kanji={kanji} />
       </HStack>
     </Page>
   );

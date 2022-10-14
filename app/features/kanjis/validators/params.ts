@@ -1,6 +1,7 @@
 import { withZod } from '@remix-validated-form/with-zod';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
+import { booleanRadio } from '~/utils/schemas/booleanRadio';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { kana } from '~/utils/schemas/regex';
@@ -14,6 +15,6 @@ export const radicalKanjiQueryParams = withZod(
     orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
     strokeCount: zfd.numeric(intRange(MIN_STOREKE_COUNT, MAX_STOREKE_COUNT).optional()),
     read: zfd.text(kana.max(10).optional()),
-    regular: zfd.checkbox(),
+    regular: booleanRadio,
   }),
 );

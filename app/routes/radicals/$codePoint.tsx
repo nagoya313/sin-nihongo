@@ -3,11 +3,12 @@ import { json, Response, type LoaderArgs, type MetaFunction } from '@remix-run/n
 import { useLoaderData } from '@remix-run/react';
 import { $path } from 'remix-routes';
 import { ValidatedForm, validationError } from 'remix-validated-form';
-import { ORDERS } from '~/components/constants';
+import { ORDERS, REGULAR_RADIO } from '~/components/constants';
 import EditButton from '~/components/EditButton';
 import NumberInput from '~/components/NumberInput';
 import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
+import RadioGroup from '~/components/RadioGroup';
 import ReadOrder from '~/components/ReadOrder';
 import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
@@ -74,6 +75,9 @@ const Radical = () => {
               </SearchFormControl>
               <SearchFormControl name="strokeCount" label="部首内画数">
                 <NumberInput name="strokeCount" placeholder={`${MIN_STOREKE_COUNT}〜${MAX_STOREKE_COUNT}`} />
+              </SearchFormControl>
+              <SearchFormControl as="fieldset" name="regular" label="常用漢字">
+                <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
               </SearchFormControl>
             </HStack>
           </VStack>

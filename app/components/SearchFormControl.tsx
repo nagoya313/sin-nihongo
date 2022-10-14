@@ -1,4 +1,4 @@
-import { FormControl, FormErrorMessage, FormLabel, Icon, Tooltip } from '@chakra-ui/react';
+import { FormControl, FormControlProps, FormErrorMessage, FormLabel, Icon, Tooltip } from '@chakra-ui/react';
 import { MdHelpOutline } from 'react-icons/md';
 import { useField } from 'remix-validated-form';
 
@@ -7,13 +7,14 @@ type SearchFormControlProps = React.PropsWithChildren<{
   name: string;
   label?: string;
   help?: string;
+  as?: FormControlProps['as'];
 }>;
 
-const SearchFormControl = ({ isRequired, name, label, help, children }: SearchFormControlProps) => {
+const SearchFormControl = ({ isRequired, name, label, help, as, children }: SearchFormControlProps) => {
   const { error } = useField(name);
 
   return (
-    <FormControl isRequired={isRequired} isInvalid={!!error}>
+    <FormControl as={as} isRequired={isRequired} isInvalid={!!error}>
       <FormLabel htmlFor={name}>
         {label}
         {help && (

@@ -1,7 +1,20 @@
-import { Badge, Box, Divider, HStack, IconButton, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import {
+  Badge,
+  Box,
+  Divider,
+  HStack,
+  IconButton,
+  Link as CUILink,
+  Spacer,
+  Text,
+  useColorModeValue,
+  VStack,
+} from '@chakra-ui/react';
+import { Link, useNavigate } from '@remix-run/react';
 import { MdInfoOutline } from 'react-icons/md';
+import { $path } from 'remix-routes';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
-import { useShadow } from '../../../hooks/useColor';
+import { useLinkColor, useShadow } from '../../../hooks/useColor';
 import { type kanjiCodePointOrder } from '../models/kanji.server';
 import JisLevelBadge from './JisLevelBadge';
 import KanjiLink from './KanjiLink';
@@ -9,53 +22,64 @@ import KanjiRead from './KanjiRead';
 import RegularBadge from './RegularBadge';
 
 type KanjiItemProps = {
-  kanji?: Awaited<ReturnType<typeof kanjiCodePointOrder>>[number];
+  kanji: Awaited<ReturnType<typeof kanjiCodePointOrder>>[number];
   isEven: boolean;
 };
 
 const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => {
-  const bg = useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50');
-  const shadow = useShadow();
+  const navigate = useNavigate();
 
   return (
-    <HStack p={4} rounded="md" borderWidth="1px" shadow={shadow} bg={bg} justify="space-between" overflow="hidden">
-      <KanjiLink codePoint={kanji?.code_point} />
+    <HStack
+      p={4}
+      rounded="md"
+      borderWidth="1px"
+      shadow={useShadow()}
+      bg={useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50')}
+      justify="space-between"
+      overflow="hidden"
+    >
+      <KanjiLink codePoint={kanji.code_point} />
       <GlyphCanvasSuspense />
       <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
-        {kanji != null && (
-          <VStack align="start">
-            <HStack>
-              <Text fontSize="sm">部首：</Text>
-              {kanji.radical_code_point != null && (
-                <Text fontSize="sm" m={4}>
-                  {String.fromCodePoint(kanji.radical_code_point)}
-                </Text>
-              )}
-            </HStack>
-            <Divider />
-            <HStack>
-              <Text fontSize="sm">総画数：</Text>
-              <Text fontSize="sm" m={4}>
-                {kanji?.stroke_count}
-              </Text>
-            </HStack>
-            <Divider />
-            <HStack>
-              <RegularBadge regular={kanji.regular} />
-              {kanji.for_name && (
-                <Badge p={1} variant="solid" colorScheme="blue">
-                  人名用
-                </Badge>
-              )}
-              <JisLevelBadge jisLevel={kanji.jis_level} />
-            </HStack>
-            <Divider />
-            <KanjiRead reads={kanji.reads} />
-          </VStack>
-        )}
+        <VStack align="start">
+          <HStack>
+            <Text fontSize="sm">部首：</Text>
+            <CUILink
+              as={Link}
+              to={$path('/radicals/:codePoint', { codePoint: kanji.radical_code_point })}
+              color={useLinkColor()}
+            >
+              {String.fromCodePoint(kanji.radical_code_point)}
+            </CUILink>
+          </HStack>
+          <Divider />
+          <HStack>
+            <Text fontSize="sm">総画数：</Text>
+            <Text fontSize="sm" m={4}>
+              {kanji?.stroke_count}
+            </Text>
+          </HStack>
+          <Divider />
+          <HStack>
+            <RegularBadge regular={kanji.regular} />
+            {kanji.for_name && (
+              <Badge p={1} variant="solid" colorScheme="blue">
+                人名用
+              </Badge>
+            )}
+            <JisLevelBadge jisLevel={kanji.jis_level} />
+          </HStack>
+          <Divider />
+          <KanjiRead reads={kanji.reads} />
+        </VStack>
       </Box>
       <Spacer />
-      <IconButton icon={<MdInfoOutline />} aria-label="kanji-detail" />
+      <IconButton
+        icon={<MdInfoOutline />}
+        aria-label="kanji-detail"
+        onClick={() => navigate($path('/kanjis/:codePoint', { codePoint: kanji.code_point }))}
+      />
     </HStack>
   );
 };

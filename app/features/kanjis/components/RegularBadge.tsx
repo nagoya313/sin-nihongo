@@ -5,17 +5,9 @@ type RegularBadgeProps = {
 };
 
 const RegularBadge = ({ regular }: RegularBadgeProps) => (
-  <>
-    {regular ? (
-      <Badge p={1} variant="solid" colorScheme="green">
-        常用
-      </Badge>
-    ) : (
-      <Badge p={1} variant="solid">
-        常用外
-      </Badge>
-    )}
-  </>
+  <Badge p={1} variant="solid" colorScheme={regular ? 'green' : undefined}>
+    {regular ? '常用' : '常用外'}
+  </Badge>
 );
 
 export default RegularBadge;

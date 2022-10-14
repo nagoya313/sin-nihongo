@@ -4,15 +4,10 @@ type JisLevelBadgeProps = {
   jisLevel: 1 | 2;
 };
 
-const JisLevelBadge = ({ jisLevel }: JisLevelBadgeProps) =>
-  jisLevel === 1 ? (
-    <Badge p={1} variant="solid" colorScheme="red">
-      第一水準
-    </Badge>
-  ) : (
-    <Badge p={1} variant="solid">
-      第二水準
-    </Badge>
-  );
+const JisLevelBadge = ({ jisLevel }: JisLevelBadgeProps) => (
+  <Badge p={1} variant="solid" colorScheme={jisLevel === 1 ? 'red' : undefined}>
+    第{jisLevel === 1 ? '一' : '二'}水準
+  </Badge>
+);
 
 export default JisLevelBadge;

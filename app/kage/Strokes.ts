@@ -1,10 +1,13 @@
-import { filter, map, uniqBy } from 'lodash';
+import filter from 'lodash/filter';
+import map from 'lodash/map';
+import uniqBy from 'lodash/unionBy';
 import Columns from './Columns';
-import { Glyph } from './types';
+import LinkColumns from './LinkColumns';
+import { type Glyph } from './types';
 
-export default class Strokes<G extends Pick<Glyph, 'data'>> {
-  constructor(glyph: G) {
-    this.#strokes = glyph.data.split('$').map((stroke) => new Columns(stroke));
+export default class Strokes<TGlyph extends Pick<Glyph, 'data'>> {
+  constructor(glyph: TGlyph) {
+    this.#strokes = glyph.data!.split('$').map((stroke) => new Columns(stroke));
   }
 
   strokeOf(id: number) {
@@ -12,7 +15,7 @@ export default class Strokes<G extends Pick<Glyph, 'data'>> {
   }
 
   get linkStrokes() {
-    return uniqBy(filter(this.#strokes, 'isLinkStroke'), 'linkStrokeId');
+    return uniqBy(filter(this.#strokes, 'isLinkStroke'), 'linkStrokeId').map((stroke) => new LinkColumns(stroke.data));
   }
 
   get linkIds() {
@@ -27,5 +30,5 @@ export default class Strokes<G extends Pick<Glyph, 'data'>> {
     return this.#strokes.length;
   }
 
-  readonly #strokes: Columns[];
+  readonly #strokes: ReadonlyArray<Columns>;
 }

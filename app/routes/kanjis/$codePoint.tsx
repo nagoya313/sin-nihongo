@@ -7,6 +7,7 @@ import { glyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 import KanjiDefine from '~/features/kanjis/components/KanjiDefine';
 import { kanji } from '~/features/kanjis/models/kanji.server';
 import { radicalParams } from '~/features/radicals/validators/params';
+import { glyphToBuhin } from '~/kage/kageData';
 
 export const meta: MetaFunction = ({ params }) => ({
   title: `新日本語｜漢字詳細「${String.fromCodePoint(parseInt(params['codePoint']!))}」`,
@@ -26,12 +27,11 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 const Kanji = () => {
   const data = useLoaderData<typeof loader>();
-  console.log(data);
 
   return (
     <Page avatar={data.kanji.kanji} title="漢字詳細">
       <HStack pt={8}>
-        <GlyphCanvasSuspense />
+        <GlyphCanvasSuspense name={data.glyph.name} buhin={glyphToBuhin(data.glyph)} />
         <KanjiDefine kanji={data.kanji} />
       </HStack>
     </Page>

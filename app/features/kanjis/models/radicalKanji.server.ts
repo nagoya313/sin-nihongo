@@ -2,7 +2,7 @@ import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import { escapeLike, kanaTranslate } from '~/utils/sql';
-import { radicalKanjiQueryParams } from '../validators/params';
+import { type radicalKanjiQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof radicalKanjiQueryParams>;
 

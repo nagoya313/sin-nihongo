@@ -1,4 +1,4 @@
-import { Buhin, Kage, Polygons } from '@kurgm/kage-engine';
+import { Kage, Polygons, type Buhin } from '@kurgm/kage-engine';
 import { Shape } from 'react-konva';
 import CanvasBase from './CanvasBase';
 
@@ -13,6 +13,7 @@ const GlyphCanvas = ({ name, buhin }: GlyphCanvasProps) => {
   const kage = new Kage();
   kage.kBuhin = buhin;
   const polygons = new Polygons();
+  kage.makeGlyph(polygons, name);
 
   return (
     <CanvasBase>

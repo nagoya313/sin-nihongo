@@ -31,7 +31,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Box h={HEADER_HEIGHT} />
       <VStack
         p={2}
-        w={{ base: 'full', md: 60 }}
+        w={{ base: 'full', md: 80 }}
         pos="fixed"
         h="full"
         borderRightWidth="1px"
@@ -59,7 +59,7 @@ const Layout = ({ children }: LayoutProps) => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      <Flex direction="column" ml={{ base: 0, md: 60 }} minH={`calc(100VH - ${HEADER_HEIGHT * 4}px)`}>
+      <Flex direction="column" ml={{ base: 0, md: 80 }} minH={`calc(100VH - ${HEADER_HEIGHT * 4}px)`}>
         {children}
         <Divider />
         <Footer />

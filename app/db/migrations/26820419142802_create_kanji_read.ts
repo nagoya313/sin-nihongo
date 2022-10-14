@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely';
+import { sql, type Kysely } from 'kysely';
 import { type Database } from '../types';
 
 export const up = ({ schema }: Kysely<Database>) =>

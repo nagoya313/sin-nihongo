@@ -1,9 +1,13 @@
+import { HStack } from '@chakra-ui/react';
 import { json, Response, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { lazy, Suspense } from 'react';
 import Page from '~/components/Page';
 import KanjiDefine from '~/features/kanjis/components/KanjiDefine';
 import { kanji } from '~/features/kanjis/models/kanji.server';
 import { radicalParams } from '~/features/radicals/validators/params';
+
+const GlyphCanvas = lazy(() => import('~/components/GlyphCanvas'));
 
 export const meta: MetaFunction = ({ params }) => ({
   title: `新日本語｜漢字「${String.fromCodePoint(parseInt(params['codePoint']!))}」`,
@@ -25,7 +29,12 @@ const Kanji = () => {
 
   return (
     <Page avatar={data.kanji} title="漢字">
-      <KanjiDefine kanji={data} />
+      <HStack pt={4}>
+        <Suspense>
+          <GlyphCanvas />
+        </Suspense>
+        <KanjiDefine kanji={data} />
+      </HStack>
     </Page>
   );
 };

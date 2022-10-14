@@ -1,7 +1,6 @@
-import { IconButton } from '@chakra-ui/react';
-import { useNavigate } from '@remix-run/react';
 import { MdEdit } from 'react-icons/md';
 import { useOptionalUser } from '~/hooks/useUser';
+import LinkButton from './LinkButton';
 
 type EditButtonProps = {
   to: string;
@@ -9,11 +8,10 @@ type EditButtonProps = {
 
 const EditButton = ({ to }: EditButtonProps) => {
   const user = useOptionalUser();
-  const navigate = useNavigate();
 
   if (user == null) return null;
 
-  return <IconButton aria-label="edit" icon={<MdEdit />} onClick={() => navigate(to)} />;
+  return <LinkButton aria-label="edit" icon={<MdEdit />} to={to} />;
 };
 
 export default EditButton;

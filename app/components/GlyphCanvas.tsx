@@ -1,12 +1,36 @@
-import { Layer, Rect, Stage } from 'react-konva';
+import { Buhin, Kage, Polygons } from '@kurgm/kage-engine';
+import { Shape } from 'react-konva';
+import CanvasBase from './CanvasBase';
 
-const GlyphCanvas = () => {
+type GlyphCanvasProps = {
+  name?: string;
+  buhin?: Buhin;
+};
+
+const GlyphCanvas = ({ name, buhin }: GlyphCanvasProps) => {
+  if (name == null || buhin == null) return <CanvasBase />;
+
+  const kage = new Kage();
+  kage.kBuhin = buhin;
+  const polygons = new Polygons();
+
   return (
-    <Stage width={200} height={200}>
-      <Layer>
-        <Rect stroke="black" strokeWidth={2} x={0} y={0} width={200} height={200} />
-      </Layer>
-    </Stage>
+    <CanvasBase>
+      <Shape
+        sceneFunc={(ctx, shape) =>
+          polygons.array.forEach((polygon) => {
+            ctx.beginPath();
+            ctx.moveTo(polygon.array[0]!.x, polygon.array[0]!.y);
+            polygon.array.slice(1).forEach((vertex) => ctx.lineTo(vertex.x, vertex.y));
+            ctx.closePath();
+            ctx.fillStrokeShape(shape);
+          })
+        }
+        fill="black"
+        stroke="black"
+        strokeWidth={0.2}
+      />
+    </CanvasBase>
   );
 };
 

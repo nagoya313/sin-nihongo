@@ -28,12 +28,14 @@ export const meta: MetaFunction = () => ({
 
 export const loader = async (args: LoaderArgs) => authGuard(args, async () => json({}));
 
-export const action = async ({ request }: ActionArgs) =>
-  checkedFormDataRequestLoader(request, glyphCreateParams, async (data) => {
-    await createGlyph(data);
-    if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'));
-    return json({ glyph: await getGlyphwiki(data.name) });
-  });
+export const action = async (args: ActionArgs) =>
+  authGuard(args, async ({ request }) =>
+    checkedFormDataRequestLoader(request, glyphCreateParams, async (data) => {
+      await createGlyph(data);
+      if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'));
+      return json({ glyph: await getGlyphwiki(data.name) });
+    }),
+  );
 
 const New = () => {
   const { data, ...searchProps } = useSearch(

@@ -3,10 +3,15 @@ import { useFormContext, type FormProps, type Validator } from 'remix-validated-
 import { useDebouncedCallback } from 'use-debounce';
 import { SEARCH_WAIT } from '~/components/constants';
 
-const useSearch = <TParamsType, TData>(formId: string, validator: Validator<TParamsType>, initialData: TData) => {
+const useSearch = <TParamsType, TData>(
+  formId: string,
+  validator: Validator<TParamsType>,
+  initialData: TData,
+  action?: string,
+) => {
   const fetcher = useFetcher<TData>();
   const { getValues, validate } = useFormContext(formId);
-  const submit = () => fetcher.submit(getValues());
+  const submit = () => fetcher.submit(getValues(), { action });
   const onChange = useDebouncedCallback(async () => {
     const result = await validate();
     if (!result.error) {
@@ -19,7 +24,7 @@ const useSearch = <TParamsType, TData>(formId: string, validator: Validator<TPar
   };
   const data = fetcher.type === 'init' ? initialData : fetcher.type === 'done' ? fetcher.data : {};
 
-  return { id: formId, fetcher, onChange, onSubmit, validator, data, getValues };
+  return { id: formId, fetcher, onChange, onSubmit, validator, data, getValues, action };
 };
 
 export default useSearch;

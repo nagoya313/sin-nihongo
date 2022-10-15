@@ -2,7 +2,6 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { booleanRadio } from '~/utils/schemas/booleanRadio';
-import { codePoint } from '~/utils/schemas/codePoint';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { kana } from '~/utils/schemas/regex';
@@ -11,6 +10,7 @@ export const MIN_STOREKE_COUNT = 1;
 export const MAX_STOREKE_COUNT = 30;
 export const MIN_IN_RADICAL_STOREKE_COUNT = -1;
 export const MAX_IN_RADICAL_STOREKE_COUNT = 25;
+const PG_INT_MAX = 2147483647;
 
 export const kanjiQueryParams = withZod(
   z.object({
@@ -33,4 +33,4 @@ export const radicalKanjiQueryParams = withZod(
   }),
 );
 
-export const kanjiParams = withZod(z.object({ codePoint }));
+export const kanjiParams = withZod(z.object({ codePoint: zfd.numeric(z.number().int().positive().max(PG_INT_MAX)) }));

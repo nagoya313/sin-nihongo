@@ -3,7 +3,7 @@ import { json, Response, type LoaderArgs, type MetaFunction } from '@remix-run/n
 import { useLoaderData } from '@remix-run/react';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import Page from '~/components/Page';
-import { glyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
+import { getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 import KanjiDefine from '~/features/kanjis/components/KanjiDefine';
 import { getKanjiByCodePoint } from '~/features/kanjis/models/kanji.server';
 import { kanjiParams } from '~/features/kanjis/validators/params';
@@ -18,7 +18,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   const { codePoint } = await checkedParamsLoader(params, kanjiParams);
   const kanji = await getKanjiByCodePoint(codePoint);
   if (kanji == null) throw new Response('Not Found', { status: 404 });
-  const glyph = await glyphwiki(`u${kanji.code_point.toString(16).padStart(4, '0')}`);
+  const glyph = await getGlyphwiki(`u${kanji.code_point.toString(16).padStart(4, '0')}`);
   return json({ kanji, glyph });
 };
 

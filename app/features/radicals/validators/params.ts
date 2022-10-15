@@ -1,13 +1,13 @@
 import { withZod } from '@remix-validated-form/with-zod';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
-import { codePoint } from '~/utils/schemas/codePoint';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { hiragana } from '~/utils/schemas/regex';
 
 export const MIN_STOREKE_COUNT = 1;
 export const MAX_STOREKE_COUNT = 17;
+const PG_SMALL_INT_MAX = 32767;
 
 export const radicalQueryParams = withZod(
   z.object({
@@ -18,7 +18,9 @@ export const radicalQueryParams = withZod(
   }),
 );
 
-export const radicalParams = withZod(z.object({ codePoint }));
+export const radicalParams = withZod(
+  z.object({ codePoint: zfd.numeric(z.number().int().positive().max(PG_SMALL_INT_MAX)) }),
+);
 
 export const radicalUpdateParams = withZod(
   z.object({

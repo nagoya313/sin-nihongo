@@ -15,14 +15,14 @@ import { $path } from 'remix-routes';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import LinkButton from '~/components/LinkButton';
 import { useLinkColor, useShadow } from '../../../hooks/useColor';
-import { type kanjiCodePointOrder } from '../models/kanji.server';
+import { type getKanjisOrderByCodePoint } from '../models/kanji.server';
 import JisLevelBadge from './JisLevelBadge';
 import KanjiLink from './KanjiLink';
 import KanjiRead from './KanjiRead';
 import RegularBadge from './RegularBadge';
 
 type KanjiItemProps = {
-  kanji: Awaited<ReturnType<typeof kanjiCodePointOrder>>[number];
+  kanji: Awaited<ReturnType<typeof getKanjisOrderByCodePoint>>[number];
   isEven: boolean;
 };
 
@@ -34,7 +34,6 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
     shadow={useShadow()}
     bg={useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50')}
     justify="space-between"
-    overflow="hidden"
   >
     <KanjiLink codePoint={kanji.code_point} />
     <GlyphCanvasSuspense />

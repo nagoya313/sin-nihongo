@@ -1,11 +1,11 @@
 import { Box, HStack, Icon, VStack } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { MdOutlineFontDownload } from 'react-icons/md';
+import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
-import Page from '~/components/Page';
+import PageInfo from '~/components/PageInfo';
 import SubmitButton from '~/components/SubmitButton';
 import TextArea from '~/components/TextArea';
 import TextInput from '~/components/TextInput';
@@ -33,32 +33,34 @@ const New = () => {
   );
 
   return (
-    <Page avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />} title="グリフ作成">
-      <HStack p={8} gap={8} align="top">
-        <VStack align="start">
-          <GlyphCanvasSuspense />
-          <ValidatedForm method="post" validator={glyphCreateParams}>
-            <VStack align="start">
-              <FormControl name="name" label="なまえ" isRequired>
-                <TextInput name="name" />
-              </FormControl>
-              <FormControl name="data" label="影算料" isRequired>
-                <TextArea name="data" />
-              </FormControl>
-              <SubmitButton>作成する</SubmitButton>
-            </VStack>
-          </ValidatedForm>
-        </VStack>
-        <Box overflow="hidden">
-          <ValidatedForm {...searchProps}>
-            <FormControl name="name" label="グリフウィキから検索" isRequired>
-              <TextInput name="q" />
+    <HStack flex={1} p={8} align="start">
+      <VStack align="start">
+        <PageInfo avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />} title="グリフ作成" />
+        <GlyphCanvasSuspense />
+        <ValidatedForm method="post" validator={glyphCreateParams}>
+          <VStack align="start">
+            <FormControl name="name" label="なまえ" isRequired>
+              <TextInput name="name" />
             </FormControl>
-          </ValidatedForm>
+            <FormControl name="data" label="影算料" isRequired>
+              <TextArea name="data" />
+            </FormControl>
+            <SubmitButton>作成する</SubmitButton>
+          </VStack>
+        </ValidatedForm>
+      </VStack>
+      <VStack align="start">
+        <PageInfo avatar={<Icon fontSize={24} as={MdOutlineBook} />} title="グリフウィキから検索" />
+        <ValidatedForm {...searchProps}>
+          <FormControl name="q">
+            <TextInput name="q" />
+          </FormControl>
+        </ValidatedForm>
+        <Box overflow="hidden" mt={8}>
           {'glyph' in data && <GlyphSearchResult glyph={data.glyph} />}
         </Box>
-      </HStack>
-    </Page>
+      </VStack>
+    </HStack>
   );
 };
 

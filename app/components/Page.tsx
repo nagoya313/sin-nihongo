@@ -1,6 +1,5 @@
-import { Heading, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
-import CircleIcon from './CircleIcon';
 import Main from './Main';
+import PageInfo from './PageInfo';
 
 type PageProps = React.PropsWithChildren<{
   avatar: React.ReactNode;
@@ -9,25 +8,9 @@ type PageProps = React.PropsWithChildren<{
   action?: React.ReactNode;
 }>;
 
-const Page = ({ avatar, title, subText, action, children }: PageProps) => (
+const Page = ({ children, ...props }: PageProps) => (
   <Main>
-    <HStack spacing={4} mt={8}>
-      <CircleIcon>{avatar}</CircleIcon>
-      <VStack align="start">
-        <Heading size="sm">{title}</Heading>
-        {subText && (
-          <Text fontSize="xs" color="gray">
-            {subText}
-          </Text>
-        )}
-      </VStack>
-      {action && (
-        <>
-          <Spacer />
-          {action}
-        </>
-      )}
-    </HStack>
+    <PageInfo {...props} />
     {children}
   </Main>
 );

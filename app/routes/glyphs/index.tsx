@@ -5,8 +5,8 @@ import { MdBuild, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
 import AdminLinkButton from '~/components/AdminLinkButton';
+import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
-import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
 import { GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
@@ -30,14 +30,14 @@ const Index = () => {
     <Page
       avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />}
       title="グリフ一覧"
-      action={<AdminLinkButton aria-label="radical-edit" icon={<MdBuild />} to={$path('/radicals')} />}
+      action={<AdminLinkButton aria-label="glyph-build" icon={<MdBuild />} to={$path('/glyphs/new')} />}
     >
       <ValidatedForm {...searchProps}>
         <SearchPanel>
           <HStack align="center">
-            <SearchFormControl name="name" label="なまえ">
+            <FormControl name="name" label="なまえ">
               <TextInput name="name" />
-            </SearchFormControl>
+            </FormControl>
           </HStack>
         </SearchPanel>
       </ValidatedForm>

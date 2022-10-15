@@ -6,10 +6,10 @@ import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm } from 'remix-validated-form';
 import { REGULAR_RADIO } from '~/components/constants';
+import FormControl from '~/components/FormControl';
 import NumberInput from '~/components/NumberInput';
 import Page from '~/components/Page';
 import RadioGroup from '~/components/RadioGroup';
-import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
@@ -52,24 +52,24 @@ const Index = () => {
       <ValidatedForm {...searchProps}>
         <SearchPanel>
           <HStack align="center">
-            <SearchFormControl
+            <FormControl
               name="read"
               label="よみかた"
               help="部首名は新日本語表音式によるひらがなでの前方一致で絞り込みができます。"
             >
               <TextInput name="read" placeholder="いち、しょー、つずみ" />
-            </SearchFormControl>
-            <SearchFormControl name="strokeCount" label="画数">
+            </FormControl>
+            <FormControl name="strokeCount" label="画数">
               <NumberInput
                 name="strokeCount"
                 placeholder={`${MIN_STOREKE_COUNT}〜${MAX_STOREKE_COUNT}`}
                 min={MIN_STOREKE_COUNT}
                 max={MAX_STOREKE_COUNT}
               />
-            </SearchFormControl>
-            <SearchFormControl as="fieldset" name="regular" label="常用漢字">
+            </FormControl>
+            <FormControl as="fieldset" name="regular" label="常用漢字">
               <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
-            </SearchFormControl>
+            </FormControl>
           </HStack>
         </SearchPanel>
         <Virtuoso

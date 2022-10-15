@@ -1,12 +1,13 @@
-import { Button, FormLabel, HStack, IconButton, useToast, VStack } from '@chakra-ui/react';
+import { HStack, IconButton, useToast, VStack } from '@chakra-ui/react';
 import { redirect, type ActionArgs, type MetaFunction } from '@remix-run/node';
 import { useActionData, useParams } from '@remix-run/react';
 import { useEffect } from 'react';
 import { MdClear } from 'react-icons/md';
 import { $params, $path } from 'remix-routes';
-import { useControlField, useFormContext, ValidatedForm, validationError } from 'remix-validated-form';
+import { useControlField, ValidatedForm, validationError } from 'remix-validated-form';
+import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
-import ReadFormControl from '~/components/ReadFormControl';
+import SubmitButton from '~/components/SubmitButton';
 import TextInput from '~/components/TextInput';
 import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { radicalUpdateParams } from '~/features/radicals/validators/params';
@@ -27,7 +28,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());
   const { radical } = useMatchesData<typeof loader>($path('/radicals/:codePoint', { codePoint }));
-  const { isValid, isSubmitting } = useFormContext(RADICAL_EDIT_FORM_ID);
   const [reads, setReads] = useControlField<string[]>('reads', RADICAL_EDIT_FORM_ID);
   const data = useActionData<typeof action>();
   const toast = useToast();
@@ -48,8 +48,12 @@ const Edit = () => {
       >
         <VStack p={8} align="start">
           {reads?.map((_, index) => (
-            <ReadFormControl key={index} name={`reads[${index}]`} isRequired={index === 0}>
-              {index === 0 && <FormLabel>よみかた</FormLabel>}
+            <FormControl
+              key={index}
+              name={`reads[${index}]`}
+              label={index === 0 ? 'よみかた' : undefined}
+              isRequired={index === 0}
+            >
               <HStack>
                 <TextInput name={`reads[${index}]`} />
                 <IconButton
@@ -63,11 +67,9 @@ const Edit = () => {
                   isDisabled={reads.length === 1}
                 />
               </HStack>
-            </ReadFormControl>
+            </FormControl>
           ))}
-          <Button type="submit" isDisabled={!isValid || isSubmitting} colorScheme="purple">
-            更新する
-          </Button>
+          <SubmitButton>更新する</SubmitButton>
         </VStack>
       </ValidatedForm>
     </Page>

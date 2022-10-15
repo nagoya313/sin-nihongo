@@ -4,10 +4,10 @@ import { useLoaderData } from '@remix-run/react';
 import { MdOutlineFormatListNumbered } from 'react-icons/md';
 import { ValidatedForm } from 'remix-validated-form';
 import { REGULAR_RADIO } from '~/components/constants';
+import FormControl from '~/components/FormControl';
 import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
 import RadioGroup from '~/components/RadioGroup';
-import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import TextInput from '~/components/TextInput';
@@ -35,16 +35,16 @@ const Index = () => {
       <ValidatedForm {...searchProps}>
         <SearchPanel>
           <HStack align="center">
-            <SearchFormControl
+            <FormControl
               name="read"
               label="よみかた"
               help="部首名は新日本語表音式によるひらがなでの前方一致で絞り込みができます。"
             >
               <TextInput name="read" placeholder="いち、しょー、つずみ" />
-            </SearchFormControl>
-            <SearchFormControl as="fieldset" name="regular" label="常用漢字">
+            </FormControl>
+            <FormControl as="fieldset" name="regular" label="常用漢字">
               <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
-            </SearchFormControl>
+            </FormControl>
           </HStack>
         </SearchPanel>
         <OrderTabs formId={STROKE_COUNT_SEARCH_FROM_ID} orders={[{ key: 'stroke_count', label: '画数順' }]}>

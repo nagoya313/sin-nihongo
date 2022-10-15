@@ -14,7 +14,6 @@ const GlyphSearchResult = ({ glyph }: GlyphSearchResultProps) => {
   return (
     <VStack align="start" p={4} mt={4} rounded="md" borderWidth="1px">
       <GlyphResult name={glyph.name} buhin={buhin} />
-      <Divider />
       {glyph.drawNecessaryGlyphs.map(({ name }) => (
         <>
           <Divider />

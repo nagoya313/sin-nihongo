@@ -12,7 +12,7 @@ import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
 import GlyphItem from '~/features/glyphs/components/GlyphItem';
-import { GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
+import { GLYPH_READ_LIMIT, GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
 import { getGlyphs } from '~/features/glyphs/models/glyph.server';
 import { glyphQueryParams } from '~/features/glyphs/validators/params';
 import useSearch from '~/hooks/useSearch';
@@ -35,7 +35,7 @@ const Index = () => {
   const { data, ...searchProps } = useSearch(GLYPH_SEARCH_FORM_ID, glyphQueryParams, initialData);
   const [glyphs, setGlyphs] = useState<Awaited<ReturnType<typeof getGlyphs>>>([]);
   const glyphMoreLoad = () => {
-    if ('glyphs' in data) {
+    if ('glyphs' in data && data.glyphs.length === GLYPH_READ_LIMIT) {
       const formData = searchProps.getValues();
       formData.set('offset', (data.offset + 20).toString());
       searchProps.fetcher.submit(formData);
@@ -46,8 +46,11 @@ const Index = () => {
       setGlyphs(data.offset ? (prev) => [...prev, ...data.glyphs] : data.glyphs);
     }
   }, [data]);
-
-  console.log(glyphs);
+  useEffect(() => {
+    if ('glyphs' in initialData) {
+      setGlyphs(initialData.glyphs);
+    }
+  }, [initialData]);
 
   return (
     <Page

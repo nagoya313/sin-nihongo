@@ -13,7 +13,7 @@ import RadioGroup from '~/components/RadioGroup';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
-import { KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
+import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
 import { getKanjisOrderByCodePoint } from '~/features/kanjis/models/kanji.server';
 import { kanjiQueryParams, MAX_STOREKE_COUNT, MIN_STOREKE_COUNT } from '~/features/kanjis/validators/params';
 import useSearch from '~/hooks/useSearch';
@@ -34,7 +34,7 @@ const Index = () => {
   const { data, ...searchProps } = useSearch(KANJI_SEARCH_FORM_ID, kanjiQueryParams, initialData);
   const [kanjis, setKanjis] = useState<Awaited<ReturnType<typeof getKanjisOrderByCodePoint>>>([]);
   const kanjiMoreLoad = () => {
-    if ('kanjis' in data) {
+    if ('kanjis' in data && data.kanjis.length === KANJI_READ_LIMIT) {
       const formData = searchProps.getValues();
       formData.set('offset', (data.offset + 20).toString());
       searchProps.fetcher.submit(formData);

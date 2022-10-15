@@ -2,6 +2,7 @@ import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import { escapeLike } from '~/utils/sql';
+import { KANJI_READ_LIMIT } from '../constants';
 import { type kanjiQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
@@ -26,7 +27,7 @@ export const getKanjisOrderByCodePoint = ({ strokeCount, regular, read, offset }
     .groupBy('kanji.code_point')
     .orderBy('code_point')
     .offset(offset)
-    .limit(20)
+    .limit(KANJI_READ_LIMIT)
     .execute();
 
 export const getKanjisOrderByStrokeCount = ({ regular, read, direction }: QueryParams) =>

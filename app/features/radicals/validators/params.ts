@@ -1,6 +1,7 @@
 import { withZod } from '@remix-validated-form/with-zod';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
+import { codePoint } from '~/utils/schemas/codePoint';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { hiragana } from '~/utils/schemas/regex';
@@ -17,11 +18,7 @@ export const radicalQueryParams = withZod(
   }),
 );
 
-export const radicalParams = withZod(
-  z.object({
-    codePoint: zfd.numeric(z.number().int()),
-  }),
-);
+export const radicalParams = withZod(z.object({ codePoint }));
 
 export const radicalUpdateParams = withZod(
   z.object({

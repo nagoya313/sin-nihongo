@@ -1,9 +1,10 @@
-import { ChakraProvider, Text } from '@chakra-ui/react';
+import { Box, ChakraProvider, Heading, Text, VStack } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
-import { type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { type ErrorBoundaryComponent, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch } from '@remix-run/react';
 import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
+import { useOptionalUser } from './hooks/useUser';
 import Layout from './layout';
 import { authenticator } from './session.server';
 import { theme } from './styles/theme';
@@ -68,13 +69,38 @@ const Document = withEmotionCache(({ title, children }: DocumentProps, emotionCa
   );
 });
 
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  const user = useOptionalUser();
+
+  return (
+    <Document title="Error">
+      <ChakraProvider theme={theme}>
+        <Box p={8}>
+          {user != null ? (
+            <>
+              <Heading mb={8}>Application Error</Heading>
+              <VStack align="start" p={4} overflowX="scroll" whiteSpace="pre" bg="white">
+                <Text color="red">{error.stack}</Text>
+              </VStack>
+            </>
+          ) : (
+            <Text>なんらかのエラーが発生しました。</Text>
+          )}
+        </Box>
+      </ChakraProvider>
+    </Document>
+  );
+};
+
 export const CatchBoundary = () => {
   const caught = useCatch();
 
   return (
     <Document title={caught.status === 404 ? 'Page Not Found' : undefined}>
       <ChakraProvider theme={theme}>
-        <Text p={4}>{caught.status === 404 ? 'お探しのページは見つかりませんでした。' : caught.statusText}</Text>
+        <Box p={8}>
+          <Text>{caught.status === 404 ? 'お探しのページは見つかりませんでした。' : caught.statusText}</Text>
+        </Box>
       </ChakraProvider>
     </Document>
   );

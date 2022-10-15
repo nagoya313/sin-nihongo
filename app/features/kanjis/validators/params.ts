@@ -2,6 +2,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { booleanRadio } from '~/utils/schemas/booleanRadio';
+import { codePoint } from '~/utils/schemas/codePoint';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { kana } from '~/utils/schemas/regex';
@@ -32,8 +33,4 @@ export const radicalKanjiQueryParams = withZod(
   }),
 );
 
-export const kanjiParams = withZod(
-  z.object({
-    codePoint: zfd.numeric(z.number().int()),
-  }),
-);
+export const kanjiParams = withZod(z.object({ codePoint }));

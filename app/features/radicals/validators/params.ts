@@ -22,3 +22,9 @@ export const radicalParams = withZod(
     codePoint: zfd.numeric(z.number().int()),
   }),
 );
+
+export const radicalUpdateParams = withZod(
+  z.object({
+    reads: zfd.repeatable(z.array(zfd.text(zfd.text(hiragana.max(10, '10文字以内で入力してください')))).min(1)),
+  }),
+);

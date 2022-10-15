@@ -26,7 +26,7 @@ const SearchFormControl = ({ isRequired, name, label, help, as, children }: Sear
         )}
       </FormLabel>
       {children}
-      {error && <FormErrorMessage>{error}</FormErrorMessage>}
+      {!!error && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>
   );
 };

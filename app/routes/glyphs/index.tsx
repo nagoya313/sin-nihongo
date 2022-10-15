@@ -1,8 +1,10 @@
 import { HStack, Icon } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { MdOutlineFontDownload } from 'react-icons/md';
+import { MdBuild, MdOutlineFontDownload } from 'react-icons/md';
+import { $path } from 'remix-routes';
 import { ValidatedForm, validationError } from 'remix-validated-form';
+import AdminLinkButton from '~/components/AdminLinkButton';
 import Page from '~/components/Page';
 import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
@@ -29,7 +31,11 @@ const Index = () => {
   const { data, ...searchProps } = useSearch(GLYPH_SEARCH_FORM_ID, glyphQueryParams, initialData);
 
   return (
-    <Page avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />} title="グリフ一覧">
+    <Page
+      avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />}
+      title="グリフ一覧"
+      action={<AdminLinkButton aria-label="radical-edit" icon={<MdBuild />} to={$path('/radicals')} />}
+    >
       <ValidatedForm {...searchProps}>
         <SearchPanel>
           <HStack align="center">

@@ -1,17 +1,10 @@
-import { useMatches } from '@remix-run/react';
-import { useMemo } from 'react';
 import { type User } from '~/session.server';
-
-const useMatchesData = (id: string): Record<string, unknown> | undefined => {
-  const matchingRoutes = useMatches();
-  const route = useMemo(() => matchingRoutes.find((route) => route.id === id), [matchingRoutes, id]);
-  return route?.data;
-};
+import useMatchesData from './useMatchesData';
 
 const isUser = (user: any): user is User => user && typeof user === 'object' && typeof user.email === 'string';
 
 export const useOptionalUser = () => {
-  const data = useMatchesData('root');
+  const data = useMatchesData('/');
   if (!data || !isUser(data['user'])) return undefined;
   return data['user'];
 };

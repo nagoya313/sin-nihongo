@@ -1,15 +1,14 @@
 import { IconButton, type IconButtonProps } from '@chakra-ui/react';
 import { useNavigate } from '@remix-run/react';
 
-type EditButtonProps = {
+type LinkButtonProps = {
   to: string;
-  icon: IconButtonProps['icon'];
-};
+} & Omit<IconButtonProps, 'onClick'>;
 
-const LinkButton = ({ to, icon }: EditButtonProps) => {
+const LinkButton = ({ to, ...props }: LinkButtonProps) => {
   const navigate = useNavigate();
 
-  return <IconButton aria-label="edit" icon={icon} onClick={() => navigate(to)} />;
+  return <IconButton {...props} onClick={() => navigate(to)} />;
 };
 
 export default LinkButton;

@@ -1,10 +1,11 @@
 import { HStack, TabPanel } from '@chakra-ui/react';
 import { json, Response, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { MdEdit } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm, validationError } from 'remix-validated-form';
+import AdminLinkButton from '~/components/AdminLinkButton';
 import { ORDERS, REGULAR_RADIO } from '~/components/constants';
-import EditButton from '~/components/EditButton';
 import NumberInput from '~/components/NumberInput';
 import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
@@ -63,7 +64,13 @@ const Radical = () => {
       avatar={data.radical.radical}
       title="部首別索引"
       subText={`（現在は旧日本語字形で部首が「${data.radical.radical}」の漢字が登録されていますが、新日本語字形で部首が「${data.radical.radical}」のものに置換予定です。）`}
-      action={<EditButton to={$path(`/radicals/:codePoint`, { codePoint: data.radical.code_point })} />}
+      action={
+        <AdminLinkButton
+          aria-label="radical-edit"
+          icon={<MdEdit />}
+          to={$path(`/radicals/:codePoint`, { codePoint: data.radical.code_point })}
+        />
+      }
     >
       <RadicalDefine radical={data.radical} />
       <ValidatedForm {...searchProps}>

@@ -6,7 +6,7 @@ import { type radicalKanjiQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof radicalKanjiQueryParams>;
 
-export const radicalKanjiStrokeCountOrder = (
+export const getRadicalKanjisOrderByStrokeCount = (
   radicalId: number,
   { strokeCount, regular, read, direction }: QueryParams,
 ) =>
@@ -28,7 +28,10 @@ export const radicalKanjiStrokeCountOrder = (
     .groupBy('in_radical_stroke_count')
     .execute();
 
-export const radicalKanjiReadOrder = (radicalId: number, { strokeCount, regular, read, direction }: QueryParams) =>
+export const getRadicalKanjisOrderByRead = (
+  radicalId: number,
+  { strokeCount, regular, read, direction }: QueryParams,
+) =>
   db
     .selectFrom((db) =>
       db

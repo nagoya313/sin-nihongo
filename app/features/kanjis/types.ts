@@ -1,7 +1,6 @@
-import { type ReadonlyDeep } from 'type-fest';
 import { type Timestamp } from '~/db/timestamp';
 
-export type Kanji = ReadonlyDeep<{
+export type Kanji = Readonly<{
   code_point: number;
   regular: boolean;
   for_name: boolean;
@@ -13,7 +12,7 @@ export type Kanji = ReadonlyDeep<{
 }> &
   Timestamp;
 
-export type KanjiRead = ReadonlyDeep<{
+export type KanjiRead = Readonly<{
   read: string;
   kanji_code_point: number;
 }> &

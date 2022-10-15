@@ -1,33 +1,35 @@
 import { json, Response, type LoaderArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 import { validationError } from 'remix-validated-form';
-import { radicalKanjiReadOrder, radicalKanjiStrokeCountOrder } from '~/features/kanjis/models/radicalKanji.server';
+import {
+  getRadicalKanjisOrderByRead,
+  getRadicalKanjisOrderByStrokeCount,
+} from '~/features/kanjis/models/radicalKanji.server';
 import { radicalKanjiQueryParams } from '~/features/kanjis/validators/params';
-import { radical } from '~/features/radicals/models/radical.server';
+import { getRadicalByCodePoint } from '~/features/radicals/models/radical.server';
 import { radicalParams } from '~/features/radicals/validators/params';
+import { checkedParamsLoader } from '~/utils/request';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const paramsResult = await radicalParams.validate(params);
-  if (paramsResult.error) {
-    console.log(paramsResult.error.fieldErrors);
-    throw new Response('Not Found', { status: 404 });
+  const { codePoint } = await checkedParamsLoader(params, radicalParams);
+  const radical = await getRadicalByCodePoint(codePoint);
+  if (radical == null) throw new Response('Not Found', { status: 404 });
+  const query = await radicalKanjiQueryParams.validate(new URL(request.url).searchParams);
+  if (query.error) {
+    console.log(query.error.fieldErrors);
+    return json({ radical, kanjis: validationError(query.error) });
   }
-  const data = await radical(paramsResult.data.codePoint);
-  if (data == null) throw new Response('Not Found', { status: 404 });
-  const result = await radicalKanjiQueryParams.validate(new URL(request.url).searchParams);
-  if (result.error) {
-    console.log(result.error.fieldErrors);
-    return json({ radical: data, kanjis: validationError(result.error) });
-  }
-  if (result.data.orderBy === 'read')
-    return json({
-      radical: data,
-      kanjiReadOrder: await radicalKanjiReadOrder(paramsResult.data.codePoint, result.data),
-    });
-  return json({
-    radical: data,
-    kanjiStrokeCountOrder: await radicalKanjiStrokeCountOrder(paramsResult.data.codePoint, result.data),
-  });
+  return json(
+    query.data.orderBy === 'read'
+      ? {
+          radical,
+          kanjisOrderByRead: await getRadicalKanjisOrderByRead(codePoint, query.data),
+        }
+      : {
+          radical,
+          kanjisOrderByStrokeCount: await getRadicalKanjisOrderByStrokeCount(codePoint, query.data),
+        },
+  );
 };
 
 const Radical = () => <Outlet />;

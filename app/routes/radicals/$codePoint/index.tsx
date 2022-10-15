@@ -27,7 +27,7 @@ import useSearch from '~/hooks/useSearch';
 import { type loader } from '../$codePoint';
 
 export const meta: MetaFunction = ({ params }) => ({
-  title: `新日本語｜部首索引「${String.fromCodePoint(parseInt(params['codePoint']!))}」`,
+  title: `新日本語｜部首索引「${String.fromCodePoint(parseInt($params('/radicals/:codePoint', params).codePoint))}」`,
 });
 
 const Radical = () => {
@@ -49,7 +49,7 @@ const Radical = () => {
       }
     >
       <RadicalDefine radical={data.radical} />
-      <ValidatedForm {...searchProps}>
+      <ValidatedForm {...searchProps} action={$path('/radicals/:codePoint', { codePoint })}>
         <SearchPanel>
           <HStack align="center">
             <SearchFormControl
@@ -74,9 +74,13 @@ const Radical = () => {
         </SearchPanel>
         <OrderTabs formId={RADICAL_SEARCH_FORM_ID} orders={ORDERS}>
           <TabPanel>
-            {'kanjiStrokeCountOrder' in kanji && <StrokeCountOrder data={kanji.kanjiStrokeCountOrder} to="/kanjis" />}
+            {'kanjisOrderByStrokeCount' in kanji && (
+              <StrokeCountOrder data={kanji.kanjisOrderByStrokeCount} to="/kanjis" />
+            )}
           </TabPanel>
-          <TabPanel>{'kanjiReadOrder' in kanji && <ReadOrder data={kanji.kanjiReadOrder} to="/kanjis" />}</TabPanel>
+          <TabPanel>
+            {'kanjisOrderByRead' in kanji && <ReadOrder data={kanji.kanjisOrderByRead} to="/kanjis" />}
+          </TabPanel>
         </OrderTabs>
       </ValidatedForm>
     </Page>

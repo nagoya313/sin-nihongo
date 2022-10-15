@@ -1,8 +1,8 @@
 import { HStack, Icon, TabPanel } from '@chakra-ui/react';
-import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdOutlineMic } from 'react-icons/md';
-import { ValidatedForm, validationError } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import { REGULAR_RADIO } from '~/components/constants';
 import NumberInput from '~/components/NumberInput';
 import OrderTabs from '~/components/OrderTabs';
@@ -13,22 +13,19 @@ import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
 import { READ_SEARCH_FROM_ID } from '~/features/kanjis/constants';
-import { kanjiReadOrder } from '~/features/kanjis/models/kanji.server';
+import { getKanjisOrderByRead } from '~/features/kanjis/models/kanji.server';
 import { kanjiQueryParams, MAX_STOREKE_COUNT, MIN_STOREKE_COUNT } from '~/features/kanjis/validators/params';
 import useSearch from '~/hooks/useSearch';
+import { checkedQueryRequestLoader } from '~/utils/request';
 
 export const meta: MetaFunction = () => ({
   title: '新日本語｜音訓索引',
 });
 
-export const loader = async ({ request }: LoaderArgs) => {
-  const result = await kanjiQueryParams.validate(new URL(request.url).searchParams);
-  if (result.error) {
-    console.log(result.error.fieldErrors);
-    return validationError(result.error);
-  }
-  return json({ kanjiReadOrder: await kanjiReadOrder(result.data) });
-};
+export const loader = async ({ request }: LoaderArgs) =>
+  checkedQueryRequestLoader(request, kanjiQueryParams, async (query) => ({
+    kanjis: await getKanjisOrderByRead(query),
+  }));
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
@@ -60,7 +57,7 @@ const Index = () => {
           </HStack>
         </SearchPanel>
         <OrderTabs formId={READ_SEARCH_FROM_ID} orders={[{ key: 'read', label: 'よみかた順' }]}>
-          <TabPanel>{'kanjiReadOrder' in data && <ReadOrder data={data.kanjiReadOrder} to="/kanjis" />}</TabPanel>
+          <TabPanel>{'kanjis' in data && <ReadOrder data={data.kanjis} to="/kanjis" />}</TabPanel>
         </OrderTabs>
       </ValidatedForm>
     </Page>

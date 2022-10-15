@@ -6,7 +6,7 @@ import { type kanjiQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
 
-export const kanjiCodePointOrder = ({ strokeCount, regular, read, offset }: QueryParams) =>
+export const getKanjisOrderByCodePoint = ({ strokeCount, regular, read, offset }: QueryParams) =>
   db
     .selectFrom('kanji')
     .innerJoin('radical', 'radical.code_point', 'radical_code_point')
@@ -29,7 +29,7 @@ export const kanjiCodePointOrder = ({ strokeCount, regular, read, offset }: Quer
     .limit(20)
     .execute();
 
-export const kanjiStrokeCountOrder = ({ regular, read, direction }: QueryParams) =>
+export const getKanjisOrderByStrokeCount = ({ regular, read, direction }: QueryParams) =>
   db
     .selectFrom('kanji')
     .select([
@@ -46,7 +46,7 @@ export const kanjiStrokeCountOrder = ({ regular, read, direction }: QueryParams)
     .orderBy('stroke_count', direction)
     .execute();
 
-export const kanjiReadOrder = ({ strokeCount, regular, read, direction }: QueryParams) =>
+export const getKanjisOrderByRead = ({ strokeCount, regular, read, direction }: QueryParams) =>
   db
     .selectFrom((db) =>
       db
@@ -76,7 +76,7 @@ export const kanjiReadOrder = ({ strokeCount, regular, read, direction }: QueryP
     .groupBy('read_front')
     .execute();
 
-export const kanji = (codePoint: number) =>
+export const getKanjiByCodePoint = (codePoint: number) =>
   db
     .selectFrom('kanji')
     .innerJoin('kanji_read', 'kanji.code_point', 'kanji_read.kanji_code_point')

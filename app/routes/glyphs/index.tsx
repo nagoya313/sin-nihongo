@@ -1,30 +1,26 @@
 import { HStack, Icon } from '@chakra-ui/react';
-import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdBuild, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
-import { ValidatedForm, validationError } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import AdminLinkButton from '~/components/AdminLinkButton';
 import Page from '~/components/Page';
 import SearchFormControl from '~/components/SearchFormControl';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
 import { GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
+import { getGlyphs } from '~/features/glyphs/models/glyph.server';
 import { glyphQueryParams } from '~/features/glyphs/validators/params';
 import useSearch from '~/hooks/useSearch';
+import { checkedQueryRequestLoader } from '~/utils/request';
 
 export const meta: MetaFunction = () => ({
   title: '新日本語｜グリフ一覧',
 });
 
-export const loader = async ({ request }: LoaderArgs) => {
-  const result = await glyphQueryParams.validate(new URL(request.url).searchParams);
-  if (result.error) {
-    console.log(result.error.fieldErrors);
-    return validationError(result.error);
-  }
-  return json({ glyphs: [] });
-};
+export const loader = async ({ request }: LoaderArgs) =>
+  checkedQueryRequestLoader(request, glyphQueryParams, async (query) => ({ glyphs: await getGlyphs(query) }));
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();

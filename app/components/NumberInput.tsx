@@ -1,9 +1,6 @@
 import {
-  NumberDecrementStepper,
-  NumberIncrementStepper,
   NumberInput as CUINumberInput,
   NumberInputField,
-  NumberInputStepper,
   type NumberInputProps as CUINumberInputProps,
 } from '@chakra-ui/react';
 import { useField } from 'remix-validated-form';
@@ -15,16 +12,13 @@ type NumberInputProps = {
   max?: number;
 };
 
+// NumberInputStepper で onChange が發火しない模樣
 const NumberInput = ({ name, placeholder, ...inputProps }: NumberInputProps) => {
   const { getInputProps } = useField(name);
 
   return (
     <CUINumberInput {...getInputProps<CUINumberInputProps>({ ...inputProps })}>
       <NumberInputField placeholder={placeholder} />
-      <NumberInputStepper>
-        <NumberIncrementStepper />
-        <NumberDecrementStepper />
-      </NumberInputStepper>
     </CUINumberInput>
   );
 };

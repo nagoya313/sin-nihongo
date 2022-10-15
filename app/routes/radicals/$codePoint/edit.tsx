@@ -1,5 +1,5 @@
 import { HStack, IconButton, useToast, VStack } from '@chakra-ui/react';
-import { redirect, type ActionArgs, type MetaFunction } from '@remix-run/node';
+import { json, redirect, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useActionData, useParams } from '@remix-run/react';
 import { useEffect } from 'react';
 import { MdClear } from 'react-icons/md';
@@ -12,11 +12,14 @@ import TextInput from '~/components/TextInput';
 import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { radicalUpdateParams } from '~/features/radicals/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
-import { type loader } from '../$codePoint';
+import { authGuard } from '~/utils/request';
+import { type loader as baseLoader } from '../$codePoint';
 
 export const meta: MetaFunction = ({ params }) => ({
   title: `新日本語｜部首編集「${String.fromCodePoint(parseInt($params('/radicals/:codePoint', params).codePoint))}」`,
 });
+
+export const loader = async (args: LoaderArgs) => authGuard(args, async () => json({}));
 
 export const action = async ({ request, params }: ActionArgs) => {
   const data = await radicalUpdateParams.validate(await request.formData());
@@ -27,7 +30,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());
-  const { radical } = useMatchesData<typeof loader>($path('/radicals/:codePoint', { codePoint }));
+  const { radical } = useMatchesData<typeof baseLoader>($path('/radicals/:codePoint', { codePoint }));
   const [reads, setReads] = useControlField<string[]>('reads', RADICAL_EDIT_FORM_ID);
   const data = useActionData<typeof action>();
   const toast = useToast();

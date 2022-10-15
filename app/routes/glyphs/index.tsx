@@ -13,14 +13,16 @@ import { GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
 import { getGlyphs } from '~/features/glyphs/models/glyph.server';
 import { glyphQueryParams } from '~/features/glyphs/validators/params';
 import useSearch from '~/hooks/useSearch';
-import { checkedQueryRequestLoader } from '~/utils/request';
+import { authGuard, checkedQueryRequestLoader } from '~/utils/request';
 
 export const meta: MetaFunction = () => ({
   title: '新日本語｜グリフ一覧',
 });
 
-export const loader = async ({ request }: LoaderArgs) =>
-  checkedQueryRequestLoader(request, glyphQueryParams, async (query) => ({ glyphs: await getGlyphs(query) }));
+export const loader = async (args: LoaderArgs) =>
+  authGuard(args, ({ request }) =>
+    checkedQueryRequestLoader(request, glyphQueryParams, async (query) => ({ glyphs: await getGlyphs(query) })),
+  );
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();

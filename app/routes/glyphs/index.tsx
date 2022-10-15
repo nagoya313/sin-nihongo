@@ -1,7 +1,9 @@
 import { HStack, Icon } from '@chakra-ui/react';
 import { type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import { useEffect, useState } from 'react';
 import { MdBuild, MdOutlineFontDownload } from 'react-icons/md';
+import { Virtuoso } from 'react-virtuoso';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
 import AdminLinkButton from '~/components/AdminLinkButton';
@@ -9,6 +11,7 @@ import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
+import GlyphItem from '~/features/glyphs/components/GlyphItem';
 import { GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
 import { getGlyphs } from '~/features/glyphs/models/glyph.server';
 import { glyphQueryParams } from '~/features/glyphs/validators/params';
@@ -21,12 +24,30 @@ export const meta: MetaFunction = () => ({
 
 export const loader = async (args: LoaderArgs) =>
   authGuard(args, ({ request }) =>
-    checkedQueryRequestLoader(request, glyphQueryParams, async (query) => ({ glyphs: await getGlyphs(query) })),
+    checkedQueryRequestLoader(request, glyphQueryParams, async (query) => ({
+      glyphs: await getGlyphs(query),
+      offset: query.offset,
+    })),
   );
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
   const { data, ...searchProps } = useSearch(GLYPH_SEARCH_FORM_ID, glyphQueryParams, initialData);
+  const [glyphs, setGlyphs] = useState<Awaited<ReturnType<typeof getGlyphs>>>([]);
+  const glyphMoreLoad = () => {
+    if ('glyphs' in data) {
+      const formData = searchProps.getValues();
+      formData.set('offset', (data.offset + 20).toString());
+      searchProps.fetcher.submit(formData);
+    }
+  };
+  useEffect(() => {
+    if ('glyphs' in data) {
+      setGlyphs(data.offset ? (prev) => [...prev, ...data.glyphs] : data.glyphs);
+    }
+  }, [data]);
+
+  console.log(glyphs);
 
   return (
     <Page
@@ -43,6 +64,12 @@ const Index = () => {
           </HStack>
         </SearchPanel>
       </ValidatedForm>
+      <Virtuoso
+        useWindowScroll
+        data={glyphs}
+        endReached={glyphMoreLoad}
+        itemContent={(index, glyph) => <GlyphItem glyph={glyph} isEven={index % 2 === 0} />}
+      />
     </Page>
   );
 };

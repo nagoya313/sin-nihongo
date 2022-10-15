@@ -4,7 +4,7 @@ import { useActionData, useParams } from '@remix-run/react';
 import { useEffect } from 'react';
 import { MdClear } from 'react-icons/md';
 import { $params, $path } from 'remix-routes';
-import { useControlField, ValidatedForm, validationError } from 'remix-validated-form';
+import { useControlField, ValidatedForm } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
 import SubmitButton from '~/components/SubmitButton';
@@ -12,7 +12,7 @@ import TextInput from '~/components/TextInput';
 import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { radicalUpdateParams } from '~/features/radicals/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
-import { authGuard } from '~/utils/request';
+import { authGuard, checkedFormDataRequestLoader } from '~/utils/request';
 import { type loader as baseLoader } from '../$codePoint';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -21,12 +21,11 @@ export const meta: MetaFunction = ({ params }) => ({
 
 export const loader = async (args: LoaderArgs) => authGuard(args, async () => json({}));
 
-export const action = async ({ request, params }: ActionArgs) => {
-  const data = await radicalUpdateParams.validate(await request.formData());
-  if (data.error) return validationError(data.error);
-  const { codePoint } = $params('/radicals/:codePoint', params);
-  return redirect($path('/radicals/:codePoint', { codePoint }));
-};
+export const action = async ({ request, params }: ActionArgs) =>
+  checkedFormDataRequestLoader(request, radicalUpdateParams, async () => {
+    const { codePoint } = $params('/radicals/:codePoint', params);
+    return redirect($path('/radicals/:codePoint', { codePoint }));
+  });
 
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());

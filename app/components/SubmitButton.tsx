@@ -1,13 +1,15 @@
-import { Button } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import { useFormContext } from 'remix-validated-form';
 
-type SubmitButtonProps = React.PropsWithChildren;
+type SubmitButtonProps = React.PropsWithChildren<{
+  size?: ButtonProps['size'];
+}>;
 
-const SubmitButton = ({ children }: SubmitButtonProps) => {
+const SubmitButton = ({ children, ...props }: SubmitButtonProps) => {
   const { isValid, isSubmitting } = useFormContext();
 
   return (
-    <Button type="submit" isDisabled={!isValid || isSubmitting} colorScheme="purple">
+    <Button {...props} type="submit" isDisabled={!isValid || isSubmitting} colorScheme="purple">
       {children}
     </Button>
   );

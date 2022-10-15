@@ -1,6 +1,10 @@
 import { Box, Button, Divider, HStack, Text, useClipboard, VStack } from '@chakra-ui/react';
 import { Buhin } from '@kurgm/kage-engine';
+import { ValidatedForm } from 'remix-validated-form';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
+import HiddenInput from '~/components/HiddenInput';
+import SubmitButton from '~/components/SubmitButton';
+import { glyphCreateParams } from '~/features/glyphs/validators/params';
 
 type GlyphResultProps = {
   name: string;
@@ -36,11 +40,23 @@ const GlyphResult = ({ name, buhin }: GlyphResultProps) => {
             </Button>
           </VStack>
           <Box>
-            {data.split('$').map((data) => (
-              <Text fontSize="sm">{data}</Text>
+            {data.split('$').map((data, index) => (
+              <Text key={index} fontSize="sm">
+                {data}
+              </Text>
             ))}
           </Box>
         </HStack>
+        <ValidatedForm
+          method="post"
+          validator={glyphCreateParams}
+          defaultValues={{ name, data }}
+          subaction="from-glyphwiki"
+        >
+          <HiddenInput name="name" />
+          <HiddenInput name="data" />
+          <SubmitButton size="sm">登録する</SubmitButton>
+        </ValidatedForm>
       </VStack>
     </HStack>
   );

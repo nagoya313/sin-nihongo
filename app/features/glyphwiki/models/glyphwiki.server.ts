@@ -19,6 +19,6 @@ const getGlyphWikiGlyph = async (name: string) => {
 export const getGlyphwiki = async (name: string) => {
   const glyph = await getGlyphWikiGlyph(name);
   if (glyph.data == null) return { ...glyph, drawNecessaryGlyphs: [] };
-  const glyphLoader = new GlyphLoader((name) => getGlyphWikiGlyph(name));
+  const glyphLoader = new GlyphLoader(getGlyphWikiGlyph);
   return { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) };
 };

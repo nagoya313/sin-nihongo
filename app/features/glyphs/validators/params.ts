@@ -15,5 +15,6 @@ export const glyphCreateParams = withZod(
   z.object({
     name: zfd.text(z.string().max(50, '50文字以内で入力してください')),
     data: zfd.text(),
+    subaction: zfd.text(z.literal('from-glyphwiki').optional()),
   }),
 );

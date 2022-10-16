@@ -3,6 +3,8 @@ import { useFormContext, type FormProps, type Validator } from 'remix-validated-
 import { useDebouncedCallback } from 'use-debounce';
 import { SEARCH_WAIT } from '~/components/constants';
 
+const EMPTY_DATA = {};
+
 const useSearch = <TParamsType, TData>(
   formId: string,
   validator: Validator<TParamsType>,
@@ -22,7 +24,7 @@ const useSearch = <TParamsType, TData>(
     submit();
     preventDefault();
   };
-  const data = fetcher.type === 'init' ? initialData : fetcher.type === 'done' ? fetcher.data : {};
+  const data = fetcher.type === 'init' ? initialData : fetcher.type === 'done' ? fetcher.data : EMPTY_DATA;
 
   return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data, getValues };
 };

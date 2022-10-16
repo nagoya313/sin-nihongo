@@ -11,7 +11,7 @@ import { $path } from 'remix-routes';
 import { useOptionalUser } from '~/hooks/useUser';
 import SideBarLink from './SidebarLink';
 
-const iconProps = { mr: 4, fontSize: 16 } as const;
+const iconProps = Object.freeze({ mr: 4, fontSize: 16 });
 
 const SideBar = () => {
   const user = useOptionalUser();

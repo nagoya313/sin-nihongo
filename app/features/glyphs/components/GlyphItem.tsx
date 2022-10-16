@@ -3,6 +3,7 @@ import { Form, useTransition } from '@remix-run/react';
 import { MdOutlineDelete } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
+import KageData from '~/components/KageData';
 import { type getGlyphs } from '~/features/glyphs/models/glyph.server';
 import { glyphToBuhin } from '~/kage/kageData';
 import { useShadow } from '../../../hooks/useColor';
@@ -36,13 +37,7 @@ const GlyphItem = ({ glyph, isEven }: GlyphItemProps) => {
           <Divider />
           <HStack>
             <Text fontSize="sm">影算料：</Text>
-            <Box>
-              {glyph.data.split('$').map((data, index) => (
-                <Text key={index} fontSize="sm">
-                  {data}
-                </Text>
-              ))}
-            </Box>
+            <KageData data={glyph.data} />
           </HStack>
         </VStack>
       </Box>

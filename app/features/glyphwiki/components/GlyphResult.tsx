@@ -1,8 +1,10 @@
-import { Box, Button, Divider, HStack, Text, useClipboard, VStack } from '@chakra-ui/react';
+import { Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { Buhin } from '@kurgm/kage-engine';
 import { ValidatedForm } from 'remix-validated-form';
+import ClipboardCopyButton from '~/components/ClipboardCopyButton';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import HiddenInput from '~/components/HiddenInput';
+import KageData from '~/components/KageData';
 import SubmitButton from '~/components/SubmitButton';
 import { glyphCreateParams } from '~/features/glyphs/validators/params';
 
@@ -13,8 +15,6 @@ type GlyphResultProps = {
 
 const GlyphResult = ({ name, buhin }: GlyphResultProps) => {
   const data = buhin.search(name);
-  const { hasCopied: hasNameCopied, onCopy: onNameCopy } = useClipboard(name);
-  const { hasCopied: hasDataCopied, onCopy: onDataCopy } = useClipboard(data);
 
   return (
     <HStack w="full">
@@ -23,9 +23,7 @@ const GlyphResult = ({ name, buhin }: GlyphResultProps) => {
         <HStack>
           <VStack align="start">
             <Text fontSize="sm">なまえ：</Text>
-            <Button size="xs" onClick={onNameCopy}>
-              {hasNameCopied ? '複製了' : '複製'}
-            </Button>
+            <ClipboardCopyButton text={name} />
           </VStack>
           <Text fontSize="sm" m={4}>
             {name}
@@ -35,17 +33,9 @@ const GlyphResult = ({ name, buhin }: GlyphResultProps) => {
         <HStack>
           <VStack align="start">
             <Text fontSize="sm">影算料：</Text>
-            <Button size="xs" onClick={onDataCopy}>
-              {hasDataCopied ? '複製了' : '複製'}
-            </Button>
+            <ClipboardCopyButton text={data} />
           </VStack>
-          <Box>
-            {data.split('$').map((data, index) => (
-              <Text key={index} fontSize="sm">
-                {data}
-              </Text>
-            ))}
-          </Box>
+          <KageData data={data} />
         </HStack>
         <ValidatedForm
           method="post"

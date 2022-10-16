@@ -3,13 +3,12 @@ import { useField } from 'remix-validated-form';
 
 type TextAreaProps = {
   name: string;
-  placeholder?: string;
 };
 
-const TextArea = ({ name, ...inputProps }: TextAreaProps) => {
+const TextArea = ({ name }: TextAreaProps) => {
   const { getInputProps } = useField(name);
 
-  return <Textarea {...getInputProps<TextareaProps>({ id: name, ...inputProps })} />;
+  return <Textarea {...getInputProps<TextareaProps>({ id: name })} />;
 };
 
 export default TextArea;

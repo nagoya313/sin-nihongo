@@ -1,7 +1,7 @@
 import { Box, HStack, Icon, VStack } from '@chakra-ui/react';
-import { json, redirect, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, redirect, type ActionArgs, type MetaFunction } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
@@ -20,13 +20,11 @@ import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
 import useSearch from '~/hooks/useSearch';
 import { authGuard, checkedFormDataRequestLoader } from '~/utils/request';
-import { type loader as glyphwikiLoader } from '../glyphwiki';
+import { type loader } from '../glyphwiki';
 
 export const meta: MetaFunction = () => ({
   title: '新日本語｜グリフ作成',
 });
-
-export const loader = async (args: LoaderArgs) => authGuard(args, async () => json({}));
 
 export const action = async (args: ActionArgs) =>
   authGuard(args, async ({ request }) =>
@@ -41,15 +39,17 @@ const New = () => {
   const { data, formProps } = useSearch(
     GLYPHWIKI_SEARCH_FORM_ID,
     glyphwikiQueryParams,
-    {} as ReturnType<typeof useMatchesData<typeof glyphwikiLoader>>,
+    {} as ReturnType<typeof useMatchesData<typeof loader>>,
     $path('/glyphwiki'),
   );
   const actionResult = useActionData<typeof action>();
-  const [glyph, setGlyph] = useState<typeof data>({});
+  const [glyph, setGlyph] = useState<typeof data>(data);
 
-  /*useEffect(() => {
-    setGlyph(data);
-  }, [data]);*/
+  console.log(data);
+
+  useEffect(() => {
+    //setGlyph(data);
+  }, [data]);
 
   /*useEffect(() => {
     setGlyph(glyph);

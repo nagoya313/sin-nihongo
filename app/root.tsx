@@ -1,12 +1,18 @@
-import { Box, ChakraProvider, Heading, Text, VStack } from '@chakra-ui/react';
+import { Box, ChakraProvider, Heading, Text, useToast, VStack } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
-import { type ErrorBoundaryComponent, type LinksFunction, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch } from '@remix-run/react';
+import {
+  json,
+  type ErrorBoundaryComponent,
+  type LinksFunction,
+  type LoaderArgs,
+  type MetaFunction,
+} from '@remix-run/node';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from '@remix-run/react';
 import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
 import { useOptionalUser } from './hooks/useUser';
 import Layout from './layout';
-import { authenticator } from './session.server';
+import { authenticator, commitSession, getFlashMessage } from './session.server';
 import { theme } from './styles/theme';
 
 export const meta: MetaFunction = () => ({
@@ -26,7 +32,8 @@ export const links: LinksFunction = () => [
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await authenticator.isAuthenticated(request);
-  return { user };
+  const { flash, session } = await getFlashMessage(request);
+  return json({ user, flash }, { headers: { 'Set-Cookie': await commitSession(session) } });
 };
 
 type DocumentProps = {
@@ -106,11 +113,24 @@ export const CatchBoundary = () => {
   );
 };
 
+const Toaster = () => {
+  const { flash } = useLoaderData<typeof loader>();
+  const toast = useToast();
+
+  useEffect(() => {
+    if (flash != null) {
+      toast({ title: flash.message, status: flash.status });
+    }
+  }, [flash, toast]);
+
+  return <Outlet />;
+};
+
 const App = () => (
   <Document>
     <ChakraProvider theme={theme}>
       <Layout>
-        <Outlet />
+        <Toaster />
       </Layout>
     </ChakraProvider>
   </Document>

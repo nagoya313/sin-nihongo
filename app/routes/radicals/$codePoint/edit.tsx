@@ -1,7 +1,6 @@
-import { HStack, IconButton, useToast, VStack } from '@chakra-ui/react';
+import { HStack, IconButton, VStack } from '@chakra-ui/react';
 import { json, redirect, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useActionData, useParams } from '@remix-run/react';
-import { useEffect } from 'react';
+import { useParams } from '@remix-run/react';
 import { MdClear } from 'react-icons/md';
 import { $params, $path } from 'remix-routes';
 import { useControlField, ValidatedForm } from 'remix-validated-form';
@@ -12,6 +11,7 @@ import TextInput from '~/components/TextInput';
 import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { radicalUpdateParams } from '~/features/radicals/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
+import { commitSession, setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader as baseLoader } from '../$codePoint';
 
@@ -28,21 +28,16 @@ export const action = async ({ request, params }: ActionArgs) => {
   await authGuard(request);
   await checkedFormData(request, radicalUpdateParams);
   const { codePoint } = $params('/radicals/:codePoint', params);
-  return redirect($path('/radicals/:codePoint', { codePoint }));
+  const session = await setFlashMessage(request, { message: '部首の更新に成功しました。', status: 'success' });
+  return redirect($path('/radicals/:codePoint', { codePoint }), {
+    headers: { 'Set-Cookie': await commitSession(session) },
+  });
 };
 
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());
   const { radical } = useMatchesData<typeof baseLoader>($path('/radicals/:codePoint', { codePoint }))!;
   const [reads, setReads] = useControlField<string[]>('reads', RADICAL_EDIT_FORM_ID);
-  const data = useActionData<typeof action>();
-  const toast = useToast();
-
-  useEffect(() => {
-    if (data != null) {
-      toast({ title: '部首更新エラー', status: 'error' });
-    }
-  }, [data, toast]);
 
   return (
     <Page avatar={radical.radical} title="部首編集">

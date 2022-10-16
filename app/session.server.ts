@@ -1,4 +1,5 @@
-import { createCookieSessionStorage } from '@remix-run/node';
+import { type UseToastOptions } from '@chakra-ui/react';
+import { createCookieSessionStorage, type DataFunctionArgs } from '@remix-run/node';
 import { Authenticator } from 'remix-auth';
 import { Auth0Strategy } from 'remix-auth-auth0';
 import { AUTH0_CALLBACK_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_DOMAIN } from './constants';
@@ -39,3 +40,20 @@ const auth0Strategy = new Auth0Strategy(
 authenticator.use(auth0Strategy);
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
+
+type FlashOptions = {
+  message: string;
+  status: UseToastOptions['status'];
+};
+
+export const setFlashMessage = async (request: DataFunctionArgs['request'], options: FlashOptions) => {
+  const session = await getSession(request.headers.get('Cookie'));
+  session.flash('flash-message', options);
+  return session;
+};
+
+export const getFlashMessage = async (request: DataFunctionArgs['request']) => {
+  const session = await getSession(request.headers.get('Cookie'));
+  const flash = (session.get('flash-message') ?? null) as FlashOptions | null;
+  return { flash, session } as const;
+};

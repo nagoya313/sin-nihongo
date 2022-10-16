@@ -2,7 +2,7 @@ import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import { escapeLike } from '~/utils/sql';
-import { radicalQueryParams } from '../validators/params';
+import { type radicalQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof radicalQueryParams>;
 

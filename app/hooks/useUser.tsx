@@ -4,7 +4,7 @@ import useMatchesData from './useMatchesData';
 const isUser = (user: any): user is User => user && typeof user === 'object' && typeof user.email === 'string';
 
 export const useOptionalUser = () => {
-  const data = useMatchesData('/');
+  const data = useMatchesData<{ user: User }>('/');
   if (!data || !isUser(data['user'])) return undefined;
   return data['user'];
 };

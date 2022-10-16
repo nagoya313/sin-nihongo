@@ -15,7 +15,7 @@ const OrderButton = ({ name }: OrderButtonProps) => {
     if (direction != null) {
       submit();
     }
-  }, [direction]);
+  }, [direction, submit]);
 
   return (
     <>

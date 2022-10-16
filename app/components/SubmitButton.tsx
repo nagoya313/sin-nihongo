@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@chakra-ui/react';
+import { Button, type ButtonProps } from '@chakra-ui/react';
 import { useFormContext } from 'remix-validated-form';
 
 type SubmitButtonProps = React.PropsWithChildren<{

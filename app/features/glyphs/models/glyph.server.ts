@@ -4,7 +4,8 @@ import GlyphLoader from '~/kage/GlyphLoader';
 import { escapeLike } from '~/utils/sql';
 import { type UnionSelect } from '~/utils/types';
 import { GLYPH_READ_LIMIT } from '../constants';
-import { glyphCreateParams, type glyphQueryParams } from '../validators/params';
+import type { glyphCreateParams } from '../validators/params';
+import { type glyphQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof glyphQueryParams>;
 

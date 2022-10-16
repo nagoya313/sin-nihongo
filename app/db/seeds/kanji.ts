@@ -69,7 +69,7 @@ export const kanjiSeed = async (db: Kysely<Database>) => {
         jis_level: (eb) => eb.ref('excluded.jis_level'),
         regular: (eb) => eb.ref('excluded.regular'),
         for_name: (eb) => eb.ref('excluded.for_name'),
-      })
+      }),
     )
     .execute();
 

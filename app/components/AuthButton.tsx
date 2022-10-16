@@ -9,7 +9,7 @@ const AuthButton = () => {
   return user != null ? (
     <Menu>
       <MenuButton as={Button} rounded="full" variant="link" cursor="pointer">
-        <Avatar name={user?.displayName} src={user?.picture} />
+        <Avatar name={user.displayName} src={user.picture} />
       </MenuButton>
       <MenuList>
         <Form action={$path('/logout')} method="post">

@@ -31,7 +31,7 @@ export const meta: MetaFunction = ({ params }) => ({
 
 const Radical = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());
-  const data = useMatchesData<typeof loader>($path('/radicals/:codePoint', { codePoint }));
+  const data = useMatchesData<typeof loader>($path('/radicals/:codePoint', { codePoint }))!;
   const { data: kanji, formProps } = useSearch({
     formId: RADICAL_SEARCH_FORM_ID,
     validator: radicalKanjiQueryParams,
@@ -79,6 +79,5 @@ const Radical = () => {
     </Page>
   );
 };
-4;
 
 export default Radical;

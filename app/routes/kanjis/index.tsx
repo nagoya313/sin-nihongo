@@ -1,7 +1,6 @@
 import { HStack, Icon } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
 import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm } from 'remix-validated-form';
@@ -14,7 +13,7 @@ import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio'
 import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
 import { getKanjisOrderByCodePoint } from '~/features/kanjis/models/kanji.server';
 import { kanjiQueryParams, MAX_STOREKE_COUNT, MIN_STOREKE_COUNT } from '~/features/kanjis/validators/params';
-import { useSearch } from '~/hooks/useSearch';
+import { useInfinitySearch } from '~/hooks/useSearch';
 import { checkedQuery } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜新日本語漢字一覧' });
@@ -25,25 +24,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const Index = () => {
-  const { data, formProps, getValues } = useSearch({
+  const { data, formProps, moreLoad } = useInfinitySearch({
+    key: 'kanjis',
     formId: KANJI_SEARCH_FORM_ID,
     validator: kanjiQueryParams,
     initialData: useLoaderData<typeof loader>(),
+    readLimit: KANJI_READ_LIMIT,
   });
-  const [kanjis, setKanjis] = useState<Awaited<ReturnType<typeof getKanjisOrderByCodePoint>>>([]);
-  const kanjiMoreLoad = () => {
-    if ('kanjis' in data && data.kanjis.length === KANJI_READ_LIMIT) {
-      const formData = getValues();
-      formData.set('offset', (data.offset + 20).toString());
-      formProps.fetcher.submit(formData);
-    }
-  };
-
-  useEffect(() => {
-    if ('kanjis' in data) {
-      setKanjis(data.offset ? (prev) => [...prev, ...data.kanjis] : data.kanjis);
-    }
-  }, [data]);
 
   return (
     <Page avatar={<Icon fontSize={24} as={MdOutlineTranslate} />} title="新日本語漢字一覧">
@@ -57,8 +44,8 @@ const Index = () => {
         </SearchPanel>
         <Virtuoso
           useWindowScroll
-          data={kanjis}
-          endReached={kanjiMoreLoad}
+          data={data}
+          endReached={moreLoad}
           itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} />}
         />
       </ValidatedForm>

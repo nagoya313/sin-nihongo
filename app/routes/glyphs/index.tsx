@@ -1,7 +1,6 @@
 import { HStack, Icon } from '@chakra-ui/react';
 import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
 import { MdBuild, MdOutlineFontDownload } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
 import { $path } from 'remix-routes';
@@ -15,7 +14,7 @@ import GlyphItem from '~/features/glyphs/components/GlyphItem';
 import { GLYPH_READ_LIMIT, GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
 import { getGlyphs } from '~/features/glyphs/models/glyph.server';
 import { glyphQueryParams } from '~/features/glyphs/validators/params';
-import { useSearch } from '~/hooks/useSearch';
+import { useInfinitySearch } from '~/hooks/useSearch';
 import { authGuard, checkedQuery } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ一覧' });
@@ -27,30 +26,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const Index = () => {
-  const initialData = useLoaderData<typeof loader>();
-  const { data, formProps, getValues } = useSearch({
+  const { data, formProps, moreLoad } = useInfinitySearch({
+    key: 'glyphs',
     formId: GLYPH_SEARCH_FORM_ID,
     validator: glyphQueryParams,
     initialData: useLoaderData<typeof loader>(),
+    readLimit: GLYPH_READ_LIMIT,
   });
-  const [glyphs, setGlyphs] = useState<Awaited<ReturnType<typeof getGlyphs>>>([]);
-  const glyphMoreLoad = () => {
-    if ('glyphs' in data && data.glyphs.length === GLYPH_READ_LIMIT) {
-      const formData = getValues();
-      formData.set('offset', (data.offset + 20).toString());
-      formProps.fetcher.submit(formData);
-    }
-  };
-  useEffect(() => {
-    if ('glyphs' in data) {
-      setGlyphs(data.offset ? (prev) => [...prev, ...data.glyphs] : data.glyphs);
-    }
-  }, [data]);
-  useEffect(() => {
-    if ('glyphs' in initialData) {
-      setGlyphs(initialData.glyphs);
-    }
-  }, [initialData]);
 
   return (
     <Page
@@ -69,8 +51,8 @@ const Index = () => {
       </ValidatedForm>
       <Virtuoso
         useWindowScroll
-        data={glyphs}
-        endReached={glyphMoreLoad}
+        data={data}
+        endReached={moreLoad}
         itemContent={(index, glyph) => <GlyphItem glyph={glyph} isEven={index % 2 === 0} />}
       />
     </Page>

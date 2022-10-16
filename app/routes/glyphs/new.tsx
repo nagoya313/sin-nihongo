@@ -1,7 +1,6 @@
 import { Box, HStack, Icon, VStack } from '@chakra-ui/react';
 import { json, redirect, type ActionArgs, type MetaFunction } from '@remix-run/node';
-import { useActionData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
@@ -17,12 +16,14 @@ import { glyphCreateParams } from '~/features/glyphs/validators/params';
 import GlyphSearchResult from '~/features/glyphwiki/components/GlyphSearchResult';
 import { getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
-import useMatchesData from '~/hooks/useMatchesData';
+import type useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
 import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader } from '../glyphwiki';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ作成' });
+
+const EmptyData = {};
 
 export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
@@ -36,17 +37,15 @@ const New = () => {
   const { data, formProps } = useSearch({
     formId: GLYPHWIKI_SEARCH_FORM_ID,
     validator: glyphwikiQueryParams,
-    initialData: {} as ReturnType<typeof useMatchesData<typeof loader>>,
+    initialData: EmptyData as ReturnType<typeof useMatchesData<typeof loader>>,
     action: $path('/glyphwiki'),
   });
-  const actionResult = useActionData<typeof action>();
-  const [glyph, setGlyph] = useState<typeof data>(data);
+  //const actionResult = useActionData<typeof action>();
+  const [glyph /*, setGlyph*/] = useState<typeof data>(data);
 
-  console.log(data);
-
-  useEffect(() => {
+  /*useEffect(() => {
     //setGlyph(data);
-  }, [data]);
+  }, [data]);*/
 
   /*useEffect(() => {
     setGlyph(glyph);
@@ -77,7 +76,7 @@ const New = () => {
           </FormControl>
         </ValidatedForm>
         <Box overflow="hidden" mt={8}>
-          {'glyph' in glyph && <GlyphSearchResult glyph={glyph.glyph} />}
+          {'glyph' in glyph! && <GlyphSearchResult glyph={glyph.glyph} />}
         </Box>
       </VStack>
     </HStack>

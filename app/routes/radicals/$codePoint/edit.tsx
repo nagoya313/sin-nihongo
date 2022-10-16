@@ -1,5 +1,5 @@
 import { HStack, IconButton, useToast, VStack } from '@chakra-ui/react';
-import { redirect, type ActionArgs, type MetaFunction } from '@remix-run/node';
+import { json, redirect, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useActionData, useParams } from '@remix-run/react';
 import { useEffect } from 'react';
 import { MdClear } from 'react-icons/md';
@@ -13,11 +13,16 @@ import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { radicalUpdateParams } from '~/features/radicals/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
 import { authGuard, checkedFormData } from '~/utils/request.server';
-import { type loader } from '../$codePoint';
+import { type loader as baseLoader } from '../$codePoint';
 
 export const meta: MetaFunction = ({ params }) => ({
   title: `新日本語｜部首編集「${String.fromCodePoint(parseInt($params('/radicals/:codePoint', params).codePoint))}」`,
 });
+
+export const loader = async ({ request }: LoaderArgs) => {
+  await authGuard(request);
+  return json({});
+};
 
 export const action = async ({ request, params }: ActionArgs) => {
   await authGuard(request);
@@ -28,7 +33,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());
-  const { radical } = useMatchesData<typeof loader>($path('/radicals/:codePoint', { codePoint }));
+  const { radical } = useMatchesData<typeof baseLoader>($path('/radicals/:codePoint', { codePoint }))!;
   const [reads, setReads] = useControlField<string[]>('reads', RADICAL_EDIT_FORM_ID);
   const data = useActionData<typeof action>();
   const toast = useToast();
@@ -37,7 +42,7 @@ const Edit = () => {
     if (data != null) {
       toast({ title: '部首更新エラー', status: 'error' });
     }
-  }, [data]);
+  }, [data, toast]);
 
   return (
     <Page avatar={radical.radical} title="部首編集">

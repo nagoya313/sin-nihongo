@@ -3,10 +3,10 @@ import { Link } from '@remix-run/react';
 import { $path } from 'remix-routes';
 import { useLinkColor } from '~/hooks/useColor';
 import { HIRAGANA_MATCHER } from '~/utils/schemas/regex';
-import { type kanji } from '../models/kanji.server';
+import { type getKanjiByCodePoint } from '../models/kanji.server';
 
 type RadicalDefineProps = {
-  kanji: NonNullable<Awaited<ReturnType<typeof kanji>>>;
+  kanji: NonNullable<Awaited<ReturnType<typeof getKanjiByCodePoint>>>;
 };
 
 const KanjiDefine = ({ kanji }: RadicalDefineProps) => (

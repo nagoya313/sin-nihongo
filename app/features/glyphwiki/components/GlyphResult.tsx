@@ -1,5 +1,5 @@
 import { Divider, HStack, Text, VStack } from '@chakra-ui/react';
-import { Buhin } from '@kurgm/kage-engine';
+import { type Buhin } from '@kurgm/kage-engine';
 import { ValidatedForm } from 'remix-validated-form';
 import ClipboardCopyButton from '~/components/ClipboardCopyButton';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';

@@ -8,7 +8,7 @@ import {
 import { radicalKanjiQueryParams } from '~/features/kanjis/validators/params';
 import { getRadicalByCodePoint } from '~/features/radicals/models/radical.server';
 import { radicalParams } from '~/features/radicals/validators/params';
-import { checkedParamsLoader } from '~/utils/request';
+import { checkedParamsLoader } from '~/utils/request.server';
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const { codePoint } = await checkedParamsLoader(params, radicalParams);

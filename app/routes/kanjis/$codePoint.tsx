@@ -8,7 +8,7 @@ import KanjiDefine from '~/features/kanjis/components/KanjiDefine';
 import { getKanjiByCodePoint } from '~/features/kanjis/models/kanji.server';
 import { kanjiParams } from '~/features/kanjis/validators/params';
 import { glyphToBuhin } from '~/kage/kageData';
-import { checkedParamsLoader } from '~/utils/request';
+import { checkedParamsLoader } from '~/utils/request.server';
 
 export const meta: MetaFunction = ({ params }) => ({
   title: `新日本語｜漢字詳細「${String.fromCodePoint(parseInt(params['codePoint']!))}」`,

@@ -3,13 +3,12 @@ import { useControlField, useFormContext } from 'remix-validated-form';
 import OrderButton from '~/components/OrderButton';
 
 type OrderTabsProps = React.PropsWithChildren<{
-  formId: string;
   orders: ReadonlyArray<{ key: string; label: string }>;
 }>;
 
-const OrderTabs = ({ formId, orders, children }: OrderTabsProps) => {
-  const [orderBy, setOrderBy] = useControlField<string>('orderBy', formId);
-  const { isValid, isSubmitting, submit } = useFormContext(formId);
+const OrderTabs = ({ orders, children }: OrderTabsProps) => {
+  const [orderBy, setOrderBy] = useControlField<string>('orderBy');
+  const { isValid, isSubmitting, submit } = useFormContext();
   const onChange = (index: number) => {
     setOrderBy(orders[index]!.key);
     submit();
@@ -24,7 +23,7 @@ const OrderTabs = ({ formId, orders, children }: OrderTabsProps) => {
               {label}
             </Tab>
           ))}
-          <OrderButton name="direction" formId={formId} />
+          <OrderButton name="direction" />
         </TabList>
         <TabPanels>{children}</TabPanels>
       </Tabs>

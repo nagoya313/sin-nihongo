@@ -12,20 +12,19 @@ import TextInput from '~/components/TextInput';
 import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { radicalUpdateParams } from '~/features/radicals/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
-import { authGuard, checkedFormDataRequestLoader } from '~/utils/request';
+import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader } from '../$codePoint';
 
 export const meta: MetaFunction = ({ params }) => ({
   title: `新日本語｜部首編集「${String.fromCodePoint(parseInt($params('/radicals/:codePoint', params).codePoint))}」`,
 });
 
-export const action = async (args: ActionArgs) =>
-  authGuard(args, ({ request, params }) =>
-    checkedFormDataRequestLoader(request, radicalUpdateParams, async () => {
-      const { codePoint } = $params('/radicals/:codePoint', params);
-      return redirect($path('/radicals/:codePoint', { codePoint }));
-    }),
-  );
+export const action = async ({ request, params }: ActionArgs) => {
+  await authGuard(request);
+  await checkedFormData(request, radicalUpdateParams);
+  const { codePoint } = $params('/radicals/:codePoint', params);
+  return redirect($path('/radicals/:codePoint', { codePoint }));
+};
 
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());

@@ -4,9 +4,7 @@ import { MdOutlineInfo } from 'react-icons/md';
 import ExternalLink from '~/components/ExternalLink';
 import Page from '~/components/Page';
 
-export const meta: MetaFunction = () => ({
-  title: '新日本語｜info',
-});
+export const meta: MetaFunction = () => ({ title: '新日本語｜info' });
 
 const Info = () => (
   <Page avatar={<Icon fontSize={24} as={MdOutlineInfo} />} title="このサイトについて">

@@ -5,12 +5,19 @@ import { SEARCH_WAIT } from '~/components/constants';
 
 const EMPTY_DATA = {};
 
-const useSearch = <TParamsType, TData>(
-  formId: string,
-  validator: Validator<TParamsType>,
-  initialData: TData,
-  action?: string,
-) => {
+type UseSearchProps<TParamsType, TData> = {
+  formId: string;
+  validator: Validator<TParamsType>;
+  initialData: TData;
+  action?: string;
+};
+
+export const useSearch = <TParamsType, TData>({
+  formId,
+  validator,
+  initialData,
+  action,
+}: UseSearchProps<TParamsType, TData>) => {
   const fetcher = useFetcher<TData>();
   const { getValues, validate } = useFormContext(formId);
   const submit = () => fetcher.submit(getValues(), { action });
@@ -28,5 +35,3 @@ const useSearch = <TParamsType, TData>(
 
   return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data, getValues };
 };
-
-export default useSearch;

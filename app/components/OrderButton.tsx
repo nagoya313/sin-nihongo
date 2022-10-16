@@ -5,12 +5,11 @@ import { useControlField, useFormContext } from 'remix-validated-form';
 
 type OrderButtonProps = {
   name: string;
-  formId?: string;
 };
 
-const OrderButton = ({ name, formId }: OrderButtonProps) => {
-  const [direction, setDirection] = useControlField<string>(name, formId);
-  const { isValid, isSubmitting, submit } = useFormContext(formId);
+const OrderButton = ({ name }: OrderButtonProps) => {
+  const [direction, setDirection] = useControlField<string>(name);
+  const { isValid, isSubmitting, submit } = useFormContext();
 
   useEffect(() => {
     if (direction != null) {

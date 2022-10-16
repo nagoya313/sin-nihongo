@@ -1,5 +1,5 @@
 import { HStack, Icon } from '@chakra-ui/react';
-import { type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { MdBuild, MdOutlineFontDownload } from 'react-icons/md';
@@ -15,24 +15,24 @@ import GlyphItem from '~/features/glyphs/components/GlyphItem';
 import { GLYPH_READ_LIMIT, GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
 import { getGlyphs } from '~/features/glyphs/models/glyph.server';
 import { glyphQueryParams } from '~/features/glyphs/validators/params';
-import useSearch from '~/hooks/useSearch';
-import { authGuard, checkedQueryRequestLoader } from '~/utils/request';
+import { useSearch } from '~/hooks/useSearch';
+import { authGuard, checkedQuery } from '~/utils/request.server';
 
-export const meta: MetaFunction = () => ({
-  title: '新日本語｜グリフ一覧',
-});
+export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ一覧' });
 
-export const loader = async (args: LoaderArgs) =>
-  authGuard(args, ({ request }) =>
-    checkedQueryRequestLoader(request, glyphQueryParams, async (query) => ({
-      glyphs: await getGlyphs(query),
-      offset: query.offset,
-    })),
-  );
+export const loader = async ({ request }: LoaderArgs) => {
+  await authGuard(request);
+  const query = await checkedQuery(request, glyphQueryParams);
+  return json({ glyphs: await getGlyphs(query), offset: query.offset });
+};
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
-  const { data, formProps, getValues } = useSearch(GLYPH_SEARCH_FORM_ID, glyphQueryParams, initialData);
+  const { data, formProps, getValues } = useSearch({
+    formId: GLYPH_SEARCH_FORM_ID,
+    validator: glyphQueryParams,
+    initialData: useLoaderData<typeof loader>(),
+  });
   const [glyphs, setGlyphs] = useState<Awaited<ReturnType<typeof getGlyphs>>>([]);
   const glyphMoreLoad = () => {
     if ('glyphs' in data && data.glyphs.length === GLYPH_READ_LIMIT) {

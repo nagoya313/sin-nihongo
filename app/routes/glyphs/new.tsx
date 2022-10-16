@@ -18,30 +18,27 @@ import GlyphSearchResult from '~/features/glyphwiki/components/GlyphSearchResult
 import { getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
-import useSearch from '~/hooks/useSearch';
-import { authGuard, checkedFormDataRequestLoader } from '~/utils/request';
+import { useSearch } from '~/hooks/useSearch';
+import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader } from '../glyphwiki';
 
-export const meta: MetaFunction = () => ({
-  title: '新日本語｜グリフ作成',
-});
+export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ作成' });
 
-export const action = async (args: ActionArgs) =>
-  authGuard(args, async ({ request }) =>
-    checkedFormDataRequestLoader(request, glyphCreateParams, async (data) => {
-      await createGlyph(data);
-      if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'));
-      return json({ glyph: await getGlyphwiki(data.name) });
-    }),
-  );
+export const action = async ({ request }: ActionArgs) => {
+  await authGuard(request);
+  const data = await checkedFormData(request, glyphCreateParams);
+  await createGlyph(data);
+  if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'));
+  return json({ glyph: await getGlyphwiki(data.name) });
+};
 
 const New = () => {
-  const { data, formProps } = useSearch(
-    GLYPHWIKI_SEARCH_FORM_ID,
-    glyphwikiQueryParams,
-    {} as ReturnType<typeof useMatchesData<typeof loader>>,
-    $path('/glyphwiki'),
-  );
+  const { data, formProps } = useSearch({
+    formId: GLYPHWIKI_SEARCH_FORM_ID,
+    validator: glyphwikiQueryParams,
+    initialData: {} as ReturnType<typeof useMatchesData<typeof loader>>,
+    action: $path('/glyphwiki'),
+  });
   const actionResult = useActionData<typeof action>();
   const [glyph, setGlyph] = useState<typeof data>(data);
 

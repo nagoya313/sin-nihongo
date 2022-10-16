@@ -5,16 +5,15 @@ import { MdEdit } from 'react-icons/md';
 import { $params, $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
 import AdminLinkButton from '~/components/AdminLinkButton';
-import { ORDERS, REGULAR_RADIO } from '~/components/constants';
-import FormControl from '~/components/FormControl';
-import NumberInput from '~/components/NumberInput';
+import { ORDERS } from '~/components/constants';
 import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
-import RadioGroup from '~/components/RadioGroup';
 import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
-import TextInput from '~/components/TextInput';
+import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
+import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import {
   MAX_IN_RADICAL_STOREKE_COUNT,
   MIN_IN_RADICAL_STOREKE_COUNT,
@@ -23,7 +22,7 @@ import {
 import RadicalDefine from '~/features/radicals/components/RadicalDefine';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
 import useMatchesData from '~/hooks/useMatchesData';
-import useSearch from '~/hooks/useSearch';
+import { useSearch } from '~/hooks/useSearch';
 import { type loader } from '../$codePoint';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -33,12 +32,12 @@ export const meta: MetaFunction = ({ params }) => ({
 const Radical = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());
   const data = useMatchesData<typeof loader>($path('/radicals/:codePoint', { codePoint }));
-  const { data: kanji, formProps } = useSearch(
-    RADICAL_SEARCH_FORM_ID,
-    radicalKanjiQueryParams,
-    data,
-    $path('/radicals/:codePoint', { codePoint }),
-  );
+  const { data: kanji, formProps } = useSearch({
+    formId: RADICAL_SEARCH_FORM_ID,
+    validator: radicalKanjiQueryParams,
+    initialData: data,
+    action: $path('/radicals/:codePoint', { codePoint }),
+  });
 
   return (
     <Page
@@ -57,27 +56,16 @@ const Radical = () => {
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
-            <FormControl
-              name="read"
-              label="よみかた"
-              help="漢字のよみかたは新日本語表音式によるひらがな（訓読み）、カタカナ（音読み）での前方一致で絞り込みができます。"
-            >
-              <TextInput name="read" placeholder="いち、しょー、つずみ" />
-            </FormControl>
-            <FormControl name="strokeCount" label="部首内画数">
-              <NumberInput
-                name="strokeCount"
-                placeholder={`${MIN_IN_RADICAL_STOREKE_COUNT}〜${MAX_IN_RADICAL_STOREKE_COUNT}`}
-                min={MIN_IN_RADICAL_STOREKE_COUNT}
-                max={MAX_IN_RADICAL_STOREKE_COUNT}
-              />
-            </FormControl>
-            <FormControl as="fieldset" name="regular" label="常用漢字">
-              <RadioGroup name="regular" radioLabels={REGULAR_RADIO} />
-            </FormControl>
+            <ReadSearchInput />
+            <StrokeCountSearchInput
+              label="部首内画数"
+              min={MIN_IN_RADICAL_STOREKE_COUNT}
+              max={MAX_IN_RADICAL_STOREKE_COUNT}
+            />
+            <RegularSelectRadio />
           </HStack>
         </SearchPanel>
-        <OrderTabs formId={RADICAL_SEARCH_FORM_ID} orders={ORDERS}>
+        <OrderTabs orders={ORDERS}>
           <TabPanel>
             {'kanjisOrderByStrokeCount' in kanji && (
               <StrokeCountOrder data={kanji.kanjisOrderByStrokeCount} to="/kanjis" />

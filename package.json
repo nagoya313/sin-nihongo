@@ -2,11 +2,12 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix-routes && remix build",
+    "build": "remix build",
     "dev": "concurrently \"remix-routes -w\" \"remix dev\"",
     "format": "prettier --config .prettierrc.json --write .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "typecheck": "tsc -b",
+    "routes": "remix-routes",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "tsn": "ts-node -r tsconfig-paths/register --require dotenv/config -O '{\"module\": \"commonjs\"}'",

@@ -31,11 +31,11 @@ export const loader = async ({ request }: LoaderArgs) =>
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
-  const { data, ...searchProps } = useSearch(RADICAL_SEARCH_FORM_ID, radicalQueryParams, initialData);
+  const { data, formProps } = useSearch(RADICAL_SEARCH_FORM_ID, radicalQueryParams, initialData);
 
   return (
     <Page avatar={<Icon fontSize={24} as={MdOutlinePark} />} title="部首索引">
-      <ValidatedForm {...searchProps}>
+      <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
             <FormControl

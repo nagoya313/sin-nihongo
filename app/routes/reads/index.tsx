@@ -29,11 +29,11 @@ export const loader = async ({ request }: LoaderArgs) =>
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
-  const { data, ...searchProps } = useSearch(READ_SEARCH_FROM_ID, kanjiQueryParams, initialData);
+  const { data, formProps } = useSearch(READ_SEARCH_FROM_ID, kanjiQueryParams, initialData);
 
   return (
     <Page avatar={<Icon fontSize={24} as={MdOutlineMic} />} title="音訓索引">
-      <ValidatedForm {...searchProps}>
+      <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
             <FormControl

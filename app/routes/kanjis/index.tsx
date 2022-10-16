@@ -31,13 +31,13 @@ export const loader = async ({ request }: LoaderArgs) =>
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
-  const { data, ...searchProps } = useSearch(KANJI_SEARCH_FORM_ID, kanjiQueryParams, initialData);
+  const { data, formProps, getValues } = useSearch(KANJI_SEARCH_FORM_ID, kanjiQueryParams, initialData);
   const [kanjis, setKanjis] = useState<Awaited<ReturnType<typeof getKanjisOrderByCodePoint>>>([]);
   const kanjiMoreLoad = () => {
     if ('kanjis' in data && data.kanjis.length === KANJI_READ_LIMIT) {
-      const formData = searchProps.getValues();
+      const formData = getValues();
       formData.set('offset', (data.offset + 20).toString());
-      searchProps.fetcher.submit(formData);
+      formProps.fetcher.submit(formData);
     }
   };
 
@@ -49,7 +49,7 @@ const Index = () => {
 
   return (
     <Page avatar={<Icon fontSize={24} as={MdOutlineTranslate} />} title="新日本語漢字一覧">
-      <ValidatedForm {...searchProps}>
+      <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
             <FormControl

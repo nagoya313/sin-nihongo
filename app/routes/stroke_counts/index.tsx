@@ -28,11 +28,11 @@ export const loader = async ({ request }: LoaderArgs) =>
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
-  const { data, ...searchProps } = useSearch(STROKE_COUNT_SEARCH_FROM_ID, kanjiQueryParams, initialData);
+  const { data, formProps } = useSearch(STROKE_COUNT_SEARCH_FROM_ID, kanjiQueryParams, initialData);
 
   return (
     <Page avatar={<Icon fontSize={24} as={MdOutlineFormatListNumbered} />} title="画数索引">
-      <ValidatedForm {...searchProps}>
+      <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
             <FormControl

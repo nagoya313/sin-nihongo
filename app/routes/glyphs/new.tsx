@@ -1,7 +1,7 @@
 import { Box, HStack, Icon, VStack } from '@chakra-ui/react';
 import { json, redirect, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useActionData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
@@ -38,7 +38,7 @@ export const action = async (args: ActionArgs) =>
   );
 
 const New = () => {
-  const { data, ...searchProps } = useSearch(
+  const { data, formProps } = useSearch(
     GLYPHWIKI_SEARCH_FORM_ID,
     glyphwikiQueryParams,
     {} as ReturnType<typeof useMatchesData<typeof glyphwikiLoader>>,
@@ -47,13 +47,13 @@ const New = () => {
   const actionResult = useActionData<typeof action>();
   const [glyph, setGlyph] = useState<typeof data>({});
 
-  useEffect(() => {
+  /*useEffect(() => {
     setGlyph(data);
-  }, [data]);
+  }, [data]);*/
 
-  useEffect(() => {
+  /*useEffect(() => {
     setGlyph(glyph);
-  }, [actionResult]);
+  }, [actionResult]);*/
 
   return (
     <HStack flex={1} p={8} align="start">
@@ -74,7 +74,7 @@ const New = () => {
       </VStack>
       <VStack align="start">
         <PageInfo avatar={<Icon fontSize={24} as={MdOutlineBook} />} title="グリフウィキから検索" />
-        <ValidatedForm {...searchProps}>
+        <ValidatedForm {...formProps}>
           <FormControl name="q">
             <TextInput name="q" />
           </FormControl>

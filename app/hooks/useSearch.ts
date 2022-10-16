@@ -24,7 +24,7 @@ const useSearch = <TParamsType, TData>(
   };
   const data = fetcher.type === 'init' ? initialData : fetcher.type === 'done' ? fetcher.data : {};
 
-  return { id: formId, fetcher, onChange, onSubmit, validator, data, getValues, action };
+  return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data, getValues };
 };
 
 export default useSearch;

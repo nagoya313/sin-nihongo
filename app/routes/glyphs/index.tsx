@@ -32,13 +32,13 @@ export const loader = async (args: LoaderArgs) =>
 
 const Index = () => {
   const initialData = useLoaderData<typeof loader>();
-  const { data, ...searchProps } = useSearch(GLYPH_SEARCH_FORM_ID, glyphQueryParams, initialData);
+  const { data, formProps, getValues } = useSearch(GLYPH_SEARCH_FORM_ID, glyphQueryParams, initialData);
   const [glyphs, setGlyphs] = useState<Awaited<ReturnType<typeof getGlyphs>>>([]);
   const glyphMoreLoad = () => {
     if ('glyphs' in data && data.glyphs.length === GLYPH_READ_LIMIT) {
-      const formData = searchProps.getValues();
+      const formData = getValues();
       formData.set('offset', (data.offset + 20).toString());
-      searchProps.fetcher.submit(formData);
+      formProps.fetcher.submit(formData);
     }
   };
   useEffect(() => {
@@ -58,7 +58,7 @@ const Index = () => {
       title="グリフ一覧"
       action={<AdminLinkButton aria-label="glyph-build" icon={<MdBuild />} to={$path('/glyphs/new')} />}
     >
-      <ValidatedForm {...searchProps}>
+      <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
             <FormControl name="name" label="なまえ">

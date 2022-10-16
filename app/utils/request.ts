@@ -1,11 +1,16 @@
-import { json, Response, type LoaderArgs } from '@remix-run/node';
+import { json, Response, type AppData, type DataFunctionArgs, type LoaderArgs } from '@remix-run/node';
 import { validationError, type Validator } from 'remix-validated-form';
 import { authenticator } from '~/session.server';
 
-export const authGuard = async <TResult>(args: LoaderArgs, loader: (args: LoaderArgs) => TResult) => {
+type Result = Promise<Response> | Response | Promise<AppData> | AppData;
+
+export const authGuard = async <TResult extends Result>(
+  args: DataFunctionArgs,
+  func: (args: DataFunctionArgs) => TResult,
+) => {
   const user = await authenticator.isAuthenticated(args.request);
   if (user == null) throw new Response('Not Found', { status: 404 });
-  return loader(args);
+  return func(args);
 };
 
 export const checkedParamsLoader = async <TParams>(params: LoaderArgs['params'], validator: Validator<TParams>) => {
@@ -17,10 +22,10 @@ export const checkedParamsLoader = async <TParams>(params: LoaderArgs['params'],
   return paramsResult.data;
 };
 
-export const checkedQueryRequestLoader = async <TQuery, TResult>(
+export const checkedQueryRequestLoader = async <TQuery, TResult extends Result>(
   request: LoaderArgs['request'],
   validator: Validator<TQuery>,
-  result: (query: TQuery) => Promise<TResult>,
+  result: (query: TQuery) => TResult,
 ) => {
   const query = await validator.validate(new URL(request.url).searchParams);
   if (query.error) {
@@ -30,10 +35,10 @@ export const checkedQueryRequestLoader = async <TQuery, TResult>(
   return json(await result(query.data));
 };
 
-export const checkedFormDataRequestLoader = async <TQuery, TResult>(
+export const checkedFormDataRequestLoader = async <TQuery, TResult extends Result>(
   request: LoaderArgs['request'],
   validator: Validator<TQuery>,
-  result: (query: TQuery) => Promise<TResult>,
+  result: (query: TQuery) => TResult,
 ) => {
   const data = await validator.validate(await request.formData());
   if (data.error) {

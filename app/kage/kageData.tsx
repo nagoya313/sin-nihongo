@@ -1,4 +1,4 @@
-import { Buhin } from '@kurgm/kage-engine';
+import { Buhin, Kage, Polygons } from '@kurgm/kage-engine';
 import { type getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 
 export const glyphToBuhin = ({ name, data, drawNecessaryGlyphs }: Awaited<ReturnType<typeof getGlyphwiki>>) => {
@@ -12,4 +12,12 @@ export const glyphToBuhin = ({ name, data, drawNecessaryGlyphs }: Awaited<Return
     });
   }
   return buhin;
+};
+
+export const makeGlyph = (name: string, buhin: Buhin) => {
+  const kage = new Kage();
+  kage.kBuhin = buhin;
+  const polygons = new Polygons();
+  kage.makeGlyph(polygons, name);
+  return polygons;
 };

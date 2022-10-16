@@ -12,7 +12,7 @@ import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
 import { useOptionalUser } from './hooks/useUser';
 import Layout from './layout';
-import { authenticator, commitSession, getFlashMessage } from './session.server';
+import { authenticator, commitSessionHeaders, getFlashMessage } from './session.server';
 import { theme } from './styles/theme';
 
 export const meta: MetaFunction = () => ({
@@ -33,7 +33,7 @@ export const links: LinksFunction = () => [
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await authenticator.isAuthenticated(request);
   const { flash, session } = await getFlashMessage(request);
-  return json({ user, flash }, { headers: { 'Set-Cookie': await commitSession(session) } });
+  return json({ user, flash }, await commitSessionHeaders(session));
 };
 
 type DocumentProps = {

@@ -1,4 +1,5 @@
 import { type UseToastOptions } from '@chakra-ui/react';
+import type { Session } from '@remix-run/node';
 import { createCookieSessionStorage, type DataFunctionArgs } from '@remix-run/node';
 import { Authenticator } from 'remix-auth';
 import { Auth0Strategy } from 'remix-auth-auth0';
@@ -57,3 +58,7 @@ export const getFlashMessage = async (request: DataFunctionArgs['request']) => {
   const flash = (session.get('flash-message') ?? null) as FlashOptions | null;
   return { flash, session } as const;
 };
+
+export const commitSessionHeaders = async (session: Session) => ({
+  headers: { 'Set-Cookie': await commitSession(session) },
+});

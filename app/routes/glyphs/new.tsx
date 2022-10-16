@@ -1,6 +1,7 @@
 import { Box, HStack, Icon, VStack } from '@chakra-ui/react';
 import { json, redirect, type ActionArgs, type MetaFunction } from '@remix-run/node';
-import { useState } from 'react';
+import { useActionData } from '@remix-run/react';
+import { useEffect, useState } from 'react';
 import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
@@ -18,38 +19,43 @@ import { getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
 import type useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
+import { commitSessionHeaders, setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader } from '../glyphwiki';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ作成' });
 
-const EmptyData = {};
+const INITIAL_DATA = {} as ReturnType<typeof useMatchesData<typeof loader>>;
 
 export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
   const data = await checkedFormData(request, glyphCreateParams);
   await createGlyph(data);
-  if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'));
-  return json({ glyph: await getGlyphwiki(data.name) });
+  const session = await setFlashMessage(request, { message: 'グリフを登録しました', status: 'success' });
+  const headers = await commitSessionHeaders(session);
+  if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'), headers);
+  return json({ glyph: await getGlyphwiki(data.name) }, headers);
 };
 
 const New = () => {
   const { data, formProps } = useSearch({
     formId: GLYPHWIKI_SEARCH_FORM_ID,
     validator: glyphwikiQueryParams,
-    initialData: EmptyData as ReturnType<typeof useMatchesData<typeof loader>>,
+    initialData: INITIAL_DATA,
     action: $path('/glyphwiki'),
   });
-  //const actionResult = useActionData<typeof action>();
-  const [glyph /*, setGlyph*/] = useState<typeof data>(data);
+  const actionResult = useActionData<typeof action>();
+  const [glyph, setGlyph] = useState<typeof data>(data);
 
-  /*useEffect(() => {
-    //setGlyph(data);
-  }, [data]);*/
+  useEffect(() => {
+    setGlyph(data);
+  }, [data]);
 
-  /*useEffect(() => {
-    setGlyph(glyph);
-  }, [actionResult]);*/
+  useEffect(() => {
+    if (actionResult != null) {
+      setGlyph(actionResult);
+    }
+  }, [actionResult]);
 
   return (
     <HStack flex={1} p={8} align="start">

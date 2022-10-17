@@ -26,7 +26,7 @@ export const kanjiQueryParams = withZod(
           : undefined,
       ),
     strokeCount: zfd.numeric(intRange(MIN_STOREKE_COUNT, MAX_STOREKE_COUNT).optional()),
-    read: zfd.text(kana.max(10, '10文字以内で入力してください').optional()),
+    read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
     forName: booleanRadio,
     jisLevel: zfd.numeric(
@@ -44,7 +44,7 @@ export const radicalKanjiQueryParams = withZod(
     direction,
     orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
     strokeCount: zfd.numeric(intRange(MIN_IN_RADICAL_STOREKE_COUNT, MAX_IN_RADICAL_STOREKE_COUNT).optional()),
-    read: zfd.text(kana.max(10, '10文字以内で入力してください').optional()),
+    read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
   }),
 );
@@ -53,7 +53,7 @@ export const kanjiParams = withZod(z.object({ codePoint: zfd.numeric(z.number().
 
 export const kanjiGlyphCreateParams = withZod(
   z.object({
-    name: zfd.text(z.string().max(50, '50文字以内で入力してください')),
+    name: zfd.text(z.string().max(50)),
     data: zfd.text(),
     codePoint: zfd.numeric(),
     formId: zfd.text(),

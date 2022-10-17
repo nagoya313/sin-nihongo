@@ -15,7 +15,7 @@ export const glyphPreviewParams = withZod(z.object({ data: zfd.text() }));
 export const glyphCreateParams = withZod(
   z
     .object({
-      name: zfd.text(z.string().max(50, '50文字以内で入力してください')),
+      name: zfd.text(z.string().max(50)),
       data: zfd.text(),
     })
     .and(

@@ -14,7 +14,7 @@ export const radicalQueryParams = withZod(
     direction,
     orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
     strokeCount: zfd.numeric(intRange(MIN_STOREKE_COUNT, MAX_STOREKE_COUNT).optional()),
-    read: zfd.text(hiragana.max(10, '10文字以内で入力してください').optional()),
+    read: zfd.text(hiragana.max(10).optional()),
   }),
 );
 
@@ -24,6 +24,6 @@ export const radicalParams = withZod(
 
 export const radicalUpdateParams = withZod(
   z.object({
-    reads: zfd.repeatable(z.array(zfd.text(zfd.text(hiragana.max(10, '10文字以内で入力してください')))).min(1)),
+    reads: zfd.repeatable(z.array(zfd.text(zfd.text(hiragana.max(10)))).min(1)),
   }),
 );

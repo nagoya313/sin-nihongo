@@ -9,11 +9,13 @@ import {
 } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from '@remix-run/react';
 import { useContext, useEffect } from 'react';
+import { z } from 'zod';
 import { ClientStyleContext, ServerStyleContext } from './context';
 import { useOptionalUser } from './hooks/useUser';
 import Layout from './layout';
 import { authenticator, getFlashMessage } from './session.server';
 import { theme } from './styles/theme';
+import { errorMap } from './utils/schemas/errorMap';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -126,14 +128,18 @@ const Toaster = () => {
   return <Outlet />;
 };
 
-const App = () => (
-  <Document>
-    <ChakraProvider theme={theme}>
-      <Layout>
-        <Toaster />
-      </Layout>
-    </ChakraProvider>
-  </Document>
-);
+const App = () => {
+  z.setErrorMap(errorMap);
+
+  return (
+    <Document>
+      <ChakraProvider theme={theme}>
+        <Layout>
+          <Toaster />
+        </Layout>
+      </ChakraProvider>
+    </Document>
+  );
+};
 
 export default App;

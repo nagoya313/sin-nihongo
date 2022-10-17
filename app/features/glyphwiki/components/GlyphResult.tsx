@@ -7,49 +7,52 @@ import HiddenInput from '~/components/HiddenInput';
 import KageData from '~/components/KageData';
 import SubmitButton from '~/components/SubmitButton';
 import { glyphCreateParams } from '~/features/glyphs/validators/params';
+import type useMatchesData from '~/hooks/useMatchesData';
+import { type loader } from '~/routes/glyphwiki';
+import { type UnionSelect } from '~/utils/types';
 
 type GlyphResultProps = {
-  name: string;
+  q: string;
+  glyph: UnionSelect<ReturnType<typeof useMatchesData<typeof loader>>, 'glyphs'>['glyphs'][number];
   buhin: Buhin;
 };
 
-const GlyphResult = ({ name, buhin }: GlyphResultProps) => {
-  const data = buhin.search(name);
-
-  return (
-    <HStack w="full">
-      <GlyphCanvasSuspense name={name} buhin={buhin} />
-      <VStack align="start">
-        <HStack>
-          <VStack align="start">
-            <Text fontSize="sm">なまえ：</Text>
-            <ClipboardCopyButton text={name} />
-          </VStack>
-          <Text fontSize="sm" m={4}>
-            {name}
-          </Text>
-        </HStack>
-        <Divider />
-        <HStack>
-          <VStack align="start">
-            <Text fontSize="sm">影算料：</Text>
-            <ClipboardCopyButton text={data} />
-          </VStack>
-          <KageData data={data} />
-        </HStack>
+const GlyphResult = ({ q, glyph, buhin }: GlyphResultProps) => (
+  <HStack w="full">
+    <GlyphCanvasSuspense name={glyph.name} buhin={buhin} />
+    <VStack align="start">
+      <HStack>
+        <VStack align="start">
+          <Text fontSize="sm">なまえ：</Text>
+          <ClipboardCopyButton text={glyph.name} />
+        </VStack>
+        <Text fontSize="sm" m={4}>
+          {glyph.name}
+        </Text>
+      </HStack>
+      <Divider />
+      <HStack>
+        <VStack align="start">
+          <Text fontSize="sm">影算料：</Text>
+          <ClipboardCopyButton text={glyph.data ?? ''} />
+        </VStack>
+        <KageData data={glyph.data ?? ''} color={glyph.info.type === 'WithDifference' ? 'red' : undefined} />
+      </HStack>
+      {glyph.info.state === 'NotImplementation' && glyph.data && (
         <ValidatedForm
           method="post"
           validator={glyphCreateParams}
-          defaultValues={{ name, data }}
+          defaultValues={{ name: glyph.name, data: glyph.data, q }}
           subaction="from-glyphwiki"
         >
           <HiddenInput name="name" />
           <HiddenInput name="data" />
+          <HiddenInput name="q" />
           <SubmitButton size="sm">登録する</SubmitButton>
         </ValidatedForm>
-      </VStack>
-    </HStack>
-  );
-};
+      )}
+    </VStack>
+  </HStack>
+);
 
 export default GlyphResult;

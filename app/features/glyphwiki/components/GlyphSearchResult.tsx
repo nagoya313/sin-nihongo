@@ -1,25 +1,25 @@
 import { Divider, VStack } from '@chakra-ui/react';
+import { Fragment } from 'react';
 import type useMatchesData from '~/hooks/useMatchesData';
-import { glyphToBuhin } from '~/kage/kageData';
+import { glyphsToBuhin } from '~/kage/kageData';
 import { type loader } from '~/routes/glyphwiki';
 import { type UnionSelect } from '~/utils/types';
 import GlyphResult from './GlyphResult';
 
 type GlyphSearchResultProps = {
-  glyph: UnionSelect<ReturnType<typeof useMatchesData<typeof loader>>, 'glyph'>['glyph'];
+  glyphs: UnionSelect<ReturnType<typeof useMatchesData<typeof loader>>, 'glyphs'>['glyphs'];
 };
 
-const GlyphSearchResult = ({ glyph }: GlyphSearchResultProps) => {
-  const buhin = glyphToBuhin(glyph);
+const GlyphSearchResult = ({ glyphs }: GlyphSearchResultProps) => {
+  const buhin = glyphsToBuhin(glyphs);
 
   return (
     <VStack align="start" p={4} mt={4} rounded="md" borderWidth="1px">
-      <GlyphResult name={glyph.name} buhin={buhin} />
-      {glyph.drawNecessaryGlyphs.map(({ name }) => (
-        <>
-          <Divider />
-          <GlyphResult name={name} buhin={buhin} />
-        </>
+      {glyphs.map((glyph, index) => (
+        <Fragment key={glyph.name}>
+          {index !== 0 && <Divider />}
+          <GlyphResult glyph={glyph} buhin={buhin} q={glyphs[0]!.name} />
+        </Fragment>
       ))}
     </VStack>
   );

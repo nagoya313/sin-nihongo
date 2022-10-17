@@ -4,7 +4,7 @@ import { useActionData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { $path } from 'remix-routes';
-import { ValidatedForm } from 'remix-validated-form';
+import { ValidatedForm, validationError } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import PageInfo from '~/components/PageInfo';
@@ -15,7 +15,7 @@ import { GLYPHWIKI_SEARCH_FORM_ID } from '~/features/glyphs/constants';
 import { createGlyph } from '~/features/glyphs/models/glyph.server';
 import { glyphCreateParams } from '~/features/glyphs/validators/params';
 import GlyphSearchResult from '~/features/glyphwiki/components/GlyphSearchResult';
-import { getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
+import { getGlyphwikiForm } from '~/features/glyphwiki/models/glyphwiki.server';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
 import type useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
@@ -30,10 +30,14 @@ const INITIAL_DATA = {} as ReturnType<typeof useMatchesData<typeof loader>>;
 export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
   const data = await checkedFormData(request, glyphCreateParams);
-  await createGlyph(data);
+  try {
+    await createGlyph(data);
+  } catch {
+    return validationError({ fieldErrors: { name: '登録済みです' }, subaction: data.subaction }, data);
+  }
   const headers = await setFlashMessage(request, { message: 'グリフを登録しました', status: 'success' });
   if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'), headers);
-  return json({ glyph: await getGlyphwiki(data.name) }, headers);
+  return json(await getGlyphwikiForm(data.q), headers);
 };
 
 const New = () => {
@@ -51,7 +55,7 @@ const New = () => {
   }, [data]);
 
   useEffect(() => {
-    if (actionResult != null) {
+    if (actionResult != null && 'glyphs' in actionResult) {
       setGlyph(actionResult);
     }
   }, [actionResult]);
@@ -81,7 +85,7 @@ const New = () => {
           </FormControl>
         </ValidatedForm>
         <Box overflow="hidden" mt={8}>
-          {'glyph' in glyph! && <GlyphSearchResult glyph={glyph.glyph} />}
+          {'glyphs' in glyph! && <GlyphSearchResult glyphs={glyph.glyphs} />}
         </Box>
       </VStack>
     </HStack>

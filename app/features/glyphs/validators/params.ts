@@ -12,9 +12,18 @@ export const glyphQueryParams = withZod(
 export const glyphParams = withZod(z.object({ name: zfd.text() }));
 
 export const glyphCreateParams = withZod(
-  z.object({
-    name: zfd.text(z.string().max(50, '50文字以内で入力してください')),
-    data: zfd.text(),
-    subaction: zfd.text(z.literal('from-glyphwiki').optional()),
-  }),
+  z
+    .object({
+      name: zfd.text(z.string().max(50, '50文字以内で入力してください')),
+      data: zfd.text(),
+    })
+    .and(
+      z.union([
+        z.object({ subaction: z.undefined() }),
+        z.object({
+          q: zfd.text(),
+          subaction: zfd.text(z.literal('from-glyphwiki')),
+        }),
+      ]),
+    ),
 );

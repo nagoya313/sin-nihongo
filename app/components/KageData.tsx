@@ -1,13 +1,14 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, type TextProps } from '@chakra-ui/react';
 
 type KageDataProps = {
   data: string;
+  color?: TextProps['color'];
 };
 
-const KageData = ({ data }: KageDataProps) => (
+const KageData = ({ data, color }: KageDataProps) => (
   <Box>
     {data.split('$').map((data, index) => (
-      <Text key={index} fontSize="sm">
+      <Text key={index} fontSize="sm" color={color}>
         {data}
       </Text>
     ))}

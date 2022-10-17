@@ -1,6 +1,9 @@
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { getGlyphByName } from '~/features/glyphs/models/glyph.server';
 import GlyphLoader from '~/kage/GlyphLoader';
+import { type Glyph } from '~/kage/types';
+import { filterPromiseFulfilledResults } from '~/utils/promise';
 import { type GlyphwikiData } from '../types';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
@@ -21,4 +24,25 @@ export const getGlyphwiki = async (name: string) => {
   if (glyph.data == null) return { ...glyph, drawNecessaryGlyphs: [] };
   const glyphLoader = new GlyphLoader(getGlyphWikiGlyph);
   return { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) };
+};
+
+const getGlyphState = async ({ name, data }: Glyph) => {
+  const glyph = await getGlyphByName(name);
+  if (glyph == null) return { state: 'NotImplementation', type: 'PossibleImplement' } as const;
+  if (glyph?.data === data) return { state: 'Implementation', type: 'PerfectMatching' } as const;
+  return { state: 'Implementation', type: 'WithDifference' } as const;
+};
+
+const toFormData = async (glyph: Glyph) => ({ name: glyph.name, data: glyph.data, info: await getGlyphState(glyph) });
+
+export const getGlyphwikiForm = async (name: string) => {
+  const glyph = await getGlyphwiki(name);
+  const drawNecessaryGlyphs = await Promise.allSettled(glyph.drawNecessaryGlyphs.map(toFormData));
+
+  return {
+    glyphs: [
+      await toFormData(glyph),
+      ...filterPromiseFulfilledResults(drawNecessaryGlyphs).map(({ value }) => value),
+    ] as const,
+  };
 };

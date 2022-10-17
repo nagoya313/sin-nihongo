@@ -1,8 +1,8 @@
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import GlyphLoader from '~/kage/GlyphLoader';
+import { filterPromiseFulfilledResults } from '~/utils/promise';
 import { escapeLike } from '~/utils/sql';
-import { type UnionSelect } from '~/utils/types';
 import { GLYPH_READ_LIMIT } from '../constants';
 import type { glyphCreateParams } from '../validators/params';
 import { type glyphQueryParams } from '../validators/params';
@@ -37,12 +37,13 @@ export const getGlyphs = async ({ q, offset }: QueryParams) => {
     }),
   );
 
-  return (result.filter(({ status }) => status === 'fulfilled') as UnionSelect<typeof result[number], 'value'>[]).map(
-    ({ value }) => value,
-  );
+  return filterPromiseFulfilledResults(result).map(({ value }) => value);
 };
 
+export const getGlyphByName = (name: string) =>
+  db.selectFrom('glyph').select(['name', 'data']).where('name', '=', name).executeTakeFirst();
+
 export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>
-  db.insertInto('glyph').values({ name, data }).execute();
+  db.insertInto('glyph').values({ name, data }).executeTakeFirst();
 
 export const deleteGlyph = (name: string) => db.deleteFrom('glyph').where('name', '=', name).executeTakeFirst();

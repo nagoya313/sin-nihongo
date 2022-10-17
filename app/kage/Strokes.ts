@@ -7,7 +7,7 @@ import { type Glyph } from './types';
 
 export default class Strokes<TGlyph extends Pick<Glyph, 'data'>> {
   constructor(glyph: TGlyph) {
-    this.#strokes = glyph.data!.split('$').map((stroke) => new Columns(stroke));
+    this.#strokes = glyph.data?.split('$')?.map((stroke) => new Columns(stroke)) ?? [];
   }
 
   strokeOf(id: number) {

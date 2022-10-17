@@ -34,7 +34,7 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
   const [preview, setPreview] = useState<LoaderData<typeof glyphPreviewLoader>>();
 
   return (
-    <Popover isLazy>
+    <Popover isLazy placement="right">
       <VStack p={2}>
         <KanjiLink codePoint={kanji.code_point} />
         {user != null && (

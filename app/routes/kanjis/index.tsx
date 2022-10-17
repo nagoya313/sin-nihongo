@@ -11,7 +11,7 @@ import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
-import { getKanjisOrderByCodePoint } from '~/features/kanjis/models/kanji.server';
+import { getKanjis } from '~/features/kanjis/models/kanji.server';
 import { kanjiQueryParams, MAX_STOREKE_COUNT, MIN_STOREKE_COUNT } from '~/features/kanjis/validators/params';
 import { useInfinitySearch } from '~/hooks/useSearch';
 import { checkedQuery } from '~/utils/request.server';
@@ -20,7 +20,7 @@ export const meta: MetaFunction = () => ({ title: '新日本語｜新日本語�
 
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
-  return json({ kanjis: await getKanjisOrderByCodePoint(query), offset: query.offset });
+  return json({ kanjis: await getKanjis(query), offset: query.offset });
 };
 
 const Index = () => {

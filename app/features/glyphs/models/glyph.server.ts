@@ -26,8 +26,8 @@ export const getGlyphPreview = async (data: string) => {
   return { ...glyph, drawNecessaryGlyphs, isDrawable: drawNecessaryGlyphs.every(({ data }) => data != null) };
 };
 
-export const getGlyphs = async ({ q, offset }: QueryParams) => {
-  const glyphs = await db
+export const getGlyphsOrderByName = ({ q, offset }: QueryParams) =>
+  db
     .selectFrom('glyph')
     .select(['name', 'data'])
     .if(!!q, (qb) => qb.where('name', 'like', `${escapeLike(q!)}%`))
@@ -35,6 +35,9 @@ export const getGlyphs = async ({ q, offset }: QueryParams) => {
     .offset(offset)
     .limit(GLYPH_READ_LIMIT)
     .execute();
+
+export const getGlyphs = async (query: QueryParams) => {
+  const glyphs = await getGlyphsOrderByName(query);
 
   const result = await Promise.allSettled(
     glyphs.map(async (glyph) => {

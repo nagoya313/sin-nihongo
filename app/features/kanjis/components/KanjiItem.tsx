@@ -14,15 +14,16 @@ import { MdInfoOutline } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import LinkButton from '~/components/LinkButton';
+import { getGlyphCanvasProps } from '~/kage/kageData';
 import { useLinkColor, useShadow } from '../../../hooks/useColor';
-import { type getKanjisOrderByCodePoint } from '../models/kanji.server';
+import { type getKanjis } from '../models/kanji.server';
 import JisLevelBadge from './JisLevelBadge';
 import KanjiLink from './KanjiLink';
 import KanjiRead from './KanjiRead';
 import RegularBadge from './RegularBadge';
 
 type KanjiItemProps = {
-  kanji: Awaited<ReturnType<typeof getKanjisOrderByCodePoint>>[number];
+  kanji: Awaited<ReturnType<typeof getKanjis>>[number];
   isEven: boolean;
 };
 
@@ -36,7 +37,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
     justify="space-between"
   >
     <KanjiLink codePoint={kanji.code_point} />
-    <GlyphCanvasSuspense />
+    <GlyphCanvasSuspense {...getGlyphCanvasProps(kanji.glyph)} />
     <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
       <VStack align="start">
         <HStack>

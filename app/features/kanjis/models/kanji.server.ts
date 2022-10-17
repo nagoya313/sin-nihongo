@@ -1,6 +1,9 @@
 import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
+import { getGlyph, getGlyphByName } from '~/features/glyphs/models/glyph.server';
+import GlyphLoader from '~/kage/GlyphLoader';
+import { filterPromiseFulfilledResults } from '~/utils/promise';
 import { escapeLike } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from '../constants';
 import { type kanjiQueryParams } from '../validators/params';
@@ -19,6 +22,7 @@ export const getKanjisOrderByCodePoint = ({ strokeCount, regular, read, offset }
       'for_name',
       'jis_level',
       'radical_code_point',
+      'glyph_name',
       sql<ReadonlyArray<string>>`array_agg(read order by read)`.as('reads'),
     ])
     .if(strokeCount != null, (qb) => qb.where('kanji.stroke_count', '=', strokeCount!))
@@ -29,6 +33,22 @@ export const getKanjisOrderByCodePoint = ({ strokeCount, regular, read, offset }
     .offset(offset)
     .limit(KANJI_READ_LIMIT)
     .execute();
+
+export const getKanjis = async (query: QueryParams) => {
+  const kanjis = await getKanjisOrderByCodePoint(query);
+
+  const result = await Promise.allSettled(
+    kanjis.map(async (kanji) => {
+      if (kanji.glyph_name == null) return { ...kanji, glyph: null };
+      const glyph = await getGlyphByName(kanji.glyph_name);
+      if (glyph == null) return { ...kanji, glyph: null };
+      const glyphLoader = new GlyphLoader(getGlyph);
+      return { ...kanji, glyph: { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) } };
+    }),
+  );
+
+  return filterPromiseFulfilledResults(result).map(({ value }) => value);
+};
 
 export const getKanjisOrderByStrokeCount = ({ regular, read, direction }: QueryParams) =>
   db

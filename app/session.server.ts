@@ -42,7 +42,7 @@ authenticator.use(auth0Strategy);
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
 
-type FlashOptions = {
+export type FlashOptions = {
   message: string;
   status: UseToastOptions['status'];
 };

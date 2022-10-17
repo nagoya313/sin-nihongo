@@ -19,7 +19,7 @@ import { getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
 import type useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
-import { commitSessionHeaders, setFlashMessage } from '~/session.server';
+import { setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader } from '../glyphwiki';
 
@@ -31,8 +31,7 @@ export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
   const data = await checkedFormData(request, glyphCreateParams);
   await createGlyph(data);
-  const session = await setFlashMessage(request, { message: 'グリフを登録しました', status: 'success' });
-  const headers = await commitSessionHeaders(session);
+  const headers = await setFlashMessage(request, { message: 'グリフを登録しました', status: 'success' });
   if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'), headers);
   return json({ glyph: await getGlyphwiki(data.name) }, headers);
 };

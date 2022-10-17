@@ -11,7 +11,7 @@ import TextInput from '~/components/TextInput';
 import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { radicalUpdateParams } from '~/features/radicals/validators/params';
 import useMatchesData from '~/hooks/useMatchesData';
-import { commitSessionHeaders, setFlashMessage } from '~/session.server';
+import { setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader as baseLoader } from '../$codePoint';
 
@@ -28,8 +28,10 @@ export const action = async ({ request, params }: ActionArgs) => {
   await authGuard(request);
   await checkedFormData(request, radicalUpdateParams);
   const { codePoint } = $params('/radicals/:codePoint', params);
-  const session = await setFlashMessage(request, { message: '部首の更新に成功しました', status: 'success' });
-  return redirect($path('/radicals/:codePoint', { codePoint }), await commitSessionHeaders(session));
+  return redirect(
+    $path('/radicals/:codePoint', { codePoint }),
+    await setFlashMessage(request, { message: '部首の更新しました', status: 'success' }),
+  );
 };
 
 const Edit = () => {

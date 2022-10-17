@@ -45,4 +45,4 @@ export const getGlyphs = async ({ q, offset }: QueryParams) => {
 export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>
   db.insertInto('glyph').values({ name, data }).execute();
 
-export const deleteGlyph = (name: string) => db.deleteFrom('glyph').where('name', '=', name).execute();
+export const deleteGlyph = (name: string) => db.deleteFrom('glyph').where('name', '=', name).executeTakeFirst();

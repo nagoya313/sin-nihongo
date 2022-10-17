@@ -47,18 +47,16 @@ type FlashOptions = {
   status: UseToastOptions['status'];
 };
 
+const setCoolieCommitSessionHeaders = async (session: Session) => ({ 'Set-Cookie': await commitSession(session) });
+
 export const setFlashMessage = async (request: DataFunctionArgs['request'], options: FlashOptions) => {
   const session = await getSession(request.headers.get('Cookie'));
   session.flash('flash-message', options);
-  return session;
+  return { headers: await setCoolieCommitSessionHeaders(session) } as const;
 };
 
 export const getFlashMessage = async (request: DataFunctionArgs['request']) => {
   const session = await getSession(request.headers.get('Cookie'));
   const flash = (session.get('flash-message') ?? null) as FlashOptions | null;
-  return { flash, session } as const;
+  return { flash, headers: { headers: await setCoolieCommitSessionHeaders(session) } } as const;
 };
-
-export const commitSessionHeaders = async (session: Session) => ({
-  headers: { 'Set-Cookie': await commitSession(session) },
-});

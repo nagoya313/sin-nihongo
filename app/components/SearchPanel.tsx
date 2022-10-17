@@ -25,7 +25,6 @@ const SearchPanel = ({ children }: SearchPanelProps) => (
     bg={useColorModeValue('white', 'gray.700')}
     shadow={useShadow()}
     role="search"
-    onSubmit={(e) => e.preventDefault()}
   >
     <Accordion allowToggle w="full">
       <AccordionItem>

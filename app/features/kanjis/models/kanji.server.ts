@@ -48,8 +48,6 @@ export const getKanjisOrderByCodePoint = ({
 export const getKanjis = async (query: QueryParams) => {
   const kanjis = await getKanjisOrderByCodePoint(query);
 
-  console.log(kanjis);
-
   const result = await Promise.allSettled(
     kanjis.map(async (kanji) => {
       if (kanji.glyph_name == null) return { ...kanji, glyph: null };

@@ -1,4 +1,4 @@
-import { UnionSelect } from './types';
+import { type UnionSelect } from './types';
 
 export type SelectPromiseFulfilledResult<T> = UnionSelect<T, 'value'>;
 

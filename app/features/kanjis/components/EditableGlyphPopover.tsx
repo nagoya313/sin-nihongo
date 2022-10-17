@@ -30,9 +30,10 @@ type EditableGlyphPopoverProps = {
 const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
   const user = useOptionalUser();
   const [preview, setPreview] = useState<typeof kanji['glyph']>(kanji.glyph);
+  const closeHandle = () => setPreview(null);
 
   return (
-    <Popover isLazy placement="right">
+    <Popover isLazy placement="right" onClose={closeHandle}>
       <VStack p={2}>
         <KanjiLink codePoint={kanji.code_point} />
         {user != null && (
@@ -51,20 +52,25 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
           <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
           <ValidatedForm
             id={`KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`}
-            method="post"
+            method={kanji.glyph != null ? 'patch' : 'post'}
             validator={kanjiGlyphCreateParams}
-            defaultValues={{ codePoint: kanji.code_point, formId: `KANJI_GLYPH_EDIT_FORM_${kanji.code_point}` }}
+            defaultValues={{
+              name: kanji.glyph?.name,
+              data: kanji.glyph?.data,
+              codePoint: kanji.code_point,
+              formId: `KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`,
+            }}
           >
             <VStack align="start">
               <FormControl name="name" label="なまえ" isRequired>
-                <TextInput name="name" />
+                <TextInput name="name" isReadOnly={!!kanji.glyph?.name} />
               </FormControl>
               <FormControl name="data" label="影算料" isRequired>
                 <KageTextArea name="data" onDataChange={setPreview} />
               </FormControl>
               <HiddenInput name="codePoint" />
               <HiddenInput name="formId" />
-              <SubmitButton>作成する</SubmitButton>
+              <SubmitButton>{kanji.glyph != null ? '更新する' : '作成する'}</SubmitButton>
             </VStack>
           </ValidatedForm>
         </PopoverBody>

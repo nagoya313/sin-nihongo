@@ -4,6 +4,7 @@ import { useField } from 'remix-validated-form';
 type TextInputProps = {
   name: string;
   placeholder?: string;
+  isReadOnly?: boolean;
 };
 
 const TextInput = ({ name, ...inputProps }: TextInputProps) => {

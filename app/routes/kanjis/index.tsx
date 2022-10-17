@@ -9,7 +9,7 @@ import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import TextInput from '~/components/TextInput';
-import { getGlyphPreview } from '~/features/glyphs/models/glyph.server';
+import { getGlyphPreview, updateGlyph } from '~/features/glyphs/models/glyph.server';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
@@ -31,7 +31,6 @@ export const meta: MetaFunction = () => ({ title: '新日本語｜新日本語�
 
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
-  console.log(query);
   return json({ kanjis: await getKanjis(query), offset: query.offset });
 };
 
@@ -40,12 +39,20 @@ export const action = async ({ request }: ActionArgs) => {
   const data = await checkedFormData(request, kanjiGlyphCreateParams);
   const { isDrawable } = await getGlyphPreview(data.data);
   if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
+  console.log(request.method);
   try {
-    await createKanjiGlyph(data);
+    if (request.method === 'POST') {
+      await createKanjiGlyph(data);
+    } else if (request.method === 'PATCH') {
+      await updateGlyph(data);
+    }
   } catch {
     return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.formId }, data);
   }
-  const headers = await setFlashMessage(request, { message: 'グリフを登録しました', status: 'success' });
+  const headers = await setFlashMessage(request, {
+    message: `グリフを${request.method === 'POST' ? '登録' : '更新'}しました`,
+    status: 'success',
+  });
   return json('ok', headers);
 };
 

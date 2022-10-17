@@ -34,7 +34,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
     bg={useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50')}
     justify="space-between"
   >
-    <EditableGlyphPopover kanji={kanji} />
+    <EditableGlyphPopover key={kanji.code_point} kanji={kanji} />
     <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
       <VStack align="start">
         <HStack>

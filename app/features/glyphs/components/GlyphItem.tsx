@@ -4,12 +4,11 @@ import { MdOutlineDelete } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import KageData from '~/components/KageData';
-import { type getGlyphs } from '~/features/glyphs/models/glyph.server';
-import { glyphToBuhin } from '~/kage/kageData';
+import { getGlyphCanvasProps, type DrawableGlyph } from '~/kage/kageData';
 import { useShadow } from '../../../hooks/useColor';
 
 type GlyphItemProps = {
-  glyph: Awaited<ReturnType<typeof getGlyphs>>[number];
+  glyph: DrawableGlyph;
   isEven: boolean;
 };
 
@@ -25,7 +24,7 @@ const GlyphItem = ({ glyph, isEven }: GlyphItemProps) => {
       bg={useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50')}
       justify="space-between"
     >
-      <GlyphCanvasSuspense name={glyph.name} buhin={glyphToBuhin(glyph)} />
+      <GlyphCanvasSuspense {...getGlyphCanvasProps(glyph)} />
       <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
         <VStack align="start">
           <HStack>

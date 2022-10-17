@@ -3,11 +3,11 @@ import { json, Response, type LoaderArgs, type MetaFunction } from '@remix-run/n
 import { useLoaderData } from '@remix-run/react';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import Page from '~/components/Page';
-import { getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
+import { getDrawableGlyphByName } from '~/features/glyphs/models/glyph.server';
 import KanjiDefine from '~/features/kanjis/components/KanjiDefine';
-import { getKanjiByCodePoint } from '~/features/kanjis/models/kanji.server';
+import { getKanjiByCodePoint, getSameKanjs } from '~/features/kanjis/models/kanji.server';
 import { kanjiParams } from '~/features/kanjis/validators/params';
-import { glyphToBuhin } from '~/kage/kageData';
+import { getGlyphCanvasProps } from '~/kage/kageData';
 import { checkedParamsLoader } from '~/utils/request.server';
 
 export const meta: MetaFunction = ({ params }) => ({
@@ -18,18 +18,19 @@ export const loader = async ({ params }: LoaderArgs) => {
   const { codePoint } = await checkedParamsLoader(params, kanjiParams);
   const kanji = await getKanjiByCodePoint(codePoint);
   if (kanji == null) throw new Response('Not Found', { status: 404 });
-  const glyph = await getGlyphwiki(`u${kanji.code_point.toString(16).padStart(4, '0')}`);
-  return json({ kanji, glyph });
+  const glyph = kanji.glyph_name != null ? await getDrawableGlyphByName(kanji.glyph_name) : null;
+  const sames = kanji.glyph_name != null ? (await getSameKanjs(kanji)).map(({ kanji }) => kanji) : [];
+  return json({ kanji, glyph, sames });
 };
 
 const Kanji = () => {
-  const { kanji, glyph } = useLoaderData<typeof loader>();
+  const { kanji, glyph, sames } = useLoaderData<typeof loader>();
 
   return (
     <Page avatar={kanji.kanji} title="漢字詳細">
       <HStack pt={8}>
-        <GlyphCanvasSuspense name={glyph.name} buhin={glyphToBuhin(glyph)} />
-        <KanjiDefine kanji={kanji} />
+        <GlyphCanvasSuspense {...getGlyphCanvasProps(glyph)} />
+        <KanjiDefine kanji={kanji} sames={sames} />
       </HStack>
     </Page>
   );

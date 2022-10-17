@@ -13,6 +13,12 @@ export const getGlyphByName = (name: string) =>
   db.selectFrom('glyph').select(['name', 'data']).where('name', '=', name).executeTakeFirst();
 
 export const getGlyph = async (name: string) => (await getGlyphByName(name)) ?? { name, data: null };
+export const getDrawableGlyphByName = async (name: string) => {
+  const glyph = await getGlyphByName(name);
+  if (glyph == null) return null;
+  const glyphLoader = new GlyphLoader(getGlyph);
+  return { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) };
+};
 export const getGlyphPreview = async (data: string) => {
   const glyph = { name: 'preview', data };
   const glyphLoader = new GlyphLoader(getGlyph);

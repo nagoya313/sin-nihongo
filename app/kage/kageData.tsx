@@ -1,6 +1,12 @@
 import { Buhin, Kage, Polygons } from '@kurgm/kage-engine';
-import { type getGlyphwiki } from '~/features/glyphwiki/models/glyphwiki.server';
+import type { ReadonlyDeep } from 'type-fest';
 import { type Glyph } from './types';
+
+export type DrawableGlyph = ReadonlyDeep<{
+  name: string;
+  data: string;
+  drawNecessaryGlyphs: Glyph[];
+}>;
 
 export const glyphsToBuhin = (glyphs: ReadonlyArray<Glyph>, buhin = new Buhin()) => {
   glyphs.forEach((glyph) => {
@@ -11,7 +17,7 @@ export const glyphsToBuhin = (glyphs: ReadonlyArray<Glyph>, buhin = new Buhin())
   return buhin;
 };
 
-export const glyphToBuhin = ({ name, data, drawNecessaryGlyphs }: Awaited<ReturnType<typeof getGlyphwiki>>) => {
+export const glyphToBuhin = ({ name, data, drawNecessaryGlyphs }: DrawableGlyph) => {
   const buhin = new Buhin();
   if (data != null) {
     buhin.push(name, data);
@@ -19,6 +25,11 @@ export const glyphToBuhin = ({ name, data, drawNecessaryGlyphs }: Awaited<Return
   }
   return buhin;
 };
+
+export const getGlyphCanvasProps = (glyph: DrawableGlyph | null | undefined) => ({
+  name: glyph?.name,
+  buhin: glyph != null ? glyphToBuhin(glyph) : undefined,
+});
 
 export const makeGlyph = (name: string, buhin: Buhin) => {
   const kage = new Kage();

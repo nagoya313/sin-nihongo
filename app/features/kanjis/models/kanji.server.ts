@@ -85,6 +85,7 @@ export const getKanjiByCodePoint = (codePoint: number) =>
       'kanji.stroke_count',
       'kanji.code_point',
       'kanji.radical_code_point',
+      'glyph_name',
       sql<ReadonlyArray<string>>`array_agg(distinct read order by read)`.as('reads'),
       sql<string>`chr(kanji.code_point)`.as('kanji'),
       sql<string>`chr(kanji.radical_code_point)`.as('radical'),
@@ -92,3 +93,16 @@ export const getKanjiByCodePoint = (codePoint: number) =>
     .where('kanji.code_point', '=', codePoint)
     .groupBy('kanji.code_point')
     .executeTakeFirst();
+
+export const getSameKanjs = ({
+  code_point,
+  glyph_name,
+}: NonNullable<Awaited<ReturnType<typeof getKanjiByCodePoint>>>) =>
+  db
+    .selectFrom('kanji')
+    .select([sql<string>`chr(code_point)`.as('kanji')])
+    .where('glyph_name', 'is not', null)
+    .where('glyph_name', '=', glyph_name)
+    .where('code_point', '!=', code_point)
+    .orderBy('code_point')
+    .execute();

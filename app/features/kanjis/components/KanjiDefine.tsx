@@ -7,9 +7,10 @@ import { type getKanjiByCodePoint } from '../models/kanji.server';
 
 type RadicalDefineProps = {
   kanji: NonNullable<Awaited<ReturnType<typeof getKanjiByCodePoint>>>;
+  sames: ReadonlyArray<string>;
 };
 
-const KanjiDefine = ({ kanji }: RadicalDefineProps) => (
+const KanjiDefine = ({ kanji, sames }: RadicalDefineProps) => (
   <Flex as="dl" wrap="wrap" p={4}>
     <Heading as="dt" size="sm" w="30%">
       画数
@@ -40,6 +41,12 @@ const KanjiDefine = ({ kanji }: RadicalDefineProps) => (
       >
         {kanji.radical}
       </CUILink>
+    </Text>
+    <Heading as="dt" size="sm" w="30%">
+      統合
+    </Heading>
+    <Text as="dd" w="70%">
+      {sames.join('　')}
     </Text>
   </Flex>
 );

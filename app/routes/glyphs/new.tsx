@@ -18,7 +18,7 @@ import GlyphSearchResult from '~/features/glyphwiki/components/GlyphSearchResult
 import { getGlyphwikiForm } from '~/features/glyphwiki/models/glyphwiki.server';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
 import { useSearch } from '~/hooks/useSearch';
-import { glyphToBuhin } from '~/kage/kageData';
+import { getGlyphCanvasProps } from '~/kage/kageData';
 import { setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type LoaderData } from '~/utils/types';
@@ -71,7 +71,7 @@ const New = () => {
     <HStack flex={1} p={8} align="start">
       <VStack align="start">
         <PageInfo avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />} title="グリフ作成" />
-        <GlyphCanvasSuspense name={preview?.name} buhin={preview ? glyphToBuhin(preview) : undefined} />
+        <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
         <ValidatedForm method="post" validator={glyphCreateParams}>
           <VStack align="start">
             <FormControl name="name" label="なまえ" isRequired>

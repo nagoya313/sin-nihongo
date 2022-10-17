@@ -4,13 +4,16 @@ import * as path from 'path';
 import { connectDatabase } from './connection.server';
 
 (async () => {
+  console.log(process.argv);
   const db = connectDatabase();
   const migrator = new Migrator({
     db,
     provider: new FileMigrationProvider({ fs, path, migrationFolder: 'app/db/migrations' }),
   });
 
-  const { error, results } = await migrator.migrateToLatest();
+  const { error, results } = process.argv.includes('rollback')
+    ? await migrator.migrateDown()
+    : await migrator.migrateToLatest();
 
   results?.forEach(({ status, migrationName }) => {
     switch (status) {

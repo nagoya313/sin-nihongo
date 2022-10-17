@@ -8,7 +8,7 @@ export type Kanji = Readonly<{
   in_radical_stroke_count: number;
   radical_code_point: number;
   jis_level: 1 | 2;
-  glyph_id: number | null;
+  glyph_name: string | null;
 }> &
   Timestamp;
 

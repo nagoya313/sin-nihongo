@@ -12,6 +12,7 @@
     "coverage": "vitest run --coverage",
     "tsn": "ts-node -r tsconfig-paths/register --require dotenv/config -O '{\"module\": \"commonjs\"}'",
     "db:migrate": "yarn tsn app/db/migration.ts",
+    "db:rollback": "yarn tsn app/db/migration.ts rollback",
     "db:seed": "yarn tsn app/db/seed.ts"
   },
   "dependencies": {

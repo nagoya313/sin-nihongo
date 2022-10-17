@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdOutlineEdit } from 'react-icons/md';
-import { $path } from 'remix-routes';
 import { useFormContext, ValidatedForm } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
@@ -35,8 +34,6 @@ const EditableGlyphPopover = ({ kanji, offset }: EditableGlyphPopoverProps) => {
   const [preview, setPreview] = useState<typeof kanji['glyph']>(kanji.glyph);
   const closeHandle = () => setPreview(null);
   const { getValues } = useFormContext(KANJI_SEARCH_FORM_ID);
-  const formData = getValues();
-  formData.set('offset', offset.toString());
 
   return (
     <Popover isLazy placement="right" onClose={closeHandle}>
@@ -59,8 +56,6 @@ const EditableGlyphPopover = ({ kanji, offset }: EditableGlyphPopoverProps) => {
           <ValidatedForm
             id={`KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`}
             method={kanji.glyph != null ? 'patch' : 'post'}
-            // こゝの指定方法は怪しい
-            action={$path('/kanjis?index&data=routes' as any, formData as any)}
             validator={kanjiGlyphCreateParams}
             defaultValues={{
               name: kanji.glyph?.name,

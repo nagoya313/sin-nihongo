@@ -111,7 +111,7 @@ export const getKanjisOrderByRead = ({ strokeCount, regular, read, direction }: 
           'code_point',
         ])
         .innerJoin('kanji_read', 'code_point', 'kanji_read.kanji_code_point')
-        .if(strokeCount != null, (qb) => qb.where('in_radical_stroke_count', '=', strokeCount!))
+        .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
         .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
         .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))
         .as('kanjis'),

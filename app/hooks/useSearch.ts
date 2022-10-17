@@ -32,7 +32,7 @@ export const useSearch = <TParamsType, TData>({
     submit();
     preventDefault();
   };
-  const [data, setData] = useState<TData | {}>(EMPTY_DATA);
+  const [data, setData] = useState<TData | {}>(initialData);
 
   useEffect(() => {
     if (fetcher.type === 'done') {
@@ -42,9 +42,9 @@ export const useSearch = <TParamsType, TData>({
     }
   }, [fetcher]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     setData(initialData);
-  }, [initialData]);
+  }, [initialData]);*/
 
   return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data };
 };

@@ -3,7 +3,6 @@ import isEmpty from 'lodash/isEmpty';
 import { getGlyph, getGlyphByName } from '~/features/glyphs/models/glyph.server';
 import GlyphLoader from '~/kage/GlyphLoader';
 import { type Glyph } from '~/kage/types';
-import { filterPromiseFulfilledResults } from '~/utils/promise';
 import { type GlyphwikiData } from '../types';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
@@ -44,12 +43,19 @@ const toFormData = async (glyph: Glyph) => ({ name: glyph.name, data: glyph.data
 
 export const getGlyphwikiForm = async (name: string) => {
   const glyph = await getGlyphwiki(name);
-  const drawNecessaryGlyphs = await Promise.allSettled(glyph.drawNecessaryGlyphs.map(toFormData));
+  const drawNecessaryGlyphs = [];
+  // 直列にしないとコネクションプールが盡きる
+  for (const g of glyph.drawNecessaryGlyphs) {
+    drawNecessaryGlyphs.push(await toFormData(g));
+  }
+
+  // const drawNecessaryGlyphs = await Promise.allSettled(glyph.drawNecessaryGlyphs.map(toFormData));
 
   return {
     glyphs: [
       await toFormData(glyph),
-      ...filterPromiseFulfilledResults(drawNecessaryGlyphs).map(({ value }) => value),
+      ...drawNecessaryGlyphs,
+      // ...filterPromiseFulfilledResults(drawNecessaryGlyphs).map(({ value }) => value),
     ] as const,
   };
 };

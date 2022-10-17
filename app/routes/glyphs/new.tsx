@@ -9,27 +9,33 @@ import FormControl from '~/components/FormControl';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import PageInfo from '~/components/PageInfo';
 import SubmitButton from '~/components/SubmitButton';
-import TextArea from '~/components/TextArea';
 import TextInput from '~/components/TextInput';
+import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import { GLYPHWIKI_SEARCH_FORM_ID } from '~/features/glyphs/constants';
-import { createGlyph } from '~/features/glyphs/models/glyph.server';
+import { createGlyph, getGlyphPreview } from '~/features/glyphs/models/glyph.server';
 import { glyphCreateParams } from '~/features/glyphs/validators/params';
 import GlyphSearchResult from '~/features/glyphwiki/components/GlyphSearchResult';
 import { getGlyphwikiForm } from '~/features/glyphwiki/models/glyphwiki.server';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators/params';
-import type useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
+import { glyphToBuhin } from '~/kage/kageData';
 import { setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData } from '~/utils/request.server';
-import { type loader } from '../glyphwiki';
+import { type LoaderData } from '~/utils/types';
+import { type loader as glyphwikiLoader } from '../glyphwiki';
+import { type loader as glyphPreviewLoader } from './preview';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ作成' });
 
-const INITIAL_DATA = {} as ReturnType<typeof useMatchesData<typeof loader>>;
+const INITIAL_DATA = {} as LoaderData<typeof glyphwikiLoader>;
 
 export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
   const data = await checkedFormData(request, glyphCreateParams);
+  if (data.subaction == null) {
+    const { isDrawable } = await getGlyphPreview(data.data);
+    if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+  }
   try {
     await createGlyph(data);
   } catch {
@@ -49,6 +55,7 @@ const New = () => {
   });
   const actionResult = useActionData<typeof action>();
   const [glyph, setGlyph] = useState<typeof data>(data);
+  const [preview, setPreview] = useState<LoaderData<typeof glyphPreviewLoader>>();
 
   useEffect(() => {
     setGlyph(data);
@@ -64,14 +71,14 @@ const New = () => {
     <HStack flex={1} p={8} align="start">
       <VStack align="start">
         <PageInfo avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />} title="グリフ作成" />
-        <GlyphCanvasSuspense />
+        <GlyphCanvasSuspense name={preview?.name} buhin={preview ? glyphToBuhin(preview) : undefined} />
         <ValidatedForm method="post" validator={glyphCreateParams}>
           <VStack align="start">
             <FormControl name="name" label="なまえ" isRequired>
               <TextInput name="name" />
             </FormControl>
             <FormControl name="data" label="影算料" isRequired>
-              <TextArea name="data" />
+              <KageTextArea name="data" onDataChange={setPreview} />
             </FormControl>
             <SubmitButton>作成する</SubmitButton>
           </VStack>

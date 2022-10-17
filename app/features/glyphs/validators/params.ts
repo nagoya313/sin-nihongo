@@ -10,6 +10,7 @@ export const glyphQueryParams = withZod(
 );
 
 export const glyphParams = withZod(z.object({ name: zfd.text() }));
+export const glyphPreviewParams = withZod(z.object({ data: zfd.text() }));
 
 export const glyphCreateParams = withZod(
   z

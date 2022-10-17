@@ -3,7 +3,6 @@ import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import { getGlyph, getGlyphByName } from '~/features/glyphs/models/glyph.server';
 import GlyphLoader from '~/kage/GlyphLoader';
-import { filterPromiseFulfilledResults } from '~/utils/promise';
 import { escapeLike } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from '../constants';
 import { type kanjiGlyphCreateParams, type kanjiQueryParams } from '../validators/params';
@@ -48,7 +47,28 @@ export const getKanjisOrderByCodePoint = ({
 export const getKanjis = async (query: QueryParams) => {
   const kanjis = await getKanjisOrderByCodePoint(query);
 
-  const result = await Promise.allSettled(
+  const result = [];
+  // 直列にしないとコネクションプールが盡きる
+  for (const kanji of kanjis) {
+    if (kanji.glyph_name == null) {
+      result.push({ ...kanji, glyph: null });
+    } else {
+      const glyph = await getGlyphByName(kanji.glyph_name);
+      if (glyph == null) {
+        result.push({ ...kanji, glyph: null });
+      } else {
+        const glyphLoader = new GlyphLoader(getGlyph);
+        result.push({
+          ...kanji,
+          glyph: { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) },
+        });
+      }
+    }
+  }
+
+  return result;
+
+  /* const result = await Promise.allSettled(
     kanjis.map(async (kanji) => {
       if (kanji.glyph_name == null) return { ...kanji, glyph: null };
       const glyph = await getGlyphByName(kanji.glyph_name);
@@ -58,7 +78,7 @@ export const getKanjis = async (query: QueryParams) => {
     }),
   );
 
-  return filterPromiseFulfilledResults(result).map(({ value }) => value);
+  return filterPromiseFulfilledResults(result).map(({ value }) => value); */
 };
 
 export const getKanjisOrderByStrokeCount = ({ regular, read, direction }: QueryParams) =>

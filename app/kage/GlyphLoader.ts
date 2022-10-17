@@ -18,13 +18,23 @@ export default class GlyphLoader<TGlyph extends Glyph> {
 
   async #scanRecursion(data: TGlyph): Promise<ReadonlyArray<TGlyph>> {
     const linkStrokes = new Strokes(data).linkStrokes;
-    const strokes = await Promise.all(
+    const strokes = [];
+    // 直列にしないとコネクションプールが盡きる
+    for (const stroke of linkStrokes) {
+      const base = await this.#getter(stroke.linkStrokeId);
+      if (base.data == null) {
+        strokes.push([base]);
+      } else {
+        strokes.push([base].concat(await this.#scanRecursion(base)));
+      }
+    }
+    /* const strokes = await Promise.all(
       linkStrokes.map(async (stroke) => {
         const base = await this.#getter(stroke.linkStrokeId);
         if (base.data == null) return [base];
         return [base].concat(await this.#scanRecursion(base));
       }),
-    );
+    ); */
     return flatten(strokes);
   }
 

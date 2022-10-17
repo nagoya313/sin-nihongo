@@ -1,7 +1,6 @@
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import GlyphLoader from '~/kage/GlyphLoader';
-import { filterPromiseFulfilledResults } from '~/utils/promise';
 import { escapeLike } from '~/utils/sql';
 import { GLYPH_READ_LIMIT } from '../constants';
 import type { glyphCreateParams } from '../validators/params';
@@ -39,7 +38,16 @@ export const getGlyphsOrderByName = ({ q, offset }: QueryParams) =>
 export const getGlyphs = async (query: QueryParams) => {
   const glyphs = await getGlyphsOrderByName(query);
 
-  const result = await Promise.allSettled(
+  const result = [];
+  // 直列にしないとコネクションプールが盡きる
+  for (const glyph of glyphs) {
+    const glyphLoader = new GlyphLoader(getGlyph);
+    result.push({ ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) });
+  }
+
+  return result;
+
+  /* const result = await Promise.allSettled(
     glyphs.map(async (glyph) => {
       const glyphLoader = new GlyphLoader(getGlyph);
       return { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) };
@@ -47,6 +55,7 @@ export const getGlyphs = async (query: QueryParams) => {
   );
 
   return filterPromiseFulfilledResults(result).map(({ value }) => value);
+  */
 };
 
 export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>

@@ -33,7 +33,7 @@ export const links: LinksFunction = () => [
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await authenticator.isAuthenticated(request);
   const { flash, headers } = await getFlashMessage(request);
-  return json({ user, flash }), headers;
+  return json({ user, flash }, headers);
 };
 
 type DocumentProps = {

@@ -3,13 +3,14 @@ import { useFormContext } from 'remix-validated-form';
 
 type SubmitButtonProps = React.PropsWithChildren<{
   size?: ButtonProps['size'];
+  isDisabled?: boolean;
 }>;
 
-const SubmitButton = ({ children, ...props }: SubmitButtonProps) => {
+const SubmitButton = ({ isDisabled, children, ...props }: SubmitButtonProps) => {
   const { isValid, isSubmitting } = useFormContext();
 
   return (
-    <Button {...props} type="submit" isDisabled={!isValid || isSubmitting} colorScheme="purple">
+    <Button {...props} type="submit" isDisabled={!!isDisabled || !isValid || isSubmitting} colorScheme="purple">
       {children}
     </Button>
   );

@@ -48,7 +48,9 @@ const GlyphResult = ({ q, glyph, buhin }: GlyphResultProps) => (
           <HiddenInput name="name" />
           <HiddenInput name="data" />
           <HiddenInput name="q" />
-          <SubmitButton size="sm">登録する</SubmitButton>
+          <SubmitButton size="sm" isDisabled={glyph.info.type === 'ShortageParts'}>
+            登録する
+          </SubmitButton>
         </ValidatedForm>
       )}
     </VStack>

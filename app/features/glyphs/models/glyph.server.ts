@@ -9,16 +9,10 @@ import { type glyphQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof glyphQueryParams>;
 
-const getGlyph = async (name: string) =>
-  (await db
-    .selectFrom('glyph')
-    .select(['name', 'data'])
-    .where('name', '=', name)
-    .orderBy('name')
-    .executeTakeFirst()) ?? {
-    name,
-    data: null,
-  };
+export const getGlyphByName = (name: string) =>
+  db.selectFrom('glyph').select(['name', 'data']).where('name', '=', name).executeTakeFirst();
+
+export const getGlyph = async (name: string) => (await getGlyphByName(name)) ?? { name, data: null };
 
 export const getGlyphs = async ({ q, offset }: QueryParams) => {
   const glyphs = await db
@@ -39,9 +33,6 @@ export const getGlyphs = async ({ q, offset }: QueryParams) => {
 
   return filterPromiseFulfilledResults(result).map(({ value }) => value);
 };
-
-export const getGlyphByName = (name: string) =>
-  db.selectFrom('glyph').select(['name', 'data']).where('name', '=', name).executeTakeFirst();
 
 export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>
   db.insertInto('glyph').values({ name, data }).executeTakeFirst();

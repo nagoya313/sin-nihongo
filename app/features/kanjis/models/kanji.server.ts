@@ -10,7 +10,7 @@ import { type kanjiGlyphCreateParams, type kanjiQueryParams } from '../validator
 
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
 
-export const getKanjisOrderByCodePoint = ({ strokeCount, regular, read, offset }: QueryParams) =>
+export const getKanjisOrderByCodePoint = ({ kanji, strokeCount, regular, read, offset }: QueryParams) =>
   db
     .selectFrom('kanji')
     .innerJoin('radical', 'radical.code_point', 'radical_code_point')
@@ -25,6 +25,7 @@ export const getKanjisOrderByCodePoint = ({ strokeCount, regular, read, offset }
       'glyph_name',
       sql<ReadonlyArray<string>>`array_agg(read order by read)`.as('reads'),
     ])
+    .if(kanji != null, (qb) => qb.where('kanji.code_point', '=', kanji!))
     .if(strokeCount != null, (qb) => qb.where('kanji.stroke_count', '=', strokeCount!))
     .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
     .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))

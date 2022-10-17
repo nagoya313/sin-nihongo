@@ -16,6 +16,15 @@ export const kanjiQueryParams = withZod(
   z.object({
     direction,
     orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
+    kanji: zfd
+      .text(z.union([z.string().length(1, '書式が不正です'), z.string().regex(/^u[\da-f]{4}$/)]).optional())
+      .transform((kanji) =>
+        kanji != null
+          ? [...kanji].length === 1
+            ? kanji.codePointAt(0)!
+            : parseInt(kanji.match(/[\da-f]{4}/)![0]!, 16)
+          : undefined,
+      ),
     strokeCount: zfd.numeric(intRange(MIN_STOREKE_COUNT, MAX_STOREKE_COUNT).optional()),
     read: zfd.text(kana.max(10, '10文字以内で入力してください').optional()),
     regular: booleanRadio,

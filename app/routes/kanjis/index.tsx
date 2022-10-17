@@ -4,9 +4,11 @@ import { useLoaderData } from '@remix-run/react';
 import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm, validationError } from 'remix-validated-form';
+import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import TextInput from '~/components/TextInput';
 import { getGlyphPreview } from '~/features/glyphs/models/glyph.server';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
@@ -27,6 +29,7 @@ export const meta: MetaFunction = () => ({ title: '新日本語｜新日本語�
 
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
+  console.log(query);
   return json({ kanjis: await getKanjis(query), offset: query.offset });
 };
 
@@ -58,8 +61,13 @@ const Index = () => {
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
+            <FormControl name="kanji" label="漢字" help="漢字またわコードポイントから検索できます。">
+              <TextInput name="kanji" placeholder="一、u4e00" />
+            </FormControl>
             <ReadSearchInput />
             <StrokeCountSearchInput min={MIN_STOREKE_COUNT} max={MAX_STOREKE_COUNT} />
+          </HStack>
+          <HStack align="center">
             <RegularSelectRadio />
           </HStack>
         </SearchPanel>

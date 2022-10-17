@@ -41,7 +41,7 @@ const Radical = () => {
     <Page
       avatar={data.radical.radical}
       title="部首別索引"
-      subText={`（現在は旧日本語字形で部首が「${data.radical.radical}」の漢字が登録されていますが、新日本語字形で部首が「${data.radical.radical}」のものに置換予定です。）`}
+      subText={`（現在わ旧日本語字形で部首が「${data.radical.radical}」の漢字が登録されていますが、新日本語字形で部首が「${data.radical.radical}」のものに置換予定です。）`}
       action={
         <AdminLinkButton
           aria-label="radical-edit"

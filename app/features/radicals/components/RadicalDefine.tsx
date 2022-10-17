@@ -20,7 +20,7 @@ const RadicalDefine = ({ radical }: RadicalDefineProps) => (
       {radical.reads.join('　')}
     </Text>
     <Heading as="dt" size="sm" w="30%">
-      この部首を持つ漢字の数
+      この部首お持つ漢字の数
     </Heading>
     <Text as="dd" w="70%">
       {radical.kanji_count}

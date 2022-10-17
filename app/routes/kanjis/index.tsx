@@ -1,5 +1,5 @@
 import { HStack, Icon } from '@chakra-ui/react';
-import { json, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, Response, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
@@ -39,12 +39,13 @@ export const action = async ({ request }: ActionArgs) => {
   const data = await checkedFormData(request, kanjiGlyphCreateParams);
   const { isDrawable } = await getGlyphPreview(data.data);
   if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
-  console.log(request.method);
   try {
     if (request.method === 'POST') {
       await createKanjiGlyph(data);
     } else if (request.method === 'PATCH') {
       await updateGlyph(data);
+    } else {
+      throw new Response('Method not allowed', { status: 405 });
     }
   } catch {
     return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.formId }, data);

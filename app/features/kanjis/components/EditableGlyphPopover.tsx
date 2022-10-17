@@ -20,8 +20,6 @@ import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import { kanjiGlyphCreateParams } from '~/features/kanjis/validators/params';
 import { useOptionalUser } from '~/hooks/useUser';
 import { getGlyphCanvasProps } from '~/kage/kageData';
-import { type loader as glyphPreviewLoader } from '~/routes/glyphs/preview';
-import { type LoaderData } from '~/utils/types';
 import { type getKanjis } from '../models/kanji.server';
 import KanjiLink from './KanjiLink';
 
@@ -31,7 +29,7 @@ type EditableGlyphPopoverProps = {
 
 const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
   const user = useOptionalUser();
-  const [preview, setPreview] = useState<LoaderData<typeof glyphPreviewLoader>>();
+  const [preview, setPreview] = useState<typeof kanji['glyph']>(kanji.glyph);
 
   return (
     <Popover isLazy placement="right">

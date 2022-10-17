@@ -166,7 +166,7 @@ export const createKanjiGlyph = async ({ name, data, codePoint }: ValidatorData<
     await trx.insertInto('glyph').values({ name, data }).executeTakeFirstOrThrow();
     await trx
       .updateTable('kanji')
-      .set({ glyph_name: name })
+      .set({ glyph_name: name, updated_at: new Date() })
       .where('code_point', '=', codePoint)
       .executeTakeFirstOrThrow();
   });

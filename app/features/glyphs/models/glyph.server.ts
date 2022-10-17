@@ -62,6 +62,6 @@ export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreatePara
   db.insertInto('glyph').values({ name, data }).executeTakeFirst();
 
 export const updateGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>
-  db.updateTable('glyph').set({ data }).where('name', '=', name).executeTakeFirstOrThrow();
+  db.updateTable('glyph').set({ data, updated_at: new Date() }).where('name', '=', name).executeTakeFirstOrThrow();
 
 export const deleteGlyph = (name: string) => db.deleteFrom('glyph').where('name', '=', name).executeTakeFirst();

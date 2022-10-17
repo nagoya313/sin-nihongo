@@ -7,12 +7,12 @@ import { ValidatedForm, validationError } from 'remix-validated-form';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
-import { createGlyph, getGlyphPreview } from '~/features/glyphs/models/glyph.server';
+import { getGlyphPreview } from '~/features/glyphs/models/glyph.server';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
-import { getKanjis } from '~/features/kanjis/models/kanji.server';
+import { createKanjiGlyph, getKanjis } from '~/features/kanjis/models/kanji.server';
 import {
   kanjiGlyphCreateParams,
   kanjiQueryParams,
@@ -34,11 +34,11 @@ export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
   const data = await checkedFormData(request, kanjiGlyphCreateParams);
   const { isDrawable } = await getGlyphPreview(data.data);
-  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
   try {
-    await createGlyph(data);
+    await createKanjiGlyph(data);
   } catch {
-    return validationError({ fieldErrors: { name: '登録済みです' } }, data);
+    return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.formId }, data);
   }
   const headers = await setFlashMessage(request, { message: 'グリフを登録しました', status: 'success' });
   return json('ok', headers);

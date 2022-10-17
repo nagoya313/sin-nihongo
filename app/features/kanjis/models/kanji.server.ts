@@ -6,7 +6,7 @@ import GlyphLoader from '~/kage/GlyphLoader';
 import { filterPromiseFulfilledResults } from '~/utils/promise';
 import { escapeLike } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from '../constants';
-import { type kanjiQueryParams } from '../validators/params';
+import { type kanjiGlyphCreateParams, type kanjiQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
 
@@ -126,3 +126,13 @@ export const getSameKanjs = ({
     .where('code_point', '!=', code_point)
     .orderBy('code_point')
     .execute();
+
+export const createKanjiGlyph = async ({ name, data, codePoint }: ValidatorData<typeof kanjiGlyphCreateParams>) =>
+  db.transaction().execute(async (trx) => {
+    await trx.insertInto('glyph').values({ name, data }).executeTakeFirstOrThrow();
+    await trx
+      .updateTable('kanji')
+      .set({ glyph_name: name })
+      .where('code_point', '=', codePoint)
+      .executeTakeFirstOrThrow();
+  });

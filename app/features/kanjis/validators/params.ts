@@ -40,5 +40,6 @@ export const kanjiGlyphCreateParams = withZod(
     name: zfd.text(z.string().max(50, '50文字以内で入力してください')),
     data: zfd.text(),
     codePoint: zfd.numeric(),
+    formId: zfd.text(),
   }),
 );

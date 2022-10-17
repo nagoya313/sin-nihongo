@@ -52,9 +52,10 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
         <PopoverBody>
           <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
           <ValidatedForm
+            id={`KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`}
             method="post"
             validator={kanjiGlyphCreateParams}
-            defaultValues={{ codePoint: kanji.code_point }}
+            defaultValues={{ codePoint: kanji.code_point, formId: `KANJI_GLYPH_EDIT_FORM_${kanji.code_point}` }}
           >
             <VStack align="start">
               <FormControl name="name" label="なまえ" isRequired>
@@ -64,6 +65,7 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
                 <KageTextArea name="data" onDataChange={setPreview} />
               </FormControl>
               <HiddenInput name="codePoint" />
+              <HiddenInput name="formId" />
               <SubmitButton>作成する</SubmitButton>
             </VStack>
           </ValidatedForm>

@@ -12,7 +12,7 @@ import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
 import { useOptionalUser } from './hooks/useUser';
 import Layout from './layout';
-import { authenticator, type FlashOptions } from './session.server';
+import { authenticator, getFlashMessage, type FlashOptions } from './session.server';
 import { theme } from './styles/theme';
 
 export const meta: MetaFunction = () => ({
@@ -32,7 +32,7 @@ export const links: LinksFunction = () => [
 
 export const loader = async ({ request }: LoaderArgs) => {
   const user = await authenticator.isAuthenticated(request);
-  // const { flash, headers } = await getFlashMessage(request);
+  /*const { flash, headers } = */ await getFlashMessage(request);
   return json({ user, flash: null as null | FlashOptions });
 };
 

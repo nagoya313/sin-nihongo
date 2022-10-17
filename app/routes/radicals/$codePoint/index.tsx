@@ -25,9 +25,7 @@ import useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
 import { type loader } from '../$codePoint';
 
-export const meta: MetaFunction = ({ params }) => ({
-  title: `新日本語｜部首索引「${String.fromCodePoint(parseInt($params('/radicals/:codePoint', params).codePoint))}」`,
-});
+export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' });
 
 const Radical = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());

@@ -5,12 +5,12 @@ import { useLinkColor } from '~/hooks/useColor';
 import { HIRAGANA_MATCHER } from '~/utils/schemas/regex';
 import { type getKanjiByCodePoint } from '../models/kanji.server';
 
-type RadicalDefineProps = {
+type KanjiDefineProps = {
   kanji: NonNullable<Awaited<ReturnType<typeof getKanjiByCodePoint>>>;
   sames: ReadonlyArray<string>;
 };
 
-const KanjiDefine = ({ kanji, sames }: RadicalDefineProps) => (
+const KanjiDefine = ({ kanji, sames }: KanjiDefineProps) => (
   <Flex as="dl" wrap="wrap" p={4}>
     <Heading as="dt" size="sm" w="30%">
       画数

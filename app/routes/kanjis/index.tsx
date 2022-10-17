@@ -1,26 +1,47 @@
 import { HStack, Icon } from '@chakra-ui/react';
-import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
-import { ValidatedForm } from 'remix-validated-form';
+import { ValidatedForm, validationError } from 'remix-validated-form';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import { createGlyph, getGlyphPreview } from '~/features/glyphs/models/glyph.server';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
 import { getKanjis } from '~/features/kanjis/models/kanji.server';
-import { kanjiQueryParams, MAX_STOREKE_COUNT, MIN_STOREKE_COUNT } from '~/features/kanjis/validators/params';
+import {
+  kanjiGlyphCreateParams,
+  kanjiQueryParams,
+  MAX_STOREKE_COUNT,
+  MIN_STOREKE_COUNT,
+} from '~/features/kanjis/validators/params';
 import { useInfinitySearch } from '~/hooks/useSearch';
-import { checkedQuery } from '~/utils/request.server';
+import { setFlashMessage } from '~/session.server';
+import { authGuard, checkedFormData, checkedQuery } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜新日本語漢字一覧' });
 
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
   return json({ kanjis: await getKanjis(query), offset: query.offset });
+};
+
+export const action = async ({ request }: ActionArgs) => {
+  await authGuard(request);
+  const data = await checkedFormData(request, kanjiGlyphCreateParams);
+  const { isDrawable } = await getGlyphPreview(data.data);
+  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+  try {
+    await createGlyph(data);
+  } catch {
+    return validationError({ fieldErrors: { name: '登録済みです' } }, data);
+  }
+  const headers = await setFlashMessage(request, { message: 'グリフを登録しました', status: 'success' });
+  return json('ok', headers);
 };
 
 const Index = () => {
@@ -42,13 +63,13 @@ const Index = () => {
             <RegularSelectRadio />
           </HStack>
         </SearchPanel>
-        <Virtuoso
-          useWindowScroll
-          data={data}
-          endReached={moreLoad}
-          itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} />}
-        />
       </ValidatedForm>
+      <Virtuoso
+        useWindowScroll
+        data={data}
+        endReached={moreLoad}
+        itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} />}
+      />
     </Page>
   );
 };

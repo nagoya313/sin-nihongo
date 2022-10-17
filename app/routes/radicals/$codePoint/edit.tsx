@@ -15,9 +15,7 @@ import { setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData } from '~/utils/request.server';
 import { type loader as baseLoader } from '../$codePoint';
 
-export const meta: MetaFunction = ({ params }) => ({
-  title: `新日本語｜部首編集「${String.fromCodePoint(parseInt($params('/radicals/:codePoint', params).codePoint))}」`,
-});
+export const meta: MetaFunction = () => ({ title: '新日本語｜部首編集' });
 
 export const loader = async ({ request }: LoaderArgs) => {
   await authGuard(request);

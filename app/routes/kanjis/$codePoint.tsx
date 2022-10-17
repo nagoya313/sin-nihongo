@@ -10,9 +10,7 @@ import { kanjiParams } from '~/features/kanjis/validators/params';
 import { getGlyphCanvasProps } from '~/kage/kageData';
 import { checkedParamsLoader } from '~/utils/request.server';
 
-export const meta: MetaFunction = ({ params }) => ({
-  title: `新日本語｜漢字詳細「${String.fromCodePoint(parseInt(params['codePoint']!))}」`,
-});
+export const meta: MetaFunction = () => ({ title: '新日本語｜漢字詳細' });
 
 export const loader = async ({ params }: LoaderArgs) => {
   const { codePoint } = await checkedParamsLoader(params, kanjiParams);

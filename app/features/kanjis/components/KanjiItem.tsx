@@ -12,13 +12,11 @@ import {
 import { Link } from '@remix-run/react';
 import { MdInfoOutline } from 'react-icons/md';
 import { $path } from 'remix-routes';
-import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import LinkButton from '~/components/LinkButton';
-import { getGlyphCanvasProps } from '~/kage/kageData';
 import { useLinkColor, useShadow } from '../../../hooks/useColor';
 import { type getKanjis } from '../models/kanji.server';
+import EditableGlyphPopover from './EditableGlyphPopover';
 import JisLevelBadge from './JisLevelBadge';
-import KanjiLink from './KanjiLink';
 import KanjiRead from './KanjiRead';
 import RegularBadge from './RegularBadge';
 
@@ -36,8 +34,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
     bg={useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50')}
     justify="space-between"
   >
-    <KanjiLink codePoint={kanji.code_point} />
-    <GlyphCanvasSuspense {...getGlyphCanvasProps(kanji.glyph)} />
+    <EditableGlyphPopover kanji={kanji} />
     <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
       <VStack align="start">
         <HStack>

@@ -34,3 +34,11 @@ export const radicalKanjiQueryParams = withZod(
 );
 
 export const kanjiParams = withZod(z.object({ codePoint: zfd.numeric(z.number().int().positive().max(PG_INT_MAX)) }));
+
+export const kanjiGlyphCreateParams = withZod(
+  z.object({
+    name: zfd.text(z.string().max(50, '50文字以内で入力してください')),
+    data: zfd.text(),
+    codePoint: zfd.numeric(),
+  }),
+);

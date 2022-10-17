@@ -88,7 +88,7 @@ const Index = () => {
         useWindowScroll
         data={data}
         endReached={moreLoad}
-        itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} offset={offset} />}
+        itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} />}
       />
     </Page>
   );

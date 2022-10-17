@@ -10,6 +10,8 @@ import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import TextInput from '~/components/TextInput';
 import { getGlyphPreview } from '~/features/glyphs/models/glyph.server';
+import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
+import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
@@ -69,6 +71,8 @@ const Index = () => {
           </HStack>
           <HStack align="center">
             <RegularSelectRadio />
+            <ForNameSelectRadio />
+            <JisLevelSelectRadio />
           </HStack>
         </SearchPanel>
       </ValidatedForm>

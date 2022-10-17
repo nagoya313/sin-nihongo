@@ -32,6 +32,7 @@ const Index = () => {
     validator: glyphQueryParams,
     initialData: useLoaderData<typeof loader>(),
     readLimit: GLYPH_READ_LIMIT,
+    initialDateUpdateable: true,
   });
 
   return (

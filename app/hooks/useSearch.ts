@@ -11,6 +11,7 @@ type UseSearchProps<TParamsType, TData> = {
   validator: Validator<TParamsType>;
   initialData: TData;
   action?: string;
+  initialDateUpdateable?: boolean;
 };
 
 export const useSearch = <TParamsType, TData>({
@@ -18,6 +19,7 @@ export const useSearch = <TParamsType, TData>({
   validator,
   initialData,
   action,
+  initialDateUpdateable,
 }: UseSearchProps<TParamsType, TData>) => {
   const fetcher = useFetcher<TData>();
   const { getValues, validate } = useFormContext(formId);
@@ -42,9 +44,11 @@ export const useSearch = <TParamsType, TData>({
     }
   }, [fetcher]);
 
-  /*useEffect(() => {
-    setData(initialData);
-  }, [initialData]);*/
+  useEffect(() => {
+    if (initialDateUpdateable) {
+      setData(initialData);
+    }
+  }, [initialData]);
 
   return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data };
 };
@@ -89,5 +93,5 @@ export const useInfinitySearch = <TParamsType, TKey extends string, TData extend
     }
   }, [props.data, key]);
 
-  return { ...props, moreLoad, data, offset: 'offset' in props.data ? props.data.offset : 0 };
+  return { ...props, moreLoad, data, setData };
 };

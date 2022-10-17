@@ -19,7 +19,9 @@ const KageTextArea = ({ name, onDataChange }: KageTextAreaProps) => {
   const [, setData] = useControlField<string>(name);
   const fetcher = useFetcher();
   const handleChange = useDebouncedCallback(async (data: string) => {
-    fetcher.submit({ data }, { action: $path('/glyphs/preview') });
+    if (data) {
+      fetcher.submit({ data }, { action: $path('/glyphs/preview') });
+    }
     setData(data);
   }, PREVIEW_WAIT);
 

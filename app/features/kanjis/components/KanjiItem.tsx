@@ -44,7 +44,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
             to={$path('/radicals/:codePoint', { codePoint: kanji.radical_code_point })}
             color={useLinkColor()}
           >
-            {String.fromCodePoint(kanji.radical_code_point)}
+            {kanji.radical}
           </CUILink>
         </HStack>
         <Divider />

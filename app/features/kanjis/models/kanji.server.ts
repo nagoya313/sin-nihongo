@@ -20,17 +20,17 @@ export const getKanjisOrderByCodePoint = ({
 }: QueryParams) =>
   db
     .selectFrom('kanji')
-    .innerJoin('radical', 'radical.code_point', 'radical_code_point')
     .innerJoin('kanji_read', 'kanji_code_point', 'kanji.code_point')
     .select([
-      sql<number>`kanji.code_point`.as('code_point'),
-      'kanji.stroke_count',
+      'code_point',
+      'stroke_count',
       'regular',
       'for_name',
       'jis_level',
       'radical_code_point',
       'glyph_name',
       sql<ReadonlyArray<string>>`array_agg(read order by read)`.as('reads'),
+      sql<string>`chr(kanji.radical_code_point)`.as('radical'),
     ])
     .if(kanji != null, (qb) => qb.where('kanji.code_point', '=', kanji!))
     .if(strokeCount != null, (qb) => qb.where('kanji.stroke_count', '=', strokeCount!))
@@ -38,7 +38,7 @@ export const getKanjisOrderByCodePoint = ({
     .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
     .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))
     .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))
-    .groupBy('kanji.code_point')
+    .groupBy('code_point')
     .orderBy('code_point')
     .offset(offset)
     .limit(KANJI_READ_LIMIT)
@@ -133,9 +133,12 @@ export const getKanjiByCodePoint = (codePoint: number) =>
     .selectFrom('kanji')
     .innerJoin('kanji_read', 'kanji.code_point', 'kanji_read.kanji_code_point')
     .select([
-      'kanji.stroke_count',
-      'kanji.code_point',
-      'kanji.radical_code_point',
+      'code_point',
+      'stroke_count',
+      'regular',
+      'for_name',
+      'jis_level',
+      'radical_code_point',
       'glyph_name',
       sql<ReadonlyArray<string>>`array_agg(distinct read order by read)`.as('reads'),
       sql<string>`chr(kanji.code_point)`.as('kanji'),

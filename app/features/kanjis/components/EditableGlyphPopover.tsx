@@ -10,7 +10,8 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdOutlineEdit } from 'react-icons/md';
-import { ValidatedForm } from 'remix-validated-form';
+import { $path } from 'remix-routes';
+import { useFormContext, ValidatedForm } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import HiddenInput from '~/components/HiddenInput';
@@ -20,17 +21,22 @@ import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import { kanjiGlyphCreateParams } from '~/features/kanjis/validators/params';
 import { useOptionalUser } from '~/hooks/useUser';
 import { getGlyphCanvasProps } from '~/kage/kageData';
+import { KANJI_SEARCH_FORM_ID } from '../constants';
 import { type getKanjis } from '../models/kanji.server';
 import KanjiLink from './KanjiLink';
 
 type EditableGlyphPopoverProps = {
   kanji: Awaited<ReturnType<typeof getKanjis>>[number];
+  offset: number;
 };
 
-const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
+const EditableGlyphPopover = ({ kanji, offset }: EditableGlyphPopoverProps) => {
   const user = useOptionalUser();
   const [preview, setPreview] = useState<typeof kanji['glyph']>(kanji.glyph);
   const closeHandle = () => setPreview(null);
+  const { getValues } = useFormContext(KANJI_SEARCH_FORM_ID);
+  const formData = getValues();
+  formData.set('offset', offset.toString());
 
   return (
     <Popover isLazy placement="right" onClose={closeHandle}>
@@ -53,6 +59,8 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
           <ValidatedForm
             id={`KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`}
             method={kanji.glyph != null ? 'patch' : 'post'}
+            // こゝの指定方法は怪しい
+            action={$path('/kanjis?index&data=routes' as any, formData as any)}
             validator={kanjiGlyphCreateParams}
             defaultValues={{
               name: kanji.glyph?.name,

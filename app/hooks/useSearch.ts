@@ -89,5 +89,5 @@ export const useInfinitySearch = <TParamsType, TKey extends string, TData extend
     }
   }, [props.data, key]);
 
-  return { ...props, moreLoad, data };
+  return { ...props, moreLoad, data, offset: 'offset' in props.data ? props.data.offset : 0 };
 };

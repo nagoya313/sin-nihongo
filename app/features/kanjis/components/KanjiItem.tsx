@@ -23,9 +23,10 @@ import RegularBadge from './RegularBadge';
 type KanjiItemProps = {
   kanji: Awaited<ReturnType<typeof getKanjis>>[number];
   isEven: boolean;
+  offset: number;
 };
 
-const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
+const KanjiItem = ({ kanji, isEven, offset }: KanjiItemProps) => (
   <HStack
     p={4}
     rounded="md"
@@ -34,7 +35,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
     bg={useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50')}
     justify="space-between"
   >
-    <EditableGlyphPopover key={kanji.code_point} kanji={kanji} />
+    <EditableGlyphPopover key={kanji.code_point} kanji={kanji} offset={offset} />
     <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
       <VStack align="start">
         <HStack>

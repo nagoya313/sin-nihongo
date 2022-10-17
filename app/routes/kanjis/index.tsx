@@ -58,7 +58,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 const Index = () => {
-  const { data, formProps, moreLoad } = useInfinitySearch({
+  const { data, formProps, moreLoad, offset } = useInfinitySearch({
     key: 'kanjis',
     formId: KANJI_SEARCH_FORM_ID,
     validator: kanjiQueryParams,
@@ -88,7 +88,7 @@ const Index = () => {
         useWindowScroll
         data={data}
         endReached={moreLoad}
-        itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} />}
+        itemContent={(index, kanji) => <KanjiItem kanji={kanji} isEven={index % 2 === 0} offset={offset} />}
       />
     </Page>
   );

@@ -43,14 +43,12 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ kanjis: await getKanjis(query), offset: query.offset });
 };
 
-const ACTIONS = Object.freeze({ POST: '登録', PATCH: '更新', DELETE: '外' });
+const ACTIONS = Object.freeze({ POST: '登録', PATCH: '更新' });
 
 export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
-  let codePoint;
   if (request.method === 'POST' || request.method === 'PATCH') {
     const data = await checkedFormData(request, kanjiGlyphCreateParams);
-    codePoint = data.codePoint;
     const { isDrawable } = await getGlyphPreview(data.data);
     if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
     try {
@@ -59,38 +57,37 @@ export const action = async ({ request }: ActionArgs) => {
       } else if (request.method === 'PATCH') {
         await updateGlyph(data);
       }
+      const kanji = (await getKanjiByCodePoint(data.codePoint))!;
+      const glyph = (await getGlyphByName(kanji.glyph_name!))!;
+      const glyphLoader = new GlyphLoader(getGlyph);
+      return json(
+        {
+          kanji: {
+            ...kanji,
+            glyph: { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) },
+          },
+        },
+        {
+          ...(await setFlashMessage(request, {
+            message: `グリフお${ACTIONS[request.method]}しました`,
+            status: 'success',
+          })),
+        },
+      );
     } catch {
       return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.formId }, data);
     }
   } else if (request.method === 'DELETE') {
     const data = await checkedFormData(request, kanjiGlyphUnlinkParams);
-    codePoint = data.codePoint;
     await unlinkKanjiGlyph(data.codePoint);
+    const kanji = (await getKanjiByCodePoint(data.codePoint))!;
+    return json(
+      { kanji: { ...kanji, glyph: null } },
+      { ...(await setFlashMessage(request, { message: `グリフの関連お外しました`, status: 'success' })) },
+    );
   } else {
     throw new Response('Method not allowed', { status: 405 });
   }
-  const kanji = (await getKanjiByCodePoint(codePoint))!;
-  const glyph = kanji.glyph_name ? await getGlyphByName(kanji.glyph_name) : null;
-  return json(
-    {
-      kanji: {
-        ...kanji,
-        glyph:
-          glyph != null
-            ? {
-                ...glyph,
-                drawNecessaryGlyphs: await new GlyphLoader(getGlyph).drawNecessaryGlyphs(glyph),
-              }
-            : null,
-      },
-    },
-    {
-      ...(await setFlashMessage(request, {
-        message: `グリフを${ACTIONS[request.method]}しました`,
-        status: 'success',
-      })),
-    },
-  );
 };
 
 const Index = () => {

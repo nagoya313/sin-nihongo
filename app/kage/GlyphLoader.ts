@@ -9,7 +9,13 @@ export default class GlyphLoader<TGlyph extends Glyph> {
 
   async includeGlyphs(glyph: TGlyph) {
     const linkStrokes = new Strokes(glyph).linkStrokes;
-    return Promise.all(linkStrokes.map(async (stroke) => await this.#getter(stroke.linkStrokeId!)));
+    const glyphs = [];
+    // 直列にしないとコネクションプールが盡きる
+    for (const stroke of linkStrokes) {
+      glyphs.push(await this.#getter(stroke.linkStrokeId!));
+    }
+    return glyphs;
+    // return Promise.all(linkStrokes.map(async (stroke) => await this.#getter(stroke.linkStrokeId!)));
   }
 
   async drawNecessaryGlyphs(data: TGlyph) {

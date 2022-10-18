@@ -37,6 +37,7 @@ import { useInfinitySearch } from '~/hooks/useSearch';
 import GlyphLoader from '~/kage/GlyphLoader';
 import { setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData, checkedQuery } from '~/utils/request.server';
+
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
   return json({ kanjis: await getKanjis(query), offset: query.offset });

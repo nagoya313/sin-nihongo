@@ -44,8 +44,8 @@ const Index = () => {
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
-            <FormControl name="name" label="なまえ">
-              <TextInput name="name" />
+            <FormControl name="q" label="なまえ">
+              <TextInput name="q" />
             </FormControl>
           </HStack>
         </SearchPanel>

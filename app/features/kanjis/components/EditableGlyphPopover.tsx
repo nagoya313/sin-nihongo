@@ -22,7 +22,7 @@ import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import { kanjiGlyphCreateParams } from '~/features/kanjis/validators/params';
 import { useOptionalUser } from '~/hooks/useUser';
 import { getGlyphCanvasProps } from '~/kage/kageData';
-import { action } from '~/routes/kanjis';
+import { type action } from '~/routes/kanjis';
 import { type getKanjis } from '../models/kanji.server';
 import KanjiLink from './KanjiLink';
 
@@ -44,7 +44,7 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
     if (updated != null && 'kanji' in updated) {
       onClose();
     }
-  }, [updated]);
+  }, [updated, onClose]);
 
   return (
     <Popover isOpen={isOpen} onOpen={openHandle} onClose={onClose} isLazy placement="right">

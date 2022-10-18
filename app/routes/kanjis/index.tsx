@@ -15,6 +15,7 @@ import { getGlyph, getGlyphByName, getGlyphPreview, updateGlyph } from '~/featur
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
+import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput';
 import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
@@ -93,6 +94,7 @@ const Index = () => {
             </FormControl>
             <ReadSearchInput />
             <StrokeCountSearchInput min={MIN_STOREKE_COUNT} max={MAX_STOREKE_COUNT} />
+            <RadicalSelectInput />
           </HStack>
           <HStack align="center">
             <RegularSelectRadio />

@@ -36,6 +36,7 @@ export const kanjiQueryParams = withZod(
         .transform((level) => (level === 'none' ? undefined : level)),
     ),
     hasGlyph: booleanRadio,
+    radical: zfd.numeric(z.number().min(0).optional()),
     offset: zfd.numeric(z.number().min(0).default(0)),
   }),
 );

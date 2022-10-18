@@ -12,7 +12,7 @@ const PG_SMALL_INT_MAX = 32767;
 export const radicalQueryParams = withZod(
   z.object({
     direction,
-    orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
+    orderBy: z.enum(['stroke_count', 'read', 'code_point']).default('stroke_count'),
     strokeCount: zfd.numeric(intRange(MIN_STOREKE_COUNT, MAX_STOREKE_COUNT).optional()),
     read: zfd.text(hiragana.max(10).optional()),
   }),

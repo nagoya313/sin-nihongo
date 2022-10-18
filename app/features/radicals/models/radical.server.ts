@@ -6,6 +6,24 @@ import { type radicalQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof radicalQueryParams>;
 
+export const getRadicalsOrderByCodePoint = ({ read }: QueryParams) =>
+  db
+    .selectFrom('radical')
+    .select([
+      'code_point',
+      sql<string>`chr(radical.code_point)`.as('radical'),
+      sql<ReadonlyArray<string>>`array_agg(distinct read order by read)`.as('reads'),
+    ])
+    .if(!!read, (qb) =>
+      qb
+        .innerJoin('radical_read', 'radical.code_point', 'radical_read.radical_code_point')
+        .where('read', 'like', `${escapeLike(read!)}%`),
+    )
+    .orderBy('code_point')
+    .groupBy('code_point')
+    .distinct()
+    .execute();
+
 export const getRadicalsOrderByStrokeCount = ({ direction, strokeCount, read }: QueryParams) =>
   db
     .selectFrom('radical')

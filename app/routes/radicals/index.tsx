@@ -12,7 +12,11 @@ import StrokeCountOrder from '~/components/StrokeCountOrder';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import ReadSearchInput from '~/features/radicals/components/ReadSearchInput';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
-import { getRadicalsOrderByRead, getRadicalsOrderByStrokeCount } from '~/features/radicals/models/radical.server';
+import {
+  getRadicalsOrderByCodePoint,
+  getRadicalsOrderByRead,
+  getRadicalsOrderByStrokeCount,
+} from '~/features/radicals/models/radical.server';
 import { MAX_STOREKE_COUNT, MIN_STOREKE_COUNT, radicalQueryParams } from '~/features/radicals/validators/params';
 import { useSearch } from '~/hooks/useSearch';
 import { checkedQuery } from '~/utils/request.server';
@@ -21,8 +25,11 @@ export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' 
 
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, radicalQueryParams);
+  console.log(query);
   return json(
-    query.orderBy === 'read'
+    query.orderBy === 'code_point'
+      ? { radicals: await getRadicalsOrderByCodePoint(query) }
+      : query.orderBy === 'read'
       ? { radicalsOrderByRead: await getRadicalsOrderByRead(query) }
       : { radicalsOrderByStrokeCount: await getRadicalsOrderByStrokeCount(query) },
   );

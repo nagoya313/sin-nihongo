@@ -25,7 +25,9 @@ export const useSearch = <TParamsType, TData>({
   const { getValues, validate } = useFormContext(formId);
   const submit = () => fetcher.submit(getValues(), { action });
   const onChange = useDebouncedCallback(async () => {
+    console.log('change!');
     const result = await validate();
+    console.log(result);
     if (!result.error) {
       submit();
     }

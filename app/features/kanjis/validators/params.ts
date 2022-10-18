@@ -61,3 +61,5 @@ export const kanjiGlyphCreateParams = withZod(
     formId: zfd.text(),
   }),
 );
+
+export const kanjiGlyphUnlinkParams = withZod(z.object({ codePoint: zfd.numeric() }));

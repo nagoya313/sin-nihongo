@@ -174,3 +174,10 @@ export const createKanjiGlyph = async ({ name, data, codePoint }: ValidatorData<
       .where('code_point', '=', codePoint)
       .executeTakeFirstOrThrow();
   });
+
+export const unlinkKanjiGlyph = async (codePoint: number) =>
+  await db
+    .updateTable('kanji')
+    .set({ glyph_name: null, updated_at: new Date() })
+    .where('code_point', '=', codePoint)
+    .executeTakeFirstOrThrow();

@@ -1,5 +1,5 @@
 import { HStack, Icon } from '@chakra-ui/react';
-import { json, Response, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, Response, type ActionArgs, type LoaderArgs } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import { useEffect } from 'react';
 import { MdOutlineTranslate } from 'react-icons/md';
@@ -20,9 +20,15 @@ import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput'
 import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
-import { createKanjiGlyph, getKanjiByCodePoint, getKanjis } from '~/features/kanjis/models/kanji.server';
+import {
+  createKanjiGlyph,
+  getKanjiByCodePoint,
+  getKanjis,
+  unlinkKanjiGlyph,
+} from '~/features/kanjis/models/kanji.server';
 import {
   kanjiGlyphCreateParams,
+  kanjiGlyphUnlinkParams,
   kanjiQueryParams,
   MAX_STOREKE_COUNT,
   MIN_STOREKE_COUNT,
@@ -31,40 +37,58 @@ import { useInfinitySearch } from '~/hooks/useSearch';
 import GlyphLoader from '~/kage/GlyphLoader';
 import { setFlashMessage } from '~/session.server';
 import { authGuard, checkedFormData, checkedQuery } from '~/utils/request.server';
-
-export const meta: MetaFunction = () => ({ title: '新日本語｜新日本語漢字一覧' });
-
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
   return json({ kanjis: await getKanjis(query), offset: query.offset });
 };
 
+const ACTIONS = Object.freeze({ POST: '登録', PATCH: '更新', DELETE: '外' });
+
 export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
-  const data = await checkedFormData(request, kanjiGlyphCreateParams);
-  const { isDrawable } = await getGlyphPreview(data.data);
-  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
-  try {
-    if (request.method === 'POST') {
-      await createKanjiGlyph(data);
-    } else if (request.method === 'PATCH') {
-      await updateGlyph(data);
-    } else {
-      throw new Response('Method not allowed', { status: 405 });
+  let codePoint;
+  if (request.method === 'POST' || request.method === 'PATCH') {
+    const data = await checkedFormData(request, kanjiGlyphCreateParams);
+    codePoint = data.codePoint;
+    const { isDrawable } = await getGlyphPreview(data.data);
+    if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
+    try {
+      if (request.method === 'POST') {
+        await createKanjiGlyph(data);
+      } else if (request.method === 'PATCH') {
+        await updateGlyph(data);
+      }
+    } catch {
+      return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.formId }, data);
     }
-  } catch {
-    return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.formId }, data);
+  } else if (request.method === 'DELETE') {
+    const data = await checkedFormData(request, kanjiGlyphUnlinkParams);
+    codePoint = data.codePoint;
+    await unlinkKanjiGlyph(data.codePoint);
+  } else {
+    throw new Response('Method not allowed', { status: 405 });
   }
-  const kanji = (await getKanjiByCodePoint(data.codePoint))!;
-  const glyph = (await getGlyphByName(kanji!.glyph_name!))!;
-  const glyphLoader = new GlyphLoader(getGlyph);
-  const headers = await setFlashMessage(request, {
-    message: `グリフを${request.method === 'POST' ? '登録' : '更新'}しました`,
-    status: 'success',
-  });
+  const kanji = (await getKanjiByCodePoint(codePoint))!;
+  const glyph = kanji.glyph_name ? await getGlyphByName(kanji.glyph_name) : null;
   return json(
-    { kanji: { ...kanji, glyph: { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) } } },
-    headers,
+    {
+      kanji: {
+        ...kanji,
+        glyph:
+          glyph != null
+            ? {
+                ...glyph,
+                drawNecessaryGlyphs: await new GlyphLoader(getGlyph).drawNecessaryGlyphs(glyph),
+              }
+            : null,
+      },
+    },
+    {
+      ...(await setFlashMessage(request, {
+        message: `グリフを${ACTIONS[request.method]}しました`,
+        status: 'success',
+      })),
+    },
   );
 };
 

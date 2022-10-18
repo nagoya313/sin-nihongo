@@ -6,6 +6,7 @@ import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import BooleanSelectRadio from '~/components/BooleanSelectRadio';
+import FormClearButton from '~/components/FormClearButton';
 import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
@@ -111,6 +112,7 @@ const Index = () => {
                 { key: 'false', label: '未実装' },
               ]}
             />
+            <FormClearButton />
           </HStack>
         </SearchPanel>
       </ValidatedForm>

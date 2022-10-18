@@ -1,7 +1,9 @@
+import { Input } from '@chakra-ui/react';
 import { useFetcher, useLoaderData } from '@remix-run/react';
 import { Select } from 'chakra-react-select';
 import { useEffect, useState } from 'react';
-import { useField, useFormContext } from 'remix-validated-form';
+import { ClientOnly } from 'remix-utils';
+import { useControlField, useField, useFormContext } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
 import FormControl from '~/components/FormControl';
 import { radicalQueryParams } from '~/features/radicals/validators/params';
@@ -11,14 +13,17 @@ type SelectProps = React.ComponentProps<typeof Select>;
 
 const RadicalSelectInput = () => {
   const { getInputProps } = useField('radical');
+  const [value, setValue] = useControlField<string>('radical');
   const { submit } = useFormContext();
   const [options, setOptions] = useState<SelectProps['options']>([]);
   const fetcher = useFetcher<ReturnType<typeof useLoaderData<typeof loader>>>();
-  const handleChange = useDebouncedCallback(async (value: string) => {
-    if (value) {
-      const query = await radicalQueryParams.validate({ read: value, orderBy: 'code_point' });
+  const handleChange = useDebouncedCallback(async (read: string) => {
+    if (read) {
+      const query = await radicalQueryParams.validate({ read, orderBy: 'code_point' });
       if (!query.error) {
         fetcher.submit(query.submittedData, { action: '/radicals?index' });
+      } else {
+        setOptions([]);
       }
     } else {
       setOptions([]);
@@ -27,7 +32,6 @@ const RadicalSelectInput = () => {
 
   useEffect(() => {
     if (fetcher.type === 'done' && 'radicals' in fetcher.data) {
-      console.log(fetcher.data);
       setOptions([
         ...fetcher.data.radicals.map(({ radical, code_point, reads }) => ({
           label: `${radical}（${reads.join(' ')}）`,
@@ -39,19 +43,28 @@ const RadicalSelectInput = () => {
 
   return (
     <FormControl name="radical" label="部首" help="部首名お指定して検索できます。">
-      <Select
-        {...getInputProps<SelectProps>({
-          isLoading: fetcher.state === 'submitting',
-          options,
-          onInputChange: (value) => {
-            handleChange(value);
-          },
-          onChange: () => submit(),
-          isClearable: true,
-          backspaceRemovesValue: true,
-          placeholder: 'いち、しょー、つずみ',
-        })}
-      />
+      <ClientOnly fallback={<Input />}>
+        {() => (
+          <Select
+            // 選擇ずみではinput valueとして""、クリアではundefinedがくる
+            // Selectのvalueに""を渡せばinputクリア、undefinedを渡してもクリアされない
+            // といふ擧動を利用（いいのか？）
+            value={value == null ? '' : undefined}
+            {...getInputProps<SelectProps>({
+              isLoading: fetcher.state === 'submitting',
+              options,
+              onInputChange: (value) => {
+                setValue(value);
+                handleChange(value);
+              },
+              onChange: () => submit(),
+              isClearable: true,
+              backspaceRemovesValue: true,
+              placeholder: 'いち、しょー、つずみ',
+            })}
+          />
+        )}
+      </ClientOnly>
     </FormControl>
   );
 };

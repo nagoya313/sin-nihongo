@@ -29,7 +29,7 @@ const KageTextArea = ({ name, onDataChange }: KageTextAreaProps) => {
     if (fetcher.type === 'done') {
       onDataChange(fetcher.data);
     }
-  }, [fetcher]);
+  }, [fetcher, onDataChange]);
 
   return (
     <Textarea {...getInputProps<TextareaProps>({ id: name, onChange: ({ target }) => handleChange(target.value) })} />

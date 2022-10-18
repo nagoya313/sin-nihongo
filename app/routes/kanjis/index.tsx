@@ -83,6 +83,8 @@ const Index = () => {
     if (updated != null && 'kanji' in updated) {
       setData(data.map((kanji) => (kanji.code_point === updated.kanji.code_point ? updated.kanji : kanji)));
     }
+    // updatedが變化した時だけdataを上書きしたいのでdataの變化は見なくてよい
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updated]);
 
   return (

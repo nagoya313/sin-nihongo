@@ -48,7 +48,7 @@ export const useSearch = <TParamsType, TData>({
     if (initialDateUpdateable) {
       setData(initialData);
     }
-  }, [initialData]);
+  }, [initialDateUpdateable, initialData]);
 
   return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data };
 };

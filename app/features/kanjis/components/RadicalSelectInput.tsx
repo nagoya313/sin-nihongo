@@ -1,5 +1,5 @@
 import { Input } from '@chakra-ui/react';
-import { useFetcher, useLoaderData } from '@remix-run/react';
+import { useFetcher } from '@remix-run/react';
 import { Select } from 'chakra-react-select';
 import { useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils';
@@ -8,6 +8,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import FormControl from '~/components/FormControl';
 import { radicalQueryParams } from '~/features/radicals/validators/params';
 import { type loader } from '~/routes/radicals';
+import { type LoaderData } from '~/utils/types';
 
 type SelectProps = React.ComponentProps<typeof Select>;
 
@@ -16,7 +17,7 @@ const RadicalSelectInput = () => {
   const [value, setValue] = useControlField<string>('radical');
   const { submit } = useFormContext();
   const [options, setOptions] = useState<SelectProps['options']>([]);
-  const fetcher = useFetcher<ReturnType<typeof useLoaderData<typeof loader>>>();
+  const fetcher = useFetcher<LoaderData<typeof loader>>();
   const handleChange = useDebouncedCallback(async (read: string) => {
     if (read) {
       const query = await radicalQueryParams.validate({ read, orderBy: 'code_point' });

@@ -2,5 +2,8 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "prettier.configPath": ".prettierrc.json",
-  "editor.codeActionsOnSave": ["source.fixAll.eslint", "source.organizeImports"]
+  "editor.codeActionsOnSave": ["source.fixAll.eslint", "source.organizeImports"],
+  "files.watcherExclude": {
+    "**/node_modules/**": true
+  }
 }

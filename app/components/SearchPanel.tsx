@@ -9,13 +9,16 @@ import {
   Icon,
   useColorModeValue,
   VStack,
+  type StackProps,
 } from '@chakra-ui/react';
 import { MdSearch } from 'react-icons/md';
 import { useShadow } from '../hooks/useColor';
 
-type SearchPanelProps = React.PropsWithChildren;
+type SearchPanelProps = React.PropsWithChildren<{
+  align?: StackProps['align'];
+}>;
 
-const SearchPanel = ({ children }: SearchPanelProps) => (
+const SearchPanel = ({ align = 'start', children }: SearchPanelProps) => (
   <VStack
     rounded="md"
     mt={4}
@@ -36,7 +39,7 @@ const SearchPanel = ({ children }: SearchPanelProps) => (
           <AccordionIcon />
         </AccordionButton>
         <AccordionPanel mt={4}>
-          <VStack w="full" align="start">
+          <VStack w="full" align={align}>
             {children}
           </VStack>
         </AccordionPanel>

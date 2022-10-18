@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm, validationError } from 'remix-validated-form';
+import BooleanSelectRadio from '~/components/BooleanSelectRadio';
 import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
@@ -85,7 +86,7 @@ const Index = () => {
   return (
     <Page avatar={<Icon fontSize={24} as={MdOutlineTranslate} />} title="新日本語漢字一覧">
       <ValidatedForm {...formProps}>
-        <SearchPanel>
+        <SearchPanel align="stretch">
           <HStack align="center">
             <FormControl name="kanji" label="漢字" help="漢字またわコードポイントから検索できます。">
               <TextInput name="kanji" placeholder="一、u4e00" />
@@ -97,6 +98,17 @@ const Index = () => {
             <RegularSelectRadio />
             <ForNameSelectRadio />
             <JisLevelSelectRadio />
+          </HStack>
+          <HStack align="center">
+            <BooleanSelectRadio
+              name="hasGlyph"
+              label="グリフ実装"
+              labels={[
+                { key: 'none', label: '指定なし' },
+                { key: 'true', label: '実装済み' },
+                { key: 'false', label: '未実装' },
+              ]}
+            />
           </HStack>
         </SearchPanel>
       </ValidatedForm>

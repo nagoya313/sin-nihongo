@@ -15,6 +15,7 @@ export const getKanjisOrderByCodePoint = ({
   regular,
   forName,
   jisLevel,
+  hasGlyph,
   read,
   offset,
 }: QueryParams) =>
@@ -37,6 +38,7 @@ export const getKanjisOrderByCodePoint = ({
     .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
     .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
     .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))
+    .if(hasGlyph !== 'none', (qb) => qb.where('glyph_name', hasGlyph === 'true' ? 'is not' : 'is', null))
     .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))
     .groupBy('code_point')
     .orderBy('code_point')

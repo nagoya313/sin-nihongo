@@ -1,7 +1,8 @@
 import {
-  HStack,
   Radio,
   RadioGroup as CUIRadioGroup,
+  Wrap,
+  WrapItem,
   type RadioGroupProps as CUIRadioGroupProps,
 } from '@chakra-ui/react';
 import { useField } from 'remix-validated-form';
@@ -21,13 +22,15 @@ const RadioGroup = ({ name, radioLabels, disabled }: RadioGroupProps) => {
       defaultValue={radioLabels[0]!.key}
       {...getInputProps<Omit<CUIRadioGroupProps, 'children'>>()}
     >
-      <HStack whiteSpace="nowrap">
+      <Wrap whiteSpace="nowrap">
         {radioLabels.map(({ key, label }) => (
-          <Radio colorScheme="purple" orientation="horizontal" key={key} value={key}>
-            {label}
-          </Radio>
+          <WrapItem key={key}>
+            <Radio colorScheme="purple" orientation="horizontal" value={key}>
+              {label}
+            </Radio>
+          </WrapItem>
         ))}
-      </HStack>
+      </Wrap>
     </CUIRadioGroup>
   );
 };

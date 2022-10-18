@@ -33,21 +33,21 @@ type EditableGlyphPopoverProps = {
 const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
   const user = useOptionalUser();
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const [preview, setPreview] = useState<typeof kanji['glyph']>(kanji.glyph);
-  const closeHandle = () => {
-    setPreview(null);
-    onClose();
+  const [preview, setPreview] = useState<typeof kanji['glyph']>();
+  const openHandle = () => {
+    setPreview(kanji.glyph);
+    onOpen();
   };
   const updated = useActionData<typeof action>();
 
   useEffect(() => {
     if (updated != null && 'kanji' in updated) {
-      closeHandle();
+      onClose();
     }
   }, [updated]);
 
   return (
-    <Popover isOpen={isOpen} onOpen={onOpen} onClose={closeHandle} isLazy placement="right">
+    <Popover isOpen={isOpen} onOpen={openHandle} onClose={onClose} isLazy placement="right">
       <VStack p={2}>
         <KanjiLink codePoint={kanji.code_point} />
         {user != null && (

@@ -12,8 +12,8 @@ type KanjiDefineProps = {
 const KanjiDefine = ({ kanji, sames }: KanjiDefineProps) => (
   <DataList>
     <DataItem term="画数" definition={kanji.stroke_count} />
-    <DataItem term="音読み" definition={kanji.reads.filter((read) => read.match(HIRAGANA_MATCHER)).join('　')} />
-    <DataItem term="訓読み" definition={kanji.reads.filter((read) => !read.match(HIRAGANA_MATCHER)).join('　')} />
+    <DataItem term="音読み" definition={kanji.reads.filter((read) => !read.match(HIRAGANA_MATCHER)).join('　')} />
+    <DataItem term="訓読み" definition={kanji.reads.filter((read) => read.match(HIRAGANA_MATCHER)).join('　')} />
     <DataItem term="部首" definition={<RadicalLink codePoint={kanji.radical_code_point} />} />
     <DataItem term="統合" definition={sames.join('　')} />
   </DataList>

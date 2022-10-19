@@ -1,7 +1,5 @@
 import { HStack, Icon } from '@chakra-ui/react';
 import { type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
-import { useEffect } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm } from 'remix-validated-form';
 import BooleanSelectRadio from '~/components/BooleanSelectRadio';
@@ -18,11 +16,11 @@ import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
-import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
+import useKanjis from '~/features/kanjis/hooks/useKanjis';
 import { create, destroy, get, update } from '~/features/kanjis/services.server';
-import { kanjiQueryParams, MAX_STOROKE_COUNT, MIN_STOROKE_COUNT } from '~/features/kanjis/validators';
-import { useInfinitySearch } from '~/hooks/useSearch';
+import { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT } from '~/features/kanjis/validators';
 import { actionResponse, authGuard } from '~/utils/request.server';
+
 export const meta: MetaFunction = () => ({ title: '新日本語｜漢字一覧' });
 export const loader = async ({ request }: LoaderArgs) => get(request);
 
@@ -36,23 +34,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 const Index = () => {
-  const { data, formProps, moreLoad, setData } = useInfinitySearch({
-    key: 'kanjis',
-    formId: KANJI_SEARCH_FORM_ID,
-    validator: kanjiQueryParams,
-    initialData: useLoaderData<typeof loader>(),
-    readLimit: KANJI_READ_LIMIT,
-  });
-
-  const updated = useActionData<typeof action>();
-
-  useEffect(() => {
-    if (updated != null && 'kanji' in updated) {
-      setData(data.map((kanji) => (kanji.code_point === updated.kanji.code_point ? updated.kanji : kanji)));
-    }
-    // updatedが變化した時だけdataを上書きしたいのでdataの變化は見なくてよい
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updated]);
+  const { data, formProps, moreLoad } = useKanjis();
 
   return (
     <Page avatar={<Icon fontSize={24} as={KanjiIcon} />} title="新日本語漢字一覧">

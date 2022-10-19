@@ -1,4 +1,5 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import DataItem from '~/components/DataItem';
+import DataList from '~/components/Datalist';
 import RadicalLink from '~/features/radicals/components/RadicalLink';
 import { HIRAGANA_MATCHER } from '~/utils/schemas/regex';
 import { type getKanjiByCodePoint } from '../models/kanji.server';
@@ -9,38 +10,13 @@ type KanjiDefineProps = {
 };
 
 const KanjiDefine = ({ kanji, sames }: KanjiDefineProps) => (
-  <Flex as="dl" wrap="wrap" p={4}>
-    <Heading as="dt" size="sm" w="30%">
-      画数
-    </Heading>
-    <Text as="dd" w="70%">
-      {kanji.stroke_count}
-    </Text>
-    <Heading as="dt" size="sm" w="30%">
-      音読み
-    </Heading>
-    <Text as="dd" w="70%">
-      {kanji.reads.filter((read) => read.match(HIRAGANA_MATCHER)).join('　')}
-    </Text>
-    <Heading as="dt" size="sm" w="30%">
-      訓読み
-    </Heading>
-    <Text as="dd" w="70%">
-      {kanji.reads.filter((read) => !read.match(HIRAGANA_MATCHER)).join('　')}
-    </Text>
-    <Heading as="dt" size="sm" w="30%">
-      部首
-    </Heading>
-    <Text as="dd" w="70%">
-      <RadicalLink codePoint={kanji.radical_code_point} />
-    </Text>
-    <Heading as="dt" size="sm" w="30%">
-      統合
-    </Heading>
-    <Text as="dd" w="70%">
-      {sames.join('　')}
-    </Text>
-  </Flex>
+  <DataList>
+    <DataItem term="画数" definition={kanji.stroke_count} />
+    <DataItem term="音読み" definition={kanji.reads.filter((read) => read.match(HIRAGANA_MATCHER)).join('　')} />
+    <DataItem term="訓読み" definition={kanji.reads.filter((read) => !read.match(HIRAGANA_MATCHER)).join('　')} />
+    <DataItem term="部首" definition={<RadicalLink codePoint={kanji.radical_code_point} />} />
+    <DataItem term="統合" definition={sames.join('　')} />
+  </DataList>
 );
 
 export default KanjiDefine;

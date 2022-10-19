@@ -1,4 +1,5 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import DataItem from '~/components/DataItem';
+import DataList from '~/components/Datalist';
 import { type getRadicalByCodePoint } from '../models/radical.server';
 
 type RadicalDefineProps = {
@@ -6,26 +7,11 @@ type RadicalDefineProps = {
 };
 
 const RadicalDefine = ({ radical }: RadicalDefineProps) => (
-  <Flex as="dl" wrap="wrap" p={4}>
-    <Heading as="dt" size="sm" w="30%">
-      画数
-    </Heading>
-    <Text as="dd" w="70%">
-      {radical.stroke_count}
-    </Text>
-    <Heading as="dt" size="sm" w="30%">
-      よみかた
-    </Heading>
-    <Text as="dd" w="70%">
-      {radical.reads.join('　')}
-    </Text>
-    <Heading as="dt" size="sm" w="30%">
-      この部首お持つ漢字の数
-    </Heading>
-    <Text as="dd" w="70%">
-      {radical.kanji_count}
-    </Text>
-  </Flex>
+  <DataList>
+    <DataItem term="画数" definition={radical.stroke_count} />
+    <DataItem term="よみかた" definition={radical.reads.join('　')} />
+    <DataItem term="この部首お持つ漢字の数" definition={radical.kanji_count} />
+  </DataList>
 );
 
 export default RadicalDefine;

@@ -2,6 +2,7 @@ import { Input } from '@chakra-ui/react';
 import { useFetcher } from '@remix-run/react';
 import { Select } from 'chakra-react-select';
 import { useEffect, useState } from 'react';
+import { $path } from 'remix-routes';
 import { ClientOnly } from 'remix-utils';
 import { useControlField, useField, useFormContext } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
@@ -22,7 +23,8 @@ const RadicalSelectInput = () => {
     if (read) {
       const query = await radicalQueryParams.validate({ read, orderBy: 'code_point' });
       if (!query.error) {
-        fetcher.submit(query.submittedData, { action: '/radicals?index' });
+        // indexをつけないとroutes/radicals/indexの方のloaderが起動しない？
+        fetcher.submit(query.submittedData, { action: $path('/radicals', { index: '' }) });
       } else {
         setOptions([]);
       }

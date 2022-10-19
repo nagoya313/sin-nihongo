@@ -2,10 +2,11 @@ import DataItem from '~/components/DataItem';
 import DataList from '~/components/Datalist';
 import RadicalLink from '~/features/radicals/components/RadicalLink';
 import { HIRAGANA_MATCHER } from '~/utils/schemas/regex';
+import { QueryResultData } from '~/utils/types';
 import { type getKanjiByCodePoint } from '../repositories.server';
 
 type KanjiDefineProps = {
-  kanji: NonNullable<Awaited<ReturnType<typeof getKanjiByCodePoint>>>;
+  kanji: QueryResultData<typeof getKanjiByCodePoint>;
   sames: ReadonlyArray<string>;
 };
 

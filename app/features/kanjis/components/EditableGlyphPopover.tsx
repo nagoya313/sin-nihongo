@@ -24,11 +24,12 @@ import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { kanjiGlyphCreateParams, kanjiGlyphUnlinkParams } from '~/features/kanjis/validators';
 import { useOptionalUser } from '~/hooks/useUser';
 import { type action } from '~/routes/kanjis/index';
+import { QueryResultData } from '~/utils/types';
 import { type getKanjis } from '../repositories.server';
 import KanjiLink from './KanjiLink';
 
 type EditableGlyphPopoverProps = {
-  kanji: Awaited<ReturnType<typeof getKanjis>>[number];
+  kanji: QueryResultData<typeof getKanjis>[number];
 };
 
 const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {

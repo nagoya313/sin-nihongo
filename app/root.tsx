@@ -1,5 +1,4 @@
 import { Box, ChakraProvider, Heading, Text, useToast, VStack } from '@chakra-ui/react';
-import { withEmotionCache } from '@emotion/react';
 import {
   json,
   type ErrorBoundaryComponent,
@@ -7,14 +6,15 @@ import {
   type LoaderArgs,
   type MetaFunction,
 } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useCatch, useLoaderData } from '@remix-run/react';
-import { useContext, useEffect } from 'react';
+import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
+import { useEffect } from 'react';
 import { z } from 'zod';
-import { ClientStyleContext, ServerStyleContext } from './context';
+import Document from './document';
 import { useOptionalUser } from './hooks/useUser';
 import Layout from './layout';
-import { authenticator, getFlashMessage } from './session.server';
+import { authenticator } from './session.server';
 import { theme } from './styles/theme';
+import { getFlashMessage } from './utils/flash.server';
 import { errorMap } from './utils/schemas/errorMap';
 
 export const meta: MetaFunction = () => ({
@@ -37,46 +37,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   const { flash, headers } = await getFlashMessage(request);
   return json({ user, flash }, headers);
 };
-
-type DocumentProps = {
-  title?: string;
-  children: React.ReactNode;
-};
-
-const Document = withEmotionCache(({ title, children }: DocumentProps, emotionCache) => {
-  const serverStyleData = useContext(ServerStyleContext);
-  const clientStyleData = useContext(ClientStyleContext);
-
-  useEffect(() => {
-    emotionCache.sheet.container = document.head;
-    const tags = emotionCache.sheet.tags;
-    emotionCache.sheet.flush();
-    tags.forEach((tag) => {
-      (emotionCache.sheet as any)._insertTag(tag);
-    });
-    clientStyleData?.reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <html lang="ja">
-      <head>
-        {title != null && <title>{title}</title>}
-        <Meta />
-        <Links />
-        {serverStyleData?.map(({ key, ids, css }) => (
-          <style key={key} data-emotion={`${key} ${ids.join(' ')}`} dangerouslySetInnerHTML={{ __html: css }} />
-        ))}
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
-  );
-});
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   const user = useOptionalUser();
@@ -108,7 +68,7 @@ export const CatchBoundary = () => {
     <Document title={caught.status === 404 ? 'Page Not Found' : undefined}>
       <ChakraProvider theme={theme}>
         <Box p={8}>
-          <Text>{caught.status === 404 ? 'お探しのページは見つかりませんでした。' : caught.statusText}</Text>
+          <Text>{caught.status === 404 ? 'お探しのページわ見つかりませんでした。' : caught.statusText}</Text>
         </Box>
       </ChakraProvider>
     </Document>

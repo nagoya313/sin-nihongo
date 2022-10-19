@@ -4,6 +4,7 @@
   "prettier.configPath": ".prettierrc.json",
   "editor.codeActionsOnSave": ["source.fixAll.eslint", "source.organizeImports"],
   "files.watcherExclude": {
-    "**/node_modules/**": true
+    "**/node_modules/**": true,
+    "**/build/**": true
   }
 }

@@ -1,6 +1,4 @@
-import { type UseToastOptions } from '@chakra-ui/react';
-import type { Session } from '@remix-run/node';
-import { createCookieSessionStorage, type DataFunctionArgs } from '@remix-run/node';
+import { createCookieSessionStorage } from '@remix-run/node';
 import { Authenticator } from 'remix-auth';
 import { Auth0Strategy } from 'remix-auth-auth0';
 import { AUTH0_CALLBACK_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_DOMAIN } from './constants';
@@ -41,22 +39,3 @@ const auth0Strategy = new Auth0Strategy(
 authenticator.use(auth0Strategy);
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
-
-export type FlashOptions = {
-  message: string;
-  status: UseToastOptions['status'];
-};
-
-const setCoolieCommitSessionHeaders = async (session: Session) => ({ 'Set-Cookie': await commitSession(session) });
-
-export const setFlashMessage = async (request: DataFunctionArgs['request'], options: FlashOptions) => {
-  const session = await getSession(request.headers.get('Cookie'));
-  session.flash('flash-message', options);
-  return { headers: await setCoolieCommitSessionHeaders(session) } as const;
-};
-
-export const getFlashMessage = async (request: DataFunctionArgs['request']) => {
-  const session = await getSession(request.headers.get('Cookie'));
-  const flash = (session.get('flash-message') ?? null) as FlashOptions | null;
-  return { flash, headers: { headers: await setCoolieCommitSessionHeaders(session) } } as const;
-};

@@ -28,3 +28,5 @@ export const glyphCreateParams = withZod(
       ]),
     ),
 );
+
+export const glyphDestroyParams = withZod(z.object({ name: zfd.text(z.string().max(50)) }));

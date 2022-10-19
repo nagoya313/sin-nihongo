@@ -1,93 +1,38 @@
 import { HStack, Icon } from '@chakra-ui/react';
-import { json, Response, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import { useEffect } from 'react';
-import { MdOutlineTranslate } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
-import { ValidatedForm, validationError } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import BooleanSelectRadio from '~/components/BooleanSelectRadio';
 import FormClearButton from '~/components/FormClearButton';
 import FormControl from '~/components/FormControl';
+import { KanjiIcon } from '~/components/icons';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import TextInput from '~/components/TextInput';
-import { getGlyph, getGlyphByName, getGlyphPreview, updateGlyph } from '~/features/glyphs/models/glyph.server';
-import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
+import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput';
-import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { KANJI_READ_LIMIT, KANJI_SEARCH_FORM_ID } from '~/features/kanjis/constants';
-import {
-  createKanjiGlyph,
-  getKanjiByCodePoint,
-  getKanjis,
-  unlinkKanjiGlyph,
-} from '~/features/kanjis/models/kanji.server';
-import {
-  kanjiGlyphCreateParams,
-  kanjiGlyphUnlinkParams,
-  kanjiQueryParams,
-  MAX_STOREKE_COUNT,
-  MIN_STOREKE_COUNT,
-} from '~/features/kanjis/validators/params';
+import { create, destroy, get, update } from '~/features/kanjis/services.server';
+import { kanjiQueryParams, MAX_STOROKE_COUNT, MIN_STOROKE_COUNT } from '~/features/kanjis/validators';
 import { useInfinitySearch } from '~/hooks/useSearch';
-import { setFlashMessage } from '~/utils/flash.server';
-import { authGuard, checkedFormData, checkedQuery } from '~/utils/request.server';
-
-export const loader = async ({ request }: LoaderArgs) => {
-  const query = await checkedQuery(request, kanjiQueryParams);
-  return json({ kanjis: await getKanjis(query), offset: query.offset });
-};
-
-const ACTIONS = Object.freeze({ POST: '登録', PATCH: '更新' });
+import { actionResponse, authGuard } from '~/utils/request.server';
+export const meta: MetaFunction = () => ({ title: '新日本語｜漢字一覧' });
+export const loader = async ({ request }: LoaderArgs) => get(request);
 
 export const action = async ({ request }: ActionArgs) => {
   await authGuard(request);
-  if (request.method === 'POST' || request.method === 'PATCH') {
-    const data = await checkedFormData(request, kanjiGlyphCreateParams);
-    const { isDrawable } = await getGlyphPreview(data.data);
-    if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
-    try {
-      if (request.method === 'POST') {
-        await createKanjiGlyph(data);
-      } else if (request.method === 'PATCH') {
-        await updateGlyph(data);
-      }
-      const kanji = (await getKanjiByCodePoint(data.codePoint))!;
-      const glyph = (await getGlyphByName(kanji.glyph_name!))!;
-      const glyphLoader = new GlyphLoader(getGlyph);
-      return json(
-        {
-          kanji: {
-            ...kanji,
-            glyph: { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) },
-          },
-        },
-        {
-          ...(await setFlashMessage(request, {
-            message: `グリフお${ACTIONS[request.method]}しました`,
-            status: 'success',
-          })),
-        },
-      );
-    } catch {
-      return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.formId }, data);
-    }
-  } else if (request.method === 'DELETE') {
-    const data = await checkedFormData(request, kanjiGlyphUnlinkParams);
-    await unlinkKanjiGlyph(data.codePoint);
-    const kanji = (await getKanjiByCodePoint(data.codePoint))!;
-    return json(
-      { kanji: { ...kanji, glyph: null } },
-      { ...(await setFlashMessage(request, { message: `グリフの関連お外しました`, status: 'success' })) },
-    );
-  } else {
-    throw new Response('Method not allowed', { status: 405 });
-  }
+  return actionResponse(request, {
+    POST: () => create(request),
+    PATCH: () => update(request),
+    DELETE: () => destroy(request),
+  });
 };
 
 const Index = () => {
@@ -110,15 +55,15 @@ const Index = () => {
   }, [updated]);
 
   return (
-    <Page avatar={<Icon fontSize={24} as={MdOutlineTranslate} />} title="新日本語漢字一覧">
+    <Page avatar={<Icon fontSize={24} as={KanjiIcon} />} title="新日本語漢字一覧">
       <ValidatedForm {...formProps}>
         <SearchPanel align="stretch">
           <HStack align="center">
             <FormControl name="kanji" label="漢字" help="漢字またわコードポイントから検索できます。">
               <TextInput name="kanji" placeholder="一、u4e00" />
             </FormControl>
-            <ReadSearchInput />
-            <StrokeCountSearchInput min={MIN_STOREKE_COUNT} max={MAX_STOREKE_COUNT} />
+            <KanjiReadSearchInput />
+            <StrokeCountSearchInput min={MIN_STOROKE_COUNT} max={MAX_STOROKE_COUNT} />
             <RadicalSelectInput />
           </HStack>
           <HStack align="center">

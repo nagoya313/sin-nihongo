@@ -1,5 +1,5 @@
 import { HStack, IconButton, VStack } from '@chakra-ui/react';
-import { json, redirect, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { json, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { useParams } from '@remix-run/react';
 import { MdClear } from 'react-icons/md';
 import { $params, $path } from 'remix-routes';
@@ -9,10 +9,10 @@ import Page from '~/components/Page';
 import SubmitButton from '~/components/SubmitButton';
 import TextInput from '~/components/TextInput';
 import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
-import { radicalUpdateParams } from '~/features/radicals/validators/params';
+import { update } from '~/features/radicals/services.server';
+import { radicalUpdateParams } from '~/features/radicals/validators';
 import useMatchesData from '~/hooks/useMatchesData';
-import { setFlashMessage } from '~/utils/flash.server';
-import { authGuard, checkedFormData } from '~/utils/request.server';
+import { authGuard } from '~/utils/request.server';
 import { type loader as baseLoader } from '../$codePoint';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首編集' });
@@ -24,17 +24,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
   await authGuard(request);
-  await checkedFormData(request, radicalUpdateParams);
-  const { codePoint } = $params('/radicals/:codePoint', params);
-  return redirect(
-    $path('/radicals/:codePoint', { codePoint }),
-    await setFlashMessage(request, { message: '部首の更新おしました', status: 'success' }),
-  );
+  return update(request, params);
 };
 
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());
-  const { radical } = useMatchesData<typeof baseLoader>($path('/radicals/:codePoint', { codePoint }))!;
+  const radical = useMatchesData<typeof baseLoader>($path('/radicals/:codePoint', { codePoint }))!;
   const [reads, setReads] = useControlField<string[]>('reads', RADICAL_EDIT_FORM_ID);
 
   return (

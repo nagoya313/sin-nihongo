@@ -5,11 +5,8 @@ import { booleanRadio } from '~/utils/schemas/booleanRadio';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { kana } from '~/utils/schemas/regex';
+import { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT } from './constants';
 
-export const MIN_STOREKE_COUNT = 1;
-export const MAX_STOREKE_COUNT = 30;
-export const MIN_IN_RADICAL_STOREKE_COUNT = -1;
-export const MAX_IN_RADICAL_STOREKE_COUNT = 25;
 const PG_INT_MAX = 2147483647;
 
 export const kanjiQueryParams = withZod(
@@ -25,7 +22,7 @@ export const kanjiQueryParams = withZod(
             : parseInt(kanji.match(/[\da-f]{4}/)![0]!, 16)
           : undefined,
       ),
-    strokeCount: zfd.numeric(intRange(MIN_STOREKE_COUNT, MAX_STOREKE_COUNT).optional()),
+    strokeCount: zfd.numeric(intRange(MIN_STOROKE_COUNT, MAX_STOROKE_COUNT).optional()),
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
     forName: booleanRadio,
@@ -41,16 +38,6 @@ export const kanjiQueryParams = withZod(
   }),
 );
 
-export const radicalKanjiQueryParams = withZod(
-  z.object({
-    direction,
-    orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
-    strokeCount: zfd.numeric(intRange(MIN_IN_RADICAL_STOREKE_COUNT, MAX_IN_RADICAL_STOREKE_COUNT).optional()),
-    read: zfd.text(kana.max(10).optional()),
-    regular: booleanRadio,
-  }),
-);
-
 export const kanjiParams = withZod(z.object({ codePoint: zfd.numeric(z.number().int().positive().max(PG_INT_MAX)) }));
 
 export const kanjiGlyphCreateParams = withZod(
@@ -62,4 +49,15 @@ export const kanjiGlyphCreateParams = withZod(
   }),
 );
 
+export const kanjiGlyphUpdateParams = withZod(
+  z.object({
+    name: zfd.text(z.string().max(50)),
+    data: zfd.text(),
+    codePoint: zfd.numeric(),
+    formId: zfd.text(),
+  }),
+);
+
 export const kanjiGlyphUnlinkParams = withZod(z.object({ codePoint: zfd.numeric() }));
+
+export { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT };

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
-import { getGlyph, getGlyphByName } from '~/features/glyphs/models/glyph.server';
+import { getGlyph, getGlyphByName } from '~/features/glyphs/repositories.server';
 import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { type Glyph } from '~/features/kage/types';
-import { type GlyphwikiData } from '../types';
+import { type GlyphwikiData } from './types';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
 
@@ -18,7 +18,7 @@ const getGlyphwikiGlyph = async (name: string) => {
   return response.data.data != null ? { name, data: response.data.data } : { name, data: null };
 };
 
-export const getGlyphwiki = async (name: string) => {
+const getDrawableGlyphwikiGlyph = async (name: string) => {
   const glyph = await getGlyphwikiGlyph(name);
   if (glyph.data == null) return { ...glyph, drawNecessaryGlyphs: [] };
   const glyphLoader = new GlyphLoader(getGlyphwikiGlyph);
@@ -41,13 +41,12 @@ const getGlyphState = async ({ name, data }: Glyph) => {
 
 const toFormData = async (glyph: Glyph) => ({ name: glyph.name, data: glyph.data, info: await getGlyphState(glyph) });
 
-export const getGlyphwikiForm = async (name: string) => {
-  const glyph = await getGlyphwiki(name);
-  const drawNecessaryGlyphs = [];
+export const getGlyphwiki = async (name: string) => {
+  const glyph = await getDrawableGlyphwikiGlyph(name);
+  const glyphs = [await toFormData(glyph)];
   // 直列にしないとコネクションプールが盡きる
-  for (const g of glyph.drawNecessaryGlyphs) {
-    drawNecessaryGlyphs.push(await toFormData(g));
+  for (const partGlyph of glyph.drawNecessaryGlyphs) {
+    glyphs.push(await toFormData(partGlyph));
   }
-
-  return { glyphs: [await toFormData(glyph), ...drawNecessaryGlyphs] as const };
+  return { glyphs };
 };

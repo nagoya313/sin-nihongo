@@ -6,7 +6,7 @@ import { ClientOnly } from 'remix-utils';
 import { useControlField, useField, useFormContext } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
 import FormControl from '~/components/FormControl';
-import { radicalQueryParams } from '~/features/radicals/validators/params';
+import { radicalQueryParams } from '~/features/radicals/validators';
 import { type loader } from '~/routes/radicals/index';
 import { type LoaderData } from '~/utils/types';
 

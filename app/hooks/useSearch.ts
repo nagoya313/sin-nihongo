@@ -5,13 +5,13 @@ import { useDebouncedCallback } from 'use-debounce';
 
 const EMPTY_DATA = Object.freeze({});
 const SEARCH_WAIT = 500;
+const READ_LIMIT = 20;
 
 type UseSearchProps<TParamsType, TData> = {
   formId: string;
   validator: Validator<TParamsType>;
   initialData: TData;
   action?: string;
-  initialDateUpdateable?: boolean;
 };
 
 export const useSearch = <TParamsType, TData>({
@@ -19,7 +19,6 @@ export const useSearch = <TParamsType, TData>({
   validator,
   initialData,
   action,
-  initialDateUpdateable,
 }: UseSearchProps<TParamsType, TData>) => {
   const fetcher = useFetcher<TData>();
   const { getValues, validate } = useFormContext(formId);
@@ -44,12 +43,6 @@ export const useSearch = <TParamsType, TData>({
     }
   }, [fetcher]);
 
-  useEffect(() => {
-    if (initialDateUpdateable) {
-      setData(initialData);
-    }
-  }, [initialDateUpdateable, initialData]);
-
   return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data };
 };
 
@@ -59,14 +52,14 @@ type InfinityData<TKey extends string> = {
 
 type UseInfinitySearchProps<TParamsType, TKey extends string, TData extends InfinityData<TKey>> = {
   key: TKey;
-  readLimit: number;
+  readLimit?: number;
 } & UseSearchProps<TParamsType, TData>;
 
 const hasInfinityData = <TData>(data: any, key: string): data is TData => key in data && 'offset' in data;
 
 export const useInfinitySearch = <TParamsType, TKey extends string, TData extends InfinityData<TKey>>({
   key,
-  readLimit,
+  readLimit = READ_LIMIT,
   ...searchProps
 }: UseInfinitySearchProps<TParamsType, TKey, TData>) => {
   const props = useSearch(searchProps);

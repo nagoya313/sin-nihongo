@@ -1,8 +1,7 @@
 import { HStack, TabPanel } from '@chakra-ui/react';
-import { type MetaFunction } from '@remix-run/node';
-import { useParams } from '@remix-run/react';
+import { type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { MdEdit } from 'react-icons/md';
-import { $params, $path } from 'remix-routes';
+import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
 import AdminLinkButton from '~/components/AdminLinkButton';
 import { ORDERS } from '~/components/constants';
@@ -12,65 +11,53 @@ import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
-import ReadSearchInput from '~/features/kanjis/components/ReadSearchInput';
+import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
-import {
-  MAX_IN_RADICAL_STOREKE_COUNT,
-  MIN_IN_RADICAL_STOREKE_COUNT,
-  radicalKanjiQueryParams,
-} from '~/features/kanjis/validators/params';
+import { MAX_IN_RADICAL_STOROKE_COUNT, MIN_IN_RADICAL_STOROKE_COUNT } from '~/features/kanjis/constants';
 import RadicalDefine from '~/features/radicals/components/RadicalDefine';
-import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
-import useMatchesData from '~/hooks/useMatchesData';
-import { useSearch } from '~/hooks/useSearch';
-import { type loader } from '../$codePoint';
+import useRadical from '~/features/radicals/hooks/useRadical';
+import { getRadicalKanji } from '~/features/radicals/services.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' });
+export const loader = async (args: LoaderArgs) => getRadicalKanji(args);
 
 const Radical = () => {
-  const { codePoint } = $params('/radicals/:codePoint', useParams());
-  const data = useMatchesData<typeof loader>($path('/radicals/:codePoint', { codePoint }))!;
-  const { data: kanji, formProps } = useSearch({
-    formId: RADICAL_SEARCH_FORM_ID,
-    validator: radicalKanjiQueryParams,
-    initialData: data,
-    action: $path('/radicals/:codePoint', { codePoint }),
-  });
+  const { radical, kanjis, formProps } = useRadical();
 
   return (
     <Page
-      avatar={data.radical.radical}
+      avatar={radical.radical}
       title="部首別索引"
-      subText={`（現在わ旧日本語字形で部首が「${data.radical.radical}」の漢字が登録されていますが、新日本語字形で部首が「${data.radical.radical}」のものに置換予定です。）`}
+      subText={`（現在わ旧日本語字形で部首が「${radical.radical}」の漢字が登録されていますが、新日本語字形で部首が「${radical.radical}」のものに置換予定です。）`}
       action={
         <AdminLinkButton
           aria-label="radical-edit"
           icon={<MdEdit />}
-          to={$path(`/radicals/:codePoint/edit`, { codePoint: data.radical.code_point })}
+          to={$path(`/radicals/:codePoint/edit`, { codePoint: radical.code_point })}
         />
       }
     >
-      <RadicalDefine radical={data.radical} />
+      <RadicalDefine radical={radical} />
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
-            <ReadSearchInput />
+            <KanjiReadSearchInput />
             <StrokeCountSearchInput
               label="部首内画数"
-              min={MIN_IN_RADICAL_STOREKE_COUNT}
-              max={MAX_IN_RADICAL_STOREKE_COUNT}
+              min={MIN_IN_RADICAL_STOROKE_COUNT}
+              max={MAX_IN_RADICAL_STOROKE_COUNT}
             />
             <RegularSelectRadio />
           </HStack>
         </SearchPanel>
         <OrderTabs orders={ORDERS}>
           <TabPanel>
-            {'kanjisOrderByStrokeCount' in kanji && (
-              <StrokeCountOrder data={kanji.kanjisOrderByStrokeCount} to="/kanjis" />
+            {'kanjisOrderByStrokeCount' in kanjis && (
+              <StrokeCountOrder data={kanjis.kanjisOrderByStrokeCount} to="/kanjis" />
             )}
           </TabPanel>
           <TabPanel>
-            {'kanjisOrderByRead' in kanji && <ReadOrder data={kanji.kanjisOrderByRead} to="/kanjis" />}
+            {'kanjisOrderByRead' in kanjis && <ReadOrder data={kanjis.kanjisOrderByRead} to="/kanjis" />}
           </TabPanel>
         </OrderTabs>
       </ValidatedForm>

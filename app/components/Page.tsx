@@ -1,5 +1,5 @@
-import Main from '../Main';
-import PageInfo from '../PageInfo';
+import Main from './Main';
+import PageInfo from './PageInfo';
 
 type PageProps = React.PropsWithChildren<{
   avatar: React.ReactNode;

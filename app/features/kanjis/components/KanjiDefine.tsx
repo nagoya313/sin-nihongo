@@ -2,7 +2,7 @@ import DataItem from '~/components/DataItem';
 import DataList from '~/components/Datalist';
 import RadicalLink from '~/features/radicals/components/RadicalLink';
 import { HIRAGANA_MATCHER } from '~/utils/schemas/regex';
-import { type getKanjiByCodePoint } from '../models/kanji.server';
+import { type getKanjiByCodePoint } from '../repositories.server';
 
 type KanjiDefineProps = {
   kanji: NonNullable<Awaited<ReturnType<typeof getKanjiByCodePoint>>>;

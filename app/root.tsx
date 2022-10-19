@@ -57,13 +57,23 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   );
 };
 
+const ERROR_PAGE_TITLE = Object.freeze({
+  404: 'Page Not Found',
+  405: 'Method Not Allowed',
+}) as Record<string, string>;
+
+const ERROR_PAGE_MESSAGE = Object.freeze({
+  404: 'お探しのページわ見つかりませんでした。',
+  405: '許可されない操作です。',
+}) as Record<string, string>;
+
 export const CatchBoundary = () => {
   const caught = useCatch();
 
   return (
-    <Document title={caught.status === 404 ? 'Page Not Found' : 'Error'}>
+    <Document title={ERROR_PAGE_TITLE[caught.status.toString()] ?? 'Error'}>
       <Box p={8}>
-        <Text>{caught.status === 404 ? 'お探しのページわ見つかりませんでした。' : caught.statusText}</Text>
+        <Text>{ERROR_PAGE_MESSAGE[caught.status.toString()] ?? caught.statusText}</Text>
       </Box>
     </Document>
   );

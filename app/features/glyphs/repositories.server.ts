@@ -2,8 +2,8 @@ import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { escapeLike } from '~/utils/sql';
-import { GLYPH_READ_LIMIT } from '../constants';
-import { type glyphCreateParams, type glyphQueryParams } from '../validators/params';
+import { GLYPH_READ_LIMIT } from './constants';
+import { type glyphCreateParams, type glyphQueryParams } from './validators';
 
 type QueryParams = ValidatorData<typeof glyphQueryParams>;
 
@@ -11,12 +11,14 @@ export const getGlyphByName = (name: string) =>
   db.selectFrom('glyph').select(['name', 'data']).where('name', '=', name).executeTakeFirst();
 
 export const getGlyph = async (name: string) => (await getGlyphByName(name)) ?? { name, data: null };
+
 export const getDrawableGlyphByName = async (name: string) => {
   const glyph = await getGlyphByName(name);
   if (glyph == null) return null;
   const glyphLoader = new GlyphLoader(getGlyph);
   return { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) };
 };
+
 export const getGlyphPreview = async (data: string) => {
   const glyph = { name: 'preview', data };
   const glyphLoader = new GlyphLoader(getGlyph);
@@ -37,24 +39,14 @@ export const getGlyphsOrderByName = ({ q, offset }: QueryParams) =>
 export const getGlyphs = async (query: QueryParams) => {
   const glyphs = await getGlyphsOrderByName(query);
 
-  const result = [];
   // 直列にしないとコネクションプールが盡きる
+  const result = [];
   for (const glyph of glyphs) {
     const glyphLoader = new GlyphLoader(getGlyph);
     result.push({ ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) });
   }
 
   return result;
-
-  /* const result = await Promise.allSettled(
-    glyphs.map(async (glyph) => {
-      const glyphLoader = new GlyphLoader(getGlyph);
-      return { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) };
-    }),
-  );
-
-  return filterPromiseFulfilledResults(result).map(({ value }) => value);
-  */
 };
 
 export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>

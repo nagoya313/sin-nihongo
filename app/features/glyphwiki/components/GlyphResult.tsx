@@ -4,7 +4,7 @@ import { ValidatedForm } from 'remix-validated-form';
 import ClipboardCopyButton from '~/components/ClipboardCopyButton';
 import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
-import { glyphCreateParams } from '~/features/glyphs/validators/params';
+import { glyphCreateParams } from '~/features/glyphs/validators';
 import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
 import KageData from '~/features/kage/components/KageData';
 import type useMatchesData from '~/hooks/useMatchesData';

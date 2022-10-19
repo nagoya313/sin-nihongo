@@ -1,43 +1,38 @@
 import { HStack, Icon } from '@chakra-ui/react';
-import { json, type LoaderArgs, type MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
-import { MdBuild, MdOutlineFontDownload } from 'react-icons/md';
+import { type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { MdBuild } from 'react-icons/md';
 import { Virtuoso } from 'react-virtuoso';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
 import AdminLinkButton from '~/components/AdminLinkButton';
 import FormControl from '~/components/FormControl';
+import { GlyphIcon } from '~/components/icons';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import TextInput from '~/components/TextInput';
 import GlyphItem from '~/features/glyphs/components/GlyphItem';
-import { GLYPH_READ_LIMIT, GLYPH_SEARCH_FORM_ID } from '~/features/glyphs/constants';
-import { getGlyphs } from '~/features/glyphs/models/glyph.server';
-import { glyphQueryParams } from '~/features/glyphs/validators/params';
-import { useInfinitySearch } from '~/hooks/useSearch';
-import { authGuard, checkedQuery } from '~/utils/request.server';
+import useGlyphs from '~/features/glyphs/hooks/useGlyphs';
+import { destroy, get } from '~/features/glyphs/services.server';
+import { actionResponse, authGuard } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ一覧' });
 
 export const loader = async ({ request }: LoaderArgs) => {
   await authGuard(request);
-  const query = await checkedQuery(request, glyphQueryParams);
-  return json({ glyphs: await getGlyphs(query), offset: query.offset });
+  return get(request);
+};
+
+export const action = async ({ request }: ActionArgs) => {
+  await authGuard(request);
+  return actionResponse(request, { DELETE: () => destroy(request) });
 };
 
 const Index = () => {
-  const { data, formProps, moreLoad } = useInfinitySearch({
-    key: 'glyphs',
-    formId: GLYPH_SEARCH_FORM_ID,
-    validator: glyphQueryParams,
-    initialData: useLoaderData<typeof loader>(),
-    readLimit: GLYPH_READ_LIMIT,
-    initialDateUpdateable: true,
-  });
+  const { data, formProps, moreLoad } = useGlyphs();
 
   return (
     <Page
-      avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />}
+      avatar={<Icon fontSize={24} as={GlyphIcon} />}
       title="グリフ一覧"
       action={<AdminLinkButton aria-label="glyph-build" icon={<MdBuild />} to={$path('/glyphs/new')} />}
     >

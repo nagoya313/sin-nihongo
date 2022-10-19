@@ -21,10 +21,10 @@ import TextInput from '~/components/TextInput';
 import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
-import { kanjiGlyphCreateParams, kanjiGlyphUnlinkParams } from '~/features/kanjis/validators/params';
+import { kanjiGlyphCreateParams, kanjiGlyphUnlinkParams } from '~/features/kanjis/validators';
 import { useOptionalUser } from '~/hooks/useUser';
 import { type action } from '~/routes/kanjis/index';
-import { type getKanjis } from '../models/kanji.server';
+import { type getKanjis } from '../repositories.server';
 import KanjiLink from './KanjiLink';
 
 type EditableGlyphPopoverProps = {

@@ -1,9 +1,10 @@
 import DataItem from '~/components/DataItem';
 import DataList from '~/components/Datalist';
-import { type getRadicalByCodePoint } from '../models/radical.server';
+import { QueryResultData } from '~/utils/types';
+import { type getRadicalByCodePoint } from '../repositories.server';
 
 type RadicalDefineProps = {
-  radical: NonNullable<Awaited<ReturnType<typeof getRadicalByCodePoint>>>;
+  radical: QueryResultData<typeof getRadicalByCodePoint>;
 };
 
 const RadicalDefine = ({ radical }: RadicalDefineProps) => (

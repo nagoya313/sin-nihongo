@@ -1,4 +1,10 @@
-import { Response, type ActionArgs, type DataFunctionArgs, type LoaderArgs } from '@remix-run/node';
+import {
+  Response,
+  type ActionArgs,
+  type ActionFunction,
+  type DataFunctionArgs,
+  type LoaderArgs,
+} from '@remix-run/node';
 import { validationError, type Validator } from 'remix-validated-form';
 import { authenticator } from '~/session.server';
 
@@ -32,4 +38,17 @@ export const checkedFormData = async <TQuery>(request: ActionArgs['request'], va
     throw validationError(data.error);
   }
   return data.data;
+};
+
+type ActionResponse = ReturnType<ActionFunction>;
+
+type Actions<TResponse extends ActionResponse> = Partial<Record<'POST' | 'PATCH' | 'DELETE', () => TResponse>>;
+
+export const actionResponse = <TResponse extends ActionResponse>(
+  request: ActionArgs['request'],
+  actions: Actions<TResponse>,
+) => {
+  const service = actions[request.method as keyof typeof actions];
+  if (service != null) return service();
+  throw new Response('Method not allowed', { status: 405 });
 };

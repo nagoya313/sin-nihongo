@@ -1,4 +1,6 @@
 export const KANJI_SEARCH_FORM_ID = 'kanji-search';
-export const STROKE_COUNT_SEARCH_FROM_ID = 'stroke-count-search';
-export const READ_SEARCH_FROM_ID = 'read-search';
 export const KANJI_READ_LIMIT = 20;
+export const MIN_STOROKE_COUNT = 1;
+export const MAX_STOROKE_COUNT = 30;
+export const MIN_IN_RADICAL_STOROKE_COUNT = -1;
+export const MAX_IN_RADICAL_STOROKE_COUNT = 25;

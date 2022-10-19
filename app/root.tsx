@@ -1,4 +1,4 @@
-import { Box, ChakraProvider, Heading, Text, useToast, VStack } from '@chakra-ui/react';
+import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 import {
   json,
   type ErrorBoundaryComponent,
@@ -6,14 +6,12 @@ import {
   type LoaderArgs,
   type MetaFunction,
 } from '@remix-run/node';
-import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
-import { useEffect } from 'react';
+import { useCatch } from '@remix-run/react';
 import { z } from 'zod';
-import Document from './document';
+import Layout from './components/Layout';
+import Document from './Document';
 import { useOptionalUser } from './hooks/useUser';
-import Layout from './layout';
 import { authenticator } from './session.server';
-import { theme } from './styles/theme';
 import { getFlashMessage } from './utils/flash.server';
 import { errorMap } from './utils/schemas/errorMap';
 
@@ -43,20 +41,18 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 
   return (
     <Document title="Error">
-      <ChakraProvider theme={theme}>
-        <Box p={8}>
-          {user != null ? (
-            <>
-              <Heading mb={8}>Application Error</Heading>
-              <VStack align="start" p={4} overflowX="scroll" whiteSpace="pre" bg="white">
-                <Text color="red">{error.stack}</Text>
-              </VStack>
-            </>
-          ) : (
-            <Text>なんらかのエラーが発生しました。</Text>
-          )}
-        </Box>
-      </ChakraProvider>
+      <Box p={8}>
+        {user != null ? (
+          <>
+            <Heading mb={8}>Application Error</Heading>
+            <VStack align="start" p={4} overflowX="scroll" whiteSpace="pre" bg="white">
+              <Text color="red">{error.stack}</Text>
+            </VStack>
+          </>
+        ) : (
+          <Text>なんらかのエラーが発生しました。</Text>
+        )}
+      </Box>
     </Document>
   );
 };
@@ -65,27 +61,12 @@ export const CatchBoundary = () => {
   const caught = useCatch();
 
   return (
-    <Document title={caught.status === 404 ? 'Page Not Found' : undefined}>
-      <ChakraProvider theme={theme}>
-        <Box p={8}>
-          <Text>{caught.status === 404 ? 'お探しのページわ見つかりませんでした。' : caught.statusText}</Text>
-        </Box>
-      </ChakraProvider>
+    <Document title={caught.status === 404 ? 'Page Not Found' : 'Error'}>
+      <Box p={8}>
+        <Text>{caught.status === 404 ? 'お探しのページわ見つかりませんでした。' : caught.statusText}</Text>
+      </Box>
     </Document>
   );
-};
-
-const Toaster = () => {
-  const { flash } = useLoaderData<typeof loader>();
-  const toast = useToast();
-
-  useEffect(() => {
-    if (flash != null) {
-      toast({ title: flash.message, status: flash.status });
-    }
-  }, [flash, toast]);
-
-  return <Outlet />;
 };
 
 const App = () => {
@@ -93,11 +74,7 @@ const App = () => {
 
   return (
     <Document>
-      <ChakraProvider theme={theme}>
-        <Layout>
-          <Toaster />
-        </Layout>
-      </ChakraProvider>
+      <Layout />
     </Document>
   );
 };

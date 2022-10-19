@@ -1,13 +1,12 @@
 import { Divider, VStack } from '@chakra-ui/react';
 import { Fragment } from 'react';
-import type useMatchesData from '~/hooks/useMatchesData';
-import { glyphsToBuhin } from '~/kage/kageData';
+import { glyphsToBuhin } from '~/features/kage/models/kageData';
 import { type loader } from '~/routes/glyphwiki';
-import { type UnionSelect } from '~/utils/types';
+import { type LoaderData, type UnionSelect } from '~/utils/types';
 import GlyphResult from './GlyphResult';
 
 type GlyphSearchResultProps = {
-  glyphs: UnionSelect<ReturnType<typeof useMatchesData<typeof loader>>, 'glyphs'>['glyphs'];
+  glyphs: UnionSelect<LoaderData<typeof loader>, 'glyphs'>['glyphs'];
 };
 
 const GlyphSearchResult = ({ glyphs }: GlyphSearchResultProps) => {

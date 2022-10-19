@@ -13,6 +13,7 @@ import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import TextInput from '~/components/TextInput';
 import { getGlyph, getGlyphByName, getGlyphPreview, updateGlyph } from '~/features/glyphs/models/glyph.server';
+import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
@@ -34,8 +35,7 @@ import {
   MIN_STOREKE_COUNT,
 } from '~/features/kanjis/validators/params';
 import { useInfinitySearch } from '~/hooks/useSearch';
-import GlyphLoader from '~/kage/GlyphLoader';
-import { setFlashMessage } from '~/session.server';
+import { setFlashMessage } from '~/utils/flash.server';
 import { authGuard, checkedFormData, checkedQuery } from '~/utils/request.server';
 
 export const loader = async ({ request }: LoaderArgs) => {

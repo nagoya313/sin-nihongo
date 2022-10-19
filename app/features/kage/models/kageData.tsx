@@ -1,6 +1,6 @@
 import { Buhin, Kage, Polygons } from '@kurgm/kage-engine';
-import type { ReadonlyDeep } from 'type-fest';
-import { type Glyph } from './types';
+import { type ReadonlyDeep } from 'type-fest';
+import { type Glyph } from '../types';
 
 export type DrawableGlyph = ReadonlyDeep<{
   name: string;

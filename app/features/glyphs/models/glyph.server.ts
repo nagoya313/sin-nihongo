@@ -1,10 +1,9 @@
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
-import GlyphLoader from '~/kage/GlyphLoader';
+import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { escapeLike } from '~/utils/sql';
 import { GLYPH_READ_LIMIT } from '../constants';
-import type { glyphCreateParams } from '../validators/params';
-import { type glyphQueryParams } from '../validators/params';
+import { type glyphCreateParams, type glyphQueryParams } from '../validators/params';
 
 type QueryParams = ValidatorData<typeof glyphQueryParams>;
 

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import { getGlyph, getGlyphByName } from '~/features/glyphs/models/glyph.server';
-import GlyphLoader from '~/kage/GlyphLoader';
-import { type Glyph } from '~/kage/types';
+import GlyphLoader from '~/features/kage/models/GlyphLoader';
+import { type Glyph } from '~/features/kage/types';
 import { type GlyphwikiData } from '../types';
 
 const GLYPHWIKI_API_ENDPOINT = 'https://glyphwiki.org/api/glyph';
@@ -49,13 +49,5 @@ export const getGlyphwikiForm = async (name: string) => {
     drawNecessaryGlyphs.push(await toFormData(g));
   }
 
-  // const drawNecessaryGlyphs = await Promise.allSettled(glyph.drawNecessaryGlyphs.map(toFormData));
-
-  return {
-    glyphs: [
-      await toFormData(glyph),
-      ...drawNecessaryGlyphs,
-      // ...filterPromiseFulfilledResults(drawNecessaryGlyphs).map(({ value }) => value),
-    ] as const,
-  };
+  return { glyphs: [await toFormData(glyph), ...drawNecessaryGlyphs] as const };
 };

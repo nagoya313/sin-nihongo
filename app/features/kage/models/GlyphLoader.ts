@@ -1,6 +1,6 @@
 import { flatten, uniqBy } from 'lodash';
+import { type GetterType, type Glyph } from '../types';
 import Strokes from './Strokes';
-import { type GetterType, type Glyph } from './types';
 
 export default class GlyphLoader<TGlyph extends Glyph> {
   constructor(getter: GetterType<TGlyph>) {

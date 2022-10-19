@@ -2,9 +2,9 @@ import { Box, Divider, HStack, IconButton, Spacer, Text, useColorModeValue, VSta
 import { Form, useTransition } from '@remix-run/react';
 import { MdOutlineDelete } from 'react-icons/md';
 import { $path } from 'remix-routes';
-import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
-import KageData from '~/components/KageData';
-import { getGlyphCanvasProps, type DrawableGlyph } from '~/kage/kageData';
+import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
+import KageData from '~/features/kage/components/KageData';
+import { getGlyphCanvasProps, type DrawableGlyph } from '~/features/kage/models/kageData';
 import { useShadow } from '../../../hooks/useColor';
 
 type GlyphItemProps = {

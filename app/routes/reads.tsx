@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ kanjis: await getKanjisOrderByRead(query) });
 };
 
-const Index = () => {
+const Reads = () => {
   const { data, formProps } = useSearch({
     formId: READ_SEARCH_FROM_ID,
     validator: kanjiQueryParams,
@@ -48,4 +48,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Reads;

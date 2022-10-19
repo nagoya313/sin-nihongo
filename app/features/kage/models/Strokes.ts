@@ -1,9 +1,9 @@
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 import uniqBy from 'lodash/unionBy';
+import { type Glyph } from '../types';
 import Columns from './Columns';
 import LinkColumns from './LinkColumns';
-import { type Glyph } from './types';
 
 export default class Strokes<TGlyph extends Pick<Glyph, 'data'>> {
   constructor(glyph: TGlyph) {

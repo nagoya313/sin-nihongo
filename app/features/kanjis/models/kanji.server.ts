@@ -2,8 +2,8 @@ import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import { getGlyph, getGlyphByName } from '~/features/glyphs/models/glyph.server';
-import GlyphLoader from '~/kage/GlyphLoader';
-import { escapeLike } from '~/utils/sql';
+import GlyphLoader from '~/features/kage/models/GlyphLoader';
+import { escapeLike, kanaTranslate } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from '../constants';
 import { type kanjiGlyphCreateParams, type kanjiQueryParams } from '../validators/params';
 
@@ -106,13 +106,7 @@ export const getKanjisOrderByRead = ({ strokeCount, regular, read, direction }: 
     .selectFrom((db) =>
       db
         .selectFrom('kanji')
-        .select([
-          sql<string>`translate(left(read, 1), 'ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッツテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワン', 'ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちっつてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわん')`.as(
-            'read_front',
-          ),
-          'read',
-          'code_point',
-        ])
+        .select([kanaTranslate.as('read_front'), 'read', 'code_point'])
         .innerJoin('kanji_read', 'code_point', 'kanji_read.kanji_code_point')
         .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
         .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))

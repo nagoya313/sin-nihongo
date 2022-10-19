@@ -1,7 +1,7 @@
 import { useColorModeValue } from '@chakra-ui/react';
 import { type Buhin } from '@kurgm/kage-engine';
 import { Layer, Rect, Shape, Stage } from 'react-konva';
-import { makeGlyph } from '~/kage/kageData';
+import { makeGlyph } from '../models/kageData';
 
 type GlyphCanvasProps = {
   name?: string;

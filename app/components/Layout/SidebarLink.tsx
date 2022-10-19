@@ -1,12 +1,14 @@
-import { Flex, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Icon, useColorModeValue } from '@chakra-ui/react';
 import { NavLink } from '@remix-run/react';
 import { useSetAtom } from 'jotai';
 import { closeSidebarAtom } from '~/atoms/sidebarAtom';
 
+const iconProps = Object.freeze({ mr: 4, fontSize: 16 });
+
 type SideBarLinkProps = {
   title: string;
   to: string;
-  icon: React.ReactNode;
+  icon?: React.ComponentProps<typeof Icon>['as'];
 };
 
 const SideBarLink = ({ to, title, icon }: SideBarLinkProps) => {
@@ -29,7 +31,7 @@ const SideBarLink = ({ to, title, icon }: SideBarLinkProps) => {
           color={isActive ? selectedColor : undefined}
           onClick={onClose}
         >
-          {icon}
+          <Icon {...iconProps} as={icon} />
           {title}
         </Flex>
       )}

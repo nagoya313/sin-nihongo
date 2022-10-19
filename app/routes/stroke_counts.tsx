@@ -22,7 +22,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ kanjis: await getKanjisOrderByStrokeCount(query) });
 };
 
-const Index = () => {
+const StrokeCounts = () => {
   const { data, formProps } = useSearch({
     formId: STROKE_COUNT_SEARCH_FROM_ID,
     validator: kanjiQueryParams,
@@ -46,4 +46,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default StrokeCounts;

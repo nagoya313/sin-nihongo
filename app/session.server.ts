@@ -22,20 +22,20 @@ const sessionStorage = createCookieSessionStorage({
 
 export const authenticator = new Authenticator<User>(sessionStorage);
 
-const auth0Strategy = new Auth0Strategy(
-  {
-    callbackURL: AUTH0_CALLBACK_URL,
-    clientID: AUTH0_CLIENT_ID,
-    clientSecret: AUTH0_CLIENT_SECRET,
-    domain: AUTH0_DOMAIN,
-  },
-  async ({ profile }) => ({
-    email: profile.emails[0].value,
-    displayName: profile.displayName,
-    picture: profile.photos[0].value,
-  }),
+authenticator.use(
+  new Auth0Strategy(
+    {
+      callbackURL: AUTH0_CALLBACK_URL,
+      clientID: AUTH0_CLIENT_ID,
+      clientSecret: AUTH0_CLIENT_SECRET,
+      domain: AUTH0_DOMAIN,
+    },
+    async ({ profile }) => ({
+      email: profile.emails[0].value,
+      displayName: profile.displayName,
+      picture: profile.photos[0].value,
+    }),
+  ),
 );
-
-authenticator.use(auth0Strategy);
 
 export const { getSession, commitSession, destroySession } = sessionStorage;

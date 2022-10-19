@@ -6,10 +6,16 @@ import JumpList from '~/components/JumpList';
 import WordItem from '~/components/WordItem';
 import QueryResult from './QueryResult';
 
-const strokeCount = (data: any) => ('stroke_count' in data ? data.stroke_count : data.in_radical_stroke_count);
+type Data = {
+  stroke_count?: number;
+  in_radical_stroke_count?: number;
+  code_points: ReadonlyArray<number>;
+};
+
+const strokeCount = (data: Data) => ('stroke_count' in data ? data.stroke_count : data.in_radical_stroke_count);
 
 type StrokeCountOrderProps = {
-  data: ReadonlyArray<{ stroke_count?: number; in_radical_stroke_count?: number; code_points: ReadonlyArray<number> }>;
+  data: ReadonlyArray<Data>;
   to: React.ComponentProps<typeof WordItem>['to'];
 };
 

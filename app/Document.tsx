@@ -1,7 +1,9 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import { withEmotionCache } from '@emotion/react';
 import { Links, LiveReload, Meta, Scripts, ScrollRestoration } from '@remix-run/react';
 import { useContext, useEffect } from 'react';
 import { ClientStyleContext, ServerStyleContext } from './context';
+import { theme } from './styles/theme';
 
 type DocumentProps = React.PropsWithChildren<{
   title?: string;
@@ -33,7 +35,7 @@ const Document = withEmotionCache(({ title, children }: DocumentProps, emotionCa
         ))}
       </head>
       <body>
-        {children}
+        <ChakraProvider theme={theme}>{children}</ChakraProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

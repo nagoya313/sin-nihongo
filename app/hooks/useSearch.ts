@@ -2,9 +2,9 @@ import { useFetcher } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { useFormContext, type FormProps, type Validator } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
-import { SEARCH_WAIT } from '~/components/constants';
 
-const EMPTY_DATA = {};
+const EMPTY_DATA = Object.freeze({});
+const SEARCH_WAIT = 500;
 
 type UseSearchProps<TParamsType, TData> = {
   formId: string;

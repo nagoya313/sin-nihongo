@@ -25,7 +25,6 @@ export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' 
 
 export const loader = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, radicalQueryParams);
-  console.log(query);
   return json(
     query.orderBy === 'code_point'
       ? { radicals: await getRadicalsOrderByCodePoint(query) }

@@ -1,5 +1,6 @@
 import {
   Box,
+  HStack,
   IconButton,
   Popover,
   PopoverAnchor,
@@ -14,15 +15,15 @@ import { useEffect, useState } from 'react';
 import { MdOutlineEdit } from 'react-icons/md';
 import { ValidatedForm } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
-import GlyphCanvasSuspense from '~/components/GlyphCanvasSuspense';
 import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
 import TextInput from '~/components/TextInput';
 import KageTextArea from '~/features/glyphs/components/KageTextArea';
+import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
+import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { kanjiGlyphCreateParams, kanjiGlyphUnlinkParams } from '~/features/kanjis/validators/params';
 import { useOptionalUser } from '~/hooks/useUser';
-import { getGlyphCanvasProps } from '~/kage/kageData';
-import { type action } from '~/routes/kanjis';
+import { type action } from '~/routes/kanjis/index';
 import { type getKanjis } from '../models/kanji.server';
 import KanjiLink from './KanjiLink';
 
@@ -63,38 +64,42 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
       </PopoverAnchor>
       <PopoverContent>
         <PopoverBody>
-          <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
-          <ValidatedForm
-            id={`KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`}
-            method={kanji.glyph != null ? 'patch' : 'post'}
-            validator={kanjiGlyphCreateParams}
-            defaultValues={{
-              name: kanji.glyph?.name,
-              data: kanji.glyph?.data,
-              codePoint: kanji.code_point,
-              formId: `KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`,
-            }}
-          >
+          <HStack>
             <VStack align="start">
-              <FormControl name="name" label="なまえ" isRequired>
-                <TextInput name="name" isReadOnly={!!kanji.glyph?.name} />
-              </FormControl>
-              <FormControl name="data" label="影算料" isRequired>
-                <KageTextArea name="data" onDataChange={setPreview} />
-              </FormControl>
-              <HiddenInput name="codePoint" />
-              <HiddenInput name="formId" />
-              <SubmitButton>{kanji.glyph != null ? '更新する' : '作成する'}</SubmitButton>
+              <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
+              <ValidatedForm
+                id={`KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`}
+                method={kanji.glyph != null ? 'patch' : 'post'}
+                validator={kanjiGlyphCreateParams}
+                defaultValues={{
+                  name: kanji.glyph?.name,
+                  data: kanji.glyph?.data,
+                  codePoint: kanji.code_point,
+                  formId: `KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`,
+                }}
+              >
+                <VStack align="start">
+                  <FormControl name="name" label="なまえ" isRequired>
+                    <TextInput name="name" isReadOnly={!!kanji.glyph?.name} />
+                  </FormControl>
+                  <FormControl name="data" label="影算料" isRequired>
+                    <KageTextArea name="data" onDataChange={setPreview} />
+                  </FormControl>
+                  <HiddenInput name="codePoint" />
+                  <HiddenInput name="formId" />
+                  <SubmitButton>{kanji.glyph != null ? '更新する' : '作成する'}</SubmitButton>
+                </VStack>
+              </ValidatedForm>
             </VStack>
-          </ValidatedForm>
-          <ValidatedForm
-            method="delete"
-            validator={kanjiGlyphUnlinkParams}
-            defaultValues={{ codePoint: kanji.code_point }}
-          >
-            <HiddenInput name="codePoint" />
-            <SubmitButton>{kanji.glyph != null ? '更新する' : '作成する'}</SubmitButton>
-          </ValidatedForm>
+            <ValidatedForm
+              method="delete"
+              validator={kanjiGlyphUnlinkParams}
+              defaultValues={{ codePoint: kanji.code_point }}
+            >
+              <HiddenInput name="codePoint" />
+              <SubmitButton>{kanji.glyph != null ? '更新する' : '作成する'}</SubmitButton>
+            </ValidatedForm>
+          </HStack>
         </PopoverBody>
       </PopoverContent>
     </Popover>

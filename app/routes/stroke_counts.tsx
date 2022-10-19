@@ -8,7 +8,7 @@ import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
-import RegularSelectRadio from '~/features/kanjis/components/RadicalSelectInput';
+import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { STROKE_COUNT_SEARCH_FROM_ID } from '~/features/strokeCounts/constants';
 import { get } from '~/features/strokeCounts/services.server';
 import { strokeCountKanjiQueryParams } from '~/features/strokeCounts/validators';

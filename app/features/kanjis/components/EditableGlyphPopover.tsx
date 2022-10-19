@@ -21,11 +21,12 @@ import TextInput from '~/components/TextInput';
 import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
-import { kanjiGlyphCreateParams, kanjiGlyphUnlinkParams } from '~/features/kanjis/validators';
+import { kanjiGlyphCreateParams } from '~/features/kanjis/validators';
 import { useOptionalUser } from '~/hooks/useUser';
 import { type action } from '~/routes/kanjis/index';
 import { QueryResultData } from '~/utils/types';
 import { type getKanjis } from '../repositories.server';
+import GlyphUnlinkForm from './GlyphUnlinkForm';
 import KanjiLink from './KanjiLink';
 
 type EditableGlyphPopoverProps = {
@@ -65,7 +66,7 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
       </PopoverAnchor>
       <PopoverContent>
         <PopoverBody>
-          <HStack>
+          <HStack align="start">
             <VStack align="start">
               <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
               <ValidatedForm
@@ -92,14 +93,7 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
                 </VStack>
               </ValidatedForm>
             </VStack>
-            <ValidatedForm
-              method="delete"
-              validator={kanjiGlyphUnlinkParams}
-              defaultValues={{ codePoint: kanji.code_point }}
-            >
-              <HiddenInput name="codePoint" />
-              <SubmitButton>{kanji.glyph != null ? '更新する' : '作成する'}</SubmitButton>
-            </ValidatedForm>
+            <GlyphUnlinkForm kanji={kanji} />
           </HStack>
         </PopoverBody>
       </PopoverContent>

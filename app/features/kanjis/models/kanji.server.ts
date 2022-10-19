@@ -32,7 +32,6 @@ export const getKanjisOrderByCodePoint = ({
       'radical_code_point',
       'glyph_name',
       sql<ReadonlyArray<string>>`array_agg(read order by read)`.as('reads'),
-      sql<string>`chr(kanji.radical_code_point)`.as('radical'),
     ])
     .if(kanji != null, (qb) => qb.where('code_point', '=', kanji!))
     .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
@@ -146,7 +145,6 @@ export const getKanjiByCodePoint = (codePoint: number) =>
       'glyph_name',
       sql<ReadonlyArray<string>>`array_agg(distinct read order by read)`.as('reads'),
       sql<string>`chr(kanji.code_point)`.as('kanji'),
-      sql<string>`chr(kanji.radical_code_point)`.as('radical'),
     ])
     .where('kanji.code_point', '=', codePoint)
     .groupBy('kanji.code_point')

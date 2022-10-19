@@ -1,19 +1,9 @@
-import {
-  Badge,
-  Box,
-  Divider,
-  HStack,
-  Link as CUILink,
-  Spacer,
-  Text,
-  useColorModeValue,
-  VStack,
-} from '@chakra-ui/react';
-import { Link } from '@remix-run/react';
+import { Badge, Box, Divider, HStack, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 import { MdInfoOutline } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import LinkButton from '~/components/LinkButton';
-import { useLinkColor, useShadow } from '../../../hooks/useColor';
+import RadicalLink from '~/features/radicals/components/RadicalLink';
+import { useShadow } from '../../../hooks/useColor';
 import { type getKanjis } from '../models/kanji.server';
 import EditableGlyphPopover from './EditableGlyphPopover';
 import JisLevelBadge from './JisLevelBadge';
@@ -39,13 +29,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
       <VStack align="start">
         <HStack>
           <Text fontSize="sm">部首：</Text>
-          <CUILink
-            as={Link}
-            to={$path('/radicals/:codePoint', { codePoint: kanji.radical_code_point })}
-            color={useLinkColor()}
-          >
-            {kanji.radical}
-          </CUILink>
+          <RadicalLink codePoint={kanji.radical_code_point} />
         </HStack>
         <Divider />
         <HStack>

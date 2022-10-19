@@ -1,7 +1,5 @@
-import { Flex, Heading, Link as CUILink, Text } from '@chakra-ui/react';
-import { Link } from '@remix-run/react';
-import { $path } from 'remix-routes';
-import { useLinkColor } from '~/hooks/useColor';
+import { Flex, Heading, Text } from '@chakra-ui/react';
+import RadicalLink from '~/features/radicals/components/RadicalLink';
 import { HIRAGANA_MATCHER } from '~/utils/schemas/regex';
 import { type getKanjiByCodePoint } from '../models/kanji.server';
 
@@ -34,13 +32,7 @@ const KanjiDefine = ({ kanji, sames }: KanjiDefineProps) => (
       部首
     </Heading>
     <Text as="dd" w="70%">
-      <CUILink
-        as={Link}
-        to={$path('/radicals/:codePoint', { codePoint: kanji.radical_code_point })}
-        color={useLinkColor()}
-      >
-        {kanji.radical}
-      </CUILink>
+      <RadicalLink codePoint={kanji.radical_code_point} />
     </Text>
     <Heading as="dt" size="sm" w="30%">
       統合

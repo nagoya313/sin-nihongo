@@ -7,6 +7,8 @@ import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
+import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
+import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { STROKE_COUNT_SEARCH_FROM_ID } from '~/features/strokeCounts/constants';
@@ -30,7 +32,11 @@ const StrokeCounts = () => {
         <SearchPanel>
           <HStack align="center">
             <KanjiReadSearchInput />
+          </HStack>
+          <HStack align="center">
             <RegularSelectRadio />
+            <ForNameSelectRadio />
+            <JisLevelSelectRadio />
           </HStack>
         </SearchPanel>
         <OrderTabs orders={[{ key: 'stroke_count', label: '画数順' }]}>

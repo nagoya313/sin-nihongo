@@ -1,9 +1,9 @@
 import isEqual from 'lodash/isEqual';
-import { assert } from 'vitest';
-import { ZodObject, ZodType } from 'zod';
+import { ZodType } from 'zod';
 
+// zfd 由來の ZodEffects は instanceof ZodType が眞でないらしい？
 export const toAcceptValue = (schema: ZodType, value: unknown) => {
-  assert(schema instanceof ZodType, 'schema is not zod schema.');
+  // assert(schema instanceof ZodType, 'schema is not zod schema.');
   const pass = schema.safeParse(value).success;
   const stringifyValues = JSON.stringify(value);
 
@@ -15,7 +15,7 @@ export const toAcceptValue = (schema: ZodType, value: unknown) => {
 };
 
 export const toAcceptValues = (schema: ZodType, values: ReadonlyArray<unknown>) => {
-  assert(schema instanceof ZodType, 'schema is not zod schema.');
+  // assert(schema instanceof ZodType, 'schema is not zod schema.');
   const pass = values.every((value) => schema.safeParse(value).success);
   const stringifyValues = JSON.stringify(values);
 
@@ -32,7 +32,7 @@ const isPass = (schema: ZodType, property: string, value: unknown) => {
 };
 
 export const toAcceptPropertyValue = (schema: ZodType, property: string, value: unknown) => {
-  assert(schema instanceof ZodObject, 'schema is not zod object schema.');
+  // assert(schema instanceof ZodObject, 'schema is not zod object schema.');
   const pass = isPass(schema, property, value);
   const stringifyValues = JSON.stringify(value);
 
@@ -44,7 +44,7 @@ export const toAcceptPropertyValue = (schema: ZodType, property: string, value: 
 };
 
 export const toAcceptPropertyValues = (schema: ZodType, property: string, values: ReadonlyArray<unknown>) => {
-  assert(schema instanceof ZodObject, 'schema is not zod object schema.');
+  // assert(schema instanceof ZodObject, 'schema is not zod object schema.');
   const pass = values.every((value) => isPass(schema, property, value));
   const stringifyValues = JSON.stringify(values);
 
@@ -56,7 +56,7 @@ export const toAcceptPropertyValues = (schema: ZodType, property: string, values
 };
 
 export const toHaveInvalidMessage = (schema: ZodType, value: unknown, errorMessage: string) => {
-  assert(schema instanceof ZodType, 'schema is not zod schema.');
+  // assert(schema instanceof ZodType, 'schema is not zod schema.');
   const parsed = schema.safeParse(value);
   const pass =
     !parsed.success && parsed.error.errors.some(({ path, message }) => isEqual(path, []) && message === errorMessage);

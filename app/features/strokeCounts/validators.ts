@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { booleanRadio } from '~/utils/schemas/booleanRadio';
 import { direction } from '~/utils/schemas/direction';
+import { jisLevelRadio } from '~/utils/schemas/jisLevelRadio';
 import { kana } from '~/utils/schemas/regex';
 
 export const strokeCountKanjiQueryParams = withZod(
@@ -10,5 +11,7 @@ export const strokeCountKanjiQueryParams = withZod(
     direction,
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
+    forName: booleanRadio,
+    jisLevel: jisLevelRadio,
   }),
 );

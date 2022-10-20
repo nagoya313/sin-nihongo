@@ -8,6 +8,8 @@ import Page from '~/components/Page';
 import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
+import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { READ_SEARCH_FROM_ID } from '~/features/reads/constants';
@@ -32,7 +34,11 @@ const Reads = () => {
           <HStack align="center">
             <KanjiReadSearchInput />
             <StrokeCountSearchInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
+          </HStack>
+          <HStack align="center">
             <RegularSelectRadio />
+            <ForNameSelectRadio />
+            <JisLevelSelectRadio />
           </HStack>
         </SearchPanel>
         <OrderTabs orders={[{ key: 'read', label: 'よみかた順' }]}>

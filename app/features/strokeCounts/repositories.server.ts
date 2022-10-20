@@ -6,7 +6,7 @@ import { strokeCountKanjiQueryParams } from './validators';
 
 type QueryParams = ValidatorData<typeof strokeCountKanjiQueryParams>;
 
-export const getKanjisOrderByStrokeCount = ({ regular, read, direction }: QueryParams) =>
+export const getKanjisOrderByStrokeCount = ({ regular, forName, jisLevel, read, direction }: QueryParams) =>
   db
     .selectFrom('kanji')
     .select([
@@ -19,6 +19,8 @@ export const getKanjisOrderByStrokeCount = ({ regular, read, direction }: QueryP
         .where('read', 'like', `${escapeLike(read!)}%`),
     )
     .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
+    .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
+    .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))
     .groupBy('stroke_count')
     .orderBy('stroke_count', direction)
     .execute();

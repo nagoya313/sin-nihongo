@@ -4,6 +4,7 @@ import { zfd } from 'zod-form-data';
 import { booleanRadio } from '~/utils/schemas/booleanRadio';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
+import { jisLevelRadio } from '~/utils/schemas/jisLevelRadio';
 import { kana } from '~/utils/schemas/regex';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from './constants';
 
@@ -26,12 +27,7 @@ export const kanjiQueryParams = withZod(
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
     forName: booleanRadio,
-    jisLevel: zfd.numeric(
-      z
-        .union([z.literal('none'), z.literal(1), z.literal(2)])
-        .default('none')
-        .transform((level) => (level === 'none' ? undefined : level)),
-    ),
+    jisLevel: jisLevelRadio,
     hasGlyph: booleanRadio,
     radical: zfd.numeric(z.number().min(0).optional()),
     offset: zfd.numeric(z.number().min(0).default(0)),

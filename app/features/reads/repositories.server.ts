@@ -6,7 +6,7 @@ import { readKanjiQueryParams } from './validators';
 
 type QueryParams = ValidatorData<typeof readKanjiQueryParams>;
 
-export const getKanjisOrderByRead = ({ strokeCount, regular, read, direction }: QueryParams) =>
+export const getKanjisOrderByRead = ({ strokeCount, regular, forName, jisLevel, read, direction }: QueryParams) =>
   db
     .selectFrom((db) =>
       db
@@ -15,6 +15,8 @@ export const getKanjisOrderByRead = ({ strokeCount, regular, read, direction }: 
         .innerJoin('kanji_read', 'code_point', 'kanji_read.kanji_code_point')
         .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
         .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
+        .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
+        .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))
         .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))
         .as('kanjis'),
     )

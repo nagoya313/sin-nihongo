@@ -19,7 +19,7 @@ import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
 import TextInput from '~/components/TextInput';
 import KageTextArea from '~/features/glyphs/components/KageTextArea';
-import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
+import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { kanjiGlyphCreateParams } from '~/features/kanjis/validators';
 import { useOptionalUser } from '~/hooks/useUser';
@@ -61,14 +61,14 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
       </VStack>
       <PopoverAnchor>
         <Box>
-          <GlyphCanvasSuspense {...getGlyphCanvasProps(kanji.glyph)} />
+          <GlyphCanvas {...getGlyphCanvasProps(kanji.glyph)} />
         </Box>
       </PopoverAnchor>
       <PopoverContent>
         <PopoverBody>
           <HStack align="start">
             <VStack align="start">
-              <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
+              <GlyphCanvas {...getGlyphCanvasProps(preview)} />
               <ValidatedForm
                 id={`KANJI_GLYPH_EDIT_FORM_${kanji.code_point}`}
                 method={kanji.glyph != null ? 'patch' : 'post'}

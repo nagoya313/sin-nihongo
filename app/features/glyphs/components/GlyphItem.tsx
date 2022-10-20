@@ -1,5 +1,5 @@
 import { Box, Divider, HStack, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
-import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
+import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import KageData from '~/features/kage/components/KageData';
 import { type DrawableGlyph, getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { useShadow } from '../../../hooks/useColor';
@@ -19,7 +19,7 @@ const GlyphItem = ({ glyph, isEven }: GlyphItemProps) => (
     bg={useColorModeValue(isEven ? 'purple.50' : 'purple.100', isEven ? 'whiteAlpha.0' : 'whiteAlpha.50')}
     justify="space-between"
   >
-    <GlyphCanvasSuspense {...getGlyphCanvasProps(glyph)} />
+    <GlyphCanvas {...getGlyphCanvasProps(glyph)} />
     <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
       <VStack align="start">
         <HStack>

@@ -3,21 +3,21 @@ import { type Buhin } from '@kurgm/kage-engine';
 import { Suspense, lazy } from 'react';
 import { ClientOnly } from 'remix-utils';
 
-const GlyphCanvas = lazy(() => import('./GlyphCanvas'));
+const GlyphCanvasImpl = lazy(() => import('./GlyphCanvasImpl'));
 
-type GlyphCanvasSuspenseProps = {
+type GlyphCanvasProps = {
   name?: string;
   buhin?: Buhin;
 };
 
-const GlyphCanvasSuspense = ({ name, buhin }: GlyphCanvasSuspenseProps) => (
+const GlyphCanvas = ({ name, buhin }: GlyphCanvasProps) => (
   <ClientOnly fallback={<Skeleton w="200px" h="200px" />}>
     {() => (
       <Suspense fallback={<Skeleton w="200px" h="200px" />}>
-        <GlyphCanvas name={name} buhin={buhin} />
+        <GlyphCanvasImpl name={name} buhin={buhin} />
       </Suspense>
     )}
   </ClientOnly>
 );
 
-export default GlyphCanvasSuspense;
+export default GlyphCanvas;

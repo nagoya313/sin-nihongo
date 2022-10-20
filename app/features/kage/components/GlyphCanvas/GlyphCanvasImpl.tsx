@@ -1,14 +1,14 @@
 import { useColorModeValue } from '@chakra-ui/react';
 import { type Buhin } from '@kurgm/kage-engine';
 import { Layer, Rect, Shape, Stage } from 'react-konva';
-import { makeGlyph } from '../models/kageData';
+import { makeGlyph } from '../../models/kageData';
 
-type GlyphCanvasProps = {
+type GlyphCanvasImplProps = {
   name?: string;
   buhin?: Buhin;
 };
 
-const GlyphCanvas = ({ name, buhin }: GlyphCanvasProps) => {
+const GlyphCanvasImpl = ({ name, buhin }: GlyphCanvasImplProps) => {
   const color = useColorModeValue('black', 'white');
 
   return (
@@ -36,4 +36,4 @@ const GlyphCanvas = ({ name, buhin }: GlyphCanvasProps) => {
   );
 };
 
-export default GlyphCanvas;
+export default GlyphCanvasImpl;

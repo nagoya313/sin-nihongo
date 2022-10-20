@@ -5,7 +5,7 @@ import ClipboardCopyButton from '~/components/ClipboardCopyButton';
 import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
 import { glyphCreateParams } from '~/features/glyphs/validators';
-import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
+import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import KageData from '~/features/kage/components/KageData';
 import type useMatchesData from '~/hooks/useMatchesData';
 import { type loader } from '~/routes/glyphwiki';
@@ -19,7 +19,7 @@ type GlyphResultProps = {
 
 const GlyphResult = ({ q, glyph, buhin }: GlyphResultProps) => (
   <HStack w="full">
-    <GlyphCanvasSuspense name={glyph.name} buhin={buhin} />
+    <GlyphCanvas name={glyph.name} buhin={buhin} />
     <VStack align="start">
       <HStack>
         <VStack align="start">

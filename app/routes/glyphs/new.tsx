@@ -11,7 +11,7 @@ import useGlyphNew from '~/features/glyphs/hooks/useGlyphNew';
 import { create } from '~/features/glyphs/services.server';
 import { glyphCreateParams } from '~/features/glyphs/validators';
 import GlyphSearchResult from '~/features/glyphwiki/components/GlyphSearchResult';
-import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
+import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { actionResponse, authGuard } from '~/utils/request.server';
 
@@ -29,7 +29,7 @@ const New = () => {
     <HStack flex={1} p={8} align="start">
       <VStack align="start">
         <PageInfo avatar={<Icon fontSize={24} as={MdOutlineFontDownload} />} title="グリフ作成" />
-        <GlyphCanvasSuspense {...getGlyphCanvasProps(preview)} />
+        <GlyphCanvas {...getGlyphCanvasProps(preview)} />
         <ValidatedForm method="post" validator={glyphCreateParams}>
           <VStack align="start">
             <FormControl name="name" label="なまえ" isRequired>

@@ -13,10 +13,10 @@ import StrokeCountOrder from '~/components/StrokeCountOrder';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
-import { MAX_IN_RADICAL_STOROKE_COUNT, MIN_IN_RADICAL_STOROKE_COUNT } from '~/features/kanjis/constants';
 import RadicalDefine from '~/features/radicals/components/RadicalDefine';
 import useRadical from '~/features/radicals/hooks/useRadical';
 import { getRadicalKanji } from '~/features/radicals/services.server';
+import { MAX_IN_RADICAL_STROKE_COUNT, MIN_IN_RADICAL_STROKE_COUNT } from '~/features/radicals/validators';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' });
 export const loader = async (args: LoaderArgs) => getRadicalKanji(args);
@@ -44,8 +44,8 @@ const Radical = () => {
             <KanjiReadSearchInput />
             <StrokeCountSearchInput
               label="部首内画数"
-              min={MIN_IN_RADICAL_STOROKE_COUNT}
-              max={MAX_IN_RADICAL_STOROKE_COUNT}
+              min={MIN_IN_RADICAL_STROKE_COUNT}
+              max={MAX_IN_RADICAL_STROKE_COUNT}
             />
             <RegularSelectRadio />
           </HStack>

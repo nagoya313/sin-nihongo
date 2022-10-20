@@ -13,7 +13,7 @@ import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import RadicalReadSearchInput from '~/features/radicals/components/RadicalReadSearchInput';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
 import { get } from '~/features/radicals/services.server';
-import { MAX_STOREKE_COUNT, MIN_STOREKE_COUNT, radicalQueryParams } from '~/features/radicals/validators';
+import { MAX_STROKE_COUNT, MIN_STROKE_COUNT, radicalQueryParams } from '~/features/radicals/validators';
 import { useSearch } from '~/hooks/useSearch';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' });
@@ -32,7 +32,7 @@ const Index = () => {
         <SearchPanel>
           <HStack align="center">
             <RadicalReadSearchInput />
-            <StrokeCountSearchInput min={MIN_STOREKE_COUNT} max={MAX_STOREKE_COUNT} />
+            <StrokeCountSearchInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
           </HStack>
         </SearchPanel>
         <OrderTabs orders={ORDERS}>

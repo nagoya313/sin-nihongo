@@ -1,5 +1,5 @@
-import FormControl from '~/components/FormControl';
-import RadioGroup from '~/components/RadioGroup';
+import FormControl from './FormControl';
+import RadioGroup from './RadioGroup';
 
 type BooleanSelectRadioProps = {
   name: string;

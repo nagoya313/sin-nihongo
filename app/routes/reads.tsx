@@ -12,7 +12,7 @@ import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchIn
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import { READ_SEARCH_FROM_ID } from '~/features/reads/constants';
 import { get } from '~/features/reads/services.server';
-import { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT, readKanjiQueryParams } from '~/features/reads/validators';
+import { MAX_STROKE_COUNT, MIN_STROKE_COUNT, readKanjiQueryParams } from '~/features/reads/validators';
 import { useSearch } from '~/hooks/useSearch';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜音訓索引' });
@@ -31,7 +31,7 @@ const Reads = () => {
         <SearchPanel>
           <HStack align="center">
             <KanjiReadSearchInput />
-            <StrokeCountSearchInput min={MIN_STOROKE_COUNT} max={MAX_STOROKE_COUNT} />
+            <StrokeCountSearchInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
             <RegularSelectRadio />
           </HStack>
         </SearchPanel>

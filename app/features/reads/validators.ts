@@ -5,15 +5,15 @@ import { booleanRadio } from '~/utils/schemas/booleanRadio';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { kana } from '~/utils/schemas/regex';
-import { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT } from '../kanjis/constants';
+import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from '../kanjis/constants';
 
 export const readKanjiQueryParams = withZod(
   z.object({
     direction,
-    strokeCount: zfd.numeric(intRange(MIN_STOROKE_COUNT, MAX_STOROKE_COUNT).optional()),
+    strokeCount: zfd.numeric(intRange(MIN_STROKE_COUNT, MAX_STROKE_COUNT).optional()),
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
   }),
 );
 
-export { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT };
+export { MAX_STROKE_COUNT, MIN_STROKE_COUNT };

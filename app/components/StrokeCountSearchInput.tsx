@@ -1,5 +1,5 @@
-import FormControl from '~/components/FormControl';
-import NumberInput from '~/components/NumberInput';
+import FormControl from './FormControl';
+import NumberInput from './NumberInput';
 
 type StrokeCountSearchInputProps = {
   min: number;

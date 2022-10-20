@@ -2,7 +2,6 @@ import { HStack, Icon } from '@chakra-ui/react';
 import { type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm } from 'remix-validated-form';
-import BooleanSelectRadio from '~/components/BooleanSelectRadio';
 import FormClearButton from '~/components/FormClearButton';
 import FormControl from '~/components/FormControl';
 import { KanjiIcon } from '~/components/icons';
@@ -11,6 +10,7 @@ import SearchPanel from '~/components/SearchPanel';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import TextInput from '~/components/TextInput';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
+import GlyphImplimentationRadio from '~/features/kanjis/components/GlyphImplimentationRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
@@ -18,7 +18,7 @@ import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput'
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import useKanjis from '~/features/kanjis/hooks/useKanjis';
 import { create, destroy, get, update } from '~/features/kanjis/services.server';
-import { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT } from '~/features/kanjis/validators';
+import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from '~/features/kanjis/validators';
 import { actionResponse, authGuard } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜漢字一覧' });
@@ -45,7 +45,7 @@ const Index = () => {
               <TextInput name="kanji" placeholder="一、u4e00" />
             </FormControl>
             <KanjiReadSearchInput />
-            <StrokeCountSearchInput min={MIN_STOROKE_COUNT} max={MAX_STOROKE_COUNT} />
+            <StrokeCountSearchInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
             <RadicalSelectInput />
           </HStack>
           <HStack align="center">
@@ -54,15 +54,7 @@ const Index = () => {
             <JisLevelSelectRadio />
           </HStack>
           <HStack align="center">
-            <BooleanSelectRadio
-              name="hasGlyph"
-              label="グリフ実装"
-              labels={[
-                { key: 'none', label: '指定なし' },
-                { key: 'true', label: '実装済み' },
-                { key: 'false', label: '未実装' },
-              ]}
-            />
+            <GlyphImplimentationRadio />
             <FormClearButton />
           </HStack>
         </SearchPanel>

@@ -1,6 +1,6 @@
 import { Tab, TabList, TabPanels, Tabs } from '@chakra-ui/react';
 import { useControlField, useFormContext } from 'remix-validated-form';
-import OrderButton from '~/components/OrderButton';
+import OrderButton from './OrderButton';
 
 type OrderTabsProps = React.PropsWithChildren<{
   orders: ReadonlyArray<{ key: string; label: string }>;

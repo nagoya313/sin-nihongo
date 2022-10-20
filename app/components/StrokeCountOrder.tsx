@@ -1,10 +1,10 @@
 import { Box, Wrap } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { GroupedVirtuoso, type GroupedVirtuosoHandle } from 'react-virtuoso';
-import GroupLabel from '~/components/GroupLabel';
-import JumpList from '~/components/JumpList';
-import WordItem from '~/components/WordItem';
+import GroupLabel from './GroupLabel';
+import JumpList from './JumpList';
 import QueryResult from './QueryResult';
+import WordItem from './WordItem';
 
 type Data = {
   stroke_count?: number;

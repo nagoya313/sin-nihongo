@@ -12,7 +12,7 @@ import {
   type StackProps,
 } from '@chakra-ui/react';
 import { MdSearch } from 'react-icons/md';
-import { useShadow } from '../hooks/useColor';
+import { useShadow } from '~/hooks/useColor';
 
 type SearchPanelProps = React.PropsWithChildren<{
   align?: StackProps['align'];

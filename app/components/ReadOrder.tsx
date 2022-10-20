@@ -2,11 +2,11 @@ import { Box, Wrap } from '@chakra-ui/react';
 import groupBy from 'lodash/groupBy';
 import { Fragment, useRef } from 'react';
 import { GroupedVirtuoso, type GroupedVirtuosoHandle } from 'react-virtuoso';
-import GroupLabel from '~/components/GroupLabel';
-import JumpList from '~/components/JumpList';
-import QueryResult from '~/components/QueryResult';
-import ReadBadge from '~/components/ReadBadge';
-import WordItem from '~/components/WordItem';
+import GroupLabel from './GroupLabel';
+import JumpList from './JumpList';
+import QueryResult from './QueryResult';
+import ReadBadge from './ReadBadge';
+import WordItem from './WordItem';
 
 type ReadOrderProps = {
   data: ReadonlyArray<{ read_front: string; results: ReadonlyArray<{ code_point: number; read: string }> }>;

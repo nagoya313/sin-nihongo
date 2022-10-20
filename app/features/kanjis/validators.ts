@@ -5,7 +5,7 @@ import { booleanRadio } from '~/utils/schemas/booleanRadio';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { kana } from '~/utils/schemas/regex';
-import { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT } from './constants';
+import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from './constants';
 
 const PG_INT_MAX = 2147483647;
 
@@ -22,7 +22,7 @@ export const kanjiQueryParams = withZod(
             : parseInt(kanji.match(/[\da-f]{4}/)![0]!, 16)
           : undefined,
       ),
-    strokeCount: zfd.numeric(intRange(MIN_STOROKE_COUNT, MAX_STOROKE_COUNT).optional()),
+    strokeCount: zfd.numeric(intRange(MIN_STROKE_COUNT, MAX_STROKE_COUNT).optional()),
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
     forName: booleanRadio,
@@ -60,4 +60,4 @@ export const kanjiGlyphUpdateParams = withZod(
 
 export const kanjiGlyphUnlinkParams = withZod(z.object({ codePoint: zfd.numeric() }));
 
-export { MAX_STOROKE_COUNT, MIN_STOROKE_COUNT };
+export { MAX_STROKE_COUNT, MIN_STROKE_COUNT };

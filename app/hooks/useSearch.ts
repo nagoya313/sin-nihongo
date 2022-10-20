@@ -7,6 +7,13 @@ const EMPTY_DATA = Object.freeze({});
 const SEARCH_WAIT = 500;
 const READ_LIMIT = 20;
 
+export const useSearchDebouncedInput = () => {
+  const { submit } = useFormContext();
+  const debouncedSubmit = useDebouncedCallback(submit, SEARCH_WAIT);
+
+  return debouncedSubmit;
+};
+
 type UseSearchProps<TParamsType, TData> = {
   formId: string;
   validator: Validator<TParamsType>;
@@ -21,14 +28,8 @@ export const useSearch = <TParamsType, TData>({
   action,
 }: UseSearchProps<TParamsType, TData>) => {
   const fetcher = useFetcher<TData>();
-  const { getValues, validate } = useFormContext(formId);
+  const { getValues } = useFormContext(formId);
   const submit = () => fetcher.submit(getValues(), { action });
-  const onChange = useDebouncedCallback(async () => {
-    const result = await validate();
-    if (!result.error) {
-      submit();
-    }
-  }, SEARCH_WAIT);
   const onSubmit: FormProps<TParamsType>['onSubmit'] = (_, { preventDefault }) => {
     submit();
     preventDefault();
@@ -43,7 +44,7 @@ export const useSearch = <TParamsType, TData>({
     }
   }, [fetcher]);
 
-  return { formProps: { id: formId, fetcher, onChange, onSubmit, validator, action }, data };
+  return { formProps: { id: formId, fetcher, onSubmit, validator, action }, data };
 };
 
 type InfinityData<TKey extends string> = {

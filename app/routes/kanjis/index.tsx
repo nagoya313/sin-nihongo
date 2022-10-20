@@ -2,20 +2,20 @@ import { HStack, Icon } from '@chakra-ui/react';
 import { type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
 import { Virtuoso } from 'react-virtuoso';
 import { ValidatedForm } from 'remix-validated-form';
-import FormClearButton from '~/components/FormClearButton';
 import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
+import SearchFormClearButton from '~/components/SearchFormClearButton';
 import SearchPanel from '~/components/SearchPanel';
-import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import SearchStrokeCountInput from '~/components/SearchStrokeCountInput';
 import TextInput from '~/components/TextInput';
 import { KanjiIcon } from '~/components/icons';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import GlyphImplimentationRadio from '~/features/kanjis/components/GlyphImplimentationRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
-import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
+import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import useKanjis from '~/features/kanjis/hooks/useKanjis';
 import { create, destroy, get, update } from '~/features/kanjis/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from '~/features/kanjis/validators';
@@ -44,8 +44,8 @@ const Index = () => {
             <FormControl name="kanji" label="漢字" help="漢字またわコードポイントから検索できます。">
               <TextInput name="kanji" placeholder="一、u4e00" />
             </FormControl>
-            <KanjiReadSearchInput />
-            <StrokeCountSearchInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
+            <SearchKanjiReadInput />
+            <SearchStrokeCountInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
             <RadicalSelectInput />
           </HStack>
           <HStack align="center">
@@ -55,7 +55,7 @@ const Index = () => {
           </HStack>
           <HStack align="center">
             <GlyphImplimentationRadio />
-            <FormClearButton />
+            <SearchFormClearButton />
           </HStack>
         </SearchPanel>
       </ValidatedForm>

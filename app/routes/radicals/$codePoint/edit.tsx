@@ -5,6 +5,7 @@ import { MdClear } from 'react-icons/md';
 import { $params, $path } from 'remix-routes';
 import { ValidatedForm, useControlField } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
+import NumberInput from '~/components/NumberInput';
 import Page from '~/components/Page';
 import SubmitButton from '~/components/SubmitButton';
 import TextInput from '~/components/TextInput';
@@ -38,9 +39,12 @@ const Edit = () => {
         id={RADICAL_EDIT_FORM_ID}
         method="patch"
         validator={radicalUpdateParams}
-        defaultValues={{ reads: radical.reads }}
+        defaultValues={{ strokeCount: radical.stroke_count, reads: radical.reads }}
       >
         <VStack p={8} align="start">
+          <FormControl name="strokeCount" label="画数" isRequired>
+            <NumberInput name="strokeCount" min={1} max={100} />
+          </FormControl>
           {reads?.map((_, index) => (
             <FormControl
               key={index}

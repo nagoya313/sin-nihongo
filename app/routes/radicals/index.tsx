@@ -6,11 +6,11 @@ import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
 import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
+import SearchStrokeCountInput from '~/components/SearchStrokeCountInput';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
-import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import { ORDERS } from '~/components/constants';
 import { RadicalIcon } from '~/components/icons';
-import RadicalReadSearchInput from '~/features/radicals/components/RadicalReadSearchInput';
+import SearchRadicalReadInput from '~/features/radicals/components/SearchRadicalReadInput';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
 import { get } from '~/features/radicals/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT, radicalQueryParams } from '~/features/radicals/validators';
@@ -31,8 +31,8 @@ const Index = () => {
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
-            <RadicalReadSearchInput />
-            <StrokeCountSearchInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
+            <SearchRadicalReadInput />
+            <SearchStrokeCountInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
           </HStack>
         </SearchPanel>
         <OrderTabs orders={ORDERS}>

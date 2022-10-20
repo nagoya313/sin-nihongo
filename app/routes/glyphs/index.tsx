@@ -8,7 +8,7 @@ import AdminLinkButton from '~/components/AdminLinkButton';
 import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
 import SearchPanel from '~/components/SearchPanel';
-import TextInput from '~/components/TextInput';
+import SearchTextInput from '~/components/SearchTextInput';
 import { GlyphIcon } from '~/components/icons';
 import GlyphItem from '~/features/glyphs/components/GlyphItem';
 import useGlyphs from '~/features/glyphs/hooks/useGlyphs';
@@ -40,7 +40,7 @@ const Index = () => {
         <SearchPanel>
           <HStack align="center">
             <FormControl name="q" label="なまえ">
-              <TextInput name="q" />
+              <SearchTextInput name="q" />
             </FormControl>
           </HStack>
         </SearchPanel>

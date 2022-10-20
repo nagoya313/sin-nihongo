@@ -8,14 +8,14 @@ import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
 import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
+import SearchStrokeCountInput from '~/components/SearchStrokeCountInput';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
-import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
 import { ORDERS } from '~/components/constants';
 import { MAX_IN_RADICAL_STROKE_COUNT, MIN_IN_RADICAL_STROKE_COUNT } from '~/features/inRadicalKanjis/validators';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
-import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
+import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import RadicalDefine from '~/features/radicals/components/RadicalDefine';
 import useRadical from '~/features/radicals/hooks/useRadical';
 import { getInRadicalKanji } from '~/features/radicals/services.server';
@@ -43,8 +43,8 @@ const Radical = () => {
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
-            <KanjiReadSearchInput />
-            <StrokeCountSearchInput
+            <SearchKanjiReadInput />
+            <SearchStrokeCountInput
               name="inRadicalStrokeCount"
               label="部首内画数"
               min={MIN_IN_RADICAL_STROKE_COUNT}

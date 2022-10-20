@@ -9,5 +9,5 @@
     "**/build/**": true,
     "**/coverage/**": true
   },
-  "typescript.updateImportsOnFileMove.enabled": "prompt"
+  "typescript.updateImportsOnFileMove.enabled": "always"
 }

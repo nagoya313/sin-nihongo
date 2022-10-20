@@ -1,4 +1,4 @@
-import BooleanSelectRadio from '~/components/BooleanSelectRadio';
+import SearchBooleanSelectRadio from '~/components/SearchBooleanSelectRadio';
 
 const LABELS = Object.freeze([
   { key: 'none', label: '指定なし' },
@@ -6,6 +6,6 @@ const LABELS = Object.freeze([
   { key: 'false', label: '非人名用' },
 ] as const);
 
-const ForNameSelectRadio = () => <BooleanSelectRadio name="forName" label="人名用" labels={LABELS} />;
+const ForNameSelectRadio = () => <SearchBooleanSelectRadio name="forName" label="人名用" labels={LABELS} />;
 
 export default ForNameSelectRadio;

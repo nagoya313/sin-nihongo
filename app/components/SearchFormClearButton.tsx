@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { useFormContext } from 'remix-validated-form';
 
-const FormClearButton = () => {
+const SearchFormClearButton = () => {
   // isSubmittinがうまく取れてゐないつぽい（getだから？onChange發火だから？）
   const { reset, isSubmitting, submit } = useFormContext();
 
@@ -19,4 +19,4 @@ const FormClearButton = () => {
   );
 };
 
-export default FormClearButton;
+export default SearchFormClearButton;

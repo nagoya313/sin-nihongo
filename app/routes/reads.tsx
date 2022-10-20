@@ -6,12 +6,12 @@ import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
 import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
-import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import SearchStrokeCountInput from '~/components/SearchStrokeCountInput';
 import { ReadIcon } from '~/components/icons';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
-import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
+import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import { READ_SEARCH_FROM_ID } from '~/features/reads/constants';
 import { get } from '~/features/reads/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT, readKanjiQueryParams } from '~/features/reads/validators';
@@ -32,8 +32,8 @@ const Reads = () => {
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
-            <KanjiReadSearchInput />
-            <StrokeCountSearchInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
+            <SearchKanjiReadInput />
+            <SearchStrokeCountInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
           </HStack>
           <HStack align="center">
             <RegularSelectRadio />

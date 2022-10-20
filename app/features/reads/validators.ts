@@ -6,6 +6,7 @@ import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { jisLevelRadio } from '~/utils/schemas/jisLevelRadio';
 import { kana } from '~/utils/schemas/regex';
+import { PG_SMALL_INT_MAX } from '~/utils/sql';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from '../kanjis/constants';
 
 export const readKanjiQueryParams = withZod(
@@ -16,6 +17,7 @@ export const readKanjiQueryParams = withZod(
     regular: booleanRadio,
     forName: booleanRadio,
     jisLevel: jisLevelRadio,
+    radical: zfd.numeric(z.number().min(0).max(PG_SMALL_INT_MAX).optional()),
   }),
 );
 

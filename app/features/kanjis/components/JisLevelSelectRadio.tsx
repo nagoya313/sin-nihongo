@@ -1,5 +1,5 @@
 import FormControl from '~/components/FormControl';
-import RadioGroup from '~/components/RadioGroup';
+import SearchRadioGroup from '~/components/SearchRadioGroup';
 
 const LABELS = Object.freeze([
   { key: 'none', label: '指定なし' },
@@ -9,7 +9,7 @@ const LABELS = Object.freeze([
 
 const JisLevelSelectRadio = () => (
   <FormControl as="fieldset" name="jisLevel" label="JIS水準">
-    <RadioGroup name="jisLevel" radioLabels={LABELS} />
+    <SearchRadioGroup name="jisLevel" radioLabels={LABELS} />
   </FormControl>
 );
 

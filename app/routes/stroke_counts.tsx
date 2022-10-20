@@ -9,8 +9,9 @@ import StrokeCountOrder from '~/components/StrokeCountOrder';
 import { StrokeCountIcon } from '~/components/icons';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
-import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
+import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
+import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import { STROKE_COUNT_SEARCH_FROM_ID } from '~/features/strokeCounts/constants';
 import { get } from '~/features/strokeCounts/services.server';
 import { strokeCountKanjiQueryParams } from '~/features/strokeCounts/validators';
@@ -31,7 +32,8 @@ const StrokeCounts = () => {
       <ValidatedForm {...formProps}>
         <SearchPanel>
           <HStack align="center">
-            <KanjiReadSearchInput />
+            <SearchKanjiReadInput />
+            <RadicalSelectInput />
           </HStack>
           <HStack align="center">
             <RegularSelectRadio />

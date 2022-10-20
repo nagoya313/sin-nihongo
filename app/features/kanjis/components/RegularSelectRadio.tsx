@@ -1,4 +1,4 @@
-import BooleanSelectRadio from '~/components/BooleanSelectRadio';
+import SearchBooleanSelectRadio from '~/components/SearchBooleanSelectRadio';
 
 const LABELS = Object.freeze([
   { key: 'none', label: '指定なし' },
@@ -6,6 +6,6 @@ const LABELS = Object.freeze([
   { key: 'false', label: '常用外' },
 ] as const);
 
-const RegularSelectRadio = () => <BooleanSelectRadio name="regular" label="常用漢字" labels={LABELS} />;
+const RegularSelectRadio = () => <SearchBooleanSelectRadio name="regular" label="常用漢字" labels={LABELS} />;
 
 export default RegularSelectRadio;

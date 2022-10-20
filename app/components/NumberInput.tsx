@@ -6,7 +6,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from '@chakra-ui/react';
-import { useControlField, useField, useFormContext } from 'remix-validated-form';
+import { useField } from 'remix-validated-form';
 
 type NumberInputProps = {
   name: string;
@@ -17,18 +17,9 @@ type NumberInputProps = {
 
 const NumberInput = ({ name, placeholder, ...inputProps }: NumberInputProps) => {
   const { getInputProps } = useField(name);
-  const [value, setValue] = useControlField<string>(name);
-  const { submit } = useFormContext();
-  const handleChange = (value: string) => {
-    setValue(value);
-    submit();
-  };
 
   return (
-    <CUINumberInput
-      value={value ?? ''}
-      {...getInputProps<CUINumberInputProps>({ ...inputProps, onChange: handleChange })}
-    >
+    <CUINumberInput {...getInputProps<CUINumberInputProps>({ ...inputProps })}>
       <NumberInputField placeholder={placeholder} />
       <NumberInputStepper>
         <NumberIncrementStepper />

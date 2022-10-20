@@ -1,28 +1,27 @@
-import {
-  RadioGroup as CUIRadioGroup,
-  type RadioGroupProps as CUIRadioGroupProps,
-  Radio,
-  Wrap,
-  WrapItem,
-} from '@chakra-ui/react';
-import { useControlField, useField } from 'remix-validated-form';
+import { Radio, RadioGroup, type RadioGroupProps, Wrap, WrapItem } from '@chakra-ui/react';
+import { useControlField, useField, useFormContext } from 'remix-validated-form';
 
-type RadioGroupProps = {
+type SearchRadioGroupProps = {
   name: string;
   radioLabels: ReadonlyArray<{ key: string; label: string }>;
   disabled?: boolean;
 };
 
-const RadioGroup = ({ name, radioLabels, disabled }: RadioGroupProps) => {
+const SearchRadioGroup = ({ name, radioLabels, disabled }: SearchRadioGroupProps) => {
   const { getInputProps } = useField(name);
   const [value, setValue] = useControlField<string>(name);
+  const { submit } = useFormContext();
+  const handleChange = (value: string) => {
+    setValue(value);
+    submit();
+  };
 
   return (
-    <CUIRadioGroup
+    <RadioGroup
       isDisabled={disabled}
       defaultValue={radioLabels[0]!.key}
       value={value ?? radioLabels[0]!.key}
-      {...getInputProps<Omit<CUIRadioGroupProps, 'children'>>({ onChange: setValue })}
+      {...getInputProps<Omit<RadioGroupProps, 'children'>>({ onChange: handleChange })}
     >
       <Wrap whiteSpace="nowrap">
         {radioLabels.map(({ key, label }) => (
@@ -33,8 +32,8 @@ const RadioGroup = ({ name, radioLabels, disabled }: RadioGroupProps) => {
           </WrapItem>
         ))}
       </Wrap>
-    </CUIRadioGroup>
+    </RadioGroup>
   );
 };
 
-export default RadioGroup;
+export default SearchRadioGroup;

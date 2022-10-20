@@ -22,6 +22,7 @@ export const radicalParams = withZod(
 
 export const radicalUpdateParams = withZod(
   z.object({
+    strokeCount: zfd.numeric(z.number().int('整数で入力してください').min(1).max(PG_SMALL_INT_MAX)),
     reads: zfd.repeatable(z.array(zfd.text(zfd.text(hiragana.max(10)))).min(1)),
   }),
 );

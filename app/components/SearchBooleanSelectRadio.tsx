@@ -1,5 +1,5 @@
 import FormControl from './FormControl';
-import RadioGroup from './RadioGroup';
+import SearchRadioGroup from './SearchRadioGroup';
 
 type BooleanSelectRadioProps = {
   name: string;
@@ -7,10 +7,10 @@ type BooleanSelectRadioProps = {
   labels: ReadonlyArray<{ key: 'none' | 'true' | 'false'; label: string }>;
 };
 
-const BooleanSelectRadio = ({ name, label, labels }: BooleanSelectRadioProps) => (
+const SearchBooleanSelectRadio = ({ name, label, labels }: BooleanSelectRadioProps) => (
   <FormControl as="fieldset" name={name} label={label}>
-    <RadioGroup name={name} radioLabels={labels} />
+    <SearchRadioGroup name={name} radioLabels={labels} />
   </FormControl>
 );
 
-export default BooleanSelectRadio;
+export default SearchBooleanSelectRadio;

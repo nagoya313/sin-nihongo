@@ -1,7 +1,7 @@
 import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
-import { getGlyph, getGlyphByName } from '~/features/glyphs/repositories.server';
+import { getDrawableGlyphByName, getGlyph, getGlyphByName } from '~/features/glyphs/repositories.server';
 import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { escapeLike, kanaTranslate } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from './constants';
@@ -51,7 +51,7 @@ export const getKanjisOrderByCodePoint = ({
     .limit(KANJI_READ_LIMIT)
     .execute();
 
-export const getKanjis = async (query: QueryParams) => {
+export const getDrawableKanjis = async (query: QueryParams) => {
   const kanjis = await getKanjisOrderByCodePoint(query);
 
   // 直列にしないとコネクションプールが盡きる
@@ -158,6 +158,14 @@ export const getKanjiByCodePoint = (codePoint: number) =>
     .where('kanji.code_point', '=', codePoint)
     .groupBy('kanji.code_point')
     .executeTakeFirst();
+
+export const getDrawableKanji = async (codePoint: number) => {
+  const kanji = (await getKanjiByCodePoint(codePoint))!;
+  if (kanji.glyph_name == null) return { ...kanji, glyph: null };
+  const glyph = await getDrawableGlyphByName(kanji.glyph_name);
+
+  return { ...kanji, glyph };
+};
 
 export const getSameKanjs = ({
   code_point,

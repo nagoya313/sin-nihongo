@@ -1,18 +1,4 @@
-import {
-  Box,
-  HStack,
-  IconButton,
-  Popover,
-  PopoverAnchor,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  VStack,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { useActionData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
-import { MdOutlineEdit } from 'react-icons/md';
+import { Box, HStack, Popover, PopoverAnchor, PopoverBody, PopoverContent, VStack } from '@chakra-ui/react';
 import { ValidatedForm } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import HiddenInput from '~/components/HiddenInput';
@@ -22,43 +8,22 @@ import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { kanjiGlyphCreateParams } from '~/features/kanjis/validators';
-import { useOptionalUser } from '~/hooks/useUser';
-import { type action } from '~/routes/kanjis/index';
-import type { QueryResultData } from '~/utils/types';
-import { type getKanjis } from '../repositories.server';
-import GlyphUnlinkForm from './GlyphUnlinkForm';
-import KanjiLink from './KanjiLink';
+import { type QueryResultData } from '~/utils/types';
+import { type getDrawableKanjis } from '../../repositories.server';
+import GlyphUnlinkForm from '../GlyphUnlinkForm';
+import EditableGlyphPopoverTrigger from './EditableGlyphPopoverTrigger';
+import { useEditableGlyphPopover } from './hooks';
 
 type EditableGlyphPopoverProps = {
-  kanji: QueryResultData<typeof getKanjis>[number];
+  kanji: QueryResultData<typeof getDrawableKanjis>[number];
 };
 
 const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
-  const user = useOptionalUser();
-  const { onOpen, onClose, isOpen } = useDisclosure();
-  const [preview, setPreview] = useState<typeof kanji['glyph']>();
-  const openHandle = () => {
-    setPreview(kanji.glyph);
-    onOpen();
-  };
-  const updated = useActionData<typeof action>();
-
-  useEffect(() => {
-    if (updated != null && 'kanji' in updated) {
-      onClose();
-    }
-  }, [updated, onClose]);
+  const { onOpen, onClose, isOpen, preview, setPreview } = useEditableGlyphPopover(kanji);
 
   return (
-    <Popover isOpen={isOpen} onOpen={openHandle} onClose={onClose} isLazy placement="right">
-      <VStack p={2}>
-        <KanjiLink codePoint={kanji.code_point} />
-        {user != null && (
-          <PopoverTrigger>
-            <IconButton aria-label="edit-kanji-glyph" icon={<MdOutlineEdit />} />
-          </PopoverTrigger>
-        )}
-      </VStack>
+    <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} isLazy placement="right">
+      <EditableGlyphPopoverTrigger kanji={kanji} />
       <PopoverAnchor>
         <Box>
           <GlyphCanvas {...getGlyphCanvasProps(kanji.glyph)} />

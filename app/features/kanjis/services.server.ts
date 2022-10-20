@@ -1,17 +1,11 @@
 import { type ActionArgs, type LoaderArgs, Response, json } from '@remix-run/node';
 import { validationError } from 'remix-validated-form';
-import {
-  getDrawableGlyphByName,
-  getGlyph,
-  getGlyphByName,
-  getGlyphPreview,
-  updateGlyph,
-} from '~/features/glyphs/repositories.server';
-import GlyphLoader from '~/features/kage/models/GlyphLoader';
+import { getDrawableGlyphByName, getGlyphPreview, updateGlyph } from '~/features/glyphs/repositories.server';
 import {
   createKanjiGlyph,
+  getDrawableKanji,
+  getDrawableKanjis,
   getKanjiByCodePoint,
-  getKanjis,
   getSameKanjs,
   unlinkKanjiGlyph,
 } from '~/features/kanjis/repositories.server';
@@ -27,7 +21,7 @@ import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/requ
 
 export const get = async (request: LoaderArgs['request']) => {
   const query = await checkedQuery(request, kanjiQueryParams);
-  return json({ kanjis: await getKanjis(query), offset: query.offset });
+  return json({ kanjis: await getDrawableKanjis(query), offset: query.offset });
 };
 
 export const create = async (request: ActionArgs['request']) => {
@@ -36,16 +30,8 @@ export const create = async (request: ActionArgs['request']) => {
   if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
   try {
     await createKanjiGlyph(data);
-    const kanji = (await getKanjiByCodePoint(data.codePoint))!;
-    const glyph = (await getGlyphByName(kanji.glyph_name!))!;
-    const glyphLoader = new GlyphLoader(getGlyph);
     return json(
-      {
-        kanji: {
-          ...kanji,
-          glyph: { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) },
-        },
-      },
+      { kanji: await getDrawableKanji(data.codePoint) },
       await setFlashMessage(request, { message: 'グリフお登録しました', status: 'success' }),
     );
   } catch {
@@ -58,16 +44,8 @@ export const update = async (request: ActionArgs['request']) => {
   const { isDrawable } = await getGlyphPreview(data.data);
   if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
   await updateGlyph(data);
-  const kanji = (await getKanjiByCodePoint(data.codePoint))!;
-  const glyph = (await getGlyphByName(kanji.glyph_name!))!;
-  const glyphLoader = new GlyphLoader(getGlyph);
   return json(
-    {
-      kanji: {
-        ...kanji,
-        glyph: { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) },
-      },
-    },
+    { kanji: await getDrawableKanji(data.codePoint) },
     await setFlashMessage(request, { message: 'グリフお更新しました', status: 'success' }),
   );
 };

@@ -4,14 +4,15 @@ import { $path } from 'remix-routes';
 import LinkButton from '~/components/LinkButton';
 import RadicalLink from '~/features/radicals/components/RadicalLink';
 import { useShadow } from '~/hooks/useColor';
-import { type getKanjis } from '../repositories.server';
+import { type QueryResultData } from '~/utils/types';
+import { type getDrawableKanjis } from '../repositories.server';
 import EditableGlyphPopover from './EditableGlyphPopover';
 import JisLevelBadge from './JisLevelBadge';
 import KanjiRead from './KanjiRead';
 import RegularBadge from './RegularBadge';
 
 type KanjiItemProps = {
-  kanji: Awaited<ReturnType<typeof getKanjis>>[number];
+  kanji: QueryResultData<typeof getDrawableKanjis>[number];
   isEven: boolean;
 };
 

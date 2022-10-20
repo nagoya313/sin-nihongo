@@ -1,11 +1,11 @@
 import {
-  Response,
   type ActionArgs,
   type ActionFunction,
   type DataFunctionArgs,
   type LoaderArgs,
+  Response,
 } from '@remix-run/node';
-import { validationError, type Validator } from 'remix-validated-form';
+import { type Validator, validationError } from 'remix-validated-form';
 import { authenticator } from '~/session.server';
 
 export const authGuard = async (request: DataFunctionArgs['request']) => {

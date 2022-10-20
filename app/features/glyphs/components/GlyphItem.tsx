@@ -1,7 +1,7 @@
-import { Box, Divider, HStack, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import { Box, Divider, HStack, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import GlyphCanvasSuspense from '~/features/kage/components/GlyphCanvasSuspense';
 import KageData from '~/features/kage/components/KageData';
-import { getGlyphCanvasProps, type DrawableGlyph } from '~/features/kage/models/kageData';
+import { type DrawableGlyph, getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { useShadow } from '../../../hooks/useColor';
 import GlyphDeleteForm from './GlyphDeleteForm';
 

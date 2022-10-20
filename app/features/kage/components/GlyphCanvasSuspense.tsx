@@ -1,6 +1,6 @@
 import { Skeleton } from '@chakra-ui/react';
 import { type Buhin } from '@kurgm/kage-engine';
-import { lazy, Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { ClientOnly } from 'remix-utils';
 
 const GlyphCanvas = lazy(() => import('./GlyphCanvas'));

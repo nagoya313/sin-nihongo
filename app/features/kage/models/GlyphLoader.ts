@@ -1,4 +1,5 @@
-import { flatten, uniqBy } from 'lodash';
+import flatten from 'lodash/flatten';
+import uniqBy from 'lodash/uniqBy';
 import { type GetterType, type Glyph } from '../types';
 import Strokes from './Strokes';
 

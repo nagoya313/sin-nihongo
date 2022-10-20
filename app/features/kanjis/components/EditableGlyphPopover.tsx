@@ -7,8 +7,8 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  useDisclosure,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useActionData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,7 @@ import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { kanjiGlyphCreateParams } from '~/features/kanjis/validators';
 import { useOptionalUser } from '~/hooks/useUser';
 import { type action } from '~/routes/kanjis/index';
-import { QueryResultData } from '~/utils/types';
+import type { QueryResultData } from '~/utils/types';
 import { type getKanjis } from '../repositories.server';
 import GlyphUnlinkForm from './GlyphUnlinkForm';
 import KanjiLink from './KanjiLink';

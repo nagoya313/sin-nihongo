@@ -6,7 +6,12 @@ import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { jisLevelRadio } from '~/utils/schemas/jisLevelRadio';
 import { kana } from '~/utils/schemas/regex';
-import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from './constants';
+import {
+  MAX_IN_RADICAL_STROKE_COUNT,
+  MAX_STROKE_COUNT,
+  MIN_IN_RADICAL_STROKE_COUNT,
+  MIN_STROKE_COUNT,
+} from './constants';
 
 const PG_INT_MAX = 2147483647;
 
@@ -24,6 +29,7 @@ export const kanjiQueryParams = withZod(
           : undefined,
       ),
     strokeCount: zfd.numeric(intRange(MIN_STROKE_COUNT, MAX_STROKE_COUNT).optional()),
+    inRadicalStrokeCount: zfd.numeric(intRange(MIN_IN_RADICAL_STROKE_COUNT, MAX_IN_RADICAL_STROKE_COUNT).optional()),
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
     forName: booleanRadio,

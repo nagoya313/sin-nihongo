@@ -1,15 +1,16 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 import {
-  json,
   type ErrorBoundaryComponent,
   type LinksFunction,
   type LoaderArgs,
   type MetaFunction,
+  json,
 } from '@remix-run/node';
 import { useCatch } from '@remix-run/react';
 import { z } from 'zod';
-import Layout from './components/Layout';
+
 import Document from './Document';
+import Layout from './components/Layout';
 import { useOptionalUser } from './hooks/useUser';
 import { authenticator } from './session.server';
 import { getFlashMessage } from './utils/flash.server';

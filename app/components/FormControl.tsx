@@ -1,10 +1,10 @@
 import {
   FormControl as CUIFormControl,
+  type FormControlProps as CUIFormControlProps,
   FormErrorMessage,
   FormLabel,
   Icon,
   Tooltip,
-  type FormControlProps as CUIFormControlProps,
 } from '@chakra-ui/react';
 import { MdHelpOutline } from 'react-icons/md';
 import { useField } from 'remix-validated-form';

@@ -1,5 +1,5 @@
-import { parse } from 'csv-parse';
 import fs from 'fs';
+import { parse } from 'csv-parse';
 import { type InsertObject, type Kysely } from 'kysely';
 import { type Database } from '../types';
 

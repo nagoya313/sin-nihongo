@@ -1,8 +1,8 @@
 import { Heading, Icon, ListItem, Text, UnorderedList } from '@chakra-ui/react';
 import { type MetaFunction } from '@remix-run/node';
 import ExternalLink from '~/components/ExternalLink';
-import { InfoIcon } from '~/components/icons';
 import Page from '~/components/Page';
+import { InfoIcon } from '~/components/icons';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜info' });
 

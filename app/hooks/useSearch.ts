@@ -1,6 +1,6 @@
 import { useFetcher } from '@remix-run/react';
 import { useEffect, useState } from 'react';
-import { useFormContext, type FormProps, type Validator } from 'remix-validated-form';
+import { type FormProps, type Validator, useFormContext } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
 
 const EMPTY_DATA = Object.freeze({});

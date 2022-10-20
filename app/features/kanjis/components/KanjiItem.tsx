@@ -1,4 +1,4 @@
-import { Badge, Box, Divider, HStack, Spacer, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import { Badge, Box, Divider, HStack, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { MdInfoOutline } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import LinkButton from '~/components/LinkButton';

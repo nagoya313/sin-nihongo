@@ -4,12 +4,12 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Heading,
   HStack,
+  Heading,
   Icon,
-  useColorModeValue,
-  VStack,
   type StackProps,
+  VStack,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { MdSearch } from 'react-icons/md';
 import { useShadow } from '~/hooks/useColor';

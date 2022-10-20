@@ -1,10 +1,10 @@
 import {
+  NumberInput as CUINumberInput,
+  type NumberInputProps as CUINumberInputProps,
   NumberDecrementStepper,
   NumberIncrementStepper,
-  NumberInput as CUINumberInput,
   NumberInputField,
   NumberInputStepper,
-  type NumberInputProps as CUINumberInputProps,
 } from '@chakra-ui/react';
 import { useControlField, useField, useFormContext } from 'remix-validated-form';
 

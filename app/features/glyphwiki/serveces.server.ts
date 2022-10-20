@@ -1,4 +1,4 @@
-import { json, type LoaderArgs } from '@remix-run/node';
+import { type LoaderArgs, json } from '@remix-run/node';
 import { checkedQuery } from '~/utils/request.server';
 import { getGlyphwiki } from './repositories.server';
 import { glyphwikiQueryParams } from './validators';

@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
-import { FileMigrationProvider, Migrator } from 'kysely';
 import * as path from 'path';
+import { FileMigrationProvider, Migrator } from 'kysely';
 import { connectDatabase } from './connection.server';
 
 (async () => {

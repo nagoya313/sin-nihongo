@@ -1,9 +1,9 @@
 import {
-  Radio,
   RadioGroup as CUIRadioGroup,
+  type RadioGroupProps as CUIRadioGroupProps,
+  Radio,
   Wrap,
   WrapItem,
-  type RadioGroupProps as CUIRadioGroupProps,
 } from '@chakra-ui/react';
 import { useControlField, useField } from 'remix-validated-form';
 

@@ -1,7 +1,7 @@
 import { Heading, Icon, Wrap } from '@chakra-ui/react';
 import { $path } from 'remix-routes';
-import { KanjiIcon, RadicalIcon, ReadIcon, StrokeCountIcon } from '~/components/icons';
 import Main from '~/components/Main';
+import { KanjiIcon, RadicalIcon, ReadIcon, StrokeCountIcon } from '~/components/icons';
 import NavCard from '~/features/home/components/NavCard';
 
 export const Index = () => (

@@ -1,4 +1,4 @@
-import { Center, Link as CUILink, Text, WrapItem } from '@chakra-ui/react';
+import { Link as CUILink, Center, Text, WrapItem } from '@chakra-ui/react';
 import { Link } from '@remix-run/react';
 import { $path } from 'remix-routes';
 import { useLinkColor } from '~/hooks/useColor';

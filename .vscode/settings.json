@@ -2,9 +2,12 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "prettier.configPath": ".prettierrc.json",
-  "editor.codeActionsOnSave": ["source.fixAll.eslint", "source.organizeImports"],
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "files.watcherExclude": {
-    "**/node_modules/**": true,
-    "**/build/**": true
-  }
+    "**/.cache/**": true,
+    "**/api/**": true,
+    "**/build/**": true,
+    "**/coverage/**": true
+  },
+  "typescript.updateImportsOnFileMove.enabled": "prompt"
 }

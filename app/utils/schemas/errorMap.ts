@@ -1,4 +1,4 @@
-import { ZodIssueCode, type ErrorMapCtx, type ZodIssueOptionalMessage } from 'zod';
+import { type ErrorMapCtx, ZodIssueCode, type ZodIssueOptionalMessage } from 'zod';
 
 export const errorMap = (issue: ZodIssueOptionalMessage, ctx: ErrorMapCtx): { message: string } => {
   let message: string;

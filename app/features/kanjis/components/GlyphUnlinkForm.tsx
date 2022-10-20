@@ -4,7 +4,7 @@ import { MdLinkOff } from 'react-icons/md';
 import { ValidatedForm } from 'remix-validated-form';
 import HiddenInput from '~/components/HiddenInput';
 import { kanjiGlyphUnlinkParams } from '~/features/kanjis/validators';
-import { QueryResultData } from '~/utils/types';
+import type { QueryResultData } from '~/utils/types';
 import { type getKanjis } from '../repositories.server';
 
 type GlyphUnlinkFormProps = {

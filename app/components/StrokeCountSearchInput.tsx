@@ -4,12 +4,13 @@ import NumberInput from './NumberInput';
 type StrokeCountSearchInputProps = {
   min: number;
   max: number;
+  name?: string;
   label?: string;
 };
 
-const StrokeCountSearchInput = ({ min, max, label = '画数' }: StrokeCountSearchInputProps) => (
-  <FormControl name="strokeCount" label={label}>
-    <NumberInput name="strokeCount" placeholder={`${min}〜${max}`} min={min} max={max} />
+const StrokeCountSearchInput = ({ min, max, name = 'strokeCount', label = '画数' }: StrokeCountSearchInputProps) => (
+  <FormControl name={name} label={label}>
+    <NumberInput name={name} placeholder={`${min}〜${max}`} min={min} max={max} />
   </FormControl>
 );
 

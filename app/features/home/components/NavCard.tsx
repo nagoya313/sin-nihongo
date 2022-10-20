@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, LinkBox, Text, useColorModeValue, WrapItem } from '@chakra-ui/react';
+import { Box, HStack, Heading, LinkBox, Text, WrapItem, useColorModeValue } from '@chakra-ui/react';
 import { Link } from '@remix-run/react';
 import CircleIcon from '~/components/CircleIcon';
 

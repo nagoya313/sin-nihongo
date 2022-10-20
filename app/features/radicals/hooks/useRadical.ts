@@ -14,7 +14,6 @@ const useRadical = () => {
     formId: RADICAL_SEARCH_FORM_ID,
     validator: inRadicalKanjiQueryParams,
     initialData: useLoaderData<typeof loader>(),
-    action: $path('/radicals/:codePoint', { codePoint }),
   });
 
   return { radical, kanjis: data, formProps };

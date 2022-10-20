@@ -1,4 +1,4 @@
-import { type z, type ZodType } from 'zod';
+import { type ZodType, type z } from 'zod';
 
 type Schema<T extends z.infer<ZodType>> = T extends z.infer<infer S> ? S : never;
 

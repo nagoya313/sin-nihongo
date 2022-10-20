@@ -4,13 +4,13 @@ import { MdEdit } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import { ValidatedForm } from 'remix-validated-form';
 import AdminLinkButton from '~/components/AdminLinkButton';
-import { ORDERS } from '~/components/constants';
 import OrderTabs from '~/components/OrderTabs';
 import Page from '~/components/Page';
 import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import { ORDERS } from '~/components/constants';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
@@ -45,6 +45,7 @@ const Radical = () => {
           <HStack align="center">
             <KanjiReadSearchInput />
             <StrokeCountSearchInput
+              name="inRadicalStrokeCount"
               label="部首内画数"
               min={MIN_IN_RADICAL_STROKE_COUNT}
               max={MAX_IN_RADICAL_STROKE_COUNT}

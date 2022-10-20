@@ -1,9 +1,9 @@
 import { HStack, IconButton, VStack } from '@chakra-ui/react';
-import { json, type ActionArgs, type LoaderArgs, type MetaFunction } from '@remix-run/node';
+import { type ActionArgs, type LoaderArgs, type MetaFunction, json } from '@remix-run/node';
 import { useParams } from '@remix-run/react';
 import { MdClear } from 'react-icons/md';
 import { $params, $path } from 'remix-routes';
-import { useControlField, ValidatedForm } from 'remix-validated-form';
+import { ValidatedForm, useControlField } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import Page from '~/components/Page';
 import SubmitButton from '~/components/SubmitButton';

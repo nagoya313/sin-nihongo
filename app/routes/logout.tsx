@@ -1,4 +1,4 @@
-import { redirect, type ActionArgs } from '@remix-run/node';
+import { type ActionArgs, redirect } from '@remix-run/node';
 import { AUTH0_CLIENT_ID, AUTH0_LOGOUT_URL, AUTH0_RETURN_TO_URL } from '~/constants';
 import { destroySession, getSession } from '~/session.server';
 

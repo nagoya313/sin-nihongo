@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { ZodType } from 'zod';
+import type { ZodType } from 'zod';
 
 // zfd 由來の ZodEffects は instanceof ZodType が眞でないらしい？
 export const toAcceptValue = (schema: ZodType, value: unknown) => {

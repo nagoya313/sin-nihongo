@@ -1,4 +1,4 @@
-import { Avatar, Flex, Heading, HStack, IconButton, LinkBox, useColorModeValue } from '@chakra-ui/react';
+import { Avatar, Flex, HStack, Heading, IconButton, LinkBox, useColorModeValue } from '@chakra-ui/react';
 import { Link } from '@remix-run/react';
 import { useSetAtom } from 'jotai';
 import { MdMenu } from 'react-icons/md';

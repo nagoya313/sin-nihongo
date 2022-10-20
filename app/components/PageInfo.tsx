@@ -1,4 +1,4 @@
-import { Heading, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
+import { HStack, Heading, Spacer, Text, VStack } from '@chakra-ui/react';
 import CircleIcon from './CircleIcon';
 
 type PageInfoProps = {

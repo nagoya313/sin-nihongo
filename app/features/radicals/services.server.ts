@@ -1,8 +1,6 @@
-import { json, redirect, Response, type ActionArgs, type LoaderArgs } from '@remix-run/node';
+import { type ActionArgs, type LoaderArgs, Response, json, redirect } from '@remix-run/node';
 import { $params, $path } from 'remix-routes';
 import {
-  getInRadicalKanjisOrderByRead,
-  getInRadicalKanjisOrderByStrokeCount,
   getRadicalByCodePoint,
   getRadicalsOrderByCodePoint,
   getRadicalsOrderByRead,
@@ -16,6 +14,7 @@ import {
 } from '~/features/radicals/validators';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
+import { getKanjisOrderByRead, getKanjisOrderByStrokeCount } from '../kanjis/repositories.server';
 
 export const get = async (request: LoaderArgs['request']) => {
   const query = await checkedQuery(request, radicalQueryParams);
@@ -47,9 +46,17 @@ export const getByCodePoint = async ({ params }: LoaderArgs) => {
 export const getInRadicalKanji = async ({ request, params }: LoaderArgs) => {
   const { codePoint } = await checkedParamsLoader(params, radicalParams);
   const query = await checkedQuery(request, inRadicalKanjiQueryParams);
+  console.log(query);
   return json(
     query.orderBy === 'read'
-      ? { kanjisOrderByRead: await getInRadicalKanjisOrderByRead(codePoint, query) }
-      : { kanjisOrderByStrokeCount: await getInRadicalKanjisOrderByStrokeCount(codePoint, query) },
+      ? {
+          kanjisOrderByRead: await getKanjisOrderByRead({ radical: codePoint, ...query }),
+        }
+      : {
+          kanjisOrderByStrokeCount: await getKanjisOrderByStrokeCount(
+            { radical: codePoint, ...query },
+            'in_radical_stroke_count',
+          ),
+        },
   );
 };

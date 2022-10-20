@@ -24,7 +24,7 @@ export const inRadicalKanjiQueryParams = withZod(
   z.object({
     direction,
     orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
-    strokeCount: zfd.numeric(intRange(MIN_IN_RADICAL_STROKE_COUNT, MAX_IN_RADICAL_STROKE_COUNT).optional()),
+    inRadicalStrokeCount: zfd.numeric(intRange(MIN_IN_RADICAL_STROKE_COUNT, MAX_IN_RADICAL_STROKE_COUNT).optional()),
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
     forName: booleanRadio,

@@ -1,6 +1,6 @@
 import DataItem from '~/components/DataItem';
 import DataList from '~/components/Datalist';
-import { QueryResultData } from '~/utils/types';
+import type { QueryResultData } from '~/utils/types';
 import { type getRadicalByCodePoint } from '../repositories.server';
 
 type RadicalDefineProps = {

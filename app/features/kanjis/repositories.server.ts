@@ -76,9 +76,9 @@ export const getKanjis = async (query: QueryParams) => {
   return result;
 };
 
-export const getKanjisOrderByStrokeCount = (
+const getKanjisOrderByStrokeCountBase = <TOrder extends 'stroke_count' | 'in_radical_stroke_count'>(
   { read, strokeCount, inRadicalStrokeCount, regular, forName, jisLevel, radical, direction }: SimpleQueryParams,
-  order: 'stroke_count' | 'in_radical_stroke_count' = 'stroke_count',
+  order: TOrder,
 ) =>
   db
     .selectFrom('kanji')
@@ -100,6 +100,12 @@ export const getKanjisOrderByStrokeCount = (
     .groupBy(order)
     .orderBy(order, direction)
     .execute();
+
+export const getKanjisOrderByStrokeCount = (params: SimpleQueryParams) =>
+  getKanjisOrderByStrokeCountBase(params, 'stroke_count');
+
+export const getKanjisOrderByInRadicalStrokeCount = (params: SimpleQueryParams) =>
+  getKanjisOrderByStrokeCountBase(params, 'in_radical_stroke_count');
 
 export const getKanjisOrderByRead = ({
   read,

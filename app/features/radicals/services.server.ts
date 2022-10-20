@@ -14,7 +14,7 @@ import {
 } from '~/features/radicals/validators';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
-import { getKanjisOrderByRead, getKanjisOrderByStrokeCount } from '../kanjis/repositories.server';
+import { getKanjisOrderByInRadicalStrokeCount, getKanjisOrderByRead } from '../kanjis/repositories.server';
 
 export const get = async (request: LoaderArgs['request']) => {
   const query = await checkedQuery(request, radicalQueryParams);
@@ -53,10 +53,7 @@ export const getInRadicalKanji = async ({ request, params }: LoaderArgs) => {
           kanjisOrderByRead: await getKanjisOrderByRead({ radical: codePoint, ...query }),
         }
       : {
-          kanjisOrderByStrokeCount: await getKanjisOrderByStrokeCount(
-            { radical: codePoint, ...query },
-            'in_radical_stroke_count',
-          ),
+          kanjisOrderByStrokeCount: await getKanjisOrderByInRadicalStrokeCount({ radical: codePoint, ...query }),
         },
   );
 };

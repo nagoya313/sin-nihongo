@@ -9,16 +9,14 @@ import { useDebouncedCallback } from 'use-debounce';
 import FormControl from '~/components/FormControl';
 import { radicalQueryParams } from '~/features/radicals/validators';
 import { type loader } from '~/routes/radicals/index';
-import { type LoaderData } from '~/utils/types';
-
-type SelectProps = React.ComponentProps<typeof Select>;
+import { type LoaderData, type UnionSelect } from '~/utils/types';
 
 const RadicalSelectInput = () => {
   const { getInputProps } = useField('radical');
-  const [value, setValue] = useControlField<string>('radical');
   const { submit } = useFormContext();
-  const [options, setOptions] = useState<SelectProps['options']>([]);
   const fetcher = useFetcher<LoaderData<typeof loader>>();
+  const [options, setOptions] = useState<UnionSelect<typeof fetcher['data'], 'radicals'>['radicals']>([]);
+  const [value, setValue] = useControlField<typeof options[number] | null>('radical');
   const handleChange = useDebouncedCallback(async (read: string) => {
     if (read) {
       const query = await radicalQueryParams.validate({ read, orderBy: 'code_point' });
@@ -35,12 +33,7 @@ const RadicalSelectInput = () => {
 
   useEffect(() => {
     if (fetcher.type === 'done' && 'radicals' in fetcher.data) {
-      setOptions([
-        ...fetcher.data.radicals.map(({ radical, code_point, reads }) => ({
-          label: `${radical}（${reads.join(' ')}）`,
-          value: code_point.toString(),
-        })),
-      ]);
+      setOptions(fetcher.data.radicals);
     }
   }, [fetcher]);
 
@@ -49,18 +42,22 @@ const RadicalSelectInput = () => {
       <ClientOnly fallback={<Input />}>
         {() => (
           <Select
-            // 選擇ずみではinput valueとして""、クリアではundefinedがくる
-            // Selectのvalueに""を渡せばinputクリア、undefinedを渡してもクリアされない
-            // といふ擧動を利用（いいのか？）
-            value={value == null ? '' : undefined}
-            {...getInputProps<SelectProps>({
+            // remix-validated-formでクリアすると undefined が value にくる
+            // react-selectのクリアには null を入れるので變換する
+            value={value ?? null}
+            {...getInputProps<React.ComponentProps<typeof Select<typeof options[number]>>>({
               isLoading: fetcher.state === 'submitting',
               options,
+              getOptionLabel: ({ reads }) => reads.join(' '),
+              getOptionValue: ({ code_point }) => code_point.toString(),
+              formatOptionLabel: ({ radical }) => radical,
               onInputChange: (value) => {
-                setValue(value);
                 handleChange(value);
               },
-              onChange: () => submit(),
+              onChange: (value) => {
+                setValue(value);
+                submit();
+              },
               isClearable: true,
               backspaceRemovesValue: true,
               placeholder: 'いち、しょー、つずみ',

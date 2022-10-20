@@ -2,7 +2,7 @@ import { Textarea, type TextareaProps } from '@chakra-ui/react';
 import { useFetcher } from '@remix-run/react';
 import { useEffect } from 'react';
 import { $path } from 'remix-routes';
-import { useControlField, useField } from 'remix-validated-form';
+import { useField } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { type loader } from '~/routes/glyphs/preview';
 import { type LoaderData } from '~/utils/types';
@@ -16,13 +16,11 @@ type KageTextAreaProps = {
 
 const KageTextArea = ({ name, onDataChange }: KageTextAreaProps) => {
   const { getInputProps } = useField(name);
-  const [, setData] = useControlField<string>(name);
   const fetcher = useFetcher();
-  const handleChange = useDebouncedCallback(async (data: string) => {
+  const handleChange = useDebouncedCallback((data: string) => {
     if (data) {
       fetcher.submit({ data }, { action: $path('/glyphs/preview') });
     }
-    setData(data);
   }, PREVIEW_WAIT);
 
   useEffect(() => {

@@ -11,15 +11,17 @@ import ReadOrder from '~/components/ReadOrder';
 import SearchPanel from '~/components/SearchPanel';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import StrokeCountSearchInput from '~/components/StrokeCountSearchInput';
+import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
+import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiReadSearchInput from '~/features/kanjis/components/KanjiReadSearchInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import RadicalDefine from '~/features/radicals/components/RadicalDefine';
 import useRadical from '~/features/radicals/hooks/useRadical';
-import { getRadicalKanji } from '~/features/radicals/services.server';
+import { getInRadicalKanji } from '~/features/radicals/services.server';
 import { MAX_IN_RADICAL_STROKE_COUNT, MIN_IN_RADICAL_STROKE_COUNT } from '~/features/radicals/validators';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' });
-export const loader = async (args: LoaderArgs) => getRadicalKanji(args);
+export const loader = async (args: LoaderArgs) => getInRadicalKanji(args);
 
 const Radical = () => {
   const { radical, kanjis, formProps } = useRadical();
@@ -47,7 +49,11 @@ const Radical = () => {
               min={MIN_IN_RADICAL_STROKE_COUNT}
               max={MAX_IN_RADICAL_STROKE_COUNT}
             />
+          </HStack>
+          <HStack align="center">
             <RegularSelectRadio />
+            <ForNameSelectRadio />
+            <JisLevelSelectRadio />
           </HStack>
         </SearchPanel>
         <OrderTabs orders={ORDERS}>

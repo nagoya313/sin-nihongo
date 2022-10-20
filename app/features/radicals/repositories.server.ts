@@ -2,10 +2,10 @@ import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import { escapeLike, kanaTranslate } from '~/utils/sql';
-import { type radicalKanjiQueryParams, type radicalQueryParams } from './validators';
+import { type inRadicalKanjiQueryParams, type radicalQueryParams } from './validators';
 
 type RadicalQueryParams = ValidatorData<typeof radicalQueryParams>;
-type RadicalKanjiQueryParams = ValidatorData<typeof radicalKanjiQueryParams>;
+type InRadicalKanjiQueryParams = ValidatorData<typeof inRadicalKanjiQueryParams>;
 
 export const getRadicalsOrderByCodePoint = ({ read }: RadicalQueryParams) =>
   db
@@ -65,9 +65,9 @@ export const getRadicalsOrderByRead = ({ direction, strokeCount, read }: Radical
     .groupBy('read_front')
     .execute();
 
-export const getRadicalKanjisOrderByStrokeCount = (
+export const getInRadicalKanjisOrderByStrokeCount = (
   radicalId: number,
-  { strokeCount, regular, read, direction }: RadicalKanjiQueryParams,
+  { strokeCount, regular, forName, jisLevel, read, direction }: InRadicalKanjiQueryParams,
 ) =>
   db
     .selectFrom('kanji')
@@ -82,14 +82,16 @@ export const getRadicalKanjisOrderByStrokeCount = (
     )
     .if(strokeCount != null, (qb) => qb.where('in_radical_stroke_count', '=', strokeCount!))
     .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
+    .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
+    .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))
     .where('radical_code_point', '=', radicalId)
     .orderBy('in_radical_stroke_count', direction)
     .groupBy('in_radical_stroke_count')
     .execute();
 
-export const getRadicalKanjisOrderByRead = (
+export const getInRadicalKanjisOrderByRead = (
   radicalId: number,
-  { strokeCount, regular, read, direction }: RadicalKanjiQueryParams,
+  { strokeCount, regular, forName, jisLevel, read, direction }: InRadicalKanjiQueryParams,
 ) =>
   db
     .selectFrom((db) =>
@@ -99,6 +101,8 @@ export const getRadicalKanjisOrderByRead = (
         .innerJoin('kanji_read', 'code_point', 'kanji_read.kanji_code_point')
         .if(strokeCount != null, (qb) => qb.where('in_radical_stroke_count', '=', strokeCount!))
         .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
+        .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
+        .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))
         .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))
         .where('radical_code_point', '=', radicalId)
         .as('kanjis'),

@@ -1,10 +1,11 @@
 import { type ActionArgs, type LoaderArgs, Response, json, redirect } from '@remix-run/node';
-import { $params, $path } from 'remix-routes';
+import { $path } from 'remix-routes';
 import {
   getRadicalByCodePoint,
   getRadicalsOrderByCodePoint,
   getRadicalsOrderByRead,
   getRadicalsOrderByStrokeCount,
+  updateRadical,
 } from '~/features/radicals/repositories.server';
 import { radicalParams, radicalQueryParams, radicalUpdateParams } from '~/features/radicals/validators';
 import { setFlashMessage } from '~/utils/flash.server';
@@ -27,8 +28,9 @@ export const get = async (request: LoaderArgs['request']) => {
 };
 
 export const update = async (request: ActionArgs['request'], params: ActionArgs['params']) => {
-  await checkedFormData(request, radicalUpdateParams);
-  const { codePoint } = $params('/radicals/:codePoint', params);
+  const data = await checkedFormData(request, radicalUpdateParams);
+  const { codePoint } = await checkedParamsLoader(params, radicalParams);
+  await updateRadical(codePoint, data);
   return redirect(
     $path('/radicals/:codePoint', { codePoint }),
     await setFlashMessage(request, { message: '部首の更新おしました', status: 'success' }),

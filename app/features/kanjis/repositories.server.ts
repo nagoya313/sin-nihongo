@@ -180,7 +180,7 @@ export const getSameKanjs = ({
     .orderBy('code_point')
     .execute();
 
-export const createKanjiGlyph = async ({ name, data, codePoint }: ValidatorData<typeof kanjiGlyphCreateParams>) =>
+export const createKanjiGlyph = ({ name, data, codePoint }: ValidatorData<typeof kanjiGlyphCreateParams>) =>
   db.transaction().execute(async (trx) => {
     await trx.insertInto('glyph').values({ name, data }).executeTakeFirstOrThrow();
     await trx
@@ -191,7 +191,7 @@ export const createKanjiGlyph = async ({ name, data, codePoint }: ValidatorData<
   });
 
 export const unlinkKanjiGlyph = async (codePoint: number) =>
-  await db
+  db
     .updateTable('kanji')
     .set({ glyph_name: null, updated_at: new Date() })
     .where('code_point', '=', codePoint)

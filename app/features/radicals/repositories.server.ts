@@ -2,7 +2,7 @@ import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import { escapeLike } from '~/utils/sql';
-import { type radicalQueryParams } from './validators';
+import { type radicalQueryParams, type radicalUpdateParams } from './validators';
 
 type RadicalQueryParams = ValidatorData<typeof radicalQueryParams>;
 
@@ -79,3 +79,26 @@ export const getRadicalByCodePoint = (codePoint: number) =>
     .where('radical.code_point', '=', codePoint)
     .groupBy('radical.code_point')
     .executeTakeFirst();
+
+export const updateRadical = (codePoint: number, { strokeCount, reads }: ValidatorData<typeof radicalUpdateParams>) =>
+  db.transaction().execute(async (trx) => {
+    await trx
+      .updateTable('radical')
+      .set({ stroke_count: strokeCount, updated_at: new Date() })
+      .where('code_point', '=', codePoint)
+      .executeTakeFirstOrThrow();
+    await trx
+      .deleteFrom('radical_read')
+      .where('radical_code_point', '=', codePoint)
+      .where('read', 'not in', reads)
+      .executeTakeFirstOrThrow();
+    await trx
+      .insertInto('radical_read')
+      .values(reads.map((read) => ({ read, radical_code_point: codePoint })))
+      .onConflict((oc) =>
+        oc.columns(['read', 'radical_code_point']).doUpdateSet({
+          updated_at: new Date(),
+        }),
+      )
+      .executeTakeFirstOrThrow();
+  });

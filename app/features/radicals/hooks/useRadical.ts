@@ -1,7 +1,7 @@
 import { useLoaderData, useParams } from '@remix-run/react';
 import { $params, $path } from 'remix-routes';
+import { inRadicalKanjiQueryParams } from '~/features/inRadicalKanjis/validators';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
-import { inRadicalKanjiQueryParams } from '~/features/radicals/validators';
 import useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
 import { type loader as radicalLoader } from '~/routes/radicals/$codePoint';

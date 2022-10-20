@@ -1,0 +1,2 @@
+export const MIN_IN_RADICAL_STROKE_COUNT = -1;
+export const MAX_IN_RADICAL_STROKE_COUNT = 25;

@@ -10,7 +10,7 @@ import { type kanjiGlyphCreateParams, type kanjiQueryParams } from './validators
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
 type SimpleQueryParams = Pick<
   QueryParams,
-  'read' | 'strokeCount' | 'inRadicalStrokeCount' | 'regular' | 'forName' | 'jisLevel' | 'radical' | 'direction'
+  'read' | 'strokeCount' | 'regular' | 'forName' | 'jisLevel' | 'radical' | 'direction'
 >;
 
 export const getKanjisOrderByCodePoint = ({
@@ -54,8 +54,8 @@ export const getKanjisOrderByCodePoint = ({
 export const getKanjis = async (query: QueryParams) => {
   const kanjis = await getKanjisOrderByCodePoint(query);
 
-  const result = [];
   // 直列にしないとコネクションプールが盡きる
+  const result = [];
   for (const kanji of kanjis) {
     if (kanji.glyph_name == null) {
       result.push({ ...kanji, glyph: null });
@@ -76,14 +76,19 @@ export const getKanjis = async (query: QueryParams) => {
   return result;
 };
 
-const getKanjisOrderByStrokeCountBase = <TOrder extends 'stroke_count' | 'in_radical_stroke_count'>(
-  { read, strokeCount, inRadicalStrokeCount, regular, forName, jisLevel, radical, direction }: SimpleQueryParams,
-  order: TOrder,
-) =>
+export const getKanjisOrderByStrokeCount = ({
+  read,
+  strokeCount,
+  regular,
+  forName,
+  jisLevel,
+  radical,
+  direction,
+}: SimpleQueryParams) =>
   db
     .selectFrom('kanji')
     .select([
-      order,
+      'stroke_count',
       sql<ReadonlyArray<number>>`array_agg(code_point order by radical_code_point, code_point)`.as('code_points'),
     ])
     .if(!!read, (qb) =>
@@ -92,25 +97,17 @@ const getKanjisOrderByStrokeCountBase = <TOrder extends 'stroke_count' | 'in_rad
         .where('read', 'like', `${escapeLike(read!)}%`),
     )
     .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
-    .if(inRadicalStrokeCount != null, (qb) => qb.where('in_radical_stroke_count', '=', inRadicalStrokeCount!))
     .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
     .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
     .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))
     .if(radical != null, (qb) => qb.where('radical_code_point', '=', radical!))
-    .groupBy(order)
-    .orderBy(order, direction)
+    .groupBy('stroke_count')
+    .orderBy('stroke_count', direction)
     .execute();
-
-export const getKanjisOrderByStrokeCount = (params: SimpleQueryParams) =>
-  getKanjisOrderByStrokeCountBase(params, 'stroke_count');
-
-export const getKanjisOrderByInRadicalStrokeCount = (params: SimpleQueryParams) =>
-  getKanjisOrderByStrokeCountBase(params, 'in_radical_stroke_count');
 
 export const getKanjisOrderByRead = ({
   read,
   strokeCount,
-  inRadicalStrokeCount,
   regular,
   forName,
   jisLevel,
@@ -124,7 +121,6 @@ export const getKanjisOrderByRead = ({
         .select([kanaTranslate.as('read_front'), 'read', 'code_point'])
         .innerJoin('kanji_read', 'code_point', 'kanji_read.kanji_code_point')
         .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
-        .if(inRadicalStrokeCount != null, (qb) => qb.where('in_radical_stroke_count', '=', inRadicalStrokeCount!))
         .if(regular !== 'none', (qb) => qb.where('regular', '=', regular === 'true'))
         .if(forName !== 'none', (qb) => qb.where('for_name', '=', forName === 'true'))
         .if(jisLevel != null, (qb) => qb.where('jis_level', '=', jisLevel!))

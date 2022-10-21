@@ -10,13 +10,13 @@ Vercel 向けのプロジェクトなので、https://vercel.com/new でリポ�
 
 ## 開發
 
-Remix アプリをローカルで實行するには、プロジェクトの依存關係が安裝されてゐることを要確認。
+プロジェクトの依存關係が安裝されてゐることを要確認。
 
 ```sh
 yarn install
 ```
 
-postgresql のデータベースを適宜作成。
+postgresql のデータベースがない場合は適宜作成。
 
 ```
 createdb {DB名}

@@ -1,6 +1,7 @@
 import { withZod } from '@remix-validated-form/with-zod';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
+import { kageData } from '~/utils/schemas/kageData';
 
 export const glyphQueryParams = withZod(
   z.object({
@@ -16,7 +17,7 @@ export const glyphCreateParams = withZod(
   z
     .object({
       name: zfd.text(z.string().max(50)),
-      data: zfd.text(),
+      data: kageData,
     })
     .and(
       z.union([

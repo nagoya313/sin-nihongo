@@ -5,6 +5,7 @@ import { booleanRadio } from '~/utils/schemas/booleanRadio';
 import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { jisLevelRadio } from '~/utils/schemas/jisLevelRadio';
+import { kageData } from '~/utils/schemas/kageData';
 import { kana } from '~/utils/schemas/regex';
 import { PG_INT_MAX, PG_SMALL_INT_MAX } from '~/utils/sql';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from './constants';
@@ -38,7 +39,7 @@ export const kanjiParams = withZod(z.object({ codePoint: zfd.numeric(z.number().
 export const kanjiGlyphCreateParams = withZod(
   z.object({
     name: zfd.text(z.string().max(50)),
-    data: zfd.text(),
+    data: kageData,
     codePoint: zfd.numeric(),
     formId: zfd.text(),
   }),
@@ -47,7 +48,7 @@ export const kanjiGlyphCreateParams = withZod(
 export const kanjiGlyphUpdateParams = withZod(
   z.object({
     name: zfd.text(z.string().max(50)),
-    data: zfd.text(),
+    data: kageData,
     codePoint: zfd.numeric(),
     formId: zfd.text(),
   }),

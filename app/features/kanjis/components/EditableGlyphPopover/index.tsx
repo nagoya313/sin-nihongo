@@ -46,8 +46,8 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
                 }}
               >
                 <VStack align="start">
-                  <FormControl name="name" label="なまえ" isRequired>
-                    <TextInput name="name" isReadOnly={!!kanji.glyph?.name} />
+                  <FormControl name="glyph_name" label="なまえ" isRequired>
+                    <TextInput name="glyph_name" isReadOnly={!!kanji.glyph?.name} />
                   </FormControl>
                   <FormControl name="data" label="影算料" isRequired>
                     <KageTextArea name="data" onDataChange={setPreview} />

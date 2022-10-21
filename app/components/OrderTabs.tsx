@@ -7,7 +7,7 @@ type OrderTabsProps = React.PropsWithChildren<{
 }>;
 
 const OrderTabs = ({ orders, children }: OrderTabsProps) => {
-  const [orderBy, setOrderBy] = useControlField<string>('orderBy');
+  const [orderBy, setOrderBy] = useControlField<string>('order_by');
   const { isValid, isSubmitting, submit } = useFormContext();
   const onChange = (index: number) => {
     setOrderBy(orders[index]!.key);
@@ -27,7 +27,7 @@ const OrderTabs = ({ orders, children }: OrderTabsProps) => {
         </TabList>
         <TabPanels>{children}</TabPanels>
       </Tabs>
-      <input type="hidden" name="orderBy" value={orderBy ?? orders[0]!.key} />
+      <input type="hidden" name="order_by" value={orderBy ?? orders[0]!.key} />
     </>
   );
 };

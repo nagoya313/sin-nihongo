@@ -19,7 +19,7 @@ const RadicalSelectInput = () => {
   const [value, setValue] = useControlField<typeof options[number] | null>('radical');
   const handleChange = useDebouncedCallback(async (read: string) => {
     if (read) {
-      const query = await radicalQueryParams.validate({ read, orderBy: 'code_point' });
+      const query = await radicalQueryParams.validate({ read, order_by: 'code_point' });
       if (!query.error) {
         // indexをつけないとroutes/radicals/indexの方のloaderが起動しない？
         fetcher.submit(query.submittedData, { action: $path('/radicals', { index: '' }) });

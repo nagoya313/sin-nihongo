@@ -19,9 +19,13 @@ export const index = async ({ request }: LoaderArgs) => {
 
 export const create = async ({ request }: ActionArgs) => {
   const data = await checkedFormData(request, glyphCreateParams);
-  if (data.subaction == null) {
-    const { isDrawable } = await getGlyphPreview(data.data);
-    if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+  const { isDrawable } = await getGlyphPreview(data.data);
+  if (!isDrawable) {
+    if (data.subaction == null) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+    return json(
+      {},
+      { ...(await setFlashMessage(request, { message: '部品が足りません', status: 'error' })), status: 422 },
+    );
   }
   try {
     await createGlyph(data);

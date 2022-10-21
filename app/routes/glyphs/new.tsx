@@ -4,6 +4,7 @@ import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { ValidatedForm } from 'remix-validated-form';
 import FormControl from '~/components/FormControl';
 import PageInfo from '~/components/PageInfo';
+import SearchTextInput from '~/components/SearchTextInput';
 import SubmitButton from '~/components/SubmitButton';
 import TextInput from '~/components/TextInput';
 import KageTextArea from '~/features/glyphs/components/KageTextArea';
@@ -42,7 +43,7 @@ const New = () => {
         <PageInfo avatar={<Icon fontSize={24} as={MdOutlineBook} />} title="グリフウィキから検索" />
         <ValidatedForm {...formProps}>
           <FormControl name="q">
-            <TextInput name="q" />
+            <SearchTextInput name="q" />
           </FormControl>
         </ValidatedForm>
         <Box overflow="hidden" mt={8}>

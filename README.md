@@ -1,34 +1,51 @@
-# Welcome to Remix!
+# 新日本語へようこそ！
 
-- [Remix Docs](https://remix.run/docs)
+このアプリはまさかの Remix 製。
 
-## Deployment
+- [Remix](https://remix.run/docs)
 
-After having run the `create-remix` command and selected "Vercel" as a deployment target, you only need to [import your Git repository](https://vercel.com/new) into Vercel, and it will be deployed.
+## デプロイ
 
-If you'd like to avoid using a Git repository, you can also deploy the directory by running [Vercel CLI](https://vercel.com/cli):
+Vercel 向けのプロジェクトなので、https://vercel.com/new でリポジトリをインポートしておけば、以降 main ブランチへの push の度に自動でデプロイされる。
 
-```sh
-npm i -g vercel
-vercel
-```
+## 開發
 
-It is generally recommended to use a Git repository, because future commits will then automatically be deployed by Vercel, through its [Git Integration](https://vercel.com/docs/concepts/git).
-
-## Development
-
-To run your Remix app locally, make sure your project's local dependencies are installed:
+Remix アプリをローカルで實行するには、プロジェクトの依存關係が安裝されてゐることを要確認。
 
 ```sh
-npm install
+yarn install
 ```
 
-Afterwards, start the Remix development server like so:
+postgresql のデータベースを適宜作成。
+
+```
+createdb {DB名}
+```
+
+必要な環境變數を .env 算帳に設定。auth0 關聯（callback url 等）は auth0 側でも要テナント設定。
+
+```
+SESSION_SECRET = {テキトーな値}
+AUTH0_RETURN_TO_URL = "http://localhost:3000"
+AUTH0_CALLBACK_URL = "http://localhost:3000/auth/callback"
+AUTH0_CLIENT_ID = {auth0のクライアントID}
+AUTH0_CLIENT_SECRET = {auth0のクライアントシークレット}
+AUTH0_DOMAIN = {auth0のドメイン名}
+AUTH0_LOGOUT_URL = "https://{auth0のドメイン名}/v2/logout"
+DATABASE_URL="postgresql://{user}:{password}@localhost:5432/{DB名}"
+```
+
+次のコマンドで DB の設定と初期算料を投入。
 
 ```sh
-npm run dev
+yarn db:migrate
+yarn db:seed
 ```
 
-Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
+その後、次のコマンドで Remix 開發サーバを起動。
 
-If you're used to using the `vercel dev` command provided by [Vercel CLI](https://vercel.com/cli) instead, you can also use that, but it's not needed.
+```sh
+yarn run dev
+```
+
+開發サーバの起動中 [http://localhost:3000](http://localhost:3000) を開けばページを閱覽可能。

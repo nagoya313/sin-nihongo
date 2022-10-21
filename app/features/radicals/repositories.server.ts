@@ -24,7 +24,7 @@ export const getRadicalsOrderByCodePoint = ({ read }: RadicalQueryParams) =>
     .distinct()
     .execute();
 
-export const getRadicalsOrderByStrokeCount = ({ direction, strokeCount, read }: RadicalQueryParams) =>
+export const getRadicalsOrderByStrokeCount = ({ direction, stroke_count, read }: RadicalQueryParams) =>
   db
     .selectFrom('radical')
     .select([
@@ -36,19 +36,19 @@ export const getRadicalsOrderByStrokeCount = ({ direction, strokeCount, read }: 
         .innerJoin('radical_read', 'radical.code_point', 'radical_read.radical_code_point')
         .where('read', 'like', `${escapeLike(read!)}%`),
     )
-    .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
+    .if(stroke_count != null, (qb) => qb.where('stroke_count', '=', stroke_count!))
     .orderBy('stroke_count', direction)
     .groupBy('stroke_count')
     .execute();
 
-export const getRadicalsOrderByRead = ({ direction, strokeCount, read }: RadicalQueryParams) =>
+export const getRadicalsOrderByRead = ({ direction, stroke_count, read }: RadicalQueryParams) =>
   db
     .selectFrom((db) =>
       db
         .selectFrom('radical')
         .select([sql<string>`left(read, 1)`.as('read_front'), 'read', 'code_point'])
         .innerJoin('radical_read', 'radical.code_point', 'radical_read.radical_code_point')
-        .if(strokeCount != null, (qb) => qb.where('stroke_count', '=', strokeCount!))
+        .if(stroke_count != null, (qb) => qb.where('stroke_count', '=', stroke_count!))
         .if(!!read, (qb) => qb.where('read', 'like', `${escapeLike(read!)}%`))
         .as('radicals'),
     )
@@ -80,11 +80,11 @@ export const getRadicalByCodePoint = (codePoint: number) =>
     .groupBy('radical.code_point')
     .executeTakeFirst();
 
-export const updateRadical = (codePoint: number, { strokeCount, reads }: ValidatorData<typeof radicalUpdateParams>) =>
+export const updateRadical = (codePoint: number, { stroke_count, reads }: ValidatorData<typeof radicalUpdateParams>) =>
   db.transaction().execute(async (trx) => {
     await trx
       .updateTable('radical')
-      .set({ stroke_count: strokeCount, updated_at: new Date() })
+      .set({ stroke_count: stroke_count, updated_at: new Date() })
       .where('code_point', '=', codePoint)
       .executeTakeFirstOrThrow();
     await trx

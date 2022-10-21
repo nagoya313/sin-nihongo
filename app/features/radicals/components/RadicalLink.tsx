@@ -8,7 +8,7 @@ type RadicalLinkProps = {
 };
 
 const RadicalLink = ({ codePoint }: RadicalLinkProps) => (
-  <CUILink as={Link} to={$path('/radicals/:codePoint', { codePoint })} color={useLinkColor()}>
+  <CUILink as={Link} to={$path('/radicals/:code_point', { code_point: codePoint })} color={useLinkColor()}>
     {String.fromCodePoint(codePoint)}
   </CUILink>
 );

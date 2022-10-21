@@ -11,7 +11,7 @@ type WordItemProps = {
 const WordItem = ({ codePoint, to }: WordItemProps) => (
   <WrapItem>
     <Center w="40px">
-      <CUILink as={Link} to={$path(`${to}/:codePoint` as any, { codePoint })} color={useLinkColor()}>
+      <CUILink as={Link} to={$path(`${to}/:code_point` as any, { code_point: codePoint })} color={useLinkColor()}>
         <Text fontSize="xl" fontWeight="bold">
           {String.fromCodePoint(codePoint)}
         </Text>

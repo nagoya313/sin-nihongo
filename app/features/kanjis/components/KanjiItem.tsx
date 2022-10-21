@@ -57,7 +57,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
     <LinkButton
       icon={<MdInfoOutline />}
       aria-label="kanji-detail"
-      to={$path('/kanjis/:codePoint', { codePoint: kanji.code_point })}
+      to={$path('/kanjis/:code_point', { code_point: kanji.code_point })}
     />
   </HStack>
 );

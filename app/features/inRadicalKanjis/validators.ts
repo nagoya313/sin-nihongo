@@ -11,12 +11,12 @@ import { MAX_IN_RADICAL_STROKE_COUNT, MIN_IN_RADICAL_STROKE_COUNT } from './cons
 export const inRadicalKanjiQueryParams = withZod(
   z.object({
     direction,
-    orderBy: z.enum(['stroke_count', 'read']).default('stroke_count'),
-    inRadicalStrokeCount: zfd.numeric(intRange(MIN_IN_RADICAL_STROKE_COUNT, MAX_IN_RADICAL_STROKE_COUNT).optional()),
+    order_by: z.enum(['stroke_count', 'read']).default('stroke_count'),
+    in_radical_stroke_count: zfd.numeric(intRange(MIN_IN_RADICAL_STROKE_COUNT, MAX_IN_RADICAL_STROKE_COUNT).optional()),
     read: zfd.text(kana.max(10).optional()),
     regular: booleanRadio,
-    forName: booleanRadio,
-    jisLevel: jisLevelRadio,
+    for_name: booleanRadio,
+    jis_level: jisLevelRadio,
   }),
 );
 

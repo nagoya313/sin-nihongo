@@ -4,12 +4,12 @@ import { inRadicalKanjiQueryParams } from '~/features/inRadicalKanjis/validators
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
 import useMatchesData from '~/hooks/useMatchesData';
 import { useSearch } from '~/hooks/useSearch';
-import { type loader as radicalLoader } from '~/routes/radicals/$codePoint';
-import { type loader } from '~/routes/radicals/$codePoint/index';
+import { type loader as radicalLoader } from '~/routes/radicals/$code_point';
+import { type loader } from '~/routes/radicals/$code_point/index';
 
 const useRadical = () => {
-  const { codePoint } = $params('/radicals/:codePoint', useParams());
-  const radical = useMatchesData<typeof radicalLoader>($path('/radicals/:codePoint', { codePoint }))!;
+  const { code_point } = $params('/radicals/:code_point', useParams());
+  const radical = useMatchesData<typeof radicalLoader>($path('/radicals/:code_point', { code_point }))!;
   const { data, formProps } = useSearch({
     formId: RADICAL_SEARCH_FORM_ID,
     validator: inRadicalKanjiQueryParams,

@@ -6,6 +6,6 @@ const LABELS = Object.freeze([
   { key: 'false', label: '未実装' },
 ] as const);
 
-const GlyphImplimentationRadio = () => <SearchBooleanSelectRadio name="hasGlyph" label="グリフ実装" labels={LABELS} />;
+const GlyphImplimentationRadio = () => <SearchBooleanSelectRadio name="has_glyph" label="グリフ実装" labels={LABELS} />;
 
 export default GlyphImplimentationRadio;

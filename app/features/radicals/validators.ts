@@ -10,20 +10,18 @@ import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from './constants';
 export const radicalQueryParams = withZod(
   z.object({
     direction,
-    orderBy: z.enum(['stroke_count', 'read', 'code_point']).default('stroke_count'),
-    strokeCount: zfd.numeric(intRange(MIN_STROKE_COUNT, MAX_STROKE_COUNT).optional()),
+    order_by: z.enum(['stroke_count', 'read', 'code_point']).default('stroke_count'),
+    stroke_count: zfd.numeric(intRange(MIN_STROKE_COUNT, MAX_STROKE_COUNT).optional()),
     read: zfd.text(hiragana.max(10).optional()),
   }),
 );
 
-export const radicalParams = withZod(
-  z.object({ codePoint: zfd.numeric(z.number().int().positive().max(PG_SMALL_INT_MAX)) }),
-);
+export const radicalParams = withZod(z.object({ code_point: zfd.numeric(intRange(1, PG_SMALL_INT_MAX)) }));
 
 export const radicalUpdateParams = withZod(
   z.object({
-    strokeCount: zfd.numeric(z.number().int('整数で入力してください').min(1).max(PG_SMALL_INT_MAX)),
-    reads: zfd.repeatable(z.array(zfd.text(zfd.text(hiragana.max(10)))).min(1)),
+    stroke_count: zfd.numeric(intRange(1, PG_SMALL_INT_MAX)),
+    reads: zfd.repeatable(z.array(zfd.text(hiragana.max(10))).min(1)),
   }),
 );
 

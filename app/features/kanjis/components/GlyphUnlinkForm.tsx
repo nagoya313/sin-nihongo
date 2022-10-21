@@ -15,8 +15,8 @@ const GlyphUnlinkForm = ({ kanji }: GlyphUnlinkFormProps) => {
   const transition = useTransition();
 
   return (
-    <ValidatedForm method="delete" validator={kanjiGlyphUnlinkParams} defaultValues={{ codePoint: kanji.code_point }}>
-      <HiddenInput name="codePoint" />
+    <ValidatedForm method="delete" validator={kanjiGlyphUnlinkParams} defaultValues={{ code_point: kanji.code_point }}>
+      <HiddenInput name="code_point" />
       <IconButton
         type="submit"
         aria-label="unlink-glyph"

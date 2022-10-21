@@ -14,9 +14,9 @@ import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/requ
 export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, radicalQueryParams);
   return json(
-    query.orderBy === 'code_point'
+    query.order_by === 'code_point'
       ? { radicals: await getRadicalsOrderByCodePoint(query) }
-      : query.orderBy === 'read'
+      : query.order_by === 'read'
       ? { radicalsOrderByRead: await getRadicalsOrderByRead(query) }
       : { radicalsOrderByStrokeCount: await getRadicalsOrderByStrokeCount(query) },
   );
@@ -24,17 +24,17 @@ export const index = async ({ request }: LoaderArgs) => {
 
 export const update = async ({ request, params }: ActionArgs) => {
   const data = await checkedFormData(request, radicalUpdateParams);
-  const { codePoint } = await checkedParamsLoader(params, radicalParams);
-  await updateRadical(codePoint, data);
+  const { code_point } = await checkedParamsLoader(params, radicalParams);
+  await updateRadical(code_point, data);
   return redirect(
-    $path('/radicals/:codePoint', { codePoint }),
+    $path('/radicals/:code_point', { code_point }),
     await setFlashMessage(request, { message: '部首の更新おしました', status: 'success' }),
   );
 };
 
 export const get = async ({ params }: LoaderArgs) => {
-  const { codePoint } = await checkedParamsLoader(params, radicalParams);
-  const radical = await getRadicalByCodePoint(codePoint);
+  const { code_point } = await checkedParamsLoader(params, radicalParams);
+  const radical = await getRadicalByCodePoint(code_point);
   if (radical == null) throw new Response('Not Found', { status: 404 });
   return json(radical);
 };

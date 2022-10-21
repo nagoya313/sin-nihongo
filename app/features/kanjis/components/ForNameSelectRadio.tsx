@@ -6,6 +6,6 @@ const LABELS = Object.freeze([
   { key: 'false', label: '非人名用' },
 ] as const);
 
-const ForNameSelectRadio = () => <SearchBooleanSelectRadio name="forName" label="人名用" labels={LABELS} />;
+const ForNameSelectRadio = () => <SearchBooleanSelectRadio name="for_name" label="人名用" labels={LABELS} />;
 
 export default ForNameSelectRadio;

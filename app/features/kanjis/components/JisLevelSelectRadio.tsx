@@ -8,8 +8,8 @@ const LABELS = Object.freeze([
 ] as const);
 
 const JisLevelSelectRadio = () => (
-  <FormControl as="fieldset" name="jisLevel" label="JIS水準">
-    <SearchRadioGroup name="jisLevel" radioLabels={LABELS} />
+  <FormControl as="fieldset" name="jis_level" label="JIS水準">
+    <SearchRadioGroup name="jis_level" radioLabels={LABELS} />
   </FormControl>
 );
 

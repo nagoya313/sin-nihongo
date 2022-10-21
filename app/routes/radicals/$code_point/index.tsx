@@ -35,7 +35,7 @@ const Radical = () => {
         <AdminLinkButton
           aria-label="radical-edit"
           icon={<MdEdit />}
-          to={$path(`/radicals/:codePoint/edit`, { codePoint: radical.code_point })}
+          to={$path(`/radicals/:code_point/edit`, { code_point: radical.code_point })}
         />
       }
     >
@@ -45,7 +45,7 @@ const Radical = () => {
           <HStack align="center">
             <SearchKanjiReadInput />
             <SearchStrokeCountInput
-              name="inRadicalStrokeCount"
+              name="in_radical_stroke_count"
               label="部首内画数"
               min={MIN_IN_RADICAL_STROKE_COUNT}
               max={MAX_IN_RADICAL_STROKE_COUNT}

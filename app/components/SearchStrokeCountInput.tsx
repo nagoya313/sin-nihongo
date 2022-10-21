@@ -11,7 +11,7 @@ type SearchStrokeCountInputProps = {
 const SearchStrokeCountSearchInput = ({
   min,
   max,
-  name = 'strokeCount',
+  name = 'stroke_count',
   label = '画数',
 }: SearchStrokeCountInputProps) => (
   <FormControl name={name} label={label}>

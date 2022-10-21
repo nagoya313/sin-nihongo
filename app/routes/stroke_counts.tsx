@@ -13,12 +13,12 @@ import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput'
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import { STROKE_COUNT_SEARCH_FROM_ID } from '~/features/strokeCounts/constants';
-import { get } from '~/features/strokeCounts/services.server';
+import { index } from '~/features/strokeCounts/services.server';
 import { strokeCountKanjiQueryParams } from '~/features/strokeCounts/validators';
 import { useSearch } from '~/hooks/useSearch';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜画数索引' });
-export const loader = async ({ request }: LoaderArgs) => get(request);
+export const loader = (args: LoaderArgs) => index(args);
 
 const StrokeCounts = () => {
   const { data, formProps } = useSearch({

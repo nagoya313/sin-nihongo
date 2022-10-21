@@ -13,20 +13,12 @@ import { RADICAL_EDIT_FORM_ID } from '~/features/radicals/constants';
 import { update } from '~/features/radicals/services.server';
 import { radicalUpdateParams } from '~/features/radicals/validators';
 import useMatchesData from '~/hooks/useMatchesData';
-import { authGuard } from '~/utils/request.server';
+import { actions, authGuard } from '~/utils/request.server';
 import { type loader as baseLoader } from '../$codePoint';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首編集' });
-
-export const loader = async ({ request }: LoaderArgs) => {
-  await authGuard(request);
-  return json({});
-};
-
-export const action = async ({ request, params }: ActionArgs) => {
-  await authGuard(request);
-  return update(request, params);
-};
+export const loader = (args: LoaderArgs) => authGuard(args, () => json({}));
+export const action = (args: ActionArgs) => authGuard(args, actions({ PATCH: update }));
 
 const Edit = () => {
   const { codePoint } = $params('/radicals/:codePoint', useParams());

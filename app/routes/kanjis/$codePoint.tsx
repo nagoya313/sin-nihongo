@@ -5,10 +5,10 @@ import Page from '~/components/Page';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import KanjiDefine from '~/features/kanjis/components/KanjiDefine';
-import { getByCodePoint } from '~/features/kanjis/services.server';
+import { get } from '~/features/kanjis/services.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜漢字詳細' });
-export const loader = async ({ params }: LoaderArgs) => getByCodePoint(params);
+export const loader = (args: LoaderArgs) => get(args);
 
 const Kanji = () => {
   const { kanji, glyph, sames } = useLoaderData<typeof loader>();

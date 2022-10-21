@@ -10,13 +10,8 @@ import {
 import { radicalParams, radicalQueryParams, radicalUpdateParams } from '~/features/radicals/validators';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
-import {
-  getInRadicalKanjisOrderByRead,
-  getInRadicalKanjisOrderByStrokeCount,
-} from '../inRadicalKanjis/repositories.server';
-import { inRadicalKanjiQueryParams } from '../inRadicalKanjis/validators';
 
-export const get = async (request: LoaderArgs['request']) => {
+export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, radicalQueryParams);
   return json(
     query.orderBy === 'code_point'
@@ -27,7 +22,7 @@ export const get = async (request: LoaderArgs['request']) => {
   );
 };
 
-export const update = async (request: ActionArgs['request'], params: ActionArgs['params']) => {
+export const update = async ({ request, params }: ActionArgs) => {
   const data = await checkedFormData(request, radicalUpdateParams);
   const { codePoint } = await checkedParamsLoader(params, radicalParams);
   await updateRadical(codePoint, data);
@@ -37,23 +32,9 @@ export const update = async (request: ActionArgs['request'], params: ActionArgs[
   );
 };
 
-export const getByCodePoint = async ({ params }: LoaderArgs) => {
+export const get = async ({ params }: LoaderArgs) => {
   const { codePoint } = await checkedParamsLoader(params, radicalParams);
   const radical = await getRadicalByCodePoint(codePoint);
   if (radical == null) throw new Response('Not Found', { status: 404 });
   return json(radical);
-};
-
-export const getInRadicalKanji = async ({ request, params }: LoaderArgs) => {
-  const { codePoint } = await checkedParamsLoader(params, radicalParams);
-  const query = await checkedQuery(request, inRadicalKanjiQueryParams);
-  return json(
-    query.orderBy === 'read'
-      ? {
-          kanjisOrderByRead: await getInRadicalKanjisOrderByRead(codePoint, query),
-        }
-      : {
-          kanjisOrderByStrokeCount: await getInRadicalKanjisOrderByStrokeCount(codePoint, query),
-        },
-  );
 };

@@ -3,7 +3,7 @@ import { getKanjisOrderByRead } from '~/features/kanjis/repositories.server';
 import { checkedQuery } from '~/utils/request.server';
 import { readKanjiQueryParams } from './validators';
 
-export const get = async (request: LoaderArgs['request']) => {
+export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, readKanjiQueryParams);
   return json({ kanjis: await getKanjisOrderByRead(query) });
 };

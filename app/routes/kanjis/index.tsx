@@ -17,21 +17,13 @@ import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput'
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import useKanjis from '~/features/kanjis/hooks/useKanjis';
-import { create, destroy, get, update } from '~/features/kanjis/services.server';
+import { create, destroy, index, update } from '~/features/kanjis/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from '~/features/kanjis/validators';
-import { actionResponse, authGuard } from '~/utils/request.server';
+import { actions, authGuard } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜漢字一覧' });
-export const loader = async ({ request }: LoaderArgs) => get(request);
-
-export const action = async ({ request }: ActionArgs) => {
-  await authGuard(request);
-  return actionResponse(request, {
-    POST: () => create(request),
-    PATCH: () => update(request),
-    DELETE: () => destroy(request),
-  });
-};
+export const loader = (args: LoaderArgs) => index(args);
+export const action = (args: ActionArgs) => authGuard(args, actions({ POST: create, PATCH: update, DELETE: destroy }));
 
 const Index = () => {
   const { data, formProps, moreLoad } = useKanjis();

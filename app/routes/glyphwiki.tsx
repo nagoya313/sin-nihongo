@@ -1,8 +1,5 @@
 import { type LoaderArgs } from '@remix-run/node';
-import { get } from '~/features/glyphwiki/serveces.server';
+import { index } from '~/features/glyphwiki/serveces.server';
 import { authGuard } from '~/utils/request.server';
 
-export const loader = async ({ request }: LoaderArgs) => {
-  await authGuard(request);
-  return get(request);
-};
+export const loader = (args: LoaderArgs) => authGuard(args, index);

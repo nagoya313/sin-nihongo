@@ -13,14 +13,10 @@ import { glyphCreateParams } from '~/features/glyphs/validators';
 import GlyphSearchResult from '~/features/glyphwiki/components/GlyphSearchResult';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
-import { actionResponse, authGuard } from '~/utils/request.server';
+import { actions, authGuard } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ作成' });
-
-export const action = async ({ request }: ActionArgs) => {
-  await authGuard(request);
-  return actionResponse(request, { POST: () => create(request) });
-};
+export const action = async (args: ActionArgs) => authGuard(args, actions({ POST: create }));
 
 const New = () => {
   const { formProps, preview, setPreview, glyph } = useGlyphNew();

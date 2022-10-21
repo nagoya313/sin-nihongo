@@ -12,12 +12,12 @@ import { ORDERS } from '~/components/constants';
 import { RadicalIcon } from '~/components/icons';
 import SearchRadicalReadInput from '~/features/radicals/components/SearchRadicalReadInput';
 import { RADICAL_SEARCH_FORM_ID } from '~/features/radicals/constants';
-import { get } from '~/features/radicals/services.server';
+import { index } from '~/features/radicals/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT, radicalQueryParams } from '~/features/radicals/validators';
 import { useSearch } from '~/hooks/useSearch';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' });
-export const loader = async ({ request }: LoaderArgs) => get(request);
+export const loader = (args: LoaderArgs) => index(args);
 
 const Index = () => {
   const { data, formProps } = useSearch({

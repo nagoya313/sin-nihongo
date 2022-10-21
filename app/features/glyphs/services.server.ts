@@ -12,12 +12,12 @@ import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedQuery } from '~/utils/request.server';
 import { getGlyphwiki } from '../glyphwiki/repositories.server';
 
-export const get = async (request: LoaderArgs['request']) => {
+export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, glyphQueryParams);
   return json({ glyphs: await getGlyphs(query), offset: query.offset });
 };
 
-export const create = async (request: ActionArgs['request']) => {
+export const create = async ({ request }: ActionArgs) => {
   const data = await checkedFormData(request, glyphCreateParams);
   if (data.subaction == null) {
     const { isDrawable } = await getGlyphPreview(data.data);
@@ -33,7 +33,7 @@ export const create = async (request: ActionArgs['request']) => {
   return json(await getGlyphwiki(data.q), headers);
 };
 
-export const destroy = async (request: ActionArgs['request']) => {
+export const destroy = async ({ request }: ActionArgs) => {
   const { name } = await checkedFormData(request, glyphDestroyParams);
   const { numDeletedRows } = await deleteGlyph(name);
   if (numDeletedRows === BigInt(1)) {
@@ -42,7 +42,7 @@ export const destroy = async (request: ActionArgs['request']) => {
   return json({ name: null }, await setFlashMessage(request, { message: 'グリフお削除しました', status: 'success' }));
 };
 
-export const getPreview = async (request: LoaderArgs['request']) => {
+export const preview = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, glyphPreviewParams);
   return json(await getGlyphPreview(query.data));
 };

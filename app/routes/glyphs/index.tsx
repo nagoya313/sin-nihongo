@@ -12,20 +12,12 @@ import SearchTextInput from '~/components/SearchTextInput';
 import { GlyphIcon } from '~/components/icons';
 import GlyphItem from '~/features/glyphs/components/GlyphItem';
 import useGlyphs from '~/features/glyphs/hooks/useGlyphs';
-import { destroy, get } from '~/features/glyphs/services.server';
-import { actionResponse, authGuard } from '~/utils/request.server';
+import { destroy, index } from '~/features/glyphs/services.server';
+import { actions, authGuard } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜グリフ一覧' });
-
-export const loader = async ({ request }: LoaderArgs) => {
-  await authGuard(request);
-  return get(request);
-};
-
-export const action = async ({ request }: ActionArgs) => {
-  await authGuard(request);
-  return actionResponse(request, { DELETE: () => destroy(request) });
-};
+export const loader = (args: LoaderArgs) => authGuard(args, index);
+export const action = async (args: ActionArgs) => authGuard(args, actions({ DELETE: destroy }));
 
 const Index = () => {
   const { data, formProps, moreLoad } = useGlyphs();

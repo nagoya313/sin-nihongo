@@ -3,14 +3,20 @@ import {
   type ActionFunction,
   type DataFunctionArgs,
   type LoaderArgs,
+  type LoaderFunction,
   Response,
 } from '@remix-run/node';
 import { type Validator, validationError } from 'remix-validated-form';
 import { authenticator } from '~/session.server';
 
-export const authGuard = async (request: DataFunctionArgs['request']) => {
-  const user = await authenticator.isAuthenticated(request);
+export const authGuard = async <TFunction extends LoaderFunction | ActionFunction>(
+  args: DataFunctionArgs,
+  func: TFunction,
+) => {
+  const user = await authenticator.isAuthenticated(args.request);
   if (user == null) throw new Response('Not Found', { status: 404 });
+  // 明示的にキャストしないと Promise<any> 等に推論される
+  return func(args) as ReturnType<TFunction>;
 };
 
 export const checkedParamsLoader = async <TParams>(params: LoaderArgs['params'], validator: Validator<TParams>) => {
@@ -42,13 +48,14 @@ export const checkedFormData = async <TQuery>(request: ActionArgs['request'], va
 
 type ActionResponse = ReturnType<ActionFunction>;
 
-type Actions<TResponse extends ActionResponse> = Partial<Record<'POST' | 'PATCH' | 'DELETE', () => TResponse>>;
+type Actions<TResponse extends ActionResponse> = Partial<
+  Record<'POST' | 'PATCH' | 'DELETE', (args: ActionArgs) => TResponse>
+>;
 
-export const actionResponse = <TResponse extends ActionResponse>(
-  request: ActionArgs['request'],
-  actions: Actions<TResponse>,
-) => {
-  const service = actions[request.method as keyof typeof actions];
-  if (service != null) return service();
-  throw new Response('Method not allowed', { status: 405 });
-};
+export const actions =
+  <TResponse extends ActionResponse>(actions: Actions<TResponse>) =>
+  (args: ActionArgs) => {
+    const service = actions[args.request.method as keyof typeof actions];
+    if (service != null) return service(args);
+    throw new Response('Method not allowed', { status: 405 });
+  };

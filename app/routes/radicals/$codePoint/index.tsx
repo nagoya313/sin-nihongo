@@ -11,6 +11,7 @@ import SearchPanel from '~/components/SearchPanel';
 import SearchStrokeCountInput from '~/components/SearchStrokeCountInput';
 import StrokeCountOrder from '~/components/StrokeCountOrder';
 import { ORDERS } from '~/components/constants';
+import { index } from '~/features/inRadicalKanjis/services.server';
 import { MAX_IN_RADICAL_STROKE_COUNT, MIN_IN_RADICAL_STROKE_COUNT } from '~/features/inRadicalKanjis/validators';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
@@ -18,10 +19,9 @@ import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio'
 import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import RadicalDefine from '~/features/radicals/components/RadicalDefine';
 import useRadical from '~/features/radicals/hooks/useRadical';
-import { getInRadicalKanji } from '~/features/radicals/services.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜部首索引' });
-export const loader = async (args: LoaderArgs) => getInRadicalKanji(args);
+export const loader = async (args: LoaderArgs) => index(args);
 
 const Radical = () => {
   const { radical, kanjis, formProps } = useRadical();

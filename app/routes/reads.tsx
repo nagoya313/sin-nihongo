@@ -13,12 +13,12 @@ import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadi
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import { READ_SEARCH_FROM_ID } from '~/features/reads/constants';
-import { get } from '~/features/reads/services.server';
+import { index } from '~/features/reads/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT, readKanjiQueryParams } from '~/features/reads/validators';
 import { useSearch } from '~/hooks/useSearch';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜音訓索引' });
-export const loader = async ({ request }: LoaderArgs) => get(request);
+export const loader = (args: LoaderArgs) => index(args);
 
 const Reads = () => {
   const { data, formProps } = useSearch({

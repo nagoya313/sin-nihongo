@@ -18,16 +18,26 @@ import {
 } from '~/features/kanjis/validators';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
+import { isErrorData } from '~/utils/typeCheck';
 
-export const get = async (request: LoaderArgs['request']) => {
+export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
   return json({ kanjis: await getDrawableKanjis(query), offset: query.offset });
 };
 
-export const create = async (request: ActionArgs['request']) => {
-  const data = await checkedFormData(request, kanjiGlyphCreateParams);
+const checkedKanjiData = async (
+  request: ActionArgs['request'],
+  validator: typeof kanjiGlyphCreateParams | typeof kanjiGlyphUpdateParams,
+) => {
+  const data = await checkedFormData(request, validator);
   const { isDrawable } = await getGlyphPreview(data.data);
   if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
+  return data;
+};
+
+export const create = async ({ request }: ActionArgs) => {
+  const data = await checkedKanjiData(request, kanjiGlyphCreateParams);
+  if (isErrorData(data)) return data;
   try {
     await createKanjiGlyph(data);
     return json(
@@ -39,10 +49,9 @@ export const create = async (request: ActionArgs['request']) => {
   }
 };
 
-export const update = async (request: ActionArgs['request']) => {
-  const data = await checkedFormData(request, kanjiGlyphUpdateParams);
-  const { isDrawable } = await getGlyphPreview(data.data);
-  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.formId }, data);
+export const update = async ({ request }: ActionArgs) => {
+  const data = await checkedKanjiData(request, kanjiGlyphUpdateParams);
+  if (isErrorData(data)) return data;
   await updateGlyph(data);
   return json(
     { kanji: await getDrawableKanji(data.codePoint) },
@@ -50,7 +59,7 @@ export const update = async (request: ActionArgs['request']) => {
   );
 };
 
-export const destroy = async (request: ActionArgs['request']) => {
+export const destroy = async ({ request }: ActionArgs) => {
   const data = await checkedFormData(request, kanjiGlyphUnlinkParams);
   await unlinkKanjiGlyph(data.codePoint);
   const kanji = (await getKanjiByCodePoint(data.codePoint))!;
@@ -60,7 +69,7 @@ export const destroy = async (request: ActionArgs['request']) => {
   );
 };
 
-export const getByCodePoint = async (params: LoaderArgs['params']) => {
+export const get = async ({ params }: LoaderArgs) => {
   const { codePoint } = await checkedParamsLoader(params, kanjiParams);
   const kanji = await getKanjiByCodePoint(codePoint);
   if (kanji == null) throw new Response('Not Found', { status: 404 });

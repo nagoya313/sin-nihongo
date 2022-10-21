@@ -1,16 +1,11 @@
-import FormControl from '~/components/FormControl';
-import SearchRadioGroup from '~/components/SearchRadioGroup';
+import SearchRadioInput from '~/components/SearchRadioInput';
 
 const LABELS = Object.freeze([
-  { key: 'none', label: '指定なし' },
-  { key: '1', label: '第一水準' },
-  { key: '2', label: '第二水準' },
+  { value: 'none', label: '指定なし' },
+  { value: '1', label: '第一水準' },
+  { value: '2', label: '第二水準' },
 ] as const);
 
-const JisLevelSelectRadio = () => (
-  <FormControl as="fieldset" name="jis_level" label="JIS水準">
-    <SearchRadioGroup name="jis_level" radioLabels={LABELS} />
-  </FormControl>
-);
+const JisLevelSelectRadio = () => <SearchRadioInput name="jis_level" label="JIS水準" options={LABELS} />;
 
 export default JisLevelSelectRadio;

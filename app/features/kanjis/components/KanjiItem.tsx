@@ -1,4 +1,4 @@
-import { Badge, Box, Divider, HStack, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
+import { Box, Divider, HStack, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { MdInfoOutline } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import LinkButton from '~/components/LinkButton';
@@ -7,9 +7,8 @@ import { useShadow } from '~/hooks/useColor';
 import { type QueryResultData } from '~/utils/types';
 import { type getDrawableKanjis } from '../repositories.server';
 import EditableGlyphPopover from './EditableGlyphPopover';
-import JisLevelBadge from './JisLevelBadge';
+import KanjiBadges from './KanjiBadges';
 import KanjiRead from './KanjiRead';
-import RegularBadge from './RegularBadge';
 
 type KanjiItemProps = {
   kanji: QueryResultData<typeof getDrawableKanjis>[number];
@@ -40,15 +39,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
           </Text>
         </HStack>
         <Divider />
-        <HStack>
-          <RegularBadge regular={kanji.regular} />
-          {kanji.for_name && (
-            <Badge p={1} variant="solid" colorScheme="blue">
-              人名用
-            </Badge>
-          )}
-          <JisLevelBadge jisLevel={kanji.jis_level} />
-        </HStack>
+        <KanjiBadges kanji={kanji} />
         <Divider />
         <KanjiRead reads={kanji.reads} />
       </VStack>

@@ -38,8 +38,8 @@ export const kanjiParams = withZod(z.object({ code_point: zfd.numeric(intRange(1
 
 export const kanjiUpdateParams = withZod(
   z.object({
-    stroke_count: zfd.numeric(intRange(1, PG_SMALL_INT_MAX).optional()),
-    in_radical_stroke_count: zfd.numeric(intRange(1, PG_SMALL_INT_MAX).optional()),
+    stroke_count: zfd.numeric(intRange(1, PG_SMALL_INT_MAX)),
+    in_radical_stroke_count: zfd.numeric(intRange(-1, PG_SMALL_INT_MAX)),
     reads: zfd.repeatable(z.array(zfd.text(oneSideKana.max(10))).min(1)),
     regular: zfd.checkbox(),
     for_name: zfd.checkbox(),

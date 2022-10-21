@@ -1,11 +1,11 @@
-import SearchBooleanSelectRadio from '~/components/SearchBooleanSelectRadio';
+import SearchRadioInput from '~/components/SearchRadioInput';
 
 const LABELS = Object.freeze([
-  { key: 'none', label: '指定なし' },
-  { key: 'true', label: '実装済み' },
-  { key: 'false', label: '未実装' },
+  { value: 'none', label: '指定なし' },
+  { value: 'true', label: '実装済み' },
+  { value: 'false', label: '未実装' },
 ] as const);
 
-const GlyphImplimentationRadio = () => <SearchBooleanSelectRadio name="has_glyph" label="グリフ実装" labels={LABELS} />;
+const GlyphImplimentationRadio = () => <SearchRadioInput name="has_glyph" label="グリフ実装" options={LABELS} />;
 
 export default GlyphImplimentationRadio;

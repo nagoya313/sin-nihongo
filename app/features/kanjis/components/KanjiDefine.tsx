@@ -4,6 +4,7 @@ import RadicalLink from '~/features/radicals/components/RadicalLink';
 import { HIRAGANA_MATCHER } from '~/utils/schemas/regex';
 import { type QueryResultData } from '~/utils/types';
 import { type getKanjiByCodePoint } from '../repositories.server';
+import KanjiBadges from './KanjiBadges';
 
 type KanjiDefineProps = {
   kanji: QueryResultData<typeof getKanjiByCodePoint>;
@@ -12,6 +13,7 @@ type KanjiDefineProps = {
 
 const KanjiDefine = ({ kanji, sames }: KanjiDefineProps) => (
   <DataList>
+    <DataItem term="" definition={<KanjiBadges kanji={kanji} />} />
     <DataItem term="画数" definition={kanji.stroke_count} />
     <DataItem term="音読み" definition={kanji.reads.filter((read) => !read.match(HIRAGANA_MATCHER)).join('　')} />
     <DataItem term="訓読み" definition={kanji.reads.filter((read) => read.match(HIRAGANA_MATCHER)).join('　')} />

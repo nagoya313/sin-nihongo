@@ -147,6 +147,7 @@ export const getKanjiByCodePoint = (codePoint: number) =>
     .select([
       'code_point',
       'stroke_count',
+      'in_radical_stroke_count',
       'regular',
       'for_name',
       'jis_level',

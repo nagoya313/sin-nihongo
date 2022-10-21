@@ -63,4 +63,10 @@ const stroke = strokeBase.refine(
 
 const strokes = z.array(z.string().refine((data) => stroke.safeParse(data.split(':')).success));
 
+export const kageName = zfd.text(
+  z
+    .string()
+    .regex(/^[\da-z_\-@]+$/, '不正ななまえです')
+    .max(100),
+);
 export const kageData = zfd.text().refine((data) => strokes.safeParse(data.split('$')).success, '不正な書式です');

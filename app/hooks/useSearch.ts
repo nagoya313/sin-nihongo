@@ -28,10 +28,9 @@ export const useSearch = <TParamsType, TData>({
   action,
 }: UseSearchProps<TParamsType, TData>) => {
   const fetcher = useFetcher<TData>();
-  const { getValues } = useFormContext(formId);
-  const submit = () => fetcher.submit(getValues(), { action });
-  const onSubmit: FormProps<TParamsType>['onSubmit'] = (_, { preventDefault }) => {
-    submit();
+  const onSubmit: FormProps<TParamsType>['onSubmit'] = async (_, { nativeEvent, preventDefault }) => {
+    // useFormContext の submit だと檢索パラメータが入らないので暫定
+    fetcher.submit(nativeEvent.target as HTMLFormElement, { action });
     preventDefault();
   };
   const [data, setData] = useState<TData | {}>(initialData);

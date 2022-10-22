@@ -34,7 +34,7 @@ export const update = async ({ request, params }: ActionArgs) => {
   if (isErrorData(data)) return data;
   await updateKanji(code_point, data);
   return redirect(
-    $path('/kanjis', { code_point }),
+    $path('/kanjis'),
     await setFlashMessage(request, { message: '漢字お更新しました', status: 'success' }),
   );
 };

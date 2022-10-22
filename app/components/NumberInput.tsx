@@ -13,13 +13,15 @@ type NumberInputProps = {
   placeholder?: string;
   min?: number;
   max?: number;
+  value?: CUINumberInputProps['value'];
+  onChange?: CUINumberInputProps['onChange'];
 };
 
-const NumberInput = ({ name, placeholder, ...inputProps }: NumberInputProps) => {
+const NumberInput = ({ name, placeholder, value, ...inputProps }: NumberInputProps) => {
   const { getInputProps } = useField(name);
 
   return (
-    <CUINumberInput {...getInputProps<CUINumberInputProps>({ ...inputProps })}>
+    <CUINumberInput value={value} {...getInputProps<CUINumberInputProps>({ ...inputProps })}>
       <NumberInputField placeholder={placeholder} />
       <NumberInputStepper>
         <NumberIncrementStepper />

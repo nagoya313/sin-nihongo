@@ -5,6 +5,7 @@ type TextInputProps = {
   name: string;
   placeholder?: string;
   isReadOnly?: boolean;
+  onChange?: InputProps['onChange'];
 };
 
 const TextInput = ({ name, ...inputProps }: TextInputProps) => {

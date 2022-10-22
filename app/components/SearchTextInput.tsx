@@ -1,18 +1,8 @@
-import { Input, type InputProps } from '@chakra-ui/react';
-import { useField } from 'remix-validated-form';
 import { useSearchDebouncedInput } from '~/hooks/useSearch';
+import TextInput from './TextInput';
 
-type SearchTextInputProps = {
-  name: string;
-  placeholder?: string;
-  isReadOnly?: boolean;
-};
+type SearchTextInputProps = Omit<React.ComponentProps<typeof TextInput>, 'onChange'>;
 
-const SearchTextInput = ({ name, ...inputProps }: SearchTextInputProps) => {
-  const { getInputProps } = useField(name);
-  const onChange = useSearchDebouncedInput();
-
-  return <Input {...getInputProps<InputProps>({ id: name, onChange, ...inputProps })} />;
-};
+const SearchTextInput = (props: SearchTextInputProps) => <TextInput {...props} onChange={useSearchDebouncedInput()} />;
 
 export default SearchTextInput;

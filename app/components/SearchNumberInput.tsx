@@ -1,39 +1,19 @@
-import {
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  type NumberInputProps,
-  NumberInputStepper,
-} from '@chakra-ui/react';
-import { useControlField, useField } from 'remix-validated-form';
+import React from 'react';
+import { useControlField } from 'remix-validated-form';
 import { useSearchDebouncedInput } from '~/hooks/useSearch';
+import NumberInput from './NumberInput';
 
-type SearchNumberInputProps = {
-  name: string;
-  placeholder?: string;
-  min?: number;
-  max?: number;
-};
+type SearchNumberInputProps = Omit<React.ComponentProps<typeof NumberInput>, 'value' | 'onChange'>;
 
-const SearchNumberInput = ({ name, placeholder, ...inputProps }: SearchNumberInputProps) => {
-  const { getInputProps } = useField(name);
-  const [value, setValue] = useControlField<string>(name);
+const SearchNumberInput = (props: SearchNumberInputProps) => {
+  const [value, setValue] = useControlField<string>(props.name);
   const submit = useSearchDebouncedInput();
   const handleChange = (value: string) => {
     setValue(value);
     submit();
   };
 
-  return (
-    <NumberInput value={value ?? ''} {...getInputProps<NumberInputProps>({ ...inputProps, onChange: handleChange })}>
-      <NumberInputField placeholder={placeholder} />
-      <NumberInputStepper>
-        <NumberIncrementStepper />
-        <NumberDecrementStepper />
-      </NumberInputStepper>
-    </NumberInput>
-  );
+  return <NumberInput {...props} value={value ?? ''} onChange={handleChange} />;
 };
 
 export default SearchNumberInput;

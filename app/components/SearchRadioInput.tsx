@@ -1,33 +1,17 @@
-import { RadioGroup, type RadioGroupProps } from '@chakra-ui/react';
-import { useControlField, useField, useFormContext } from 'remix-validated-form';
-import FormControl from './FormControl';
-import RadioItems from './RadioItems';
+import { useControlField, useFormContext } from 'remix-validated-form';
+import RadioInput from './RadioInput';
 
-type SearchRadioGroupProps = {
-  name: string;
-  label: string;
-  options: ReadonlyArray<{ value: string; label: string }>;
-};
+type SearchRadioGroupProps = Omit<React.ComponentProps<typeof RadioInput>, 'value' | 'onChange'>;
 
-const SearchRadioGroup = ({ name, label, options }: SearchRadioGroupProps) => {
-  const { getInputProps } = useField(name);
-  const [value, setValue] = useControlField<string>(name);
+const SearchRadioGroup = (props: SearchRadioGroupProps) => {
+  const [value, setValue] = useControlField<string>(props.name);
   const { submit } = useFormContext();
   const handleChange = (value: string) => {
     setValue(value);
     submit();
   };
 
-  return (
-    <FormControl as="fieldset" name={name} label={label}>
-      <RadioGroup
-        value={value ?? options[0]!.value}
-        {...getInputProps<Omit<RadioGroupProps, 'children'>>({ onChange: handleChange })}
-      >
-        <RadioItems options={options} />
-      </RadioGroup>
-    </FormControl>
-  );
+  return <RadioInput {...props} value={value} onChange={handleChange} />;
 };
 
 export default SearchRadioGroup;

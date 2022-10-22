@@ -7,7 +7,7 @@ import Page from '~/components/Page';
 import SearchFormClearButton from '~/components/SearchFormClearButton';
 import SearchPanel from '~/components/SearchPanel';
 import SearchStrokeCountInput from '~/components/SearchStrokeCountInput';
-import TextInput from '~/components/TextInput';
+import SearchTextInput from '~/components/SearchTextInput';
 import { KanjiIcon } from '~/components/icons';
 import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio';
 import GlyphImplimentationRadio from '~/features/kanjis/components/GlyphImplimentationRadio';
@@ -34,7 +34,7 @@ const Index = () => {
         <SearchPanel align="stretch">
           <HStack align="center">
             <FormControl name="kanji" label="漢字" help="漢字またわコードポイントから検索できます。">
-              <TextInput name="kanji" placeholder="一、u4e00" />
+              <SearchTextInput name="kanji" placeholder="一、u4e00" />
             </FormControl>
             <SearchKanjiReadInput />
             <SearchStrokeCountInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />

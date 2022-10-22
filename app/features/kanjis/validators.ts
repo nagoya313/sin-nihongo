@@ -6,7 +6,7 @@ import { direction } from '~/utils/schemas/direction';
 import { intRange } from '~/utils/schemas/intRange';
 import { jisLevelRadio } from '~/utils/schemas/jisLevelRadio';
 import { kageData, kageName } from '~/utils/schemas/kageData';
-import { kana, oneSideKana } from '~/utils/schemas/regex';
+import { hiragana, kana, katakana } from '~/utils/schemas/regex';
 import { PG_INT_MAX, PG_SMALL_INT_MAX } from '~/utils/sql';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from './constants';
 
@@ -40,7 +40,8 @@ export const kanjiUpdateParams = withZod(
   z.object({
     stroke_count: zfd.numeric(intRange(1, PG_SMALL_INT_MAX)),
     in_radical_stroke_count: zfd.numeric(intRange(-1, PG_SMALL_INT_MAX)),
-    reads: zfd.repeatable(z.array(zfd.text(oneSideKana.max(10))).min(1)),
+    on_reads: zfd.repeatable(z.array(zfd.text(katakana.max(10))).min(1)),
+    kun_reads: zfd.repeatable(z.array(zfd.text(hiragana.max(10))).min(1)),
     regular: zfd.checkbox(),
     for_name: zfd.checkbox(),
     jis_level: z.union([zfd.numeric(z.literal(1)), zfd.numeric(z.literal(2))]),

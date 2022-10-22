@@ -31,7 +31,7 @@ const Edit = () => {
           <FormControl name="stroke_count" label="画数" isRequired>
             <NumberInput name="stroke_count" min={1} max={100} />
           </FormControl>
-          <ReadsInput />
+          <ReadsInput name="reads" label="よみかた" />
           <SubmitButton>更新する</SubmitButton>
         </VStack>
       </ValidatedForm>

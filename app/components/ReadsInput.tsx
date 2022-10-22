@@ -1,23 +1,33 @@
 import { HStack, IconButton } from '@chakra-ui/react';
-import { MdClear } from 'react-icons/md';
+import { MdAdd, MdClear } from 'react-icons/md';
 import { useControlField } from 'remix-validated-form';
 import FormControl from './FormControl';
 import TextInput from './TextInput';
 
-const ReadsInput = () => {
-  const [reads, setReads] = useControlField<string[]>('reads');
+type ReadsInputProps = {
+  name: string;
+  label: string;
+};
+
+const ReadsInput = ({ name, label }: ReadsInputProps) => {
+  const [reads, setReads] = useControlField<string[]>(name);
+  const addReads = () => {
+    const next = [...reads];
+    next.push('');
+    setReads(next);
+  };
 
   return (
     <>
       {reads?.map((_, index) => (
         <FormControl
           key={index}
-          name={`reads[${index}]`}
-          label={index === 0 ? 'よみかた' : undefined}
+          name={`${name}[${index}]`}
+          label={index === 0 ? label : undefined}
           isRequired={index === 0}
         >
           <HStack>
-            <TextInput name={`reads[${index}]`} />
+            <TextInput name={`${name}[${index}]`} />
             <IconButton
               aria-label="read-clear"
               icon={<MdClear />}
@@ -31,6 +41,7 @@ const ReadsInput = () => {
           </HStack>
         </FormControl>
       ))}
+      <IconButton aria-label="read-add" icon={<MdAdd />} onClick={addReads} />
     </>
   );
 };

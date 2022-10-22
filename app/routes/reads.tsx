@@ -12,6 +12,7 @@ import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio'
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
+import SearchRadicalSelectInput from '~/features/kanjis/components/SearchRadicalSelectInput';
 import { READ_SEARCH_FROM_ID } from '~/features/reads/constants';
 import { index } from '~/features/reads/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT, readKanjiQueryParams } from '~/features/reads/validators';
@@ -34,6 +35,7 @@ const Reads = () => {
           <HStack align="center">
             <SearchKanjiReadInput />
             <SearchStrokeCountInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
+            <SearchRadicalSelectInput />
           </HStack>
           <HStack align="center">
             <RegularSelectRadio />

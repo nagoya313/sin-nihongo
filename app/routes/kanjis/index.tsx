@@ -13,9 +13,9 @@ import ForNameSelectRadio from '~/features/kanjis/components/ForNameSelectRadio'
 import GlyphImplimentationRadio from '~/features/kanjis/components/GlyphImplimentationRadio';
 import JisLevelSelectRadio from '~/features/kanjis/components/JisLevelSelectRadio';
 import KanjiItem from '~/features/kanjis/components/KanjiItem';
-import RadicalSelectInput from '~/features/kanjis/components/RadicalSelectInput';
 import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio';
 import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
+import SearchRadicalSelectInput from '~/features/kanjis/components/SearchRadicalSelectInput';
 import useKanjis from '~/features/kanjis/hooks/useKanjis';
 import { create, destroy, index, update } from '~/features/kanjis/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from '~/features/kanjis/validators';
@@ -38,7 +38,7 @@ const Index = () => {
             </FormControl>
             <SearchKanjiReadInput />
             <SearchStrokeCountInput min={MIN_STROKE_COUNT} max={MAX_STROKE_COUNT} />
-            <RadicalSelectInput />
+            <SearchRadicalSelectInput />
           </HStack>
           <HStack align="center">
             <RegularSelectRadio />

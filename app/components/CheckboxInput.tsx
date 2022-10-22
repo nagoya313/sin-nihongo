@@ -10,7 +10,7 @@ const CheckboxInput = ({ name, label }: CheckboxInputProps) => {
   const { getInputProps, defaultValue } = useField(name);
 
   return (
-    <Checkbox defaultChecked={defaultValue} {...getInputProps()}>
+    <Checkbox defaultChecked={defaultValue} value="on" {...getInputProps()}>
       {label}
     </Checkbox>
   );

@@ -18,7 +18,6 @@ import RadioInput from '~/components/RadioInput';
 import ReadsInput from '~/components/ReadsInput';
 import SubmitButton from '~/components/SubmitButton';
 import { type loader } from '~/routes/kanjis/$code_point';
-import { HIRAGANA_MATCHER, KATAKANA_MATCHER } from '~/utils/schemas/regex';
 import { type LoaderData } from '~/utils/types';
 import { toKunyomi, toOnyomi } from '../decorators';
 import { kanjiUpdateParams } from '../validators';
@@ -42,6 +41,7 @@ const KanjiEditForm = ({ kanji }: KanjiEditFormProps) => {
         <AccordionPanel mt={4}>
           <VStack align="start">
             <ValidatedForm
+              method="patch"
               validator={kanjiUpdateParams}
               defaultValues={{
                 stroke_count: kanji.stroke_count,

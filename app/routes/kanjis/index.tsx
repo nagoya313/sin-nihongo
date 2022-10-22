@@ -17,13 +17,14 @@ import RegularSelectRadio from '~/features/kanjis/components/RegularSelectRadio'
 import SearchKanjiReadInput from '~/features/kanjis/components/SearchKanjiReadInput';
 import SearchRadicalSelectInput from '~/features/kanjis/components/SearchRadicalSelectInput';
 import useKanjis from '~/features/kanjis/hooks/useKanjis';
-import { create, destroy, index, update } from '~/features/kanjis/services.server';
+import { createGlyph, index, unlinkGlyph, updateKanjiGlyph } from '~/features/kanjis/services.server';
 import { MAX_STROKE_COUNT, MIN_STROKE_COUNT } from '~/features/kanjis/validators';
 import { actions, authGuard } from '~/utils/request.server';
 
 export const meta: MetaFunction = () => ({ title: '新日本語｜漢字一覧' });
 export const loader = (args: LoaderArgs) => index(args);
-export const action = (args: ActionArgs) => authGuard(args, actions({ POST: create, PATCH: update, DELETE: destroy }));
+export const action = (args: ActionArgs) =>
+  authGuard(args, actions({ POST: createGlyph, PATCH: updateKanjiGlyph, DELETE: unlinkGlyph }));
 
 const Index = () => {
   const { data, formProps, moreLoad } = useKanjis();

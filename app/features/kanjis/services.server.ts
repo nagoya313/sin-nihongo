@@ -1,4 +1,5 @@
-import { type ActionArgs, type LoaderArgs, Response, json } from '@remix-run/node';
+import { type ActionArgs, type LoaderArgs, Response, json, redirect } from '@remix-run/node';
+import { $path } from 'remix-routes';
 import { validationError } from 'remix-validated-form';
 import { getDrawableGlyphByName, getGlyphPreview, updateGlyph } from '~/features/glyphs/repositories.server';
 import {
@@ -8,6 +9,7 @@ import {
   getKanjiByCodePoint,
   getSameKanjs,
   unlinkKanjiGlyph,
+  updateKanji,
 } from '~/features/kanjis/repositories.server';
 import {
   kanjiGlyphCreateParams,
@@ -15,6 +17,7 @@ import {
   kanjiGlyphUpdateParams,
   kanjiParams,
   kanjiQueryParams,
+  kanjiUpdateParams,
 } from '~/features/kanjis/validators';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
@@ -23,6 +26,17 @@ import { isErrorData } from '~/utils/typeCheck';
 export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, kanjiQueryParams);
   return json({ kanjis: await getDrawableKanjis(query), offset: query.offset });
+};
+
+export const update = async ({ request, params }: ActionArgs) => {
+  const { code_point } = await checkedParamsLoader(params, kanjiParams);
+  const data = await checkedFormData(request, kanjiUpdateParams);
+  if (isErrorData(data)) return data;
+  await updateKanji(code_point, data);
+  return redirect(
+    $path('/kanjis', { code_point }),
+    await setFlashMessage(request, { message: '漢字お更新しました', status: 'success' }),
+  );
 };
 
 const checkedKanjiData = async (
@@ -35,7 +49,7 @@ const checkedKanjiData = async (
   return data;
 };
 
-export const create = async ({ request }: ActionArgs) => {
+export const createGlyph = async ({ request }: ActionArgs) => {
   const data = await checkedKanjiData(request, kanjiGlyphCreateParams);
   if (isErrorData(data)) return data;
   try {
@@ -49,7 +63,7 @@ export const create = async ({ request }: ActionArgs) => {
   }
 };
 
-export const update = async ({ request }: ActionArgs) => {
+export const updateKanjiGlyph = async ({ request }: ActionArgs) => {
   const data = await checkedKanjiData(request, kanjiGlyphUpdateParams);
   if (isErrorData(data)) return data;
   await updateGlyph({ name: data.glyph_name, data: data.data });
@@ -59,7 +73,7 @@ export const update = async ({ request }: ActionArgs) => {
   );
 };
 
-export const destroy = async ({ request }: ActionArgs) => {
+export const unlinkGlyph = async ({ request }: ActionArgs) => {
   const { code_point } = await checkedFormData(request, kanjiGlyphUnlinkParams);
   await unlinkKanjiGlyph(code_point);
   const kanji = (await getKanjiByCodePoint(code_point))!;

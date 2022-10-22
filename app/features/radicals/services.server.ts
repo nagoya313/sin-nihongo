@@ -23,8 +23,8 @@ export const index = async ({ request }: LoaderArgs) => {
 };
 
 export const update = async ({ request, params }: ActionArgs) => {
-  const data = await checkedFormData(request, radicalUpdateParams);
   const { code_point } = await checkedParamsLoader(params, radicalParams);
+  const data = await checkedFormData(request, radicalUpdateParams);
   await updateRadical(code_point, data);
   return redirect(
     $path('/radicals/:code_point', { code_point }),

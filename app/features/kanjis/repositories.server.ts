@@ -5,7 +5,7 @@ import { getDrawableGlyphByName, getGlyph, getGlyphByName } from '~/features/gly
 import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { escapeLike, kanaTranslate } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from './constants';
-import { type kanjiGlyphCreateParams, type kanjiQueryParams } from './validators';
+import { type kanjiGlyphCreateParams, type kanjiQueryParams, type kanjiUpdateParams } from './validators';
 
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
 type SimpleQueryParams = Pick<
@@ -180,6 +180,32 @@ export const getSameKanjs = ({
     .where('code_point', '!=', code_point)
     .orderBy('code_point')
     .execute();
+
+export const updateKanji = (
+  codePoint: number,
+  { on_reads, kun_reads, radical, ...others }: ValidatorData<typeof kanjiUpdateParams>,
+) =>
+  db.transaction().execute(async (trx) => {
+    await trx
+      .deleteFrom('kanji_read')
+      .where('kanji_code_point', '=', codePoint)
+      .where((qb) => qb.where('read', 'not in', on_reads).orWhere('read', 'not in', kun_reads))
+      .executeTakeFirstOrThrow();
+    await trx
+      .insertInto('kanji_read')
+      .values(on_reads.concat(kun_reads).map((read) => ({ read, kanji_code_point: codePoint })))
+      .onConflict((oc) =>
+        oc.columns(['read', 'kanji_code_point']).doUpdateSet({
+          updated_at: new Date(),
+        }),
+      )
+      .executeTakeFirstOrThrow();
+    await trx
+      .updateTable('kanji')
+      .set({ ...others, radical_code_point: radical, updated_at: new Date() })
+      .where('code_point', '=', codePoint)
+      .executeTakeFirstOrThrow();
+  });
 
 export const createKanjiGlyph = ({ glyph_name, data, code_point }: ValidatorData<typeof kanjiGlyphCreateParams>) =>
   db.transaction().execute(async (trx) => {

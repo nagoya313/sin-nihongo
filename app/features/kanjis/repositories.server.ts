@@ -1,11 +1,17 @@
 import { sql } from 'kysely';
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
-import { getDrawableGlyphByName, getGlyph, getGlyphByName } from '~/features/glyphs/repositories.server';
+import {
+  getDrawableGlyphByName,
+  getGlyph,
+  getGlyphByName,
+  getGlyphsOrderByName,
+} from '~/features/glyphs/repositories.server';
 import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { escapeLike, kanaTranslate } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from './constants';
 import {
+  type kanjiCandidateGlyphsQueryParams,
   type kanjiGlyphCreateParams,
   type kanjiGlyphUpdateParams,
   type kanjiQueryParams,
@@ -242,3 +248,21 @@ export const unlinkKanjiGlyph = async (codePoint: number) =>
     .set({ glyph_name: null, updated_at: new Date() })
     .where('code_point', '=', codePoint)
     .executeTakeFirstOrThrow();
+
+export const getKanjiCandidateGlyphs = async ({ q }: ValidatorData<typeof kanjiCandidateGlyphsQueryParams>) => {
+  const name = [...q].length === 1 ? q.codePointAt(0)! : q;
+  const glyphs = await getGlyphsOrderByName({ q: name, offset: 0 });
+
+  // 直列にしないとコネクションプールが盡きる
+  const result = [];
+  for (const glyph of glyphs) {
+    const glyphLoader = new GlyphLoader(getGlyph);
+    result.push({
+      ...glyph,
+      q,
+      drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph),
+    });
+  }
+
+  return result;
+};

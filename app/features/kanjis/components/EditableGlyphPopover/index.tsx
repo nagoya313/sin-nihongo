@@ -22,7 +22,7 @@ import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { kanjiGlyphCreateParams, kanjiGlyphUpdateParams } from '~/features/kanjis/validators';
 import { useOptionalUser } from '~/hooks/useUser';
-import { type loader } from '~/routes/glyphs/index';
+import { type loader } from '~/routes/kanjis/glyphs';
 import { type QueryResultData } from '~/utils/types';
 import { type LoaderData } from '~/utils/types';
 import { type getDrawableKanjis } from '../../repositories.server';
@@ -79,16 +79,20 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
                     isReadOnly={!!kanji.glyph?.name}
                     isCreatable
                     isRequired
-                    defaultOption={kanji.glyph != null ? { name: kanji.glyph?.name, data: null } : undefined}
-                    action={$path('/glyphs', { index: '' })}
+                    defaultOption={
+                      kanji.glyph != null ? { name: kanji.glyph?.name, data: '', q: '', isNew: false } : undefined
+                    }
+                    action={$path('/kanjis/glyphs')}
                     toQueryParams={(name) => ({ q: name })}
                     toOptions={(data: LoaderData<typeof loader>) =>
-                      'glyphs' in data ? data.glyphs.map(({ name, data }) => ({ name, data })) : []
+                      'glyphs' in data
+                        ? data.glyphs.map(({ name, data, q }) => ({ name, data, q: q, isNew: false }))
+                        : []
                     }
-                    getOptionLabel={({ name }) => name}
+                    getOptionLabel={({ q }) => q}
                     getOptionValue={({ name }) => name}
-                    formatOptionLabel={({ name }) => name}
-                    getNewOptionData={(name) => ({ name, data: null })}
+                    formatOptionLabel={({ name, isNew }) => (isNew ? `${name}で作成` : name)}
+                    getNewOptionData={(name) => ({ name, data: '', q: name, isNew: true })}
                     onChange={selectGlyph}
                     onCreateOption={toCreateMode}
                   />

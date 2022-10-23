@@ -13,6 +13,7 @@ export const useEditableGlyphPopover = (kanji: QueryResultData<typeof getDrawabl
   const formId = `kanji-glyph-editable-form-${kanji.code_point}`;
   const { onOpen, onClose, isOpen } = useDisclosure();
   const [preview, setPreview] = useState<DrawableGlyph | null>();
+  useControlField('glyph_name', formId); // これを置いとくとpopoverを閉ぢてもselectが維持される
   const [data, setData] = useControlField<string>('data', formId);
   const [isReadonlyData, setIsReadonlyData] = useState(false);
   const openHandle = () => {

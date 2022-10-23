@@ -36,6 +36,8 @@ export const kanjiQueryParams = withZod(
 
 export const kanjiParams = withZod(z.object({ code_point: zfd.numeric(intRange(1, PG_INT_MAX)) }));
 
+export const kanjiCandidateGlyphsQueryParams = withZod(z.object({ q: zfd.text(z.string()) }));
+
 export const kanjiUpdateParams = withZod(
   z.object({
     stroke_count: zfd.numeric(intRange(1, PG_SMALL_INT_MAX)),

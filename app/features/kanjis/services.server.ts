@@ -7,12 +7,14 @@ import {
   getDrawableKanji,
   getDrawableKanjis,
   getKanjiByCodePoint,
+  getKanjiCandidateGlyphs,
   getSameKanjs,
   linkKanjiGlyph,
   unlinkKanjiGlyph,
   updateKanji,
 } from '~/features/kanjis/repositories.server';
 import {
+  kanjiCandidateGlyphsQueryParams,
   kanjiGlyphCreateParams,
   kanjiGlyphUnlinkParams,
   kanjiGlyphUpdateParams,
@@ -105,4 +107,9 @@ export const get = async ({ params }: LoaderArgs) => {
         }
       : { kanji, glyph: null, sames: [] },
   );
+};
+
+export const glyphs = async ({ request }: LoaderArgs) => {
+  const query = await checkedQuery(request, kanjiCandidateGlyphsQueryParams);
+  return json({ glyphs: await getKanjiCandidateGlyphs(query) });
 };

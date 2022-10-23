@@ -71,14 +71,24 @@ export const getGlyphPreview = async (data: string) => {
 };
 
 export const getGlyphsOrderByName = ({ q, offset }: QueryParams) =>
-  db
-    .selectFrom('glyph')
-    .select(['name', 'data'])
-    .if(!!q, (qb) => qb.where('name', 'like', `${escapeLike(q!)}%`))
-    .orderBy('name')
-    .offset(offset)
-    .limit(GLYPH_READ_LIMIT)
-    .execute();
+  typeof q === 'number'
+    ? db
+        .selectFrom('glyph')
+        .innerJoin('kanji', 'glyph_name', 'name')
+        .select(['name', 'data'])
+        .if(!!q, (qb) => qb.where('code_point', '=', q))
+        .orderBy('name')
+        .offset(offset)
+        .limit(GLYPH_READ_LIMIT)
+        .execute()
+    : db
+        .selectFrom('glyph')
+        .select(['name', 'data'])
+        .if(!!q, (qb) => qb.where('name', 'like', `${escapeLike(q!)}%`))
+        .orderBy('name')
+        .offset(offset)
+        .limit(GLYPH_READ_LIMIT)
+        .execute();
 
 export const getGlyphs = async (query: QueryParams) => {
   const glyphs = await getGlyphsOrderByName(query);

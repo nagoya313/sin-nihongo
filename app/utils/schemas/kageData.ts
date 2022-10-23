@@ -67,6 +67,7 @@ export const kageName = zfd.text(
   z
     .string()
     .regex(/^[\da-z_\-@]+$/, '不正ななまえです')
+    .min(3)
     .max(100),
 );
 

@@ -2,6 +2,7 @@ import { Input } from '@chakra-ui/react';
 import { useFetcher } from '@remix-run/react';
 import {
   CreatableSelect,
+  type FormatOptionLabelMeta,
   type GetOptionLabel,
   type GetOptionValue,
   Select,
@@ -30,7 +31,7 @@ type AsyncSelectInputProps<TQueryData, TFetcherData, TOption> = {
   toOptions: (data: TFetcherData) => ReadonlyArray<TOption>;
   getOptionLabel: GetOptionLabel<TOption>;
   getOptionValue: GetOptionValue<TOption>;
-  formatOptionLabel: (data: TOption) => React.ReactNode;
+  formatOptionLabel: (data: TOption, meta: FormatOptionLabelMeta<TOption>) => React.ReactNode;
   getNewOptionData?: (input: string) => TOption;
   onCreateOption?: (input: string) => void;
 } & (
@@ -101,6 +102,7 @@ const AsyncSelectInput = <TQueryData, TFetcherData, TOption>({
             //formatCreateLabel={(input) => `${input}で作成`}
             {...getInputProps<React.ComponentProps<typeof Component<typeof options[number]>>>({
               isLoading: fetcher.state === 'submitting',
+              allowCreateWhileLoading: true,
               options,
               getOptionLabel,
               getOptionValue,

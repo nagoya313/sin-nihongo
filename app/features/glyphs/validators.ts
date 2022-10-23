@@ -5,7 +5,9 @@ import { kageData, kageName } from '~/utils/schemas/kageData';
 
 export const glyphsQueryParams = withZod(
   z.object({
-    q: zfd.text(z.string().optional()),
+    q: zfd
+      .text(z.string().optional())
+      .transform((q) => (q != null ? ([...q].length === 1 ? q.codePointAt(0)! : q) : undefined)),
     offset: zfd.numeric(z.number().min(0).default(0)),
   }),
 );

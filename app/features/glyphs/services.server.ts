@@ -4,15 +4,18 @@ import { validationError } from 'remix-validated-form';
 import {
   createGlyph,
   deleteGlyph,
+  getDrawableGlyphByName,
   getGlyphDetailByName,
   getGlyphPreview,
   getGlyphs,
+  updateGlyph,
 } from '~/features/glyphs/repositories.server';
 import {
   glyphCreateParams,
   glyphDestroyParams,
   glyphParams,
   glyphPreviewParams,
+  glyphUpdateParams,
   glyphsQueryParams,
 } from '~/features/glyphs/validators';
 import { getGlyphwiki } from '~/features/glyphwiki/repositories.server';
@@ -44,6 +47,18 @@ export const create = async ({ request }: ActionArgs) => {
   const headers = await setFlashMessage(request, { message: 'グリフお登録しました', status: 'success' });
   if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'), headers);
   return json(await getGlyphwiki(data.q), headers);
+};
+
+export const update = async ({ request, params }: ActionArgs) => {
+  const { name } = await checkedParamsLoader(params, glyphParams);
+  const { data } = await checkedFormData(request, glyphUpdateParams);
+  const { isDrawable } = await getGlyphPreview(data);
+  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+  await updateGlyph({ name, data });
+  return json(
+    { glyph: (await getDrawableGlyphByName(name))! },
+    await setFlashMessage(request, { message: 'グリフお更新しました', status: 'success' }),
+  );
 };
 
 export const destroy = async ({ request }: ActionArgs) => {

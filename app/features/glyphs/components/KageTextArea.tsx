@@ -5,14 +5,13 @@ import { useEffect } from 'react';
 import { $path } from 'remix-routes';
 import { useControlField, useField } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
-import { type loader } from '~/routes/glyphs/preview';
-import { type LoaderData } from '~/utils/types';
+import { type DrawableGlyph } from '~/features/kage/models/kageData';
 
 const PREVIEW_WAIT = 500;
 
 type KageTextAreaProps = {
   name: string;
-  onDataChange: (data: LoaderData<typeof loader>) => void;
+  onDataChange: (data: DrawableGlyph) => void;
   isReadOnly?: boolean;
 };
 

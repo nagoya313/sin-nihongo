@@ -46,7 +46,7 @@ export const errorMap = (issue: ZodIssueOptionalMessage, ctx: ErrorMapCtx): { me
         message = `${issue.minimum}文字${issue.inclusive ? '以上' : '超過'}で入力してください`;
       else if (issue.type === 'number')
         message = `${issue.minimum}${issue.inclusive ? '以上' : '超過'}で入力してください`;
-      else message = 'Invalid input';
+      else message = '不正な入力です';
       break;
     case ZodIssueCode.too_big:
       if (issue.type === 'array')
@@ -55,7 +55,7 @@ export const errorMap = (issue: ZodIssueOptionalMessage, ctx: ErrorMapCtx): { me
         message = `${issue.maximum}文字${issue.inclusive ? '以内' : '未満'}で入力してください`;
       else if (issue.type === 'number')
         message = `${issue.maximum}${issue.inclusive ? '以下' : '未満'}で入力してください`;
-      else message = 'Invalid input';
+      else message = '不正な入力です';
       break;
     case ZodIssueCode.custom:
       message = `Invalid input`;

@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { $path } from 'remix-routes';
 import { GLYPHWIKI_SEARCH_FORM_ID } from '~/features/glyphs/constants';
 import { glyphwikiQueryParams } from '~/features/glyphwiki/validators';
+import { type DrawableGlyph } from '~/features/kage/models/kageData';
 import { useSearch } from '~/hooks/useSearch';
 import { type action } from '~/routes/glyphs/new';
-import { type loader as glyphPreviewLoader } from '~/routes/glyphs/preview';
 import { type loader as glyphwikiLoader } from '~/routes/glyphwiki';
 import { type LoaderData } from '~/utils/types';
 
@@ -20,7 +20,7 @@ const useGlyphNew = () => {
   });
   const actionResult = useActionData<typeof action>();
   const [glyph, setGlyph] = useState<typeof data>(data);
-  const [preview, setPreview] = useState<LoaderData<typeof glyphPreviewLoader>>();
+  const [preview, setPreview] = useState<DrawableGlyph>();
 
   useEffect(() => {
     setGlyph(data);

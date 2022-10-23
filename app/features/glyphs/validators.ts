@@ -30,4 +30,5 @@ export const glyphCreateParams = withZod(
     ),
 );
 
+export const glyphUpdateParams = withZod(z.object({ data: kageData }));
 export const glyphDestroyParams = withZod(z.object({ name: zfd.text(z.string().max(50)) }));

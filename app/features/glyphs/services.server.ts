@@ -1,15 +1,23 @@
-import { type ActionArgs, type LoaderArgs, json, redirect } from '@remix-run/node';
+import { type ActionArgs, type LoaderArgs, Response, json, redirect } from '@remix-run/node';
 import { $path } from 'remix-routes';
 import { validationError } from 'remix-validated-form';
-import { createGlyph, deleteGlyph, getGlyphPreview, getGlyphs } from '~/features/glyphs/repositories.server';
+import {
+  createGlyph,
+  deleteGlyph,
+  getDrawableGlyphByName,
+  getGlyphDetailByName,
+  getGlyphPreview,
+  getGlyphs,
+} from '~/features/glyphs/repositories.server';
 import {
   glyphCreateParams,
   glyphDestroyParams,
+  glyphParams,
   glyphPreviewParams,
   glyphQueryParams,
 } from '~/features/glyphs/validators';
 import { setFlashMessage } from '~/utils/flash.server';
-import { checkedFormData, checkedQuery } from '~/utils/request.server';
+import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
 import { getGlyphwiki } from '../glyphwiki/repositories.server';
 
 export const index = async ({ request }: LoaderArgs) => {
@@ -44,6 +52,13 @@ export const destroy = async ({ request }: ActionArgs) => {
     return json({ name }, await setFlashMessage(request, { message: 'グリフお削除しました', status: 'success' }));
   }
   return json({ name: null }, await setFlashMessage(request, { message: 'グリフお削除しました', status: 'success' }));
+};
+
+export const get = async ({ params }: LoaderArgs) => {
+  const { name } = await checkedParamsLoader(params, glyphParams);
+  const glyph = await getGlyphDetailByName(name);
+  if (glyph == null) throw new Response('Not Found', { status: 404 });
+  return json({ glyph });
 };
 
 export const preview = async ({ request }: LoaderArgs) => {

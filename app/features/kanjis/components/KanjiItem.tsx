@@ -49,6 +49,7 @@ const KanjiItem = ({ kanji, isEven }: KanjiItemProps) => (
       icon={<MdInfoOutline />}
       aria-label="kanji-detail"
       to={$path('/kanjis/:code_point', { code_point: kanji.code_point })}
+      colorScheme="blue"
     />
   </HStack>
 );

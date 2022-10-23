@@ -4,7 +4,7 @@ import { type Glyph } from '../types';
 
 export type DrawableGlyph = ReadonlyDeep<{
   name: string;
-  data: string;
+  data: string | null;
   drawNecessaryGlyphs: Glyph[];
 }>;
 

@@ -1,19 +1,18 @@
 import { Divider, HStack, Text, VStack } from '@chakra-ui/react';
 import { type Buhin } from '@kurgm/kage-engine';
 import { ValidatedForm } from 'remix-validated-form';
-import ClipboardCopyButton from '~/components/ClipboardCopyButton';
 import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
 import { glyphCreateParams } from '~/features/glyphs/validators';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import KageData from '~/features/kage/components/KageData';
-import type useMatchesData from '~/hooks/useMatchesData';
 import { type loader } from '~/routes/glyphwiki';
-import { type UnionSelect } from '~/utils/types';
+import { type LoaderData, type UnionSelect } from '~/utils/types';
+import KageElement from './KageElement';
 
 type GlyphResultProps = {
   q: string;
-  glyph: UnionSelect<ReturnType<typeof useMatchesData<typeof loader>>, 'glyphs'>['glyphs'][number];
+  glyph: UnionSelect<LoaderData<typeof loader>, 'glyphs'>['glyphs'][number];
   buhin: Buhin;
 };
 
@@ -21,23 +20,21 @@ const GlyphResult = ({ q, glyph, buhin }: GlyphResultProps) => (
   <HStack w="full">
     <GlyphCanvas name={glyph.name} buhin={buhin} />
     <VStack align="start">
-      <HStack>
-        <VStack align="start">
-          <Text fontSize="sm">なまえ：</Text>
-          <ClipboardCopyButton text={glyph.name} />
-        </VStack>
-        <Text fontSize="sm" m={4}>
-          {glyph.name}
-        </Text>
-      </HStack>
+      <KageElement
+        label="なまえ"
+        text={glyph.name}
+        data={
+          <Text fontSize="sm" m={4}>
+            {glyph.name}
+          </Text>
+        }
+      />
       <Divider />
-      <HStack>
-        <VStack align="start">
-          <Text fontSize="sm">影算料：</Text>
-          <ClipboardCopyButton text={glyph.data ?? ''} />
-        </VStack>
-        <KageData data={glyph.data ?? ''} color={glyph.info.type === 'WithDifference' ? 'red' : undefined} />
-      </HStack>
+      <KageElement
+        label="影算料"
+        text={glyph.data ?? ''}
+        data={<KageData data={glyph.data} color={glyph.info.type === 'WithDifference' ? 'red' : undefined} />}
+      />
       {glyph.info.state === 'NotImplementation' && glyph.data && (
         <ValidatedForm
           method="post"

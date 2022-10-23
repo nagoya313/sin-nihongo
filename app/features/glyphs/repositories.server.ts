@@ -1,6 +1,7 @@
 import { type ValidatorData } from 'remix-validated-form';
 import { db } from '~/db/db.server';
 import GlyphLoader from '~/features/kage/models/GlyphLoader';
+import { type Glyph } from '~/features/kage/types';
 import { escapeLike } from '~/utils/sql';
 import { GLYPH_READ_LIMIT } from './constants';
 import { type glyphCreateParams, type glyphQueryParams } from './validators';
@@ -17,6 +18,38 @@ export const getDrawableGlyphByName = async (name: string) => {
   if (glyph == null) return null;
   const glyphLoader = new GlyphLoader(getGlyph);
   return { ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) };
+};
+
+const toDrawableGlyphs = async (glyphs: ReadonlyArray<Glyph>) => {
+  // 直列にしないとコネクションプールが盡きる
+  const result = [];
+  for (const glyph of glyphs) {
+    const glyphLoader = new GlyphLoader(getGlyph);
+    result.push({ ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) });
+  }
+
+  return result;
+};
+
+const getIncludedGlyphsByName = async (name: string) => {
+  const glyphs = await db
+    .selectFrom('glyph')
+    .select(['name', 'data'])
+    .where('data', 'like', `%99:%${escapeLike(name)}%`)
+    .execute();
+
+  return toDrawableGlyphs(glyphs);
+};
+
+export const getGlyphDetailByName = async (name: string) => {
+  const glyph = await getGlyphByName(name);
+  if (glyph == null) return null;
+  const glyphLoader = new GlyphLoader(getGlyph);
+  return {
+    ...glyph,
+    drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph),
+    includedGlyphs: await getIncludedGlyphsByName(name),
+  };
 };
 
 export const getGlyphPreview = async (data: string) => {
@@ -39,14 +72,7 @@ export const getGlyphsOrderByName = ({ q, offset }: QueryParams) =>
 export const getGlyphs = async (query: QueryParams) => {
   const glyphs = await getGlyphsOrderByName(query);
 
-  // 直列にしないとコネクションプールが盡きる
-  const result = [];
-  for (const glyph of glyphs) {
-    const glyphLoader = new GlyphLoader(getGlyph);
-    result.push({ ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) });
-  }
-
-  return result;
+  return toDrawableGlyphs(glyphs);
 };
 
 export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>

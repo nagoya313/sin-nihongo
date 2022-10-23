@@ -1,4 +1,7 @@
 import { Box, Divider, HStack, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
+import { MdInfoOutline } from 'react-icons/md';
+import { $path } from 'remix-routes';
+import LinkButton from '~/components/LinkButton';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import KageData from '~/features/kage/components/KageData';
 import { type DrawableGlyph, getGlyphCanvasProps } from '~/features/kage/models/kageData';
@@ -36,7 +39,15 @@ const GlyphItem = ({ glyph, isEven }: GlyphItemProps) => (
       </VStack>
     </Box>
     <Spacer />
-    <GlyphDeleteForm name={glyph.name} />
+    <VStack>
+      <LinkButton
+        icon={<MdInfoOutline />}
+        aria-label="glyph-detail"
+        to={$path('/glyphs/:name', { name: glyph.name })}
+        colorScheme="blue"
+      />
+      <GlyphDeleteForm name={glyph.name} />
+    </VStack>
   </HStack>
 );
 

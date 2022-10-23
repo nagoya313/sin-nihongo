@@ -181,6 +181,13 @@ export const getSameKanjs = ({
     .orderBy('code_point')
     .execute();
 
+export const getKanjisByGlyphName = (name: string) =>
+  db
+    .selectFrom('kanji')
+    .select(['code_point', sql<string>`chr(kanji.code_point)`.as('kanji')])
+    .where('glyph_name', '=', name)
+    .execute();
+
 export const updateKanji = (
   codePoint: number,
   { on_reads, kun_reads, radical, ...others }: ValidatorData<typeof kanjiUpdateParams>,

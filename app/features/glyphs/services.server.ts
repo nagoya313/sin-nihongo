@@ -15,10 +15,11 @@ import {
   glyphPreviewParams,
   glyphQueryParams,
 } from '~/features/glyphs/validators';
+import { getGlyphwiki } from '~/features/glyphwiki/repositories.server';
+import { glyphToBuhin, toSVG } from '~/features/kage/models/kageData';
+import { getKanjisByGlyphName } from '~/features/kanjis/repositories.server';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
-import { getGlyphwiki } from '../glyphwiki/repositories.server';
-import { glyphToBuhin, toSVG } from '../kage/models/kageData';
 
 export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, glyphQueryParams);
@@ -64,6 +65,7 @@ export const get = async ({ params }: LoaderArgs) => {
       name: glyph.name,
       data: glyph.data,
       drawNecessaryGlyphs: glyph.drawNecessaryGlyphs,
+      kanjis: await getKanjisByGlyphName(glyph.name),
     },
     includeGlyphs: glyph.drawNecessaryGlyphs.map((part) => ({
       name: part.name,

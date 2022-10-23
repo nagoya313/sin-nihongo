@@ -60,10 +60,11 @@ export const kanjiGlyphCreateParams = withZod(
 
 export const kanjiGlyphUpdateParams = withZod(
   z.object({
-    glyph_name: kageName,
-    data: kageData,
     code_point: zfd.numeric(),
     form_id: zfd.text(),
+    glyph_name: kageName,
+    data: kageData,
+    type: z.enum(['create', 'link']),
   }),
 );
 

@@ -12,11 +12,10 @@ const PREVIEW_WAIT = 500;
 type KageTextAreaProps = {
   name: string;
   onDataChange: (data: DrawableGlyph) => void;
-  isReadOnly?: boolean;
-};
+} & Omit<TextareaProps, 'value' | 'defaulValue' | 'onChange'>;
 
-const KageTextArea = ({ name, onDataChange, isReadOnly }: KageTextAreaProps) => {
-  const { getInputProps } = useField(name);
+const KageTextArea = ({ name, onDataChange, ...otherProps }: KageTextAreaProps) => {
+  const { getInputProps, validate } = useField(name);
   const [data, setData] = useControlField<string>(name);
   const fetcher = useFetcher();
   const handleChange = useDebouncedCallback((data: string) => {
@@ -33,12 +32,18 @@ const KageTextArea = ({ name, onDataChange, isReadOnly }: KageTextAreaProps) => 
 
   useEffect(() => {
     handleChange(data);
-  }, [data, handleChange]);
+    // 必要なタイミングが謎
+    validate();
+  }, [data, handleChange, validate]);
 
   return (
     <Textarea
       {...omit(
-        getInputProps<TextareaProps>({ id: name, isReadOnly, onChange: ({ target }) => setData(target.value) }),
+        getInputProps<TextareaProps>({
+          id: name,
+          onChange: ({ target }) => setData(target.value),
+          ...otherProps,
+        }),
         'defaultValue',
       )}
       value={data}

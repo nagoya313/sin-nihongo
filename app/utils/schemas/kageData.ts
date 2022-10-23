@@ -69,4 +69,8 @@ export const kageName = zfd.text(
     .regex(/^[\da-z_\-@]+$/, '不正ななまえです')
     .max(100),
 );
-export const kageData = zfd.text().refine((data) => strokes.safeParse(data.split('$')).success, '不正な書式です');
+
+// グリフウィキのデータが一部こけるので要確認
+export const kageData = zfd
+  .text(z.string())
+  .refine((data) => strokes.safeParse(data.split('$')).success, '不正な書式です');

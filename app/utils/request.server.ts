@@ -6,7 +6,7 @@ import {
   type LoaderFunction,
   Response,
 } from '@remix-run/node';
-import { type Validator, validationError } from 'remix-validated-form';
+import { type Validator, type ValidatorData, validationError } from 'remix-validated-form';
 import { authenticator } from '~/session.server';
 
 export const authGuard = async <TFunction extends LoaderFunction | ActionFunction>(
@@ -19,31 +19,40 @@ export const authGuard = async <TFunction extends LoaderFunction | ActionFunctio
   return func(args) as ReturnType<TFunction>;
 };
 
-export const checkedParamsLoader = async <TParams>(params: LoaderArgs['params'], validator: Validator<TParams>) => {
+export const checkedParamsLoader = async <TValidator extends Validator<any>>(
+  params: LoaderArgs['params'],
+  validator: TValidator,
+) => {
   const paramsResult = await validator.validate(params);
   if (paramsResult.error) {
     console.log(paramsResult.error.fieldErrors);
     throw new Response('Not Found', { status: 404 });
   }
-  return paramsResult.data;
+  return paramsResult.data as ValidatorData<TValidator>;
 };
 
-export const checkedQuery = async <TQuery>(request: LoaderArgs['request'], validator: Validator<TQuery>) => {
+export const checkedQuery = async <TValidator extends Validator<any>>(
+  request: LoaderArgs['request'],
+  validator: TValidator,
+) => {
   const query = await validator.validate(new URL(request.url).searchParams);
   if (query.error) {
     console.log(query.error.fieldErrors);
     throw validationError(query.error);
   }
-  return query.data;
+  return query.data as ValidatorData<TValidator>;
 };
 
-export const checkedFormData = async <TQuery>(request: ActionArgs['request'], validator: Validator<TQuery>) => {
+export const checkedFormData = async <TValidator extends Validator<any>>(
+  request: ActionArgs['request'],
+  validator: TValidator,
+) => {
   const data = await validator.validate(await request.formData());
   if (data.error) {
     console.log(data.error.fieldErrors);
     throw validationError(data.error);
   }
-  return data.data;
+  return data.data as ValidatorData<TValidator>;
 };
 
 type ActionResponse = ReturnType<ActionFunction>;

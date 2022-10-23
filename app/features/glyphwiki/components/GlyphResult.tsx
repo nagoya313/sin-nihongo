@@ -1,7 +1,6 @@
 import { Divider, HStack, VStack } from '@chakra-ui/react';
 import { type Buhin } from '@kurgm/kage-engine';
 import { ValidatedForm } from 'remix-validated-form';
-import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
 import { glyphCreateParams } from '~/features/glyphs/validators';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
@@ -29,15 +28,10 @@ const GlyphResult = ({ q, glyph, buhin }: GlyphResultProps) => (
         color={glyph.info.type === 'WithDifference' ? 'red' : undefined}
       />
       {glyph.info.state === 'NotImplementation' && glyph.data && (
-        <ValidatedForm
-          method="post"
-          validator={glyphCreateParams}
-          defaultValues={{ name: glyph.name, data: glyph.data, q }}
-          subaction="from-glyphwiki"
-        >
-          <HiddenInput name="name" />
-          <HiddenInput name="data" />
-          <HiddenInput name="q" />
+        <ValidatedForm method="post" validator={glyphCreateParams} subaction="from-glyphwiki">
+          <input type="hidden" name="name" value={glyph.name} />
+          <input type="hidden" name="data" value={glyph.data} />
+          <input type="hidden" name="q" value={q} />
           <SubmitButton size="sm" isDisabled={glyph.info.type === 'ShortageParts'}>
             登録する
           </SubmitButton>

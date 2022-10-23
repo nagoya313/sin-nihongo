@@ -5,7 +5,12 @@ import { getDrawableGlyphByName, getGlyph, getGlyphByName } from '~/features/gly
 import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { escapeLike, kanaTranslate } from '~/utils/sql';
 import { KANJI_READ_LIMIT } from './constants';
-import { type kanjiGlyphCreateParams, type kanjiQueryParams, type kanjiUpdateParams } from './validators';
+import {
+  type kanjiGlyphCreateParams,
+  type kanjiGlyphUpdateParams,
+  type kanjiQueryParams,
+  type kanjiUpdateParams,
+} from './validators';
 
 type QueryParams = ValidatorData<typeof kanjiQueryParams>;
 type SimpleQueryParams = Pick<
@@ -223,6 +228,13 @@ export const createKanjiGlyph = ({ glyph_name, data, code_point }: ValidatorData
       .where('code_point', '=', code_point)
       .executeTakeFirstOrThrow();
   });
+
+export const linkKanjiGlyph = async ({ code_point, glyph_name }: ValidatorData<typeof kanjiGlyphUpdateParams>) =>
+  db
+    .updateTable('kanji')
+    .set({ glyph_name, updated_at: new Date() })
+    .where('code_point', '=', code_point)
+    .executeTakeFirstOrThrow();
 
 export const unlinkKanjiGlyph = async (codePoint: number) =>
   db

@@ -10,19 +10,17 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Link } from '@remix-run/react';
-import { useState } from 'react';
 import { MdOutlineEdit } from 'react-icons/md';
 import { $path } from 'remix-routes';
-import { ValidatedForm, useControlField } from 'remix-validated-form';
+import { ValidatedForm } from 'remix-validated-form';
 import AsyncSelectInput from '~/components/AsyncSelectInput';
 import FormControl from '~/components/FormControl';
-import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
 import KageTextArea from '~/features/glyphs/components/KageTextArea';
 import { glyphsQueryParams } from '~/features/glyphs/validators';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
-import { kanjiGlyphCreateParams } from '~/features/kanjis/validators';
+import { kanjiGlyphCreateParams, kanjiGlyphUpdateParams } from '~/features/kanjis/validators';
 import { useOptionalUser } from '~/hooks/useUser';
 import { type loader } from '~/routes/glyphs/index';
 import { type QueryResultData } from '~/utils/types';
@@ -38,9 +36,8 @@ type EditableGlyphPopoverProps = {
 
 const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
   const user = useOptionalUser();
-  const { onOpen, onClose, isOpen, preview, setPreview, formId } = useEditableGlyphPopover(kanji);
-  const [data, setData] = useControlField<string>('data', formId);
-  const [isReadonlyData, setIsReadonlyData] = useState(false);
+  const { onOpen, onClose, isOpen, preview, setPreview, data, selectGlyph, formId, mode, toCreateMode } =
+    useEditableGlyphPopover(kanji);
 
   return (
     <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} isLazy placement="right">
@@ -70,13 +67,9 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
               <GlyphCanvas {...getGlyphCanvasProps(preview)} />
               <ValidatedForm
                 id={formId}
-                method={kanji.glyph != null ? 'patch' : 'post'}
-                validator={kanjiGlyphCreateParams}
-                defaultValues={{
-                  data: data ?? kanji.glyph?.data,
-                  code_point: kanji.code_point,
-                  form_id: formId,
-                }}
+                method={kanji.glyph != null || mode === 'link' ? 'patch' : 'post'}
+                validator={kanji.glyph != null ? kanjiGlyphCreateParams : kanjiGlyphUpdateParams}
+                defaultValues={{ data: data ?? kanji.glyph?.data }}
               >
                 <VStack align="start">
                   <AsyncSelectInput
@@ -96,19 +89,19 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
                     getOptionValue={({ name }) => name}
                     formatOptionLabel={({ name }) => name}
                     getNewOptionData={(name) => ({ name, data: null })}
-                    onChange={(option) => {
-                      setData(option?.data || '');
-                      setIsReadonlyData(true);
-                    }}
-                    onCreateOption={() => setIsReadonlyData(false)}
+                    onChange={selectGlyph}
+                    onCreateOption={toCreateMode}
                   />
 
                   <FormControl name="data" label="影算料" isRequired>
-                    <KageTextArea name="data" onDataChange={setPreview} isReadOnly={isReadonlyData} />
+                    <KageTextArea name="data" onDataChange={setPreview} isReadOnly={mode === 'link'} />
                   </FormControl>
-                  <HiddenInput name="code_point" />
-                  <HiddenInput name="form_id" />
-                  <SubmitButton>{kanji.glyph != null ? '更新する' : '作成する'}</SubmitButton>
+                  <input type="hidden" name="code_point" value={kanji.code_point} />
+                  <input type="hidden" name="form_id" value={formId} />
+                  {kanji.glyph == null && <input type="hidden" name="type" value={mode} />}
+                  <SubmitButton>
+                    {kanji.glyph != null ? '更新する' : mode === 'link' ? '関連ずける' : '作成する'}
+                  </SubmitButton>
                 </VStack>
               </ValidatedForm>
             </VStack>

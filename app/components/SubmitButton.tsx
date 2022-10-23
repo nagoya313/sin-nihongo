@@ -7,7 +7,9 @@ type SubmitButtonProps = React.PropsWithChildren<{
 }>;
 
 const SubmitButton = ({ isDisabled, children, ...props }: SubmitButtonProps) => {
-  const { isValid, isSubmitting } = useFormContext();
+  const { isValid, isSubmitting, fieldErrors } = useFormContext();
+
+  console.log(fieldErrors);
 
   return (
     <Button {...props} type="submit" isDisabled={!!isDisabled || !isValid || isSubmitting} colorScheme="purple">

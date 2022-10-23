@@ -8,6 +8,7 @@ import {
   getDrawableKanjis,
   getKanjiByCodePoint,
   getSameKanjs,
+  linkKanjiGlyph,
   unlinkKanjiGlyph,
   updateKanji,
 } from '~/features/kanjis/repositories.server';
@@ -39,9 +40,9 @@ export const update = async ({ request, params }: ActionArgs) => {
   );
 };
 
-const checkedKanjiData = async (
+const checkedKanjiData = async <TValidator extends typeof kanjiGlyphCreateParams | typeof kanjiGlyphUpdateParams>(
   request: ActionArgs['request'],
-  validator: typeof kanjiGlyphCreateParams | typeof kanjiGlyphUpdateParams,
+  validator: TValidator,
 ) => {
   const data = await checkedFormData(request, validator);
   const { isDrawable } = await getGlyphPreview(data.data);
@@ -66,11 +67,19 @@ export const createGlyph = async ({ request }: ActionArgs) => {
 export const updateKanjiGlyph = async ({ request }: ActionArgs) => {
   const data = await checkedKanjiData(request, kanjiGlyphUpdateParams);
   if (isErrorData(data)) return data;
-  await updateGlyph({ name: data.glyph_name, data: data.data });
-  return json(
-    { kanji: await getDrawableKanji(data.code_point) },
-    await setFlashMessage(request, { message: 'グリフお更新しました', status: 'success' }),
-  );
+  if (data.type === 'link') {
+    await linkKanjiGlyph(data);
+    return json(
+      { kanji: await getDrawableKanji(data.code_point) },
+      await setFlashMessage(request, { message: 'グリフお関連ずけました', status: 'success' }),
+    );
+  } else {
+    await updateGlyph({ name: data.glyph_name, data: data.data });
+    return json(
+      { kanji: await getDrawableKanji(data.code_point) },
+      await setFlashMessage(request, { message: 'グリフお更新しました', status: 'success' }),
+    );
+  }
 };
 
 export const unlinkGlyph = async ({ request }: ActionArgs) => {

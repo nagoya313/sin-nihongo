@@ -9,8 +9,10 @@ import {
   PopoverTrigger,
   VStack,
 } from '@chakra-ui/react';
+import { Link } from '@remix-run/react';
 import { useState } from 'react';
 import { MdOutlineEdit } from 'react-icons/md';
+import { $path } from 'remix-routes';
 import { $path } from 'remix-routes';
 import { ValidatedForm, useControlField } from 'remix-validated-form';
 import AsyncSelectInput from '~/components/AsyncSelectInput';
@@ -53,7 +55,13 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
       </VStack>
       <PopoverAnchor>
         <Box>
-          <GlyphCanvas {...getGlyphCanvasProps(kanji.glyph)} />
+          {kanji.glyph != null ? (
+            <Link to={$path('/glyphs/:name', { name: kanji.glyph.name })}>
+              <GlyphCanvas {...getGlyphCanvasProps(kanji.glyph)} />
+            </Link>
+          ) : (
+            <GlyphCanvas {...getGlyphCanvasProps(kanji.glyph)} />
+          )}
         </Box>
       </PopoverAnchor>
       <PopoverContent>

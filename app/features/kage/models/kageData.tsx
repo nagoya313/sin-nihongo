@@ -38,3 +38,5 @@ export const makeGlyph = (name: string, buhin: Buhin) => {
   kage.makeGlyph(polygons, name);
   return polygons;
 };
+
+export const toSVG = (name: string, buhin: Buhin) => makeGlyph(name, buhin).generateSVG();

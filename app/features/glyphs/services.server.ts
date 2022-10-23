@@ -4,7 +4,6 @@ import { validationError } from 'remix-validated-form';
 import {
   createGlyph,
   deleteGlyph,
-  getDrawableGlyphByName,
   getGlyphDetailByName,
   getGlyphPreview,
   getGlyphs,
@@ -19,6 +18,7 @@ import {
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
 import { getGlyphwiki } from '../glyphwiki/repositories.server';
+import { glyphToBuhin, toSVG } from '../kage/models/kageData';
 
 export const index = async ({ request }: LoaderArgs) => {
   const query = await checkedQuery(request, glyphQueryParams);
@@ -58,7 +58,22 @@ export const get = async ({ params }: LoaderArgs) => {
   const { name } = await checkedParamsLoader(params, glyphParams);
   const glyph = await getGlyphDetailByName(name);
   if (glyph == null) throw new Response('Not Found', { status: 404 });
-  return json({ glyph });
+  const buhin = glyphToBuhin(glyph);
+  return json({
+    glyph: {
+      name: glyph.name,
+      data: glyph.data,
+      drawNecessaryGlyphs: glyph.drawNecessaryGlyphs,
+    },
+    includeGlyphs: glyph.drawNecessaryGlyphs.map((part) => ({
+      name: part.name,
+      html: toSVG(part.name, buhin),
+    })),
+    includedGlyphs: glyph.includedGlyphs.map((part) => ({
+      name: part.name,
+      html: toSVG(part.name, glyphToBuhin(part)),
+    })),
+  });
 };
 
 export const preview = async ({ request }: LoaderArgs) => {

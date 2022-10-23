@@ -18,7 +18,7 @@ const RadioInput = ({ name, label, options, value, ...inputProps }: RadioInputPr
       <RadioGroup
         {...getInputProps<Omit<RadioGroupProps, 'children'>>({ ...inputProps })}
         value={value}
-        defaultValue={defaultValue?.toString()}
+        defaultValue={defaultValue?.toString() ?? options[0]!.value}
       >
         <Wrap whiteSpace="nowrap">
           {options.map(({ value, label }) => (

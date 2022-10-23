@@ -21,6 +21,8 @@ const KageTextArea = ({ name, onDataChange, ...otherProps }: KageTextAreaProps) 
   const handleChange = useDebouncedCallback((data: string) => {
     if (data) {
       fetcher.submit({ data }, { action: $path('/glyphs/preview') });
+      // 必要なタイミングが謎
+      validate();
     }
   }, PREVIEW_WAIT);
 
@@ -32,8 +34,6 @@ const KageTextArea = ({ name, onDataChange, ...otherProps }: KageTextAreaProps) 
 
   useEffect(() => {
     handleChange(data);
-    // 必要なタイミングが謎
-    validate();
   }, [data, handleChange, validate]);
 
   return (

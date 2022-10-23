@@ -12,25 +12,25 @@ export const Index = () => (
         to={$path('/kanjis')}
         avatar={<Icon fontSize={24} as={KanjiIcon} />}
         title="新日本語漢字一覧"
-        description="新日本語漢字を閲覧できます。"
+        description="新日本語漢字お閲覧できます。"
       />
       <NavCard
         to={$path('/radicals')}
         avatar={<Icon fontSize={24} as={RadicalIcon} />}
         title="部首索引"
-        description="部首から漢字を検索できます。"
+        description="部首から漢字お検索できます。"
       />
       <NavCard
         to={$path('/stroke_counts')}
         avatar={<Icon fontSize={24} as={StrokeCountIcon} />}
         title="画数索引"
-        description="画数から漢字を検索できます。"
+        description="画数から漢字お検索できます。"
       />
       <NavCard
         to={$path('/reads')}
         avatar={<Icon fontSize={24} as={ReadIcon} />}
         title="音訓索引"
-        description="よみかたから漢字を検索できます。"
+        description="よみかたから漢字お検索できます。"
       />
     </Wrap>
   </Main>

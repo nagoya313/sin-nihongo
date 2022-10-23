@@ -1,14 +1,14 @@
-import { Divider, HStack, Text, VStack } from '@chakra-ui/react';
+import { Divider, HStack, VStack } from '@chakra-ui/react';
 import { type Buhin } from '@kurgm/kage-engine';
 import { ValidatedForm } from 'remix-validated-form';
 import HiddenInput from '~/components/HiddenInput';
 import SubmitButton from '~/components/SubmitButton';
 import { glyphCreateParams } from '~/features/glyphs/validators';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
-import KageData from '~/features/kage/components/KageData';
+import KageElement from '~/features/kage/components/KageElement';
+import { toDisplayKageData } from '~/features/kage/decorators';
 import { type loader } from '~/routes/glyphwiki';
 import { type LoaderData, type UnionSelect } from '~/utils/types';
-import KageElement from './KageElement';
 
 type GlyphResultProps = {
   q: string;
@@ -20,20 +20,13 @@ const GlyphResult = ({ q, glyph, buhin }: GlyphResultProps) => (
   <HStack w="full">
     <GlyphCanvas name={glyph.name} buhin={buhin} />
     <VStack align="start">
-      <KageElement
-        label="なまえ"
-        text={glyph.name}
-        data={
-          <Text fontSize="sm" m={4}>
-            {glyph.name}
-          </Text>
-        }
-      />
+      <KageElement label="なまえ" data={glyph.name} />
       <Divider />
       <KageElement
         label="影算料"
-        text={glyph.data ?? ''}
-        data={<KageData data={glyph.data} color={glyph.info.type === 'WithDifference' ? 'red' : undefined} />}
+        data={toDisplayKageData(glyph.data)}
+        copyText={glyph.data ?? ''}
+        color={glyph.info.type === 'WithDifference' ? 'red' : undefined}
       />
       {glyph.info.state === 'NotImplementation' && glyph.data && (
         <ValidatedForm

@@ -2,7 +2,7 @@
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "public/build"],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "lib": ["DOM", "DOM.Iterable", "ES2021"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",

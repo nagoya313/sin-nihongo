@@ -1,9 +1,10 @@
-import { Box, Divider, HStack, Spacer, Text, VStack, useColorModeValue } from '@chakra-ui/react';
+import { Box, Divider, HStack, Spacer, VStack, useColorModeValue } from '@chakra-ui/react';
 import { MdInfoOutline } from 'react-icons/md';
 import { $path } from 'remix-routes';
 import LinkButton from '~/components/LinkButton';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
-import KageData from '~/features/kage/components/KageData';
+import KageElement from '~/features/kage/components/KageElement';
+import { toDisplayKageData } from '~/features/kage/decorators';
 import { type DrawableGlyph, getGlyphCanvasProps } from '~/features/kage/models/kageData';
 import { useShadow } from '../../../hooks/useColor';
 import GlyphDeleteForm from './GlyphDeleteForm';
@@ -25,17 +26,9 @@ const GlyphItem = ({ glyph, isEven }: GlyphItemProps) => (
     <GlyphCanvas {...getGlyphCanvasProps(glyph)} />
     <Box p={4} borderWidth="1px" rounded="md" w="full" overflow="hidden">
       <VStack align="start">
-        <HStack>
-          <Text fontSize="sm">なまえ：</Text>
-          <Text fontSize="sm" m={4}>
-            {glyph.name}
-          </Text>
-        </HStack>
+        <KageElement label="なまえ" data={glyph.name} />
         <Divider />
-        <HStack>
-          <Text fontSize="sm">影算料：</Text>
-          <KageData data={glyph.data} />
-        </HStack>
+        <KageElement label="影算料" data={toDisplayKageData(glyph.data)} copyText={glyph.data ?? ''} />
       </VStack>
     </Box>
     <Spacer />

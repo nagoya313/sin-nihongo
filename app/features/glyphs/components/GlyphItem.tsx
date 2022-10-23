@@ -5,12 +5,13 @@ import LinkButton from '~/components/LinkButton';
 import GlyphCanvas from '~/features/kage/components/GlyphCanvas';
 import KageElement from '~/features/kage/components/KageElement';
 import { toDisplayKageData } from '~/features/kage/decorators';
-import { type DrawableGlyph, getGlyphCanvasProps } from '~/features/kage/models/kageData';
-import { useShadow } from '../../../hooks/useColor';
+import { getGlyphCanvasProps } from '~/features/kage/models/kageData';
+import { useShadow } from '~/hooks/useColor';
+import { type GlyphItemData } from '../types';
 import GlyphDeleteForm from './GlyphDeleteForm';
 
 type GlyphItemProps = {
-  glyph: DrawableGlyph;
+  glyph: GlyphItemData;
   isEven: boolean;
 };
 
@@ -39,7 +40,7 @@ const GlyphItem = ({ glyph, isEven }: GlyphItemProps) => (
         to={$path('/glyphs/:name', { name: glyph.name })}
         colorScheme="blue"
       />
-      <GlyphDeleteForm name={glyph.name} />
+      <GlyphDeleteForm glyph={glyph} />
     </VStack>
   </HStack>
 );

@@ -24,18 +24,29 @@ const toDrawableGlyphs = async (glyphs: ReadonlyArray<Glyph>) => {
   // 直列にしないとコネクションプールが盡きる
   const result = [];
   for (const glyph of glyphs) {
+    const count = await db
+      .selectFrom('glyph')
+      .select([db.fn.count('name').as('glyph_count')])
+      .where('data', '~', includedGlyphsByNameRegex(glyph.name))
+      .executeTakeFirst();
     const glyphLoader = new GlyphLoader(getGlyph);
-    result.push({ ...glyph, drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph) });
+    result.push({
+      ...glyph,
+      drawNecessaryGlyphs: await glyphLoader.drawNecessaryGlyphs(glyph),
+      deletable: count?.glyph_count === '0',
+    });
   }
 
   return result;
 };
 
+const includedGlyphsByNameRegex = (name: string) => `99:.*:${escapeLike(name)}(:|$|[$])`;
+
 const getIncludedGlyphsByName = async (name: string) => {
   const glyphs = await db
     .selectFrom('glyph')
     .select(['name', 'data'])
-    .where('data', 'like', `%99:%${escapeLike(name)}%`)
+    .where('data', 'like', includedGlyphsByNameRegex(name))
     .execute();
 
   return toDrawableGlyphs(glyphs);
@@ -81,4 +92,12 @@ export const createGlyph = ({ name, data }: ValidatorData<typeof glyphCreatePara
 export const updateGlyph = ({ name, data }: ValidatorData<typeof glyphCreateParams>) =>
   db.updateTable('glyph').set({ data, updated_at: new Date() }).where('name', '=', name).executeTakeFirstOrThrow();
 
-export const deleteGlyph = (name: string) => db.deleteFrom('glyph').where('name', '=', name).executeTakeFirst();
+export const deleteGlyph = async (name: string) => {
+  const { glyph_count } = await db
+    .selectFrom('glyph')
+    .select([db.fn.count('name').as('glyph_count')])
+    .where('data', '~', includedGlyphsByNameRegex(name))
+    .executeTakeFirstOrThrow();
+  if (glyph_count !== '0') return { numDeletedRows: BigInt(0) };
+  return db.deleteFrom('glyph').where('name', '=', name).executeTakeFirst();
+};

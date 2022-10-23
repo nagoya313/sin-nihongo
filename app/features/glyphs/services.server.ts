@@ -52,7 +52,10 @@ export const destroy = async ({ request }: ActionArgs) => {
   if (numDeletedRows === BigInt(1)) {
     return json({ name }, await setFlashMessage(request, { message: 'グリフお削除しました', status: 'success' }));
   }
-  return json({ name: null }, await setFlashMessage(request, { message: 'グリフお削除しました', status: 'success' }));
+  return json(
+    { name: null },
+    await setFlashMessage(request, { message: 'グリフの削除に失敗しました', status: 'error' }),
+  );
 };
 
 export const get = async ({ params }: LoaderArgs) => {

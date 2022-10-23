@@ -46,7 +46,9 @@ export const getGlyphwiki = async (name: string) => {
   const glyphs = [await toFormData(glyph)];
   // 直列にしないとコネクションプールが盡きる
   for (const partGlyph of glyph.drawNecessaryGlyphs) {
-    glyphs.push(await toFormData(partGlyph));
+    if (partGlyph.data != null) {
+      glyphs.push(await toFormData(partGlyph));
+    }
   }
   return { glyphs };
 };

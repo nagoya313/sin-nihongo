@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { kageData, kageName } from '~/utils/schemas/kageData';
 
-export const glyphQueryParams = withZod(
+export const glyphsQueryParams = withZod(
   z.object({
     q: zfd.text(z.string().optional()),
     offset: zfd.numeric(z.number().min(0).default(0)),

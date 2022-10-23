@@ -4,9 +4,9 @@ import GlyphLoader from '~/features/kage/models/GlyphLoader';
 import { type Glyph } from '~/features/kage/types';
 import { escapeLike } from '~/utils/sql';
 import { GLYPH_READ_LIMIT } from './constants';
-import { type glyphCreateParams, type glyphQueryParams } from './validators';
+import { type glyphCreateParams, type glyphsQueryParams } from './validators';
 
-type QueryParams = ValidatorData<typeof glyphQueryParams>;
+type QueryParams = ValidatorData<typeof glyphsQueryParams>;
 
 export const getGlyphByName = (name: string) =>
   db.selectFrom('glyph').select(['name', 'data']).where('name', '=', name).executeTakeFirst();

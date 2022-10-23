@@ -13,7 +13,7 @@ import {
   glyphDestroyParams,
   glyphParams,
   glyphPreviewParams,
-  glyphQueryParams,
+  glyphsQueryParams,
 } from '~/features/glyphs/validators';
 import { getGlyphwiki } from '~/features/glyphwiki/repositories.server';
 import { glyphToBuhin, toSVG } from '~/features/kage/models/kageData';
@@ -22,7 +22,7 @@ import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
 
 export const index = async ({ request }: LoaderArgs) => {
-  const query = await checkedQuery(request, glyphQueryParams);
+  const query = await checkedQuery(request, glyphsQueryParams);
   return json({ glyphs: await getGlyphs(query), offset: query.offset });
 };
 

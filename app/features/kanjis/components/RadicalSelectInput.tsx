@@ -14,6 +14,7 @@ const RadicalSelectInput = ({ onChange, defaultOption }: RadicalSelectInputProps
     name="radical"
     label="部首"
     help="部首名お指定して検索できます。"
+    placeholder="いち、しょー、つずみ"
     action={$path('/radicals', { index: '' })}
     validator={radicalQueryParams}
     onChange={onChange}

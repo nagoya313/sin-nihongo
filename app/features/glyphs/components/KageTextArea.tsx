@@ -1,8 +1,9 @@
 import { Textarea, type TextareaProps } from '@chakra-ui/react';
 import { useFetcher } from '@remix-run/react';
+import omit from 'lodash/omit';
 import { useEffect } from 'react';
 import { $path } from 'remix-routes';
-import { useField } from 'remix-validated-form';
+import { useControlField, useField } from 'remix-validated-form';
 import { useDebouncedCallback } from 'use-debounce';
 import { type loader } from '~/routes/glyphs/preview';
 import { type LoaderData } from '~/utils/types';
@@ -12,10 +13,12 @@ const PREVIEW_WAIT = 500;
 type KageTextAreaProps = {
   name: string;
   onDataChange: (data: LoaderData<typeof loader>) => void;
+  isReadOnly?: boolean;
 };
 
-const KageTextArea = ({ name, onDataChange }: KageTextAreaProps) => {
+const KageTextArea = ({ name, onDataChange, isReadOnly }: KageTextAreaProps) => {
   const { getInputProps } = useField(name);
+  const [data, setData] = useControlField<string>(name);
   const fetcher = useFetcher();
   const handleChange = useDebouncedCallback((data: string) => {
     if (data) {
@@ -29,8 +32,18 @@ const KageTextArea = ({ name, onDataChange }: KageTextAreaProps) => {
     }
   }, [fetcher, onDataChange]);
 
+  useEffect(() => {
+    handleChange(data);
+  }, [data, handleChange]);
+
   return (
-    <Textarea {...getInputProps<TextareaProps>({ id: name, onChange: ({ target }) => handleChange(target.value) })} />
+    <Textarea
+      {...omit(
+        getInputProps<TextareaProps>({ id: name, isReadOnly, onChange: ({ target }) => setData(target.value) }),
+        'defaultValue',
+      )}
+      value={data}
+    />
   );
 };
 

@@ -1,6 +1,12 @@
 import { Input } from '@chakra-ui/react';
 import { useFetcher } from '@remix-run/react';
-import { type GetOptionLabel, type GetOptionValue, Select } from 'chakra-react-select';
+import {
+  CreatableSelect,
+  type GetOptionLabel,
+  type GetOptionValue,
+  Select,
+  type SingleValue,
+} from 'chakra-react-select';
 import { useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils';
 import { useControlField, useField } from 'remix-validated-form';
@@ -16,13 +22,29 @@ type AsyncSelectInputProps<TQueryData, TFetcherData, TOption> = {
   help?: string;
   placeholder?: string;
   defaultOption?: TOption;
-  onChange?: () => void;
+  isCreatable?: boolean;
+  isReadOnly?: boolean;
+  isRequired?: boolean;
+  onChange?: (option: SingleValue<TOption>) => void;
   toQueryParams: (value: string) => GenericObject;
   toOptions: (data: TFetcherData) => ReadonlyArray<TOption>;
   getOptionLabel: GetOptionLabel<TOption>;
   getOptionValue: GetOptionValue<TOption>;
   formatOptionLabel: (data: TOption) => React.ReactNode;
-};
+  getNewOptionData?: (input: string) => TOption;
+  onCreateOption?: (input: string) => void;
+} & (
+  | {
+      isCreatable: true;
+      getNewOptionData: (input: string) => TOption;
+      onCreateOption: (input: string) => void;
+    }
+  | {
+      isCreatable?: false;
+      getNewOptionData?: never;
+      onCreateOption?: never;
+    }
+);
 
 const AsyncSelectInput = <TQueryData, TFetcherData, TOption>({
   name,
@@ -32,14 +54,19 @@ const AsyncSelectInput = <TQueryData, TFetcherData, TOption>({
   help,
   placeholder,
   defaultOption,
+  isCreatable,
+  isReadOnly,
+  isRequired,
   onChange,
   toQueryParams,
   toOptions,
   getOptionLabel,
   getOptionValue,
   formatOptionLabel,
+  getNewOptionData,
+  onCreateOption,
 }: AsyncSelectInputProps<TQueryData, TFetcherData, TOption>) => {
-  const { getInputProps } = useField(name);
+  const { getInputProps, validate } = useField(name);
   const fetcher = useFetcher<TFetcherData>();
   const [options, setOptions] = useState<ReadonlyArray<TOption>>(defaultOption ? [defaultOption] : []);
   const [value, setValue] = useControlField<typeof options[number] | null>(name);
@@ -55,6 +82,7 @@ const AsyncSelectInput = <TQueryData, TFetcherData, TOption>({
       setOptions([]);
     }
   }, 1000);
+  const Component = isCreatable ? CreatableSelect : Select;
 
   useEffect(() => {
     if (fetcher.type === 'done') {
@@ -63,28 +91,43 @@ const AsyncSelectInput = <TQueryData, TFetcherData, TOption>({
   }, [fetcher, toOptions]);
 
   return (
-    <FormControl name={name} label={label} help={help}>
+    <FormControl name={name} label={label} help={help} isRequired={isRequired}>
       <ClientOnly fallback={<Input />}>
         {() => (
-          <Select
+          <Component
             // remix-validated-formでクリアすると undefined が value にくる
             // react-selectのクリアには null を入れるので變換する
             value={value ?? defaultOption ?? null}
-            {...getInputProps<React.ComponentProps<typeof Select<typeof options[number]>>>({
+            //formatCreateLabel={(input) => `${input}で作成`}
+            {...getInputProps<React.ComponentProps<typeof Component<typeof options[number]>>>({
               isLoading: fetcher.state === 'submitting',
               options,
               getOptionLabel,
               getOptionValue,
               formatOptionLabel,
+              loadingMessage: () => '検索中',
+              noOptionsMessage: () => '該当なし',
+              getNewOptionData,
+              // うまく動いてない
+              formatCreateLabel: (input) => `${input}で作成`,
+              isReadOnly,
               onInputChange: (value) => {
                 handleChange(value);
               },
               onChange: (value) => {
                 setValue(value);
-                onChange?.();
+                onChange?.(value);
               },
-              isClearable: true,
-              backspaceRemovesValue: true,
+              onCreateOption: isCreatable
+                ? (value) => {
+                    setValue(getNewOptionData(value));
+                    onCreateOption(value);
+                    // 明示的に呼ぶ必要があるパターンが謎
+                    validate();
+                  }
+                : undefined,
+              isClearable: !isReadOnly,
+              backspaceRemovesValue: !isReadOnly,
               placeholder,
               menuPortalTarget: typeof document !== 'undefined' ? document.body : undefined,
               styles: { menuPortal: (base) => ({ ...base, zIndex: 100 }) },

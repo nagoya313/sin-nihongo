@@ -20,5 +20,12 @@ export const useEditableGlyphPopover = (kanji: QueryResultData<typeof getDrawabl
     }
   }, [updated, onClose]);
 
-  return { preview, setPreview, isOpen, onOpen: openHandle, onClose };
+  return {
+    preview,
+    setPreview,
+    isOpen,
+    onOpen: openHandle,
+    onClose,
+    formId: `kanji-glyph-editable-form-${kanji.code_point}`,
+  };
 };

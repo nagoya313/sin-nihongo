@@ -59,7 +59,7 @@ export const createGlyph = async ({ request }: ActionArgs) => {
       await setFlashMessage(request, { message: 'グリフお登録しました', status: 'success' }),
     );
   } catch {
-    return validationError({ fieldErrors: { name: '登録済みです' }, formId: data.form_id }, data);
+    return validationError({ fieldErrors: { glyph_name: '登録済みです' }, formId: data.form_id }, data);
   }
 };
 

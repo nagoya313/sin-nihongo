@@ -46,7 +46,7 @@ const getIncludedGlyphsByName = async (name: string) => {
   const glyphs = await db
     .selectFrom('glyph')
     .select(['name', 'data'])
-    .where('data', 'like', includedGlyphsByNameRegex(name))
+    .where('data', '~', includedGlyphsByNameRegex(name))
     .execute();
 
   return toDrawableGlyphs(glyphs);

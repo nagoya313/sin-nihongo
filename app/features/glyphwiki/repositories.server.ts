@@ -43,7 +43,7 @@ const toFormData = async (glyph: Glyph) => ({ name: glyph.name, data: glyph.data
 
 export const getGlyphwiki = async (name: string) => {
   const glyph = await getDrawableGlyphwikiGlyph(name);
-  const glyphs = [await toFormData(glyph)];
+  const glyphs = glyph.data != null ? [await toFormData(glyph)] : [];
   // 直列にしないとコネクションプールが盡きる
   for (const partGlyph of glyph.drawNecessaryGlyphs) {
     if (partGlyph.data != null) {

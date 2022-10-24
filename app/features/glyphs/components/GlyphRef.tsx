@@ -9,7 +9,7 @@ type GlyphRefProps = {
 
 const GlyphRef = ({ name, html }: GlyphRefProps) => (
   <Link to={$path('/glyphs/:name', { name })}>
-    <Box dangerouslySetInnerHTML={{ __html: html }} sx={{ svg: { width: '32px', height: '32px' } }} />
+    <Box bg="white" dangerouslySetInnerHTML={{ __html: html }} sx={{ svg: { width: '32px', height: '32px' } }} />
   </Link>
 );
 

@@ -17,12 +17,14 @@ type KageTextAreaProps = {
 const KageTextArea = ({ name, onDataChange, ...otherProps }: KageTextAreaProps) => {
   const { getInputProps, validate } = useField(name);
   const [data, setData] = useControlField<string>(name);
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<DrawableGlyph>();
   const handleChange = useDebouncedCallback((data: string) => {
     if (data) {
       fetcher.submit({ data }, { action: $path('/glyphs/preview') });
       // 必要なタイミングが謎
       validate();
+    } else {
+      onDataChange({ name: 'preview', data: null, drawNecessaryGlyphs: [] });
     }
   }, PREVIEW_WAIT);
 

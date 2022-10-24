@@ -1,4 +1,4 @@
-import { Box, HStack, Icon, VStack } from '@chakra-ui/react';
+import { Box, HStack, Icon, InputGroup, InputRightElement, Spinner, VStack } from '@chakra-ui/react';
 import { type ActionArgs, type MetaFunction } from '@remix-run/node';
 import { MdOutlineBook, MdOutlineFontDownload } from 'react-icons/md';
 import { ValidatedForm } from 'remix-validated-form';
@@ -43,7 +43,12 @@ const New = () => {
         <PageInfo avatar={<Icon fontSize={24} as={MdOutlineBook} />} title="グリフウィキから検索" />
         <ValidatedForm {...formProps}>
           <FormControl name="q">
-            <SearchTextInput name="q" />
+            <InputGroup>
+              <SearchTextInput name="q" />
+              <InputRightElement>
+                {formProps.fetcher.state === 'submitting' && <Spinner size="sm" color="gray" />}
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
         </ValidatedForm>
         <Box overflow="hidden" mt={8}>

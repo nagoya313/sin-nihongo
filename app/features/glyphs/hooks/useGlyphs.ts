@@ -5,20 +5,22 @@ import { glyphsQueryParams } from '~/features/glyphs/validators';
 import useActionUpdate from '~/hooks/useActionUpdate';
 import { useInfinitySearch } from '~/hooks/useSearch';
 import { type action, type loader } from '~/routes/glyphs/index';
+import { type UnionSelect } from '~/utils/types';
 
 const useGlyphs = () => {
+  const initialData = useLoaderData<typeof loader>();
   const { data, formProps, moreLoad, setData } = useInfinitySearch({
     key: 'glyphs',
     formId: GLYPH_SEARCH_FORM_ID,
     validator: glyphsQueryParams,
     readLimit: GLYPH_READ_LIMIT,
-    initialData: useLoaderData<typeof loader>(),
+    initialData: initialData as UnionSelect<typeof initialData, 'glyphs'>,
   });
 
   useActionUpdate<typeof action>(
     useCallback(
       (updated) => {
-        if (updated.name != null) {
+        if ('name' in updated && updated.name != null) {
           setData((prev) => prev.filter(({ name }) => name != updated.name));
         }
       },

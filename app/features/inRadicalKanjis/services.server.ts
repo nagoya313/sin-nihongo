@@ -9,14 +9,15 @@ import { inRadicalKanjiQueryParams } from '../inRadicalKanjis/validators';
 
 export const index = async ({ request, params }: LoaderArgs) => {
   const { code_point } = await checkedParamsLoader(params, radicalParams);
-  const query = await checkedQuery(request, inRadicalKanjiQueryParams);
-  return json(
-    query.order_by === 'read'
-      ? {
-          kanjisOrderByRead: await getInRadicalKanjisOrderByRead(code_point, query),
-        }
-      : {
-          kanjisOrderByStrokeCount: await getInRadicalKanjisOrderByStrokeCount(code_point, query),
-        },
+  return checkedQuery(request, inRadicalKanjiQueryParams, async (query) =>
+    json(
+      query.order_by === 'read'
+        ? {
+            kanjisOrderByRead: await getInRadicalKanjisOrderByRead(code_point, query),
+          }
+        : {
+            kanjisOrderByStrokeCount: await getInRadicalKanjisOrderByStrokeCount(code_point, query),
+          },
+    ),
   );
 };

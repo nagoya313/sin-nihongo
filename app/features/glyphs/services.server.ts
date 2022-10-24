@@ -24,54 +24,58 @@ import { getKanjisByGlyphName } from '~/features/kanjis/repositories.server';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
 
-export const index = async ({ request }: LoaderArgs) => {
-  const query = await checkedQuery(request, glyphsQueryParams);
-  return json({ glyphs: await getGlyphs(query), offset: query.offset });
-};
+export const index = ({ request }: LoaderArgs) =>
+  checkedQuery(request, glyphsQueryParams, async (query) =>
+    json({ glyphs: await getGlyphs(query), offset: query.offset }),
+  );
 
-export const create = async ({ request }: ActionArgs) => {
-  const data = await checkedFormData(request, glyphCreateParams);
-  const { isDrawable } = await getGlyphPreview(data.data);
-  if (!isDrawable) {
-    if (data.subaction == null) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
-    return json(
-      {},
-      { ...(await setFlashMessage(request, { message: '部品が足りません', status: 'error' })), status: 422 },
-    );
-  }
-  try {
-    await createGlyph(data);
-  } catch {
-    return validationError({ fieldErrors: { name: '登録済みです' }, subaction: data.subaction }, data);
-  }
-  const headers = await setFlashMessage(request, { message: 'グリフお登録しました', status: 'success' });
-  if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'), headers);
-  return json(await getGlyphwiki(data.q), headers);
-};
+export const create = ({ request }: ActionArgs) =>
+  checkedFormData(request, glyphCreateParams, async (data) => {
+    const { isDrawable } = await getGlyphPreview(data.data);
+    if (!isDrawable) {
+      if (data.subaction == null) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+      return json(
+        {},
+        { ...(await setFlashMessage(request, { message: '部品が足りません', status: 'error' })), status: 422 },
+      );
+    }
+    try {
+      await createGlyph(data);
+    } catch {
+      return validationError({ fieldErrors: { name: '登録済みです' }, subaction: data.subaction }, data);
+    }
+    const headers = await setFlashMessage(request, { message: 'グリフお登録しました', status: 'success' });
+    if (data.subaction !== 'from-glyphwiki') return redirect($path('/glyphs'), headers);
+    return json(await getGlyphwiki(data.q), headers);
+  });
 
 export const update = async ({ request, params }: ActionArgs) => {
   const { name } = await checkedParamsLoader(params, glyphParams);
-  const { data } = await checkedFormData(request, glyphUpdateParams);
-  const { isDrawable } = await getGlyphPreview(data);
-  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
-  await updateGlyph({ name, data });
-  return json(
-    { glyph: (await getDrawableGlyphByName(name))! },
-    await setFlashMessage(request, { message: 'グリフお更新しました', status: 'success' }),
-  );
+  return checkedFormData(request, glyphUpdateParams, async (data) => {
+    const { isDrawable } = await getGlyphPreview(data.data);
+    if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' } }, data);
+    await updateGlyph({ name, data: data.data });
+    return json(
+      { glyph: (await getDrawableGlyphByName(name))! },
+      await setFlashMessage(request, { message: 'グリフお更新しました', status: 'success' }),
+    );
+  });
 };
 
-export const destroy = async ({ request }: ActionArgs) => {
-  const { name } = await checkedFormData(request, glyphDestroyParams);
-  const { numDeletedRows } = await deleteGlyph(name);
-  if (numDeletedRows === BigInt(1)) {
-    return json({ name }, await setFlashMessage(request, { message: 'グリフお削除しました', status: 'success' }));
-  }
-  return json(
-    { name: null },
-    await setFlashMessage(request, { message: 'グリフの削除に失敗しました', status: 'error' }),
-  );
-};
+export const destroy = ({ request }: ActionArgs) =>
+  checkedFormData(request, glyphDestroyParams, async (data) => {
+    const { numDeletedRows } = await deleteGlyph(data.name);
+    if (numDeletedRows === BigInt(1)) {
+      return json(
+        { name: data.name },
+        await setFlashMessage(request, { message: 'グリフお削除しました', status: 'success' }),
+      );
+    }
+    return json(
+      { name: null },
+      await setFlashMessage(request, { message: 'グリフの削除に失敗しました', status: 'error' }),
+    );
+  });
 
 export const get = async ({ params }: LoaderArgs) => {
   const { name } = await checkedParamsLoader(params, glyphParams);
@@ -96,7 +100,5 @@ export const get = async ({ params }: LoaderArgs) => {
   });
 };
 
-export const preview = async ({ request }: LoaderArgs) => {
-  const query = await checkedQuery(request, glyphPreviewParams);
-  return json(await getGlyphPreview(query.data));
-};
+export const preview = ({ request }: LoaderArgs) =>
+  checkedQuery(request, glyphPreviewParams, async ({ data }) => json(await getGlyphPreview(data)));

@@ -5,14 +5,16 @@ import { kanjiQueryParams } from '~/features/kanjis/validators';
 import useActionUpdate from '~/hooks/useActionUpdate';
 import { useInfinitySearch } from '~/hooks/useSearch';
 import { type action, type loader } from '~/routes/kanjis/index';
+import { type UnionSelect } from '~/utils/types';
 
 const useKanjis = () => {
+  const initialData = useLoaderData<typeof loader>();
   const { data, formProps, moreLoad, setData } = useInfinitySearch({
     key: 'kanjis',
     formId: KANJI_SEARCH_FORM_ID,
     validator: kanjiQueryParams,
-    initialData: useLoaderData<typeof loader>(),
     readLimit: KANJI_READ_LIMIT,
+    initialData: initialData as UnionSelect<typeof initialData, 'kanjis'>,
   });
 
   useActionUpdate<typeof action>(

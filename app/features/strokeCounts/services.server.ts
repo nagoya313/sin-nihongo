@@ -3,7 +3,7 @@ import { getKanjisOrderByStrokeCount } from '~/features/kanjis/repositories.serv
 import { checkedQuery } from '~/utils/request.server';
 import { strokeCountKanjiQueryParams } from './validators';
 
-export const index = async ({ request }: LoaderArgs) => {
-  const query = await checkedQuery(request, strokeCountKanjiQueryParams);
-  return json({ kanjis: await getKanjisOrderByStrokeCount(query) });
-};
+export const index = ({ request }: LoaderArgs) =>
+  checkedQuery(request, strokeCountKanjiQueryParams, async (query) =>
+    json({ kanjis: await getKanjisOrderByStrokeCount(query) }),
+  );

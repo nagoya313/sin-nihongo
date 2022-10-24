@@ -31,40 +31,54 @@ export const checkedParamsLoader = async <TValidator extends Validator<any>>(
   return paramsResult.data as ValidatorData<TValidator>;
 };
 
-export const checkedQuery = async <TValidator extends Validator<any>>(
+export const checkedQuery = async <TValidator extends Validator<any>, TResponse extends ReturnType<LoaderFunction>>(
   request: LoaderArgs['request'],
   validator: TValidator,
+  func: (query: ValidatorData<TValidator>) => TResponse,
 ) => {
   const query = await validator.validate(new URL(request.url).searchParams);
   if (query.error) {
     console.log(query.error.fieldErrors);
-    throw validationError(query.error);
+    return validationError(query.error);
   }
-  return query.data as ValidatorData<TValidator>;
+  return func(query.data);
 };
 
-export const checkedFormData = async <TValidator extends Validator<any>>(
+export const checkedFormData = async <TValidator extends Validator<any>, TResponse extends ReturnType<ActionFunction>>(
   request: ActionArgs['request'],
   validator: TValidator,
+  func: (query: ValidatorData<TValidator>) => TResponse,
 ) => {
   const data = await validator.validate(await request.formData());
   if (data.error) {
     console.log(data.error.fieldErrors);
-    throw validationError(data.error);
+    return validationError(data.error);
   }
-  return data.data as ValidatorData<TValidator>;
+  return func(data.data);
 };
 
 type ActionResponse = ReturnType<ActionFunction>;
 
-type Actions<TResponse extends ActionResponse> = Partial<
-  Record<'POST' | 'PATCH' | 'DELETE', (args: ActionArgs) => TResponse>
->;
+type Actions<
+  TPostResponse extends ActionResponse,
+  TPatchResponse extends ActionResponse,
+  TDeleteResponse extends ActionResponse,
+> = Partial<{
+  POST: (args: ActionArgs) => TPostResponse;
+  PATCH: (args: ActionArgs) => TPatchResponse;
+  DELETE: (args: ActionArgs) => TDeleteResponse;
+}>;
 
 export const actions =
-  <TResponse extends ActionResponse>(actions: Actions<TResponse>) =>
+  <
+    TPostResponse extends ActionResponse = undefined,
+    TPatchResponse extends ActionResponse = undefined,
+    TDeleteResponse extends ActionResponse = undefined,
+  >(
+    actions: Actions<TPostResponse, TPatchResponse, TDeleteResponse>,
+  ) =>
   (args: ActionArgs) => {
     const service = actions[args.request.method as keyof typeof actions];
-    if (service != null) return service(args);
+    if (service != null) return service(args) as NonNullable<ReturnType<typeof service>>;
     throw new Response('Method not allowed', { status: 405 });
   };

@@ -26,31 +26,31 @@ import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
 import { isErrorData } from '~/utils/typeCheck';
 
-export const index = async ({ request }: LoaderArgs) => {
-  const query = await checkedQuery(request, kanjiQueryParams);
-  return json({ kanjis: await getDrawableKanjis(query), offset: query.offset });
-};
+export const index = ({ request }: LoaderArgs) =>
+  checkedQuery(request, kanjiQueryParams, async (query) =>
+    json({ kanjis: await getDrawableKanjis(query), offset: query.offset }),
+  );
 
 export const update = async ({ request, params }: ActionArgs) => {
   const { code_point } = await checkedParamsLoader(params, kanjiParams);
-  const data = await checkedFormData(request, kanjiUpdateParams);
-  if (isErrorData(data)) return data;
-  await updateKanji(code_point, data);
-  return redirect(
-    $path('/kanjis'),
-    await setFlashMessage(request, { message: '漢字お更新しました', status: 'success' }),
-  );
+  return checkedFormData(request, kanjiUpdateParams, async (data) => {
+    await updateKanji(code_point, data);
+    return redirect(
+      $path('/kanjis'),
+      await setFlashMessage(request, { message: '漢字お更新しました', status: 'success' }),
+    );
+  });
 };
 
-const checkedKanjiData = async <TValidator extends typeof kanjiGlyphCreateParams | typeof kanjiGlyphUpdateParams>(
+const checkedKanjiData = <TValidator extends typeof kanjiGlyphCreateParams | typeof kanjiGlyphUpdateParams>(
   request: ActionArgs['request'],
   validator: TValidator,
-) => {
-  const data = await checkedFormData(request, validator);
-  const { isDrawable } = await getGlyphPreview(data.data);
-  if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.form_id }, data);
-  return data;
-};
+) =>
+  checkedFormData(request, validator, async (data) => {
+    const { isDrawable } = await getGlyphPreview(data.data);
+    if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.form_id }, data);
+    return data;
+  });
 
 export const createGlyph = async ({ request }: ActionArgs) => {
   const data = await checkedKanjiData(request, kanjiGlyphCreateParams);
@@ -84,15 +84,15 @@ export const updateKanjiGlyph = async ({ request }: ActionArgs) => {
   }
 };
 
-export const unlinkGlyph = async ({ request }: ActionArgs) => {
-  const { code_point } = await checkedFormData(request, kanjiGlyphUnlinkParams);
-  await unlinkKanjiGlyph(code_point);
-  const kanji = (await getKanjiByCodePoint(code_point))!;
-  return json(
-    { kanji: { ...kanji, glyph: null } },
-    { ...(await setFlashMessage(request, { message: 'グリフの関連お外しました', status: 'success' })) },
-  );
-};
+export const unlinkGlyph = ({ request }: ActionArgs) =>
+  checkedFormData(request, kanjiGlyphUnlinkParams, async ({ code_point }) => {
+    await unlinkKanjiGlyph(code_point);
+    const kanji = (await getKanjiByCodePoint(code_point))!;
+    return json(
+      { kanji: { ...kanji, glyph: null } },
+      { ...(await setFlashMessage(request, { message: 'グリフの関連お外しました', status: 'success' })) },
+    );
+  });
 
 export const get = async ({ params }: LoaderArgs) => {
   const { code_point } = await checkedParamsLoader(params, kanjiParams);
@@ -109,7 +109,7 @@ export const get = async ({ params }: LoaderArgs) => {
   );
 };
 
-export const glyphs = async ({ request }: LoaderArgs) => {
-  const query = await checkedQuery(request, kanjiCandidateGlyphsQueryParams);
-  return json({ glyphs: await getKanjiCandidateGlyphs(query) });
-};
+export const glyphs = ({ request }: LoaderArgs) =>
+  checkedQuery(request, kanjiCandidateGlyphsQueryParams, async (query) =>
+    json({ glyphs: await getKanjiCandidateGlyphs(query) }),
+  );

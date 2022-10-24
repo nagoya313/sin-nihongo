@@ -28,7 +28,6 @@ export const action = (args: ActionArgs) =>
 
 const Index = () => {
   const { data, formProps, moreLoad } = useKanjis();
-  console.log(data);
 
   return (
     <Page avatar={<Icon fontSize={24} as={KanjiIcon} />} title="新日本語漢字一覧">

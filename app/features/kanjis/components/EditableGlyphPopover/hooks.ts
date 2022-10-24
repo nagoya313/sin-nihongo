@@ -25,8 +25,9 @@ export const useEditableGlyphPopover = (kanji: QueryResultData<typeof getDrawabl
   useEffect(() => {
     if (updated != null && 'kanji' in updated) {
       onClose();
+      setData(updated.kanji.glyph?.data ?? '');
     }
-  }, [updated, onClose]);
+  }, [updated, onClose, setData]);
 
   return {
     preview,

@@ -9,6 +9,9 @@ import {
 import { type Validator, type ValidatorData, validationError } from 'remix-validated-form';
 import { authenticator } from '~/session.server';
 
+type LoaderResponse = ReturnType<LoaderFunction>;
+type ActionResponse = ReturnType<ActionFunction>;
+
 export const authGuard = async <TFunction extends LoaderFunction | ActionFunction>(
   args: DataFunctionArgs,
   func: TFunction,
@@ -31,7 +34,7 @@ export const checkedParamsLoader = async <TValidator extends Validator<any>>(
   return paramsResult.data as ValidatorData<TValidator>;
 };
 
-export const checkedQuery = async <TValidator extends Validator<any>, TResponse extends ReturnType<LoaderFunction>>(
+export const checkedQuery = async <TValidator extends Validator<any>, TResponse extends LoaderResponse>(
   request: LoaderArgs['request'],
   validator: TValidator,
   func: (query: ValidatorData<TValidator>) => TResponse,
@@ -44,7 +47,7 @@ export const checkedQuery = async <TValidator extends Validator<any>, TResponse 
   return func(query.data);
 };
 
-export const checkedFormData = async <TValidator extends Validator<any>, TResponse extends ReturnType<ActionFunction>>(
+export const checkedFormData = async <TValidator extends Validator<any>, TResponse extends ActionResponse>(
   request: ActionArgs['request'],
   validator: TValidator,
   func: (query: ValidatorData<TValidator>) => TResponse,
@@ -56,8 +59,6 @@ export const checkedFormData = async <TValidator extends Validator<any>, TRespon
   }
   return func(data.data);
 };
-
-type ActionResponse = ReturnType<ActionFunction>;
 
 type Actions<
   TPostResponse extends ActionResponse,

@@ -8,7 +8,6 @@ import {
 } from '@remix-run/node';
 import { useCatch } from '@remix-run/react';
 import { z } from 'zod';
-
 import Document from './Document';
 import Layout from './components/Layout';
 import { useOptionalUser } from './hooks/useUser';

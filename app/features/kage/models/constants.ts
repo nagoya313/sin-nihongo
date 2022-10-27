@@ -34,6 +34,7 @@ export const VALID_STROKE_SHAPE_TYPES = Object.freeze([
   [1, 22, 313],
   [1, 22, 413],
   [1, 22, 24],
+  [2, 0, 0], // 追記
   [2, 0, 7],
   [2, 0, 5],
   [2, 32, 7],

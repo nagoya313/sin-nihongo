@@ -24,7 +24,6 @@ import {
 } from '~/features/kanjis/validators';
 import { setFlashMessage } from '~/utils/flash.server';
 import { checkedFormData, checkedParamsLoader, checkedQuery } from '~/utils/request.server';
-import { isErrorData } from '~/utils/typeCheck';
 
 export const index = ({ request }: LoaderArgs) =>
   checkedQuery(request, kanjiQueryParams, async (query) =>
@@ -49,12 +48,13 @@ const checkedKanjiData = <TValidator extends typeof kanjiGlyphCreateParams | typ
   checkedFormData(request, validator, async (data) => {
     const { isDrawable } = await getGlyphPreview(data.data);
     if (!isDrawable) return validationError({ fieldErrors: { data: '部品が足りません' }, formId: data.form_id }, data);
+    console.log(data);
     return data;
   });
 
 export const createGlyph = async ({ request }: ActionArgs) => {
   const data = await checkedKanjiData(request, kanjiGlyphCreateParams);
-  if (isErrorData(data)) return data;
+  if (!('code_point' in data)) return data;
   try {
     await createKanjiGlyph(data);
     return json(
@@ -68,7 +68,8 @@ export const createGlyph = async ({ request }: ActionArgs) => {
 
 export const updateKanjiGlyph = async ({ request }: ActionArgs) => {
   const data = await checkedKanjiData(request, kanjiGlyphUpdateParams);
-  if (isErrorData(data)) return data;
+  console.log(data);
+  if (!('code_point' in data)) return data;
   if (data.type === 'link') {
     await linkKanjiGlyph(data);
     return json(

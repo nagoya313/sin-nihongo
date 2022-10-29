@@ -102,7 +102,7 @@ const EditableGlyphPopover = ({ kanji }: EditableGlyphPopoverProps) => {
                   </FormControl>
                   <input type="hidden" name="code_point" value={kanji.code_point} />
                   <input type="hidden" name="form_id" value={formId} />
-                  {kanji.glyph == null && <input type="hidden" name="type" value={mode} />}
+                  <input type="hidden" name="type" value={mode} />
                   <SubmitButton>
                     {kanji.glyph != null ? '更新する' : mode === 'link' ? '関連ずける' : '作成する'}
                   </SubmitButton>

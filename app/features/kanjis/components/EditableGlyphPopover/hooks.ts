@@ -44,5 +44,5 @@ export const useEditableGlyphPopover = (kanji: QueryResultData<typeof getDrawabl
     mode: isReadonlyData ? 'link' : 'create',
     toCreateMode: () => setIsReadonlyData(false),
     formId,
-  };
+  } as const;
 };

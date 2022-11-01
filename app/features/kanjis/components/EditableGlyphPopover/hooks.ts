@@ -23,11 +23,11 @@ export const useEditableGlyphPopover = (kanji: QueryResultData<typeof getDrawabl
   const updated = useActionData<typeof action>();
 
   useEffect(() => {
-    if (updated != null && 'kanji' in updated) {
+    if (updated != null && 'kanji' in updated && updated.kanji.code_point === kanji.code_point) {
       onClose();
       setData(updated.kanji.glyph?.data ?? '');
     }
-  }, [updated, onClose, setData]);
+  }, [updated, kanji, onClose, setData]);
 
   return {
     preview,
